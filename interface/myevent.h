@@ -29,6 +29,10 @@ public:
     vector<myGenobject> RecGenJet;
     vector<myGenobject> RecGenTauVisible;
     vector<myobject> PreSelectedElectrons;
+    vector<myobject> L2Particles;
+    vector<myobject> L1Tau;
+    vector<myobject> L1Jet;
+    vector<myobject> L1Etm;
     vector<myobject> PreSelectedMuons;
     vector<myobject> PreSelectedHPSTaus;
     vector<myobject> SelectedHPSTaus;
@@ -36,6 +40,10 @@ public:
     vector<myobject> RecPFMet;
     vector<myobject> RecPFMetCor;
     vector<myobject> RecMVAMet;
+    vector<myobject> RecMVAMet_ditau;
+    vector<myobject> RecMVAMet_mutau;
+    vector<myobject> RecMVAMet_etau;
+    vector<myobject> RecMVAMet_emu;
     vector<myobject> RectcMet;
     vector<myobject> RecPFMetCorElectronEnUp;
     vector<myobject> RecPFMetCorElectronEnDown;
@@ -83,6 +91,26 @@ public:
     float MVAMet_sigMatrix_01;
     float MVAMet_sigMatrix_10;
     float MVAMet_sigMatrix_11;
+
+    float MVAMet_sigMatrix_00_emu;
+    float MVAMet_sigMatrix_01_emu;
+    float MVAMet_sigMatrix_10_emu;
+    float MVAMet_sigMatrix_11_emu;
+
+    float MVAMet_sigMatrix_00_mutau;
+    float MVAMet_sigMatrix_01_mutau;
+    float MVAMet_sigMatrix_10_mutau;
+    float MVAMet_sigMatrix_11_mutau;
+
+    float MVAMet_sigMatrix_00_etau;
+    float MVAMet_sigMatrix_01_etau;
+    float MVAMet_sigMatrix_10_etau;
+    float MVAMet_sigMatrix_11_etau;
+
+    float MVAMet_sigMatrix_00_ditau;
+    float MVAMet_sigMatrix_01_ditau;
+    float MVAMet_sigMatrix_10_ditau;
+    float MVAMet_sigMatrix_11_ditau;
 
 
 private:

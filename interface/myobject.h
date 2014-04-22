@@ -31,7 +31,7 @@ public:
      int pdgId, status, mod_pdgId, mod_status, Gmod_pdgId, Gmod_status, tracksSize;
      int gen_index, decay_mode;
     //Muon
-    float dB, d0, emfraction;
+     float dB, d0, emfraction;
     float DepositR03Ecal;
     float DepositR03Hcal;
     float DepositR03TrackerOfficial;
@@ -46,7 +46,11 @@ public:
    float normalizedChi2;
    int trkLayerMeasure , intrkLayerMeasure,  intrkLayerpixel;
     float    dxy_in , dZ_in ;
-
+    
+    // 2D IP wrt primary vertex
+    float dxy_PV,dz_PV;
+    // 3D impact parameter
+    float IP3D;
 
     //Vertex Mettopology Trigger
     bool isFake, isValid;
@@ -60,8 +64,13 @@ public:
     //Electron
     float HoverE, deltaPhiSuperClusterTrackAtVtx, deltaEtaSuperClusterTrackAtVtx, sigmaIetaIeta, sigmaEtaEta;
     float ecalIso, hcalIso, caloIso, trackIso, hcalOverEcal, SIP;
+    bool passConversionVeto;
+    float rawE_SC, preshowerE_SC;
+    float EleId95rel, EleId90rel, EleId85rel, EleId80rel, EleId70rel, EleId60rel;
+    float CicVeryLoose, CicLoose, CicMedium, CicTight, CicSuperTight;
 
     //For jet and taus
+    int decayMode;
     float bDiscriminatiors_CSV,bDiscriminatiors_JP,bDiscriminatiors_TCHPT;
     float jetPt, jetEta, jetPhi;
     float leadChargedParticlePt, leadTrackD0;
@@ -79,17 +88,6 @@ public:
     float sig_pi0_1_pt, sig_pi0_1_phi, sig_pi0_1_eta, sig_pi0_1_m;
     float sig_pi0_2_pt, sig_pi0_2_phi, sig_pi0_2_eta, sig_pi0_2_m;
 
-
-    //    float discriminationByLeadingTrackFinding;
-    //    float discriminationByLeadingTrackPtCut;
-    //    float discriminationByDecayModeSelection;
-    //    float discriminationByFlightPath;
-    //    float discriminationByTaNC;
-    //    float discriminationByTaNCRaw;
-    //    float discriminationByTaNCVeryLoose;
-    //    float discriminationByTaNCLoose;
-    //    float discriminationByTaNCMedium;
-    //    float discriminationByTaNCTight;
     bool discriminationByDecayModeFinding;
     bool discriminationByVeryLooseIsolation;
     bool discriminationByLooseIsolation;
@@ -98,14 +96,11 @@ public:
     bool discriminationByElectronLoose;
     bool discriminationByElectronMedium;
     bool discriminationByElectronTight;
-    bool discriminationByElectronMVA;
-    bool discriminationByElectronMVA2Loose;
-    bool discriminationByElectronMVA2Medium;
-    bool discriminationByElectronMVA2Tight;
-    bool discriminationByElectronMVA3Loose;
-    bool discriminationByElectronMVA3Medium;
-    bool discriminationByElectronMVA3Tight;
-    bool discriminationByElectronMVA3VTight;
+    bool discriminationByElectronMVA5VLoose;
+    bool discriminationByElectronMVA5Loose;
+    bool discriminationByElectronMVA5Medium;
+    bool discriminationByElectronMVA5Tight;
+    bool discriminationByElectronMVA5VTight;
 
     bool discriminationByMuonLoose;
     bool discriminationByMuonMedium;
@@ -113,6 +108,12 @@ public:
     bool discriminationByMuonLoose2;
     bool discriminationByMuonMedium2;
     bool discriminationByMuonTight2;
+    bool discriminationByMuonLoose3;
+    bool discriminationByMuonTight3;
+    bool discriminationByMuonMVALoose;
+    bool discriminationByMuonMVAMedium;
+    bool discriminationByMuonMVATight;
+
     bool byVLooseCombinedIsolationDeltaBetaCorr;
     bool byLooseCombinedIsolationDeltaBetaCorr;
     bool byMediumCombinedIsolationDeltaBetaCorr;
@@ -120,11 +121,11 @@ public:
     bool byLooseCombinedIsolationDeltaBetaCorr3Hits;
     bool byMediumCombinedIsolationDeltaBetaCorr3Hits;
     bool byTightCombinedIsolationDeltaBetaCorr3Hits;
-
-
+    float byRawCombinedIsolationDeltaBetaCorr3Hits;
 
     float byIsolationMVAraw;
     float byIsolationMVA2raw;
+    float discriminationByMuonMVAraw;
     bool byLooseIsolationMVA;
     bool byMediumIsolationMVA;
     bool byTightIsolationMVA;
@@ -132,29 +133,75 @@ public:
     bool byMediumIsolationMVA2;
     bool byTightIsolationMVA2;
 
-  /*   float CicVeryLoose; */
-/*     float CicLoose; */
-/*     float CicMedium; */
-/*     float CicTight; */
-/*     float CicSuperTight; */
+    float byIsolationMVA3oldDMwLTraw;
+    float byIsolationMVA3newDMwLTraw;
+    float byIsolationMVA3oldDMwoLTraw;
+    float byIsolationMVA3newDMwoLTraw;
 
-    //    float CicHZZVeryLoose;
-    //    float CicHZZLoose;
-    //    float CicHZZMedium;
-    //    float CicHZZTight;
-    //    float CicHZZSuperTight;
+    bool byVLooseIsolationMVA3oldDMwLT;
+    bool byVLooseIsolationMVA3newDMwLT;
+    bool byVLooseIsolationMVA3oldDMwoLT;
+    bool byVLooseIsolationMVA3newDMwoLT;
+    bool byLooseIsolationMVA3oldDMwLT;
+    bool byLooseIsolationMVA3newDMwLT;
+    bool byLooseIsolationMVA3oldDMwoLT;
+    bool byLooseIsolationMVA3newDMwoLT;
+    bool byMediumIsolationMVA3oldDMwLT;
+    bool byMediumIsolationMVA3newDMwLT;
+    bool byMediumIsolationMVA3oldDMwoLT;
+    bool byMediumIsolationMVA3newDMwoLT;
+    bool byTightIsolationMVA3oldDMwLT;
+    bool byTightIsolationMVA3newDMwLT;
+    bool byTightIsolationMVA3oldDMwoLT;
+    bool byTightIsolationMVA3newDMwoLT;
+    bool byVTightIsolationMVA3oldDMwLT;
+    bool byVTightIsolationMVA3newDMwLT;
+    bool byVTightIsolationMVA3oldDMwoLT;
+    bool byVTightIsolationMVA3newDMwoLT;
+    bool byVVTightIsolationMVA3oldDMwLT;
+    bool byVVTightIsolationMVA3newDMwLT;
+    bool byVVTightIsolationMVA3oldDMwoLT;
+    bool byVVTightIsolationMVA3newDMwoLT;
+
+    bool discriminationByDecayModeFindingNewDMs;
+    bool discriminationByDecayModeFindingOldDMs;
+    float discriminationByRawCombinedIsolationDBSumPtCorr;
+    float MVA3IsolationChargedIsoPtSum;
+    float MVA3IsolationNeutralIsoPtSum;
+    float MVA3IsolationPUcorrPtSum;
+    float discriminationByMVA5rawElectronRejection;
+    float discriminationByMVA5rawElectronRejectionCategory;
+    bool discriminationByDeadECALElectronRejection;
 
 //    trigger matching
-        bool hasTrgObject_loose ;
-        float TrgObjectEta_loose ;
-        float TrgObjectPt_loose ;
-        float TrgObjectPhi_loose ;
-
-        bool hasTrgObject_medium ;
-        float TrgObjectEta_medium ;
-        float TrgObjectPt_medium ;
-        float TrgObjectPhi_medium ;
-
+        bool hasTrgObject_Mu17Tau20 ;
+        float TrgObjectEta_Mu17Tau20 ;
+        float TrgObjectPt_Mu17Tau20 ;
+        float TrgObjectPhi_Mu17Tau20 ;
+        bool hasTrgObject_Mu18Tau25 ;
+        float TrgObjectEta_Mu18Tau25 ;
+        float TrgObjectPt_Mu18Tau25 ;
+        float TrgObjectPhi_Mu18Tau25 ;
+        bool hasTrgObject_Ele20Tau20 ;
+        float TrgObjectEta_Ele20Tau20 ;
+        float TrgObjectPt_Ele20Tau20 ;
+        float TrgObjectPhi_Ele20Tau20 ;
+        bool hasTrgObject_EleMu817 ;
+        float TrgObjectEta_EleMu817 ;
+        float TrgObjectPt_EleMu817 ;
+        float TrgObjectPhi_EleMu817 ;
+        bool hasTrgObject_Ditau30Jet30 ;
+        float TrgObjectEta_Ditau30Jet30 ;
+        float TrgObjectPt_Ditau30Jet30 ;
+        float TrgObjectPhi_Ditau30Jet30 ;
+        bool hasTrgObject_Ditau35 ;
+        float TrgObjectEta_Ditau35 ;
+        float TrgObjectPt_Ditau35 ;
+        float TrgObjectPhi_Ditau35 ;
+        bool hasTrgObject_Mu24 ;
+        float TrgObjectEta_Mu24 ;
+        float TrgObjectPt_Mu24 ;
+        float TrgObjectPhi_Mu24 ;
 
     ClassDef(myobject, 1)
 };

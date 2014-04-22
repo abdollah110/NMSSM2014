@@ -273,7 +273,7 @@ float Trg_Ele_2012(myobject const & a, myobject const& b) {
 }
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-float getCorrFactor(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c, myobject const& d) {
+float getCorrFactor(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c) {
 
     // return 1;
 

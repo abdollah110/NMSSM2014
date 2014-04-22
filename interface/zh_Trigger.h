@@ -56,27 +56,22 @@ bool Trg_MC_12(myevent *m) {
     bool Trigger = false;
     bool TriggerEle = false;
     bool TriggerMu = false;
-    bool TriggerMuTr = false;
 
-    string doubEle = "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL";
-    string doubMu = "HLT_Mu17_Mu8";
-    string doubMuTr = "HLT_Mu17_TkMu8";
+    string MuTauTrg = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20";
+    string ElTauTrg = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20";
 
     for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
 
         string name = ihlt->first;
-        size_t foundEl = name.find(doubEle);
-        size_t foundMu = name.find(doubMu);
-        size_t foundMuTr = name.find(doubMuTr);
+        size_t foundMu = name.find(MuTauTrg);
+        size_t foundEl = name.find(ElTauTrg);
 
-        if (foundEl != string::npos)
-            TriggerEle = ihlt->second;
         if (foundMu != string::npos)
             TriggerMu = ihlt->second;
-        if (foundMuTr != string::npos)
-            TriggerMuTr = ihlt->second;
+        if (foundEl != string::npos)
+            TriggerEle = ihlt->second;
 
-        Trigger = TriggerEle || TriggerMu || TriggerMuTr;
+        Trigger = TriggerMu || TriggerEle;
     }
     return Trigger;
 }

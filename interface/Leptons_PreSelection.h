@@ -54,6 +54,22 @@ float looseIsolation = 0.30;
 //**********************   MUON   **********************************************************
 //******************************************************************************************
 
+vector<myobject> GoodMuon10GeV(myevent *m) {
+
+    vector<myobject> looseMuon;
+    looseMuon.clear();
+    vector<myobject> muon = m->PreSelectedMuons;
+    for (int i = 0; i < muon.size(); i++) {
+        float muPt = muon[i].pt;
+        //        float muEta = muon[i].eta;
+        //        if (muPt > 10 && TMath::Abs(muEta) < 2.4 && Id_Mu_Loose(muon[i]) && Iso_Mu_dBeta(muon[i]) < looseIsolation)
+        if (muPt > 10)
+            looseMuon.push_back(muon[i]);
+    }
+    sort(looseMuon.begin(), looseMuon.end(), myobject_grt());
+    return looseMuon;
+}
+
 vector<myobject> GoodMuon(myevent *m) {
 
     vector<myobject> looseMuon;
@@ -89,6 +105,22 @@ vector<myobject> NoIdIsoMuon(myevent *m) {
 //***********************   Electron   *****************************************************
 //******************************************************************************************
 
+vector<myobject> GoodElectron10GeV(myevent *m) {
+
+    vector<myobject> goodElectron;
+    goodElectron.clear();
+    vector<myobject> electron = m->PreSelectedElectrons;
+    for (int i = 0; i < electron.size(); i++) {
+        float elePt = electron[i].pt;
+        //        float eleEta = electron[i].eta_SC;
+        //        if (elePt > 10 && TMath::Abs(eleEta) < 2.5 && EleMVANonTrigId_Loose(electron[i]) && Iso_Ele_dBeta(electron[i]) < looseIsolation)
+        if (elePt > 10)
+            goodElectron.push_back(electron[i]);
+    }
+    sort(goodElectron.begin(), goodElectron.end(), myobject_grt());
+    return goodElectron;
+}
+
 vector<myobject> GoodElectron(myevent *m) {
 
     vector<myobject> goodElectron;
@@ -122,24 +154,45 @@ vector<myobject> NoIdIsoElectron(myevent *m) {
 //*********************   TAU   ************************************************************
 //******************************************************************************************
 
-vector<myobject> GoodTau(myevent *m) {
+vector<myobject> GoodTau20GeV(myevent *m) {
 
     vector<myobject> goodHPSTau;
     vector<myobject> tau = m->PreSelectedHPSTaus;
     for (int i = 0; i < tau.size(); i++) {
 
         float tauPt = tau[i].pt;
-        float tauEta = tau[i].eta;
+        //        float tauEta = tau[i].eta;
 
-        if (tauPt > 15 && TMath::Abs(tauEta) < 2.3 &&
-                tau[i].discriminationByDecayModeFinding && tau[i].byLooseCombinedIsolationDeltaBetaCorr3Hits &&
-                tau[i].discriminationByElectronLoose && tau[i].discriminationByMuonLoose2)
+        if (tauPt > 20)
             goodHPSTau.push_back(tau[i]);
     }
+    //        if (tauPt > 15 && TMath::Abs(tauEta) < 2.3 &&
+    //                tau[i].discriminationByDecayModeFinding && tau[i].byLooseCombinedIsolationDeltaBetaCorr3Hits &&
+    //                tau[i].discriminationByElectronLoose && tau[i].discriminationByMuonLoose2)
+    //            goodHPSTau.push_back(tau[i]);
+    //    }
 
     sort(goodHPSTau.begin(), goodHPSTau.end(), myobject_grt());
     return goodHPSTau;
 }
+//vector<myobject> GoodTau(myevent *m) {
+//
+//    vector<myobject> goodHPSTau;
+//    vector<myobject> tau = m->PreSelectedHPSTaus;
+//    for (int i = 0; i < tau.size(); i++) {
+//
+//        float tauPt = tau[i].pt;
+//        float tauEta = tau[i].eta;
+//
+//        if (tauPt > 15 && TMath::Abs(tauEta) < 2.3 &&
+//                tau[i].discriminationByDecayModeFinding && tau[i].byLooseCombinedIsolationDeltaBetaCorr3Hits &&
+//                tau[i].discriminationByElectronLoose && tau[i].discriminationByMuonLoose2)
+//            goodHPSTau.push_back(tau[i]);
+//    }
+//
+//    sort(goodHPSTau.begin(), goodHPSTau.end(), myobject_grt());
+//    return goodHPSTau;
+//}
 
 vector<myobject> NoIsoTau(myevent *m) {
 
@@ -201,7 +254,7 @@ vector<myobject> GoodJet(myevent *m) {
 int bjet_Multiplicity(myevent *m) {
     vector<myobject> mu_ = GoodMuon(m);
     vector<myobject> ele_ = GoodElectron(m);
-    vector<myobject> tau_ = GoodTau(m); // Loose HPS
+    vector<myobject> tau_ = GoodTau20GeV(m); // Loose HPS
     vector<myobject> jet = GoodJet(m);
 
     //    jet = m->RecPFJetsAK5;
@@ -251,7 +304,7 @@ vector <myobject> myCleanLepton(myevent *m, string lep) {
 
     vector<myobject> Muon_Vector = GoodMuon(m);
     vector<myobject> Electron_Vector = GoodElectron(m);
-    vector<myobject> Tau_Vector = GoodTau(m);
+    vector<myobject> Tau_Vector = GoodTau20GeV(m);
 
     //#####################  CleanMuon
     if (lep == "mu") {
@@ -390,6 +443,151 @@ vector <myobject> LeptonSubSet(myevent *m, string lep) {
 
 
 }
+
+bool Multi_Lepton_Veto(std::string channel, myevent * m) {
+
+    vector<myobject> mu_ = GoodMuon10GeV(m);
+    vector<myobject> electron_ = GoodElectron10GeV(m);
+
+
+    bool ThisIsNoExtraLepton = true;
+    if (channel == "MM") {
+        for (int i = 0; i < mu_.size(); i++) {
+            for (int j = i + 1; j < mu_.size(); j++) {
+                bool DiMu_Pt = mu_[i].pt > 15 && mu_[j].pt > 15;
+                bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
+                bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
+                bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
+                bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2;
+                bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
+
+                if (DiMu_Pt && DiMu_Eta && DiMu_Id && DiMu_Iso && DiMu_dZ && DiMu_charge)
+                    ThisIsNoExtraLepton = false;
+
+            }
+        }
+    }
+
+    if (channel == "MMM") {
+        for (int i = 0; i < mu_.size(); i++) {
+            for (int j = i + 1; j < mu_.size(); j++) {
+                for (int k = j + 1; k < mu_.size(); k++) {
+                    bool DiMu_Pt = mu_[i].pt > 15 && mu_[j].pt > 15;
+                    bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
+                    bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
+                    bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
+                    bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2;
+                    bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
+
+                    bool ThirdMu_Pt = mu_[k].pt > 10;
+                    bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
+                    bool ThirdMu_Id = Id_Mu_Tight(mu_[k]);
+                    bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
+
+                    if (DiMu_Pt && DiMu_Eta && DiMu_Id && DiMu_Iso && DiMu_dZ && DiMu_charge && ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso)
+                        ThisIsNoExtraLepton = false;
+                }
+            }
+        }
+    }
+
+    if (channel == "MME") {
+        for (int i = 0; i < mu_.size(); i++) {
+            for (int j = i + 1; j < mu_.size(); j++) {
+                for (int k = 0; k < electron_.size(); k++) {
+                    bool DiMu_Pt = mu_[i].pt > 15 && mu_[j].pt > 15;
+                    bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
+                    bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
+                    bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
+                    bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2;
+                    bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
+
+                    bool ThirdEl_Pt = electron_[k].pt > 10;
+                    bool ThirdEl_Eta = fabs(electron_[k].eta) < 2.5;
+                    bool ThirdEl_Id = EleMVANonTrigId_Loose(electron_[k]);
+                    bool ThirdEle_Iso = Iso_Ele_dBeta(electron_[k]) < 0.3;
+
+                    if (DiMu_Pt && DiMu_Eta && DiMu_Id && DiMu_Iso && DiMu_dZ && DiMu_charge && ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso)
+                        ThisIsNoExtraLepton = false;
+                }
+            }
+        }
+    }
+
+    if (channel == "EE") {
+        for (int i = 0; i < electron_.size(); i++) {
+            for (int j = i + 1; j < electron_.size(); j++) {
+                bool DiEl_Pt = electron_[i].pt > 15 && electron_[j].pt > 15;
+                bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
+                bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
+                bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
+                bool DiEl_dZ = electron_[i].dZ_in < 0.2 && electron_[j].dZ_in < 0.2;
+                bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
+
+                if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && DiEl_dZ && DiEl_charge)
+                    ThisIsNoExtraLepton = false;
+            }
+        }
+    }
+
+    if (channel == "EEE") {
+        for (int i = 0; i < electron_.size(); i++) {
+            for (int j = i + 1; j < electron_.size(); j++) {
+                for (int k = j + 1; k < electron_.size(); k++) {
+                    bool DiEl_Pt = electron_[i].pt > 15 && electron_[j].pt > 15;
+                    bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
+                    bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
+                    bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
+                    bool DiEl_dZ = electron_[i].dZ_in < 0.2 && electron_[j].dZ_in < 0.2;
+                    bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
+
+
+                    bool ThirdEl_Pt = electron_[k].pt > 10;
+                    bool ThirdEl_Eta = fabs(electron_[k].eta) < 2.5;
+                    bool ThirdEl_Id = EleMVANonTrigId_Loose(electron_[k]);
+                    bool ThirdEle_Iso = Iso_Ele_dBeta(electron_[k]) < 0.3;
+
+
+                    if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && DiEl_dZ && DiEl_charge && ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso)
+                        ThisIsNoExtraLepton = false;
+                }
+            }
+        }
+    }
+
+    if (channel == "EEM") {
+        for (int i = 0; i < electron_.size(); i++) {
+            for (int j = i + 1; j < electron_.size(); j++) {
+                for (int k = 0; k < mu_.size(); k++) {
+                    bool DiEl_Pt = electron_[i].pt > 15 && electron_[j].pt > 15;
+                    bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
+                    bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
+                    bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
+                    bool DiEl_dZ = electron_[i].dZ_in < 0.2 && electron_[j].dZ_in < 0.2;
+                    bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
+
+
+                    bool ThirdMu_Pt = mu_[k].pt > 10;
+                    bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
+                    bool ThirdMu_Id = Id_Mu_Tight(mu_[k]);
+                    bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
+
+
+                    if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && DiEl_dZ && DiEl_charge && ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso)
+                        ThisIsNoExtraLepton = false;
+                }
+            }
+        }
+    }
+
+
+
+    return ThisIsNoExtraLepton;
+
+
+
+}
+
 
 
 #endif	/* _GOODMUON_H */

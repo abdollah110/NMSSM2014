@@ -13,18 +13,18 @@ import shutil
 Run_Over = {
 
     ##### Unfiltered
-    1:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v2/53X/Data", "data11", "Ele", "25:00:00"),
-    2:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v2/53X/Data", "data11", "Mu",  "25:00:00"),
-    3:("/pnfs/iihe/cms/store/user/lperrini/ZHttNtuples_v2/42X/Data", "data11", "Ele", "25:00:00"),
-    4:("/pnfs/iihe/cms/store/user/lperrini/ZHttNtuples_v2/42X/Data", "data11", "Mu",  "25:00:00"),
-    5:("/pnfs/iihe/cms/store/user/abdollah/ZHttNtuples_v3/53X/Data", "data12", "Ele", "25:00:00"),
-    6:("/pnfs/iihe/cms/store/user/abdollah/ZHttNtuples_v3/53X/Data", "data12", "Mu", "25:00:00"),
-    7:("/pnfs/iihe/cms/store/user/jez/ZHttNtuples_v3/53X/Data", "data12", "Ele", "25:00:00"),
-    8:("/pnfs/iihe/cms/store/user/jez/ZHttNtuples_v3/53X/Data", "data12", "Mu", "25:00:00"),
-    9:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v2/53X/MC", "mc11", "Tot", "25:00:00"),
-    10:("/pnfs/iihe/cms/store/user/lperrini/ZHttNtuples_v2/42X/MC", "mc11", "Tot",  "45:00:00"),
-    11:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v3/53X/MC", "mc12", "Tot", "25:00:00"),
-    12:("/pnfs/iihe/cms/store/user/jez/ZHttNtuples_v3/53X/MC", "mc12", "Tot", "45:00:00"),
+#    1:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v2/53X/Data", "data11", "Ele", "25:00:00"),
+#    2:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v2/53X/Data", "data11", "Mu",  "25:00:00"),
+#    3:("/pnfs/iihe/cms/store/user/lperrini/ZHttNtuples_v2/42X/Data", "data11", "Ele", "25:00:00"),
+#    4:("/pnfs/iihe/cms/store/user/lperrini/ZHttNtuples_v2/42X/Data", "data11", "Mu",  "25:00:00"),
+#    5:("/pnfs/iihe/cms/store/user/abdollah/ZHttNtuples_v3/53X/Data", "data12", "Ele", "25:00:00"),
+#    6:("/pnfs/iihe/cms/store/user/abdollah/ZHttNtuples_v3/53X/Data", "data12", "Mu", "25:00:00"),
+#    7:("/pnfs/iihe/cms/store/user/jez/ZHttNtuples_v3/53X/Data", "data12", "Ele", "25:00:00"),
+#    8:("/pnfs/iihe/cms/store/user/jez/ZHttNtuples_v3/53X/Data", "data12", "Mu", "25:00:00"),
+#    9:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v2/53X/MC", "mc11", "Tot", "25:00:00"),
+#    10:("/pnfs/iihe/cms/store/user/lperrini/ZHttNtuples_v2/42X/MC", "mc11", "Tot",  "45:00:00"),
+#    11:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v3/53X/MC", "mc12", "Tot", "25:00:00"),
+    12:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "Tot", "04:00:00"),
 
     
 #   ##### Filtered
@@ -70,7 +70,7 @@ def make_submit_form(order, pnfn, data_year, lepton_type, timing):
         outFile.write(command1)
         #Make loop over the rootfiles in the given file
         for i in f.readlines():
-            command2 = "\n" + "./ZH_Analysis.exe " + data_year + " " + lepton_type + " "  + files[0:-1] + i[0:-1] + " " + dir + "/" + i[0:-1]
+            command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " " + lepton_type + " "  + files[0:-1] + i[0:-1] + " " + dir + "/" + i[0:-1]
             command2 = command2 + " \n" + " mv  " + data_year + "_" + lepton_type + "_" + files[0:-1] + i[0:-1] + "\t" + "Out_" + files[0:-1]
             command2 = command2 + " \n\n\n"
             outFile.write(command2)

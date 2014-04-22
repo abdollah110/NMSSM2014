@@ -48,7 +48,7 @@ float EAElectron(float eta) {
 
 //Muon PF Isolation
 
-float Iso_Mu_dBeta(myobject const& a) {
+float Iso_Mu_dBeta(myobject const& a) { //REVISITED
 
 
     //    float MuIsoTrk = a.pfIsoCharged; //has been changed at 19 April to be sync with inclusive H->tautau
@@ -133,11 +133,10 @@ bool Id_Mu_Loose(myobject const& a) {
 
 }
 
-bool Id_Mu_Tight(myobject const& a) {
+bool Id_Mu_Tight(myobject const& a) { // REVISITED
 
-    bool muPF = a.isPFMuon;
     bool muGlobal = a.isGlobalMuon;
-    bool muTracker = a.isTrackerMuon;
+    bool muPF = a.isPFMuon;
     float MuChi2 = a.normalizedChi2;
     int MuValHit = a.numberOfValidMuonHits;
     int numMatchStat = a.numMatchStation;
@@ -145,7 +144,9 @@ bool Id_Mu_Tight(myobject const& a) {
     int intrkLayerpixel_ = a.intrkLayerpixel;
     int trkLayerMeasure_ = a.trkLayerMeasure;
 
-    if (muPF && (muGlobal && muTracker) && MuChi2 < 10 && MuValHit > 0 && numMatchStat > 1 && a.dB < 0.2 && dZ_in < 0.5 && intrkLayerpixel_ > 0 && trkLayerMeasure_ > 5)
+    //    bool muTracker = a.isTrackerMuon;
+
+    if (muPF && muGlobal && MuChi2 < 10 && MuValHit > 0 && numMatchStat > 1 && a.dB < 0.2 && dZ_in < 0.5 && intrkLayerpixel_ > 0 && trkLayerMeasure_ > 5)
         return true;
     else
         return false;
@@ -155,53 +156,74 @@ bool Id_Mu_Tight(myobject const& a) {
 //https://twiki.cern.ch/twiki/bin/view/Main/HVVElectronId2012/
 //bool EleMVANonTrigId(float pt, float eta, float value){
 
-bool EleMVANonTrigId_Loose(myobject const& a) {
+bool EleMVANonTrigId_Loose(myobject const& a) { //REVISIED based on HTT groiup definition
     bool passingId = false;
     float pt = a.pt;
-    float eta = a.eta_SC;
+    float eta = fabs(a.eta_SC);
     float value = a.Id_mvaNonTrg;
 
-    //Similar to HZZ4L analysis
-    if (pt > 5. && pt < 10. && TMath::Abs(eta) < 0.8 && value > 0.47)
+
+    if (pt < 20. && eta < 0.8 && value > 0.925)
         passingId = true;
-    if (pt > 5. && pt < 10. && TMath::Abs(eta) >= 0.8 && TMath::Abs(eta) < 1.479 && value > 0.004)
+    if (pt < 20. && eta >= 0.8 && eta < 1.479 && value > 0.915)
         passingId = true;
-    if (pt > 5. && pt < 10. && TMath::Abs(eta) >= 1.479 && value > 0.295)
+    if (pt < 20. && eta >= 1.479 && value > 0.965)
+        passingId = true;
+    if (pt > 20. && eta < 0.8 && value > 0.905)
+        passingId = true;
+    if (pt > 20. && eta >= 0.8 && eta < 1.479 && value > 0.955)
+        passingId = true;
+    if (pt > 20. && eta >= 1.479 && value > 0.975)
         passingId = true;
 
-    if (pt > 10. && TMath::Abs(eta) < 0.8 && value > 0.5)
-        passingId = true;
-    if (pt > 10. && TMath::Abs(eta) >= 0.8 && TMath::Abs(eta) < 1.479 && value > 0.12)
-        passingId = true;
-    if (pt > 10. && TMath::Abs(eta) >= 1.479 && value > 0.6)
-        passingId = true;
+    bool numHit = a.numHitEleInner < 1;
+    bool ConversionVeto = a.passConversionVeto;
+    bool Ele_d0 = a.dxy_PV < 0.045; //the impact parameter in the transverse plane
+    bool Ele_dZ = a.dz_PV < 0.2; //the impact parameter in the transverse plane
 
-    bool numHit = a.numHitEleInner < 2;
-    return numHit && passingId;
+    return passingId && numHit && ConversionVeto && Ele_d0 && Ele_dZ;
 }
 
-bool EleMVANonTrigId_Tight(myobject const& a) {
+bool EleMVANonTrigId_Tight(myobject const& a) { //REVISIED based on HTT groiup definition
     bool passingId = false;
     float pt = a.pt;
-    float eta = a.eta_SC;
+    float eta = fabs(a.eta_SC);
     float value = a.Id_mvaNonTrg;
 
-    //Similar to HTT analysis
-    if (pt < 20. && TMath::Abs(eta) < 0.8 && value > 0.925)
+
+
+    if (pt > 20. && eta < 0.8 && value > 0.925)
         passingId = true;
-    if (pt < 20. && TMath::Abs(eta) >= 0.8 && TMath::Abs(eta) < 1.479 && value > 0.915)
+    if (pt > 20. && eta >= 0.8 && eta < 1.479 && value > 0.975)
         passingId = true;
-    if (pt < 20. && TMath::Abs(eta) >= 1.479 && value > 0.965)
+    if (pt > 20. && eta >= 1.479 && value > 0.985)
         passingId = true;
 
-    if (pt > 20. && TMath::Abs(eta) < 0.8 && value > 0.905)
-        passingId = true;
-    if (pt > 20. && TMath::Abs(eta) >= 0.8 && TMath::Abs(eta) < 1.479 && value > 0.955)
-        passingId = true;
-    if (pt > 20. && TMath::Abs(eta) >= 1.479 && value > 0.975)
-        passingId = true;
-    bool numHit = a.numHitEleInner < 2;
-    return numHit && passingId;
+    bool numHit = a.numHitEleInner < 1;
+    bool ConversionVeto = a.passConversionVeto;
+    bool Ele_d0 = a.dxy_PV < 0.045; //the impact parameter in the transverse plane
+    bool Ele_dZ = a.dz_PV < 0.2; //the impact parameter in the transverse plane
+
+    return passingId && numHit && ConversionVeto && Ele_d0 && Ele_dZ;
+}
+
+bool EleLooseForEtauVeto(myobject const& a) {
+
+    if (abs(a.dz_PV) >= 0.2) return false;
+
+    bool EB = fabs(a.eta_SC) < 1.479;
+    bool EE = fabs(a.eta_SC) >= 1.479;
+
+    float hoe = a.HoverE;
+    float deta = abs(a.deltaEtaSuperClusterTrackAtVtx);
+    float dphi = abs(a.deltaPhiSuperClusterTrackAtVtx);
+    float sihih = a.sigmaIetaIeta;
+
+    if (EB && sihih < 0.010 && dphi < 0.80 && deta < 0.007 && hoe < 0.15) return true;
+    else if (EE && sihih < 0.030 && dphi < 0.70 && deta < 0.010 && hoe < 0.07) return true;
+    else return false;
+
+
 }
 
 bool getTauIsolation(std::string channel, myobject const& a) {
@@ -229,7 +251,8 @@ bool getEleRejection(std::string channel, myobject const& a) {
     }
     if (channel == "mmet" || channel == "eeet") {
         //        if (a.discriminationByElectronMVA2Tight) //changed in 19April
-        if (a.discriminationByElectronMVA3Tight)
+        //        if (a.discriminationByElectronMVA3Tight)
+        if (a.discriminationByElectronMVA5Tight) // There is no 3 ???? but 5
             return true;
         else
             return false;
@@ -252,6 +275,8 @@ bool getMuRejection(std::string channel, myobject const& a) {
     }
 
 }
+
+
 
 
 #endif
