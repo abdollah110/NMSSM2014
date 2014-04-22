@@ -209,14 +209,14 @@ bool EleMVANonTrigId_Tight(myobject const& a) { //REVISIED based on HTT groiup d
 
 bool EleLooseForEtauVeto(myobject const& a) {
 
-    if (abs(a.dz_PV) >= 0.2) return false;
+    if (fabs(a.dz_PV) >= 0.2) return false;
 
     bool EB = fabs(a.eta_SC) < 1.479;
     bool EE = fabs(a.eta_SC) >= 1.479;
 
     float hoe = a.HoverE;
-    float deta = abs(a.deltaEtaSuperClusterTrackAtVtx);
-    float dphi = abs(a.deltaPhiSuperClusterTrackAtVtx);
+    float deta = fabs(a.deltaEtaSuperClusterTrackAtVtx);
+    float dphi = fabs(a.deltaPhiSuperClusterTrackAtVtx);
     float sihih = a.sigmaIetaIeta;
 
     if (EB && sihih < 0.010 && dphi < 0.80 && deta < 0.007 && hoe < 0.15) return true;

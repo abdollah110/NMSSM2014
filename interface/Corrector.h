@@ -325,7 +325,7 @@ double eff2012IsoTau19fbMC_Simone(double pt, double eta) {
 }
 
 double eff2012Jet19fb(double pt, double eta) {
-    return (abs(eta) <= 2.1)*
+    return (fabs(eta) <= 2.1)*
             ((808.411 * (0.99212 * 0.5 * (TMath::Erf((pt - 31.3706) / 2. / 1.22821 / sqrt(pt)) + 1.))
             + 4428.0 * (0.99059 * 0.5 * (TMath::Erf((pt - 32.1104) / 2. / 1.23292 / sqrt(pt)) + 1.))
             + 1783.003 * (0.988256 * 0.5 * (TMath::Erf((pt - 31.3103) / 2. / 1.18766 / sqrt(pt)) + 1.))
@@ -333,7 +333,7 @@ double eff2012Jet19fb(double pt, double eta) {
             + 4131. * (0.989049 * 0.5 * (TMath::Erf((pt - 31.9836) / 2. / 1.23871 / sqrt(pt)) + 1.))
             + 3143. * (0.988047 * 0.5 * (TMath::Erf((pt - 31.6975) / 2. / 1.25372 / sqrt(pt)) + 1.)))
             / (808.411 + 4428.0 + 1783.003 + 5109.155 + 4131 + 3143))+
-            (abs(eta) > 2.1)*
+            (fabs(eta) > 2.1)*
             ((808.411 * (0.969591 * 0.5 * (TMath::Erf((pt - 36.8179) / 2. / 0.904254 / sqrt(pt)) + 1.))
             + 4428.0 * (0.975932 * 0.5 * (TMath::Erf((pt - 37.2121) / 2. / 0.961693 / sqrt(pt)) + 1.))
             + 1783.003 * (0.990305 * 0.5 * (TMath::Erf((pt - 36.3096) / 2. / 0.979524 / sqrt(pt)) + 1.))
