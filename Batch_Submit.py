@@ -24,7 +24,8 @@ Run_Over = {
 #    9:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v2/53X/MC", "mc11", "Tot", "25:00:00"),
 #    10:("/pnfs/iihe/cms/store/user/lperrini/ZHttNtuples_v2/42X/MC", "mc11", "Tot",  "45:00:00"),
 #    11:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v3/53X/MC", "mc12", "Tot", "25:00:00"),
-    12:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "Tot", "04:00:00"),
+    12:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "Mu", "04:00:00"),
+    13:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "Ele", "04:00:00"),
 
     
 #   ##### Filtered

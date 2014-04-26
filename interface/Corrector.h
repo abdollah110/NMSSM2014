@@ -305,8 +305,8 @@ double eff2012IsoTau19fb_Simone(double pt, double eta) {
                 + 4428.0 * (0.75721 * 0.5 * (TMath::Erf((pt - 39.0836) / 2. / 1.07753 / sqrt(pt)) + 1.)) // 2012B
                 + 6892.158 * (0.791464 * 0.5 * (TMath::Erf((pt - 38.4932) / 2. / 1.01232 / sqrt(pt)) + 1.)) // 2012C measured in v2 only
                 + 7274. * (0.779446 * 0.5 * (TMath::Erf((pt - 38.4603) / 2. / 1.01071 / sqrt(pt)) + 1.))) // 2012D measured in one go
-        / (808.411 + 4428.0 + 6892.158 + 7274.);
-//                if(a.pt >= 17 && a.pt < 20 && fabs(a.eta) < 0.8) return;
+                / (808.411 + 4428.0 + 6892.158 + 7274.);
+        //                if(a.pt >= 17 && a.pt < 20 && fabs(a.eta) < 0.8) return;
     } else {
         return ( 808.411 * (0.764166 * 0.5 * (TMath::Erf((pt - 33.2236) / 2. / 0.97289 / sqrt(pt)) + 1.)) // 2012A by Bastian not split in eta
                 + 4428.0 * (0.693788 * 0.5 * (TMath::Erf((pt - 37.7719) / 2. / 1.09202 / sqrt(pt)) + 1.)) // 2012B
@@ -351,7 +351,7 @@ float getCorrFactor(std::string channel, std::string type, myobject const& a, my
         if (channel == "emu") {
             return (Cor_IDIso_EMu_Ele_2012(b) * Cor_IDIso_EMu_Mu_2012(a) * Corr_EMuTrg_MuLeg_2012(a) * Corr_EMuTrg_EleLeg_2012(b));
         }
-        if (channel == "etau") {
+        if (channel == "eltau") {
             return (Eff_ETauTrg_Ele_Data_2012(a) / Eff_ETauTrg_Ele_MC_2012(a))*(Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)) * Cor_IDIso_ETau_Ele_2012(a);
         }
         if (channel == "mutau") {
@@ -368,6 +368,50 @@ float getCorrFactor(std::string channel, std::string type, myobject const& a, my
     else return 1;
 
 }
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+float getCorrTriggerLep(std::string channel, std::string type, myobject const& a) {
+
+    if (type == "mc12") {
+
+        if (channel == "eltau") {
+            return (Eff_ETauTrg_Ele_Data_2012(a) / Eff_ETauTrg_Ele_MC_2012(a));
+        }
+        if (channel == "mutau") {
+            return (Eff_MuTauTrg_Mu_Data_2012(a) / Eff_MuTauTrg_Mu_MC_2012(a));
+        }
+    } else if (type == "data11" || type == "data12")
+        return 1;
+    else return 1;
+
+}
+
+float getCorrTriggerTau(std::string channel, std::string type, myobject const& b) {
+
+    if (type == "mc12") {
+        return ((Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)));
+    } else
+        return 1;
+}
+
+
+float getCorrIdIsoLep(std::string channel, std::string type, myobject const& a) {
+
+    if (type == "mc12") {
+
+        if (channel == "eltau") {
+            return Cor_IDIso_ETau_Ele_2012(a);
+        }
+        if (channel == "mutau") {
+            return  Cor_IDIso_MuTau_Muon_2012(a);
+        }
+    } else if (type == "data11" || type == "data12")
+        return 1;
+    else return 1;
+
+}
+
+
 
 
 

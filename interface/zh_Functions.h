@@ -110,52 +110,52 @@ vector<float> Find_Closet_Jet(myobject const& a, myevent *m) {
     return JetInfo;
 }
 
-bool WZ_Rej(myevent *m, myobject const& a) {
-    vector<myobject> Met = m->RecMVAMet;
-    //    bool met = Met.front().pt < 20;
-    bool tmass = TMass(a, Met.front()) < 30;
+//bool WZ_Rej(myevent *m, myobject const& a) {
+//    vector<myobject> Met = m->RecMVAMet;
+//    //    bool met = Met.front().pt < 20;
+//    bool tmass = TMass(a, Met.front()) < 30;
+//
+//    //    if (met && tmass) //changed in 19 April
+//    if (tmass)
+//        return true;
+//    else
+//        return false;
+//
+//
+//}
 
-    //    if (met && tmass) //changed in 19 April
-    if (tmass)
-        return true;
-    else
-        return false;
+//double jet_HT(myevent *m) {
+//    vector<myobject> jet;
+//    jet = m->RecPFJetsAK5;
+//    double ht_jet = 0;
+//    //    for (int k = 0; k < jet.size(); k++) {
+//    //        if (jet[k].pt > 10 && jet[k].eta < 3.0) {
+//    //            ht_jet = ht_jet + jet[k].pt;
+//    //        }
+//    //    }
+//    return ht_jet;
+//}
 
-
-}
-
-double jet_HT(myevent *m) {
-    vector<myobject> jet;
-    jet = m->RecPFJetsAK5;
-    double ht_jet = 0;
-    //    for (int k = 0; k < jet.size(); k++) {
-    //        if (jet[k].pt > 10 && jet[k].eta < 3.0) {
-    //            ht_jet = ht_jet + jet[k].pt;
-    //        }
-    //    }
-    return ht_jet;
-}
-
-float getSumPtCut(std::string channel, myobject const& a, myobject const& b, myobject const& c, myobject const& d) {
-
-    // return 1;
-
-
-
-    if (channel == "mmtt" || channel == "eett") {
-        return (c.pt + d.pt > 75);
-    }
-    if (channel == "mmmt" || channel == "eemt") {
-        return (c.pt + d.pt > 55);
-    }
-    if (channel == "mmet" || channel == "eeet") {
-        return (c.pt + d.pt > 45);
-    }
-    if (channel == "mmme" || channel == "eeem") {
-        return (c.pt + d.pt > 25);
-    }
-
-}
+//float getSumPtCut(std::string channel, myobject const& a, myobject const& b, myobject const& c, myobject const& d) {
+//
+//    // return 1;
+//
+//
+//
+//    if (channel == "mmtt" || channel == "eett") {
+//        return (c.pt + d.pt > 75);
+//    }
+//    if (channel == "mmmt" || channel == "eemt") {
+//        return (c.pt + d.pt > 55);
+//    }
+//    if (channel == "mmet" || channel == "eeet") {
+//        return (c.pt + d.pt > 45);
+//    }
+//    if (channel == "mmme" || channel == "eeem") {
+//        return (c.pt + d.pt > 25);
+//    }
+//
+//}
 
 
 

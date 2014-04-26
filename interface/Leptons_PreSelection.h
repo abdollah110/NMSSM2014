@@ -47,6 +47,20 @@ struct myobject_sort_Phi {
     }
 };
 
+struct myobject_sort_TauIsolation {
+
+    bool operator ()(myobject const& a, myobject const& b) const {
+        return (a.byRawCombinedIsolationDeltaBetaCorr3Hits < b.byRawCombinedIsolationDeltaBetaCorr3Hits);
+    }
+};
+
+struct myobject_sort_BTagging {
+
+    bool operator ()(myobject const& a, myobject const& b) const {
+        return (a.bDiscriminatiors_CSV > b.bDiscriminatiors_CSV);
+    }
+};
+
 
 
 float looseIsolation = 0.30;
@@ -172,7 +186,22 @@ vector<myobject> GoodTau20GeV(myevent *m) {
     //            goodHPSTau.push_back(tau[i]);
     //    }
 
-    sort(goodHPSTau.begin(), goodHPSTau.end(), myobject_grt());
+    sort(goodHPSTau.begin(), goodHPSTau.end(), myobject_sort_TauIsolation());
+    return goodHPSTau;
+}
+
+vector<myobject> GoodTau(myevent *m) {
+
+    vector<myobject> goodHPSTau;
+    vector<myobject> tau = GoodTau20GeV(m);
+    for (int i = 0; i < tau.size(); i++) {
+
+        if (tau[i].pt > 15 && TMath::Abs(tau[i].eta) < 2.3 &&
+                tau[i].discriminationByDecayModeFinding && tau[i].byLooseCombinedIsolationDeltaBetaCorr3Hits)
+            goodHPSTau.push_back(tau[i]);
+    }
+
+    sort(goodHPSTau.begin(), goodHPSTau.end(), myobject_sort_TauIsolation());
     return goodHPSTau;
 }
 //vector<myobject> GoodTau(myevent *m) {
@@ -215,76 +244,68 @@ vector<myobject> NoIsoTau(myevent *m) {
 //******************************************************************************************
 //******************************************************************************************
 
+bool NonOverLapWithMuEle(myevent *m, myobject const& a) {
+    vector<myobject> mu_ = GoodMuon(m);
+    vector<myobject> ele_ = GoodElectron(m);
+    vector<myobject> tau_ = GoodTau20GeV(m); // Loose HPS
+    bool Nooverlap = true;
+
+    for (int p = 0; p < mu_.size(); p++) {
+        if (deltaR(a, mu_[p]) < 0.4)
+            Nooverlap = false;
+    }
+    for (int q = 0; q < ele_.size(); q++) {
+        if (deltaR(a, ele_[q]) < 0.4)
+            Nooverlap = false;
+    }
+    for (int r = 0; r < tau_.size(); r++) {
+        if (deltaR(a, tau_[r]) < 0.4)
+            Nooverlap = false;
+    }
+    return Nooverlap;
+}
+
 vector<myobject> GoodJet(myevent *m) {
 
     vector<myobject> goodJet;
     vector<myobject> Jet = m->RecPFJetsAK5;
+
     for (int i = 0; i < Jet.size(); i++) {
-        float JetPt = Jet[i].pt;
-        float JetEta = Jet[i].eta;
-        if (JetPt > 10 && TMath::Abs(JetEta) < 5.0)
-            goodJet.push_back(Jet[i]);
+        if (Jet[i].pt > 0 && TMath::Abs(Jet[i].eta) < 4.7) {
+            if (NonOverLapWithMuEle(m, Jet[i])) goodJet.push_back(Jet[i]);
+        }
     }
     sort(goodJet.begin(), goodJet.end(), myobject_grt());
     return goodJet;
 }
 
-//inline float deltaPhi(myobject const& a, myobject const& b) {
-//    float result = a.phi - b.phi;
-//    while (result > M_PI) result -= 2 * M_PI;
-//    while (result <= -M_PI) result += 2 * M_PI;
-//    return TMath::Abs(result);
-//}
-//
-//inline float deltaR2(myobject const& a, myobject const& b) {
-//    float deta = a.eta - b.eta;
-//    float dphi = deltaPhi(a, b);
-//    return deta * deta + dphi*dphi;
-//}
-////inline float deltaR2(float eta1, float phi1, float eta2, float phi2) {
-////    float deta = eta1 - eta2;
-////    float dphi = deltaPhi(phi1, phi2);
-////    return deta * deta + dphi*dphi;
-////}
-//
-//inline float deltaR(myobject const& a, myobject const& b) {
-//    return sqrt(deltaR2(a, b));
-//}
+vector<myobject> GoodJet20(myevent *m) {
 
-int bjet_Multiplicity(myevent *m) {
-    vector<myobject> mu_ = GoodMuon(m);
-    vector<myobject> ele_ = GoodElectron(m);
-    vector<myobject> tau_ = GoodTau20GeV(m); // Loose HPS
-    vector<myobject> jet = GoodJet(m);
+    vector<myobject> goodJet;
+    vector<myobject> Jet = m->RecPFJetsAK5;
 
-    //    jet = m->RecPFJetsAK5;
-    int num_bj = 0;
+    for (int i = 0; i < Jet.size(); i++) {
+        if (Jet[i].pt > 20 && TMath::Abs(Jet[i].eta) < 4.7) {
+            if (NonOverLapWithMuEle(m, Jet[i])) goodJet.push_back(Jet[i]);
+        }
+    }
+    sort(goodJet.begin(), goodJet.end(), myobject_grt());
+    return goodJet;
+}
+
+vector<myobject> GoodbJet20(myevent *m) {
+
+    vector<myobject> goodbJet;
+    vector<myobject> jet = GoodJet20(m);
+
     //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
     for (int k = 0; k < jet.size(); k++) {
-        //        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.898) { //changed on 19April
         if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.679) {
-            bool Nooverlap = true;
-
-            for (int p = 0; p < mu_.size(); p++) {
-                if (deltaR(jet[k], mu_[p]) < 0.4)
-                    Nooverlap = false;
-            }
-            for (int q = 0; q < ele_.size(); q++) {
-                if (deltaR(jet[k], ele_[q]) < 0.4)
-                    Nooverlap = false;
-            }
-            /*
-            for (int r = 0; r < tau_.size(); r++) {
-                       if (deltaR(jet[k], tau_[r]) < 0.4)
-                           Nooverlap = false;
-                   }
-             */
-            if (Nooverlap) num_bj++;
+            if (NonOverLapWithMuEle(m, jet[k])) goodbJet.push_back(jet[k]);
         }
-
     }
-
-    return num_bj;
+    sort(goodbJet.begin(), goodbJet.end(), myobject_sort_BTagging());
+    return goodbJet;
 }
 
 //*********************************************************************************************
@@ -592,3 +613,62 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
 
 #endif	/* _GOODMUON_H */
 
+
+
+
+//
+//
+//skimOutput_14_1_FHP.root
+//skimOutput_1_1_vtr.root
+//skimOutput_6_1_dbC.root
+//skimOutput_15_1_hGi.root
+//skimOutput_11_1_Qay.root
+//skimOutput_26_1_oPQ.root
+//skimOutput_123_1_k1C.root
+//skimOutput_149_1_Brf.root
+//skimOutput_138_1_m7N.root
+//skimOutput_108_1_Kdt.root
+//skimOutput_174_1_l0o.root
+//skimOutput_135_1_d0X.root
+//skimOutput_147_1_5P1.root
+//skimOutput_197_1_9uM.root
+//skimOutput_189_1_3jh.root
+//skimOutput_55_1_dEV.root
+//skimOutput_205_1_snV.root
+//skimOutput_20_1_15p.root
+//skimOutput_196_1_WPR.root
+//skimOutput_124_1_LDG.root
+//skimOutput_167_1_kex.root
+//skimOutput_251_1_lio.root
+//skimOutput_42_1_v3J.root
+//skimOutput_27_1_UIP.root
+//skimOutput_49_1_TNI.root
+//skimOutput_316_1_AeL.root
+//skimOutput_303_1_xjg.root
+//skimOutput_330_1_RoS.root
+//skimOutput_248_1_1l1.root
+//skimOutput_237_1_wsA.root
+//skimOutput_155_1_EMZ.root
+//skimOutput_311_1_NKp.root
+//skimOutput_231_1_LpL.root
+//skimOutput_353_1_gjq.root
+//skimOutput_481_1_O6d.root
+//
+//
+//
+//
+//
+//15535192026 10:03 skimOutput_14_1_aNY.root
+//15495146126 10:08 skimOutput_15_1_b6b.root
+//15327723326 10:10 skimOutput_6_1_ZSj.root
+//14284175626 10:15 skimOutput_11_1_WkA.root
+//15179004126 10:49 skimOutput_1_1_2Ko.root
+//13336873226 12:09 skimOutput_174_1_JzW.root
+//13561739726 12:12 skimOutput_189_1_nc3.root
+//17910126226 12:12 skimOutput_147_1_4Ws.root
+//15283154426 12:13 skimOutput_149_1_ZfO.root
+//14576044426 12:14 skimOutput_197_1_2HB.root
+//15998551926 12:16 skimOutput_124_1_LBb.root
+//15075548126 12:17 skimOutput_138_1_S83.root
+//14974771226 12:22 skimOutput_108_1_OBv.root
+//15999781026 12:25 skimOutput_123_1_rD7.root
