@@ -49,7 +49,8 @@ def make_submit_form(order, pnfn, data_year, lepton_type, timing):
 
     location = os.getcwd()
     location = location.replace("/localgrid_mnt", "") #nedd to remove the first part of address while submitting
-    Sample = os.popen(("ls " + pnfn + " | sort | grep " + lepton_type))
+#    Sample = os.popen(("ls " + pnfn + " | sort | grep " + lepton_type))
+    Sample = os.popen(("ls " + pnfn + " | sort "))
     if lepton_type == "Tot":
         Sample = os.popen(("ls " + pnfn + " | sort "))
     #output name, one for submitting jobs, one for hadding root files
