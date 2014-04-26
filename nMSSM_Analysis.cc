@@ -245,10 +245,10 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("metcov10", &metcov10, "metcov10/F");
     Run_Tree->Branch("metcov11", &metcov11, "metcov11/F");
 
-    Run_Tree->Branch("mvametcov00", &mvametcov00, "mvametcov00/F");
-    Run_Tree->Branch("mvametcov01", &mvametcov01, "mvametcov01/F");
-    Run_Tree->Branch("mvametcov10", &mvametcov10, "mvametcov10/F");
-    Run_Tree->Branch("mvametcov11", &mvametcov11, "mvametcov11/F");
+    Run_Tree->Branch("mvacov00", &mvacov00, "mvacov00/F");
+    Run_Tree->Branch("mvacov01", &mvacov01, "mvacov01/F");
+    Run_Tree->Branch("mvacov10", &mvacov10, "mvacov10/F");
+    Run_Tree->Branch("mvacov11", &mvacov11, "mvacov11/F");
 
     Run_Tree->Branch("npv", &num_PV, "npv/I");
     Run_Tree->Branch("npu", &npu, "npu/I"); // NNNEW
@@ -494,7 +494,7 @@ int main(int argc, char** argv) {
                 //##############################################################################
                 // eltau
                 //##############################################################################
-                std::string ThisChannel = "mutau";
+                std::string ThisChannel = "eltau";
                 int eltau = -1;
                 plotFill("eltau", ++eltau, 20, 0., 20.);
                 if (Trigger) {

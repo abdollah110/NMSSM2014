@@ -265,18 +265,15 @@ bool NonOverLapWithMuEle(myevent *m, myobject const& a) {
     return Nooverlap;
 }
 
-vector<myobject> GoodJet(myevent *m) {
+bool NonOverLapWithAB(myobject const& obj1, myobject const& obj2, myobject const& jet) {
+    bool Nooverlap = true;
 
-    vector<myobject> goodJet;
-    vector<myobject> Jet = m->RecPFJetsAK5;
 
-    for (int i = 0; i < Jet.size(); i++) {
-        if (Jet[i].pt > 0 && TMath::Abs(Jet[i].eta) < 4.7) {
-            if (NonOverLapWithMuEle(m, Jet[i])) goodJet.push_back(Jet[i]);
-        }
-    }
-    sort(goodJet.begin(), goodJet.end(), myobject_grt());
-    return goodJet;
+    if (deltaR(obj1, jet) < 0.5 || deltaR(obj2, jet) < 0.5)
+        Nooverlap = false;
+
+
+    return Nooverlap;
 }
 
 vector<myobject> GoodJet20(myevent *m) {
@@ -286,14 +283,29 @@ vector<myobject> GoodJet20(myevent *m) {
 
     for (int i = 0; i < Jet.size(); i++) {
         if (Jet[i].pt > 20 && TMath::Abs(Jet[i].eta) < 4.7) {
-            if (NonOverLapWithMuEle(m, Jet[i])) goodJet.push_back(Jet[i]);
+            goodJet.push_back(Jet[i]);
         }
     }
     sort(goodJet.begin(), goodJet.end(), myobject_grt());
     return goodJet;
 }
 
-vector<myobject> GoodbJet20(myevent *m) {
+vector<myobject> GoodJet30(myevent *m, myobject const& a, myobject const& b) {
+
+    vector<myobject> goodJet;
+    vector<myobject> Jet = GoodJet20(m);
+
+    for (int i = 0; i < Jet.size(); i++) {
+        if (Jet[i].pt > 30 && TMath::Abs(Jet[i].eta) < 4.7) {
+            //            if (NonOverLapWithMuEle(m, Jet[i])) goodJet.push_back(Jet[i]);
+            if (NonOverLapWithAB(a, b, Jet[i])) goodJet.push_back(Jet[i]);
+        }
+    }
+    sort(goodJet.begin(), goodJet.end(), myobject_grt());
+    return goodJet;
+}
+
+vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b) {
 
     vector<myobject> goodbJet;
     vector<myobject> jet = GoodJet20(m);
@@ -301,10 +313,11 @@ vector<myobject> GoodbJet20(myevent *m) {
     //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
     for (int k = 0; k < jet.size(); k++) {
         if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.679) {
-            if (NonOverLapWithMuEle(m, jet[k])) goodbJet.push_back(jet[k]);
+            //            if (NonOverLapWithMuEle(m, jet[k])) goodbJet.push_back(jet[k]);
+            if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
         }
     }
-    sort(goodbJet.begin(), goodbJet.end(), myobject_sort_BTagging());
+    sort(goodbJet.begin(), goodbJet.end(), myobject_grt());
     return goodbJet;
 }
 
@@ -481,8 +494,9 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
                 bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
                 bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2;
                 bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
+                bool DiMu_dR = deltaR(mu_[i], mu_[j]) > 0.15;
 
-                if (DiMu_Pt && DiMu_Eta && DiMu_Id && DiMu_Iso && DiMu_dZ && DiMu_charge)
+                if (DiMu_Pt && DiMu_Eta && DiMu_Id && DiMu_Iso && DiMu_dZ && DiMu_charge && DiMu_dR)
                     ThisIsNoExtraLepton = false;
 
             }
@@ -544,8 +558,9 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
                 bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
                 bool DiEl_dZ = electron_[i].dZ_in < 0.2 && electron_[j].dZ_in < 0.2;
                 bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
+                bool DiEl_dR = deltaR(electron_[i], electron_[j]) > 0.15;
 
-                if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && DiEl_dZ && DiEl_charge)
+                if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && DiEl_dZ && DiEl_charge && DiEl_dR)
                     ThisIsNoExtraLepton = false;
             }
         }

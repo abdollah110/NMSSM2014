@@ -56,7 +56,7 @@ bool l2_tauIsoL, l2_tauIsoM, l2_tauIsoT, l2_tauRejMuL, l2_tauRejMuM, l2_tauRejMu
 bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu2L, l2_tauRejMu2M, l2_tauRejMu2T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
 bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T;
 
-float mvametcov00, mvametcov01, mvametcov10, mvametcov11;
+float mvacov00, mvacov01, mvacov10, mvacov11;
 float metcov00, metcov01, metcov10, metcov11;
 float eff_Correction, pu_Weight;
 int num_PV, num_bjet, num_goodjet, npu, mcdata;
@@ -148,10 +148,10 @@ void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string
     //  ########## ########## ########## ########## ########## ##########
     vector<myobject> MVAMet = m->RecMVAMet;
     vector<myobject> PFMet = m->RecPFMet;
-    mvametcov00 = m->MVAMet_sigMatrix_00;
-    mvametcov01 = m->MVAMet_sigMatrix_01;
-    mvametcov10 = m->MVAMet_sigMatrix_10;
-    mvametcov11 = m->MVAMet_sigMatrix_11;
+    mvacov00 = m->MVAMet_sigMatrix_00;
+    mvacov01 = m->MVAMet_sigMatrix_01;
+    mvacov10 = m->MVAMet_sigMatrix_10;
+    mvacov11 = m->MVAMet_sigMatrix_11;
     metcov00 = m->MET_sigMatrix_00;
     metcov01 = m->MET_sigMatrix_01;
     metcov10 = m->MET_sigMatrix_10;
@@ -167,11 +167,11 @@ void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string
     //  ########## ########## ########## ########## ########## ##########
     //  Jet Information
     //  ########## ########## ########## ########## ########## ##########
-    vector<myobject> JETS = GoodJet20(m);
-    vector<myobject> BJETS = GoodbJet20(m);
+    vector<myobject> JETS = GoodJet30(m, obj1, obj2);
+    vector<myobject> BJETS = GoodbJet20(m, obj1, obj2);
 
-    njets = GoodJet(m).size();
-    njetpt20 = JETS.size();
+    njetpt20 = GoodJet20(m).size();
+    njets = JETS.size();
     nbtag = BJETS.size();
 
     jpt_1 = (JETS.size() > 0 ? JETS[0].pt : -1000);
@@ -196,19 +196,19 @@ void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string
     bphi_2 = (BJETS.size() > 1 ? BJETS[1].phi : -1000);
     bdiscriminant_2 = (BJETS.size() > 1 ? BJETS[1].bDiscriminatiors_CSV : -1000);
 
-    mjj = (GoodJet20(m).size() > 1 ? InvarMass_2(JETS[0], JETS[1]) : -1000);
-    jdeta = (GoodJet20(m).size() > 1 ? JETS[0].eta - JETS[1].eta : -1000);
-    jdphi = (GoodJet20(m).size() > 1 ? deltaPhi(JETS[0], JETS[1]) : -1000);
+    mjj = (JETS.size() > 1 ? InvarMass_2(JETS[0], JETS[1]) : -1000);
+    jdeta = (JETS.size() > 1 ? JETS[0].eta - JETS[1].eta : -1000);
+    jdphi = (JETS.size() > 1 ? deltaPhi(JETS[0], JETS[1]) : -1000);
     TLorentzVector LorJet1;
     TLorentzVector LorJet2;
     TLorentzVector LorJetTot;
-    if (GoodJet20(m).size() > 1) {
+    if (JETS.size() > 1) {
         LorJet1.SetPtEtaPhiE(JETS[0].pt, JETS[0].eta, JETS[0].phi, JETS[0].E);
         LorJet2.SetPtEtaPhiE(JETS[1].pt, JETS[1].eta, JETS[1].phi, JETS[1].E);
         LorJetTot = LorJet1 + LorJet2;
     }
-    jetpt = (GoodJet20(m).size() > 1 ? LorJetTot.Pt() : -1000);
-    dijetphi = (GoodJet20(m).size() > 1 ? LorJetTot.Phi() : -1000);
+    jetpt = (JETS.size() > 1 ? LorJetTot.Pt() : -1000);
+    dijetphi = (JETS.size() > 1 ? LorJetTot.Phi() : -1000);
 
 
 

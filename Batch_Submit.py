@@ -63,7 +63,7 @@ def make_submit_form(order, pnfn, data_year, lepton_type, timing):
     for files in Sample.readlines():
         f = os.popen("ls " + pnfn + "/" + files[0:-1] + " | sort")
         dir = "dcap://maite.iihe.ac.be" + pnfn + "/" + files[0:-1] + "/"
-        name_out = "__" + data_year + "_" + files[0:-1] + ".sh"
+        name_out = "__" + data_year + "_" + lepton_type + "_" + files[0:-1] + ".sh"
         outFile = open(name_out, 'w')
         command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
         command1 = command1 + "cd " + location + "\n"
@@ -90,16 +90,16 @@ def make_submit_form(order, pnfn, data_year, lepton_type, timing):
 if __name__ == "__main__":
     for i in Run_Over:
         R1, R2, R3, R4 = Run_Over[i]
-        print "preparing the submission files for-->  " + R1+R2+R3
+        print "preparing the submission files for-->  " + R1 + R2 + R3
 	make_submit_form(str(i), R1, R2, R3, R4)
 
     maindir = 'ROOT'
-    dirs = ['data11','data12','mc11','mc12']
+    dirs = ['data11', 'data12', 'mc11', 'mc12']
     if  os.path.exists(maindir):
 	shutil.rmtree(maindir)
     for i in dirs:
-	if not os.path.exists(maindir+"/"+i):
-		os.makedirs(maindir+'/'+i)
+	if not os.path.exists(maindir + "/" + i):
+            os.makedirs(maindir + '/' + i)
     	     
     _Total = open('Do_total.txt', 'w')	     
     command = "rm TotalSubmit.sh\n"

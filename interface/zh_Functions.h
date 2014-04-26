@@ -86,7 +86,7 @@ double H_Pt(myobject const& a, myobject const& b, myobject const& c, myobject co
 vector<float> Find_Closet_Jet(myobject const& a, myevent *m) {
     vector <float> JetInfo;
     JetInfo.clear();
-    vector<myobject> Jet = GoodJet(m);
+    vector<myobject> Jet = GoodJet20(m);
     double fake_Pt = a.pt;
     double fake_Eta = a.eta;
     double fake_Phi = a.phi;
