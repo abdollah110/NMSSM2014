@@ -282,7 +282,7 @@ vector<myobject> GoodJet20(myevent *m) {
     vector<myobject> Jet = m->RecPFJetsAK5;
 
     for (int i = 0; i < Jet.size(); i++) {
-        if (Jet[i].pt > 20 && TMath::Abs(Jet[i].eta) < 4.7) {
+        if (Jet[i].pt > 20 && TMath::Abs(Jet[i].eta) < 4.7 && Jet[i].puJetIdLoose > 0.5) {
             goodJet.push_back(Jet[i]);
         }
     }
@@ -296,7 +296,7 @@ vector<myobject> GoodJet30(myevent *m, myobject const& a, myobject const& b) {
     vector<myobject> Jet = GoodJet20(m);
 
     for (int i = 0; i < Jet.size(); i++) {
-        if (Jet[i].pt > 30 && TMath::Abs(Jet[i].eta) < 4.7) {
+        if (Jet[i].pt > 30 && TMath::Abs(Jet[i].eta) < 4.7  && Jet[i].puJetIdLoose > 0.5) {
             //            if (NonOverLapWithMuEle(m, Jet[i])) goodJet.push_back(Jet[i]);
             if (NonOverLapWithAB(a, b, Jet[i])) goodJet.push_back(Jet[i]);
         }

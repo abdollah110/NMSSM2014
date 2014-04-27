@@ -197,7 +197,7 @@ void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string
     bdiscriminant_2 = (BJETS.size() > 1 ? BJETS[1].bDiscriminatiors_CSV : -1000);
 
     mjj = (JETS.size() > 1 ? InvarMass_2(JETS[0], JETS[1]) : -1000);
-    jdeta = (JETS.size() > 1 ? JETS[0].eta - JETS[1].eta : -1000);
+    jdeta = (JETS.size() > 1 ? fabs(JETS[0].eta - JETS[1].eta) : -1000);
     jdphi = (JETS.size() > 1 ? deltaPhi(JETS[0], JETS[1]) : -1000);
     TLorentzVector LorJet1;
     TLorentzVector LorJet2;
