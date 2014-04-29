@@ -157,7 +157,7 @@
 #include "DataFormats/PatCandidates/interface/MET.h"
 
 
-#include "Analysis/NtupleProducer/interface/myevent.h"
+#include "NtupleProducer2014/Analysis/interface/myevent.h"
 #include "DataFormats/Common/interface/ValueMap.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
@@ -198,6 +198,7 @@ private:
     void DoJetEC_Uncer_Analysis(const edm::Event&);
     void DoGenParticlesAnalysis(const edm::Event&);
     void DoMetAnalysis(const edm::Event&);
+    void DoL1Analysis(const edm::Event&);
     void DoVertexAnalysis(const edm::Event&);
     void DoMetUncertaityAnalysis(const edm::Event&);
 
@@ -221,10 +222,15 @@ private:
     edm::InputTag tcMetCollection_;
     edm::InputTag Type1CorMETCollection_;
     edm::InputTag MVAMetCollection_;
+    edm::InputTag MVAMetCollection_ditau_;
+    edm::InputTag MVAMetCollection_emu_;
+    edm::InputTag MVAMetCollection_etau_;
+    edm::InputTag MVAMetCollection_mutau_;
 
     edm::InputTag PreSelectedElectronCollection_;
     edm::InputTag PreSelectedMuonCollection_;
     edm::InputTag PreSelectedhpsCollection_;
+    edm::InputTag vertexCollectionForLeptonIP_;
     edm::InputTag srcTriggerResults_;
 
 /*     std::vector<edm::InputTag> eleIDTag_; */
@@ -236,10 +242,24 @@ private:
     edm::InputTag PileUpInfo_;
     edm::InputTag GenParticlesInfo_;
     edm::InputTag triggerEvent_;
-    std::string tauMatch_Loose_;
-    std::string electronMatch_Loose_;
-    std::string tauMatch_Medium_;
-    std::string muonMatch_Loose_;
+    std::string tauMatch_Ele20Tau20_;
+    std::string eleMatch_Ele20Tau20_;
+    std::string tauMatch_SoftEle_;
+    std::string eleMatch_SoftEle_;
+    std::string muMatch_Mu24_;
+    std::string tauMatch_Ditau35_;
+    std::string tauMatch_Ditau30Jet30_;
+    std::string jetMatch_Ditau30Jet30_;
+    std::string muMatch_Mu18Tau25_;
+    std::string tauMatch_Mu18Tau25_;
+    std::string tauMatch_Mu17Tau20_;
+    std::string muMatch_Mu17Tau20_;
+    std::string tauMatch_SoftMu_;
+    std::string muMatch_SoftMu_;
+    std::string muMatch_Ele17Mu8_;
+    std::string eleMatch_Ele17Mu8_;
+    std::string muMatch_Ele8Mu17_;
+    std::string eleMatch_Ele8Mu17_;
 
     bool Include_HPSTau;
     bool Include_Muon;
@@ -248,6 +268,7 @@ private:
     bool Include_JetCorrection;
     bool Include_MET_Uncertaity;
     bool Include_MET;
+    bool Include_L1;
     bool Include_HLT;
     bool Include_Vertex;
     bool Include_GenPartiles;

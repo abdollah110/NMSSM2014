@@ -44,7 +44,7 @@ unsigned int Event = 0;
 float IMass = 0;
 float mvis = 0;
 float HMass = 0;
-float met, metphi, mvamet, mvametphi;
+float met, metphi, mvamet, mvametphi, mvamet_mutau, mvamet_etau;
 float l1M, l1Px, l1Py, l1Pz, l1E, l1Pt, l1Phi, l1Eta, l1Charge, l1_muIso, l1_eleIso, l1_eleMVANonTrg, l1_eleNumHit, l1_tauIsoMVA2raw = -10;
 float l2M, l2Px, l2Py, l2Pz, l2E, l2Pt, l2Phi, l2Eta, l2Charge, l2_muIso, l2_eleIso, l2_eleMVANonTrg, l2_eleNumHit, l2_tauIsoMVA2raw, byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = -10;
 float l2_RefJetPt, l2_RefJetEta, l2_RefJetPhi = -10;
@@ -146,8 +146,14 @@ void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string
     //  ########## ########## ########## ########## ########## ##########
     //  MET Information
     //  ########## ########## ########## ########## ########## ##########
+    vector<myobject> MVAMet_mutau = m->RecMVAMet_mutau;
+    vector<myobject> MVAMet_etau = m->RecMVAMet_etau;
     vector<myobject> MVAMet = m->RecMVAMet;
     vector<myobject> PFMet = m->RecPFMet;
+//    mvacov_mt00 = m->MVAMet_sigMatrix_00;
+//    mvacov_mt01 = m->MVAMet_sigMatrix_01;
+//    mvacov_mt10 = m->MVAMet_sigMatrix_10;
+//    mvacov_mt11 = m->MVAMet_sigMatrix_11;
     mvacov00 = m->MVAMet_sigMatrix_00;
     mvacov01 = m->MVAMet_sigMatrix_01;
     mvacov10 = m->MVAMet_sigMatrix_10;
@@ -157,6 +163,8 @@ void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string
     metcov10 = m->MET_sigMatrix_10;
     metcov11 = m->MET_sigMatrix_11;
 
+    mvamet_mutau = MVAMet_mutau.front().pt;
+    mvamet_etau = MVAMet_etau.front().pt;
     mvamet = MVAMet.front().pt;
     mvametphi = MVAMet.front().phi;
     met = PFMet.front().pt;

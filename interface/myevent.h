@@ -44,6 +44,12 @@ public:
     vector<myobject> RecMVAMet_mutau;
     vector<myobject> RecMVAMet_etau;
     vector<myobject> RecMVAMet_emu;
+    vector<myobject> CorrectedL1ETM;
+    vector<myobject> UncorrectedL1ETM;
+    vector<myobject> CorrectedCaloMetNoHF;
+    vector<myobject> GenTauMatchedCaloJet;
+    vector<myobject> MetNoHFresidualCorrected;
+    vector<myobject> MetNoHF;
     vector<myobject> RectcMet;
     vector<myobject> RecPFMetCorElectronEnUp;
     vector<myobject> RecPFMetCorElectronEnDown;

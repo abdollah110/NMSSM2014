@@ -235,6 +235,8 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("mvis", &mvis, "mvis/F");
     Run_Tree->Branch("HMass", &HMass, "HMass/F");
 
+    Run_Tree->Branch("mvamet_mutau", &mvamet_mutau, "mvamet_mutau/F");
+    Run_Tree->Branch("mvamet_etau", &mvamet_etau, "mvamet_etau/F");
     Run_Tree->Branch("mvamet", &mvamet, "mvamet/F");
     Run_Tree->Branch("metphi", &metphi, "metphi/F");
     Run_Tree->Branch("met", &met, "met/F");
