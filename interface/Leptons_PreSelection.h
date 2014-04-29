@@ -282,7 +282,7 @@ vector<myobject> GoodJet20(myevent *m) {
     vector<myobject> Jet = m->RecPFJetsAK5;
 
     for (int i = 0; i < Jet.size(); i++) {
-        if (Jet[i].pt > 20 && TMath::Abs(Jet[i].eta) < 4.7 && Jet[i].puJetIdLoose > 0.5) {
+        if (Jet[i].pt > 20) {
             goodJet.push_back(Jet[i]);
         }
     }
