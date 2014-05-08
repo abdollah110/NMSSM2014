@@ -326,157 +326,157 @@ vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b) {
 //*********************************************************************************************
 //remove overlap Muon and electron
 
-vector <myobject> myCleanLepton(myevent *m, string lep) {
-
-    vector<myobject> mu_;
-    vector<myobject> electron_;
-    vector<myobject> tau_;
-
-    mu_.clear();
-    electron_.clear();
-    tau_.clear();
-
-    vector<myobject> Muon_Vector = GoodMuon(m);
-    vector<myobject> Electron_Vector = GoodElectron(m);
-    vector<myobject> Tau_Vector = GoodTau20GeV(m);
-
-    //#####################  CleanMuon
-    if (lep == "mu") {
-        for (int a = 0; a < Muon_Vector.size(); a++) {
-            mu_.push_back(Muon_Vector[a]);
-        }
-        return mu_;
-    }
-    //#####################  CleanElectron
-    if (lep == "ele") {
-        for (int a = 0; a < Electron_Vector.size(); a++) {
-            bool Keep_obj = true;
-            for (int b = 0; b < Muon_Vector.size(); b++) {
-                if (deltaR(Electron_Vector[a], Muon_Vector[b]) < 0.1)
-                    Keep_obj = false;
-            }
-            if (Keep_obj == true)
-                electron_.push_back(Electron_Vector[a]);
-        }
-        return electron_;
-    }
-    //#####################  CleanTau
-    if (lep == "tau") {
-        for (int a = 0; a < Tau_Vector.size(); a++) {
-            bool Keep_obj = true;
-            for (int b = 0; b < Electron_Vector.size(); b++) {
-                if (deltaR(Tau_Vector[a], Electron_Vector[b]) < 0.1)
-                    Keep_obj = false;
-            }
-            for (int c = 0; c < Muon_Vector.size(); c++) {
-                if (deltaR(Tau_Vector[a], Muon_Vector[c]) < 0.1)
-                    Keep_obj = false;
-            }
-            if (Keep_obj == true)
-                tau_.push_back(Tau_Vector[a]);
-        }
-        return tau_;
-    }
-    //###################################
-}
-
-vector <myobject> myCleanBareLepton(myevent *m, string lep) {
-
-    vector<myobject> mu_;
-    vector<myobject> electron_;
-    vector<myobject> tau_;
-
-    mu_.clear();
-    electron_.clear();
-    tau_.clear();
-
-    vector<myobject> Muon_Vector = NoIdIsoMuon(m);
-    vector<myobject> Electron_Vector = NoIdIsoElectron(m);
-    vector<myobject> Tau_Vector = NoIsoTau(m);
-    //Good Vector
-    vector<myobject> goodmu_ = myCleanLepton(m, "mu");
-    vector<myobject> goodelectron_ = myCleanLepton(m, "ele");
-
-    //#####################  CleanMuon
-    if (lep == "mu") {
-        for (int a = 0; a < Muon_Vector.size(); a++) {
-            mu_.push_back(Muon_Vector[a]);
-        }
-        return mu_;
-    }
-    //#####################  CleanElectron
-    if (lep == "ele") {
-        for (int a = 0; a < Electron_Vector.size(); a++) {
-            bool Keep_obj = true;
-            for (int b = 0; b < goodmu_.size(); b++) {
-                if (deltaR(Electron_Vector[a], goodmu_[b]) < 0.1)
-                    Keep_obj = false;
-            }
-            if (Keep_obj == true)
-                electron_.push_back(Electron_Vector[a]);
-        }
-        return electron_;
-    }
-    //#####################  CleanTau
-    if (lep == "tau") {
-        for (int a = 0; a < Tau_Vector.size(); a++) {
-            bool Keep_obj = true;
-            for (int b = 0; b < goodelectron_.size(); b++) {
-                if (deltaR(Tau_Vector[a], goodelectron_[b]) < 0.1)
-                    Keep_obj = false;
-            }
-            for (int c = 0; c < goodmu_.size(); c++) {
-                if (deltaR(Tau_Vector[a], goodmu_[c]) < 0.1)
-                    Keep_obj = false;
-            }
-            if (Keep_obj == true)
-                tau_.push_back(Tau_Vector[a]);
-        }
-        return tau_;
-    }
-    //###################################
-}
+//vector <myobject> myCleanLepton(myevent *m, string lep) {
+//
+//    vector<myobject> mu_;
+//    vector<myobject> electron_;
+//    vector<myobject> tau_;
+//
+//    mu_.clear();
+//    electron_.clear();
+//    tau_.clear();
+//
+//    vector<myobject> Muon_Vector = GoodMuon(m);
+//    vector<myobject> Electron_Vector = GoodElectron(m);
+//    vector<myobject> Tau_Vector = GoodTau20GeV(m);
+//
+//    //#####################  CleanMuon
+//    if (lep == "mu") {
+//        for (int a = 0; a < Muon_Vector.size(); a++) {
+//            mu_.push_back(Muon_Vector[a]);
+//        }
+//        return mu_;
+//    }
+//    //#####################  CleanElectron
+//    if (lep == "ele") {
+//        for (int a = 0; a < Electron_Vector.size(); a++) {
+//            bool Keep_obj = true;
+//            for (int b = 0; b < Muon_Vector.size(); b++) {
+//                if (deltaR(Electron_Vector[a], Muon_Vector[b]) < 0.1)
+//                    Keep_obj = false;
+//            }
+//            if (Keep_obj == true)
+//                electron_.push_back(Electron_Vector[a]);
+//        }
+//        return electron_;
+//    }
+//    //#####################  CleanTau
+//    if (lep == "tau") {
+//        for (int a = 0; a < Tau_Vector.size(); a++) {
+//            bool Keep_obj = true;
+//            for (int b = 0; b < Electron_Vector.size(); b++) {
+//                if (deltaR(Tau_Vector[a], Electron_Vector[b]) < 0.1)
+//                    Keep_obj = false;
+//            }
+//            for (int c = 0; c < Muon_Vector.size(); c++) {
+//                if (deltaR(Tau_Vector[a], Muon_Vector[c]) < 0.1)
+//                    Keep_obj = false;
+//            }
+//            if (Keep_obj == true)
+//                tau_.push_back(Tau_Vector[a]);
+//        }
+//        return tau_;
+//    }
+//    //###################################
+//}
+//
+//vector <myobject> myCleanBareLepton(myevent *m, string lep) {
+//
+//    vector<myobject> mu_;
+//    vector<myobject> electron_;
+//    vector<myobject> tau_;
+//
+//    mu_.clear();
+//    electron_.clear();
+//    tau_.clear();
+//
+//    vector<myobject> Muon_Vector = NoIdIsoMuon(m);
+//    vector<myobject> Electron_Vector = NoIdIsoElectron(m);
+//    vector<myobject> Tau_Vector = NoIsoTau(m);
+//    //Good Vector
+//    vector<myobject> goodmu_ = myCleanLepton(m, "mu");
+//    vector<myobject> goodelectron_ = myCleanLepton(m, "ele");
+//
+//    //#####################  CleanMuon
+//    if (lep == "mu") {
+//        for (int a = 0; a < Muon_Vector.size(); a++) {
+//            mu_.push_back(Muon_Vector[a]);
+//        }
+//        return mu_;
+//    }
+//    //#####################  CleanElectron
+//    if (lep == "ele") {
+//        for (int a = 0; a < Electron_Vector.size(); a++) {
+//            bool Keep_obj = true;
+//            for (int b = 0; b < goodmu_.size(); b++) {
+//                if (deltaR(Electron_Vector[a], goodmu_[b]) < 0.1)
+//                    Keep_obj = false;
+//            }
+//            if (Keep_obj == true)
+//                electron_.push_back(Electron_Vector[a]);
+//        }
+//        return electron_;
+//    }
+//    //#####################  CleanTau
+//    if (lep == "tau") {
+//        for (int a = 0; a < Tau_Vector.size(); a++) {
+//            bool Keep_obj = true;
+//            for (int b = 0; b < goodelectron_.size(); b++) {
+//                if (deltaR(Tau_Vector[a], goodelectron_[b]) < 0.1)
+//                    Keep_obj = false;
+//            }
+//            for (int c = 0; c < goodmu_.size(); c++) {
+//                if (deltaR(Tau_Vector[a], goodmu_[c]) < 0.1)
+//                    Keep_obj = false;
+//            }
+//            if (Keep_obj == true)
+//                tau_.push_back(Tau_Vector[a]);
+//        }
+//        return tau_;
+//    }
+//    //###################################
+//}
 
 //******************************************************************************************
 //******************************************************************************************
 
-vector <myobject> LeptonSubSet(myevent *m, string lep) {
-
-    //    vector<myobject> mu_Debug_L;
-    vector<myobject> mu_Debug_T;
-    //    mu_Debug_L.clear();
-    mu_Debug_T.clear();
-    //    vector<myobject> ele_Debug_L;
-    vector<myobject> ele_Debug_T;
-    //    ele_Debug_L.clear();
-    ele_Debug_T.clear();
-
-    vector<myobject> Muon_Vector = myCleanLepton(m, "mu");
-    vector<myobject> Electron_Vector = myCleanLepton(m, "ele");
-
-
-
-    for (int b = 0; b < Muon_Vector.size(); b++) {
-        //        if (Iso_Mu_dBeta(Muon_Vector[b]) > 0.30 && Iso_Mu_dBeta(Muon_Vector[b]) < looseIsolation)
-        //            mu_Debug_L.push_back(Muon_Vector[b]);
-        if (Iso_Mu_dBeta(Muon_Vector[b]) > 0.15 && Iso_Mu_dBeta(Muon_Vector[b]) < looseIsolation)
-            mu_Debug_T.push_back(Muon_Vector[b]);
-    }
-
-    for (int a = 0; a < Electron_Vector.size(); a++) {
-        //        if (Iso_Ele_dBeta(Electron_Vector[a]) > 0.30 && Iso_Ele_dBeta(Electron_Vector[a]) < looseIsolation)
-        //            ele_Debug_L.push_back(Electron_Vector[a]);
-        if (Iso_Ele_dBeta(Electron_Vector[a]) > 0.10 && Iso_Ele_dBeta(Electron_Vector[a]) < looseIsolation)
-            ele_Debug_T.push_back(Electron_Vector[a]);
-    }
-
-    //    if (lep == "mu_loose_partly") return mu_Debug_L;
-    if (lep == "mu_tight_partly") return mu_Debug_T;
-    //    if (lep == "ele_loose_partly") return ele_Debug_L;
-    if (lep == "ele_tight_partly") return ele_Debug_T;
-
-
-}
+//vector <myobject> LeptonSubSet(myevent *m, string lep) {
+//
+//    //    vector<myobject> mu_Debug_L;
+//    vector<myobject> mu_Debug_T;
+//    //    mu_Debug_L.clear();
+//    mu_Debug_T.clear();
+//    //    vector<myobject> ele_Debug_L;
+//    vector<myobject> ele_Debug_T;
+//    //    ele_Debug_L.clear();
+//    ele_Debug_T.clear();
+//
+//    vector<myobject> Muon_Vector = myCleanLepton(m, "mu");
+//    vector<myobject> Electron_Vector = myCleanLepton(m, "ele");
+//
+//
+//
+//    for (int b = 0; b < Muon_Vector.size(); b++) {
+//        //        if (Iso_Mu_dBeta(Muon_Vector[b]) > 0.30 && Iso_Mu_dBeta(Muon_Vector[b]) < looseIsolation)
+//        //            mu_Debug_L.push_back(Muon_Vector[b]);
+//        if (Iso_Mu_dBeta(Muon_Vector[b]) > 0.15 && Iso_Mu_dBeta(Muon_Vector[b]) < looseIsolation)
+//            mu_Debug_T.push_back(Muon_Vector[b]);
+//    }
+//
+//    for (int a = 0; a < Electron_Vector.size(); a++) {
+//        //        if (Iso_Ele_dBeta(Electron_Vector[a]) > 0.30 && Iso_Ele_dBeta(Electron_Vector[a]) < looseIsolation)
+//        //            ele_Debug_L.push_back(Electron_Vector[a]);
+//        if (Iso_Ele_dBeta(Electron_Vector[a]) > 0.10 && Iso_Ele_dBeta(Electron_Vector[a]) < looseIsolation)
+//            ele_Debug_T.push_back(Electron_Vector[a]);
+//    }
+//
+//    //    if (lep == "mu_loose_partly") return mu_Debug_L;
+//    if (lep == "mu_tight_partly") return mu_Debug_T;
+//    //    if (lep == "ele_loose_partly") return ele_Debug_L;
+//    if (lep == "ele_tight_partly") return ele_Debug_T;
+//
+//
+//}
 
 bool Multi_Lepton_Veto(std::string channel, myevent * m) {
 

@@ -226,55 +226,55 @@ bool EleLooseForEtauVeto(myobject const& a) {
 
 }
 
-bool getTauIsolation(std::string channel, myobject const& a) {
-    if (channel == "mmtt" || channel == "eett") {
-        //        if (a.byMediumCombinedIsolationDeltaBetaCorr3Hits) //changed in 19April
-        if (a.byLooseCombinedIsolationDeltaBetaCorr3Hits)
-            return true;
-        else
-            return false;
-    }
-    if (channel == "mmet" || channel == "eeet" || channel == "mmmt" || channel == "eemt") {
-        if (a.byLooseCombinedIsolationDeltaBetaCorr3Hits)
-            return true;
-        else
-            return false;
-    }
-}
+//bool getTauIsolation(std::string channel, myobject const& a) {
+//    if (channel == "mmtt" || channel == "eett") {
+//        //        if (a.byMediumCombinedIsolationDeltaBetaCorr3Hits) //changed in 19April
+//        if (a.byLooseCombinedIsolationDeltaBetaCorr3Hits)
+//            return true;
+//        else
+//            return false;
+//    }
+//    if (channel == "mmet" || channel == "eeet" || channel == "mmmt" || channel == "eemt") {
+//        if (a.byLooseCombinedIsolationDeltaBetaCorr3Hits)
+//            return true;
+//        else
+//            return false;
+//    }
+//}
 
-bool getEleRejection(std::string channel, myobject const& a) {
-    if (channel == "mmtt" || channel == "eett" || channel == "mmmt" || channel == "eemt") {
-        if (a.discriminationByElectronLoose)
-            return true;
-        else
-            return false;
-    }
-    if (channel == "mmet" || channel == "eeet") {
-        //        if (a.discriminationByElectronMVA2Tight) //changed in 19April
-        //        if (a.discriminationByElectronMVA3Tight)
-        if (a.discriminationByElectronMVA5Tight) // There is no 3 ???? but 5
-            return true;
-        else
-            return false;
-    }
+//bool getEleRejection(std::string channel, myobject const& a) {
+//    if (channel == "mmtt" || channel == "eett" || channel == "mmmt" || channel == "eemt") {
+//        if (a.discriminationByElectronLoose)
+//            return true;
+//        else
+//            return false;
+//    }
+//    if (channel == "mmet" || channel == "eeet") {
+//        //        if (a.discriminationByElectronMVA2Tight) //changed in 19April
+//        //        if (a.discriminationByElectronMVA3Tight)
+//        if (a.discriminationByElectronMVA5Tight) // There is no 3 ???? but 5
+//            return true;
+//        else
+//            return false;
+//    }
+//
+//}
 
-}
-
-bool getMuRejection(std::string channel, myobject const& a) {
-    if (channel == "mmtt" || channel == "eett" || channel == "mmet" || channel == "eeet") {
-        if (a.discriminationByMuonLoose2)
-            return true;
-        else
-            return false;
-    }
-    if (channel == "mmmt" || channel == "eemt") {
-        if (a.discriminationByMuonTight2)
-            return true;
-        else
-            return false;
-    }
-
-}
+//bool getMuRejection(std::string channel, myobject const& a) {
+//    if (channel == "mmtt" || channel == "eett" || channel == "mmet" || channel == "eeet") {
+//        if (a.discriminationByMuonLoose2)
+//            return true;
+//        else
+//            return false;
+//    }
+//    if (channel == "mmmt" || channel == "eemt") {
+//        if (a.discriminationByMuonTight2)
+//            return true;
+//        else
+//            return false;
+//    }
+//
+//}
 
 
 

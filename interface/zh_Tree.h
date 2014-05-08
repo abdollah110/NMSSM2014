@@ -41,10 +41,8 @@ unsigned int Channel = 0;
 unsigned int Run = 0;
 unsigned int Lumi = 0;
 unsigned int Event = 0;
-float IMass = 0;
 float mvis = 0;
-float HMass = 0;
-float met, metphi, mvamet, mvametphi, mvamet_mutau, mvamet_etau;
+float met, metphi, mvamet, mvametphi, mvametNoRecoil, mvametphiNoRecoil;
 float l1M, l1Px, l1Py, l1Pz, l1E, l1Pt, l1Phi, l1Eta, l1Charge, l1_muIso, l1_eleIso, l1_eleMVANonTrg, l1_eleNumHit, l1_tauIsoMVA2raw = -10;
 float l2M, l2Px, l2Py, l2Pz, l2E, l2Pt, l2Phi, l2Eta, l2Charge, l2_muIso, l2_eleIso, l2_eleMVANonTrg, l2_eleNumHit, l2_tauIsoMVA2raw, byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = -10;
 float l2_RefJetPt, l2_RefJetEta, l2_RefJetPhi = -10;
@@ -56,10 +54,12 @@ bool l2_tauIsoL, l2_tauIsoM, l2_tauIsoT, l2_tauRejMuL, l2_tauRejMuM, l2_tauRejMu
 bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu2L, l2_tauRejMu2M, l2_tauRejMu2T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
 bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T;
 
+//float mvacov00_mutau, mvacov01_mutau, mvacov10_mutau, mvacov11_mutau;
+//float mvacov00_etau, mvacov01_etau, mvacov10_etau, mvacov11_etau;
 float mvacov00, mvacov01, mvacov10, mvacov11;
 float metcov00, metcov01, metcov10, metcov11;
 float eff_Correction, pu_Weight;
-int num_PV, num_bjet, num_goodjet, npu, mcdata;
+int num_PV,  npu, mcdata;
 int mu_Size, BareMuon_Size, electron_Size, BareElectron_Size, tau_Size, BareTau_Size;
 float l1_CloseJetPt, l2_CloseJetPt;
 float l1_CloseJetEta, l2_CloseJetEta;
@@ -108,11 +108,15 @@ float jdphi;
 float jetpt;
 float dijetphi;
 
-void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string is_mt_et, myobject obj1, myobject obj2) {
+void fillTree(TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string ThisChannel, myobject obj1, myobject obj2) {
 
 
 
-    Channel = (ThisChannel == "mutau" ? 1 : 2);
+
+    if (ThisChannel == "mutau") Channel = 1;
+    else if (ThisChannel == "eltau") Channel = 2;
+    else Channel = 3;
+
     if (is_data_mc == "mc11") mcdata = 1;
     if (is_data_mc == "data11") mcdata = 2;
     if (is_data_mc == "mc12") mcdata = 3;
@@ -146,30 +150,45 @@ void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string
     //  ########## ########## ########## ########## ########## ##########
     //  MET Information
     //  ########## ########## ########## ########## ########## ##########
+    vector<myobject> MVAMetRecoil_mutau = m->RecoilMetmutau;
+    vector<myobject> MVAMetRecoil_etau = m->RecoilMetetau;
     vector<myobject> MVAMet_mutau = m->RecMVAMet_mutau;
     vector<myobject> MVAMet_etau = m->RecMVAMet_etau;
-    vector<myobject> MVAMet = m->RecMVAMet;
     vector<myobject> PFMet = m->RecPFMet;
-//    mvacov_mt00 = m->MVAMet_sigMatrix_00;
-//    mvacov_mt01 = m->MVAMet_sigMatrix_01;
-//    mvacov_mt10 = m->MVAMet_sigMatrix_10;
-//    mvacov_mt11 = m->MVAMet_sigMatrix_11;
-    mvacov00 = m->MVAMet_sigMatrix_00;
-    mvacov01 = m->MVAMet_sigMatrix_01;
-    mvacov10 = m->MVAMet_sigMatrix_10;
-    mvacov11 = m->MVAMet_sigMatrix_11;
+
+
+
+    if (ThisChannel == "mutau") {
+        mvamet = MVAMetRecoil_mutau.front().pt;
+        mvametphi = MVAMetRecoil_mutau.front().phi;
+        mvametNoRecoil = MVAMet_mutau.front().pt;
+        mvametphiNoRecoil = MVAMet_mutau.front().phi;
+        mvacov00 = m->MVAMet_sigMatrix_00_mutau;
+        mvacov01 = m->MVAMet_sigMatrix_01_mutau;
+        mvacov10 = m->MVAMet_sigMatrix_10_mutau;
+        mvacov11 = m->MVAMet_sigMatrix_11_mutau;
+        mt_1 = TMass(obj1, MVAMetRecoil_mutau.front());
+        mt_2 = TMass(obj2, MVAMetRecoil_mutau.front());
+    }
+    if (ThisChannel == "eltau") {
+        mvamet = MVAMetRecoil_etau.front().pt;
+        mvametphi = MVAMetRecoil_etau.front().phi;
+        mvametNoRecoil = MVAMet_etau.front().pt;
+        mvametphiNoRecoil = MVAMet_etau.front().phi;
+        mvacov00 = m->MVAMet_sigMatrix_00_etau;
+        mvacov01 = m->MVAMet_sigMatrix_01_etau;
+        mvacov10 = m->MVAMet_sigMatrix_10_etau;
+        mvacov11 = m->MVAMet_sigMatrix_11_etau;
+        mt_1 = TMass(obj1, MVAMetRecoil_etau.front());
+        mt_2 = TMass(obj2, MVAMetRecoil_etau.front());
+    }
+
+    met = PFMet.front().pt;
+    metphi = PFMet.front().phi;
     metcov00 = m->MET_sigMatrix_00;
     metcov01 = m->MET_sigMatrix_01;
     metcov10 = m->MET_sigMatrix_10;
     metcov11 = m->MET_sigMatrix_11;
-
-    mvamet_mutau = MVAMet_mutau.front().pt;
-    mvamet_etau = MVAMet_etau.front().pt;
-    mvamet = MVAMet.front().pt;
-    mvametphi = MVAMet.front().phi;
-    met = PFMet.front().pt;
-    metphi = PFMet.front().phi;
-
 
 
     //  ########## ########## ########## ########## ########## ##########
@@ -300,19 +319,12 @@ void fillTree(std::string ThisChannel, TTree * Run_Tree, myevent *m, std::string
     //  ########## ########## ########## ########## ########## ##########
     rho = m->Rho;
     eff_Correction = getCorrFactor(ThisChannel, is_data_mc, obj1, obj2, obj2);
-    mu_Size = myCleanLepton(m, "mu").size();
-    BareMuon_Size = myCleanBareLepton(m, "mu").size();
-    electron_Size = myCleanLepton(m, "ele").size();
-    BareElectron_Size = myCleanBareLepton(m, "ele").size();
-    tau_Size = myCleanLepton(m, "tau").size();
-    BareTau_Size = myCleanBareLepton(m, "tau").size();
     vector<myobject> Vertex = m->Vertex;
     num_PV = Vertex.size();
     pu_Weight = PU_Weight;
     npu = m->PUInfo_true;
     mvis = InvarMass_2(obj1, obj2);
-    mt_1 = TMass(obj1, MVAMet.front());
-    mt_2 = TMass(obj2, MVAMet.front());
+
 
     idweight_1 = getCorrIdIsoLep(ThisChannel, is_data_mc, obj2);
     trigweight_1 = getCorrTriggerLep(ThisChannel, is_data_mc, obj1);

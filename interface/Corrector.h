@@ -127,6 +127,7 @@ float Eff_MuTauTrg_Mu_Data_2012(myobject const& a) {
     else if (a.eta < 0.8) return efficiency(a.pt, 17.313, 0.662731, 1.3412, 1.05778, 1.26624);
     else if (a.eta < 1.2) return efficiency(a.pt, 16.9966, 0.550532, 0.807863, 1.55402, 0.885134);
     else if (a.eta > 1.2) return efficiency(a.pt, 15.9962, 0.000106195, 4.95058e-8, 1.9991, 0.851294);
+    else  return 1;
 }
 
 float Eff_MuTauTrg_Mu_MC_2012(myobject const& a) {
@@ -136,6 +137,7 @@ float Eff_MuTauTrg_Mu_MC_2012(myobject const& a) {
     else if (a.eta < 0.8) return efficiency(a.pt, 15.9289, 0.0271317, 0.00448573, 1.92101, 0.978625);
     else if (a.eta < 1.2) return efficiency(a.pt, 16.5678, 0.328333, 0.354533, 1.67085, 0.916992);
     else if (a.eta > 1.2) return efficiency(a.pt, 15.997, 7.90069e-5, 4.40039e-8, 1.66272, 0.884502);
+    else  return 1;
 }
 
 float Eff_MuTauTrg_Tau_MC_2012(myobject const& a) {
@@ -365,7 +367,7 @@ float getCorrFactor(std::string channel, std::string type, myobject const& a, my
         }
     } else if (type == "data11" || type == "data12")
         return 1;
-    else return 1;
+    return 1.0;
 
 }
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -382,7 +384,7 @@ float getCorrTriggerLep(std::string channel, std::string type, myobject const& a
         }
     } else if (type == "data11" || type == "data12")
         return 1;
-    else return 1;
+    return 1.0;
 
 }
 
@@ -407,7 +409,7 @@ float getCorrIdIsoLep(std::string channel, std::string type, myobject const& a) 
         }
     } else if (type == "data11" || type == "data12")
         return 1;
-    else return 1;
+    return 1.0;
 
 }
 
