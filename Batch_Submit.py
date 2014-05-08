@@ -24,8 +24,8 @@ Run_Over = {
 #    9:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v2/53X/MC", "mc11", "Tot", "25:00:00"),
 #    10:("/pnfs/iihe/cms/store/user/lperrini/ZHttNtuples_v2/42X/MC", "mc11", "Tot",  "45:00:00"),
 #    11:("/pnfs/iihe/cms/store/user/ccaillol/ZHttNtuples_v3/53X/MC", "mc12", "Tot", "25:00:00"),
-    12:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "Mu", "04:00:00"),
-    13:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "Ele", "04:00:00"),
+#    12:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "Mu", "04:00:00"),
+    13:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12",  "05:00:00"),
 
     
 #   ##### Filtered
@@ -45,17 +45,19 @@ Run_Over = {
 }
 
     ########################################################################################
-def make_submit_form(order, pnfn, data_year, lepton_type, timing):
+def make_submit_form(order, pnfn, data_year, timing):
 
     location = os.getcwd()
     location = location.replace("/localgrid_mnt", "") #nedd to remove the first part of address while submitting
 #    Sample = os.popen(("ls " + pnfn + " | sort | grep " + lepton_type))
     Sample = os.popen(("ls " + pnfn + " | sort "))
-    if lepton_type == "Tot":
-        Sample = os.popen(("ls " + pnfn + " | sort "))
+#    if lepton_type == "Tot":
+#        Sample = os.popen(("ls " + pnfn + " | sort "))
     #output name, one for submitting jobs, one for hadding root files
-    name_submitFile = "Submit_" + data_year + "_" + lepton_type + "_" + order + ".sh"
-    name_haddFile = "Hadd_" + data_year + "_" + lepton_type + "_" + order + ".sh"
+    name_submitFile = "Submit_" + data_year + "_"  + order + ".sh"
+    name_haddFile = "Hadd_" + data_year + "_" +  + order + ".sh"
+#    name_submitFile = "Submit_" + data_year + "_" + lepton_type + "_" + order + ".sh"
+#    name_haddFile = "Hadd_" + data_year + "_" + lepton_type + "_" + order + ".sh"
     submit_File = open(name_submitFile, 'w')
     Hadd_File = open(name_haddFile, 'w')
 
@@ -63,7 +65,7 @@ def make_submit_form(order, pnfn, data_year, lepton_type, timing):
     for files in Sample.readlines():
         f = os.popen("ls " + pnfn + "/" + files[0:-1] + " | sort")
         dir = "dcap://maite.iihe.ac.be" + pnfn + "/" + files[0:-1] + "/"
-        name_out = "__" + data_year + "_" + lepton_type + "_" + files[0:-1] + ".sh"
+        name_out = "__" + data_year + "_" +  files[0:-1] + ".sh"
         outFile = open(name_out, 'w')
         command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
         command1 = command1 + "cd " + location + "\n"
@@ -72,8 +74,8 @@ def make_submit_form(order, pnfn, data_year, lepton_type, timing):
         outFile.write(command1)
         #Make loop over the rootfiles in the given file
         for i in f.readlines():
-            command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " " + lepton_type + " "  + files[0:-1] + i[0:-1] + " " + dir + "/" + i[0:-1]
-            command2 = command2 + " \n" + " mv  " + data_year + "_" + lepton_type + "_" + files[0:-1] + i[0:-1] + "\t" + "Out_" + files[0:-1]
+            command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " "   + files[0:-1] + i[0:-1] + " " + dir + "/" + i[0:-1]
+            command2 = command2 + " \n" + " mv  " + data_year + "_" +  files[0:-1] + i[0:-1] + "\t" + "Out_" + files[0:-1]
             command2 = command2 + " \n\n\n"
             outFile.write(command2)
 
@@ -89,9 +91,9 @@ def make_submit_form(order, pnfn, data_year, lepton_type, timing):
     ########################################################################################
 if __name__ == "__main__":
     for i in Run_Over:
-        R1, R2, R3, R4 = Run_Over[i]
-        print "preparing the submission files for-->  " + R1 + R2 + R3
-	make_submit_form(str(i), R1, R2, R3, R4)
+        R1, R2, R3 = Run_Over[i]
+        print "preparing the submission files for-->  " + R1 + "  which is " + R2
+	make_submit_form(str(i), R1, R2, R3)
 
     maindir = 'ROOT'
     dirs = ['data11', 'data12', 'mc11', 'mc12']
