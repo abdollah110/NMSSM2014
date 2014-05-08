@@ -55,7 +55,7 @@ def make_submit_form(order, pnfn, data_year, timing):
 #        Sample = os.popen(("ls " + pnfn + " | sort "))
     #output name, one for submitting jobs, one for hadding root files
     name_submitFile = "Submit_" + data_year + "_"  + order + ".sh"
-    name_haddFile = "Hadd_" + data_year + "_" +  + order + ".sh"
+    name_haddFile = "Hadd_" + data_year + "_" +  order + ".sh"
 #    name_submitFile = "Submit_" + data_year + "_" + lepton_type + "_" + order + ".sh"
 #    name_haddFile = "Hadd_" + data_year + "_" + lepton_type + "_" + order + ".sh"
     submit_File = open(name_submitFile, 'w')
