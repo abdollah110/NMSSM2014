@@ -239,8 +239,6 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l1_eleMVANonTrg", &l1_eleMVANonTrg, "l1_eleMVANonTrg/F");
     Run_Tree->Branch("l1_eleNumHit", &l1_eleNumHit, "l1_eleNumHit/F");
 
-
-
     Run_Tree->Branch("m_2", &l2M, "m_2/F");
     Run_Tree->Branch("e_2", &l2E, "e_2/F");
     Run_Tree->Branch("px_2", &l2Px, "px_2/F");
@@ -253,37 +251,30 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l2_CloseJetPt", &l2_CloseJetPt, "l2_CloseJetPt/F");
     Run_Tree->Branch("l2_CloseJetEta", &l2_CloseJetEta, "l2_CloseJetEta/F");
     Run_Tree->Branch("l2_CloseJetPhi", &l2_CloseJetPhi, "l2_CloseJetPhi/F");
-
-
     Run_Tree->Branch("l2_tauIsoVL", &l2_tauIsoVL, "l2_tauIsoVL/O");
     Run_Tree->Branch("byCombinedIsolationDeltaBetaCorrRaw3Hits_2", &byCombinedIsolationDeltaBetaCorrRaw3Hits_2, "byCombinedIsolationDeltaBetaCorrRaw3Hits_2/F"); //NNNEW
     Run_Tree->Branch("l2_tauIso3HitL", &l2_tauIso3HitL, "l2_tauIso3HitL/O");
     Run_Tree->Branch("l2_tauIso3HitM", &l2_tauIso3HitM, "l2_tauIso3HitM/O");
     Run_Tree->Branch("l2_tauIso3HitT", &l2_tauIso3HitT, "l2_tauIso3HitT/O");
-
     Run_Tree->Branch("l2_tauIsoL", &l2_tauIsoL, "l2_tauIsoL/O");
     Run_Tree->Branch("l2_tauIsoM", &l2_tauIsoM, "l2_tauIsoM/O");
     Run_Tree->Branch("l2_tauIsoT", &l2_tauIsoT, "l2_tauIsoT/O");
-
     Run_Tree->Branch("mva_2", &l2_tauIsoMVA2L, "mva_2/O");
-    Run_Tree->Branch("iso_2", &l2_tauIsoMVA2raw, "iso_2/F");
     Run_Tree->Branch("l2_tauIsoMVA2M", &l2_tauIsoMVA2M, "l2_tauIsoMVA2M/O");
     Run_Tree->Branch("l2_tauIsoMVA2T", &l2_tauIsoMVA2T, "l2_tauIsoMVA2T/O");
-
+    Run_Tree->Branch("iso_2", &l2_tauIsoMVA2raw, "iso_2/F");
     Run_Tree->Branch("l2_tauRejMuL", &l2_tauRejMuL, "l2_tauRejMuL/O");
-    Run_Tree->Branch("l2_tauRejMuM", &l2_tauRejMuM, "l2_tauRejMuM/O");
-    Run_Tree->Branch("l2_tauRejMuT", &l2_tauRejMuT, "l2_tauRejMuT/O");
     Run_Tree->Branch("againstMuonLoose2_2", &l2_tauRejMu2L, "againstMuonLoose2_2/O");
+    Run_Tree->Branch("l2_tauRejMuM", &l2_tauRejMuM, "l2_tauRejMuM/O");
     Run_Tree->Branch("againstMuonMedium2_2", &l2_tauRejMu2M, "againstMuonMedium2_2/O");
+    Run_Tree->Branch("l2_tauRejMuT", &l2_tauRejMuT, "l2_tauRejMuT/O");
     Run_Tree->Branch("againstMuonTight2_2", &l2_tauRejMu2T, "againstMuonTight2_2/O");
-
-    Run_Tree->Branch("againstElectronMVA3raw_2", &l2_tauRejEleMVA, "againstElectronMVA3raw_2/F");
     Run_Tree->Branch("l2_tauRejEleL", &l2_tauRejEleL, "l2_tauRejEleL/O");
     Run_Tree->Branch("l2_tauRejEleM", &l2_tauRejEleM, "l2_tauRejEleM/O");
+    Run_Tree->Branch("againstElectronMVA3raw_2", &l2_tauRejEleMVA, "againstElectronMVA3raw_2/F");
     Run_Tree->Branch("l2_tauRejEleMVA3L", &l2_tauRejEleMVA3L, "l2_tauRejEleMVA3L/O");
     Run_Tree->Branch("l2_tauRejEleMVA3M", &l2_tauRejEleMVA3M, "l2_tauRejEleMVA3M/O");
     Run_Tree->Branch("l2_tauRejEleMVA3T", &l2_tauRejEleMVA3T, "l2_tauRejEleMVA3T/O");
-
     Run_Tree->Branch("l2_RefJetPt", &l2_RefJetPt, "l2_RefJetPt/F");
     Run_Tree->Branch("l2_RefJetEta", &l2_RefJetEta, "l2_RefJetEta/F");
     Run_Tree->Branch("l2_RefJetPhi", &l2_RefJetPhi, "l2_RefJetPhi/F");
@@ -327,11 +318,6 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("njetpt20", &njetpt20, "njetpt20/I");
     Run_Tree->Branch("nbtag", &nbtag, "nbtag/I");
     Run_Tree->Branch("mcdata", &mcdata, "mcdata/I");
-
-    //Newly added
-    Run_Tree->Branch("l1_d0", &l1_d0, "l1_d0/F");
-    Run_Tree->Branch("l1_dZ_in", &l1_dZ_in, "l1_dZ_in/F");
-    Run_Tree->Branch("l2_DecayModeFinding", &l2_DecayModeFinding, "l2_DecayModeFinding/O");
 
 
     //#################################################################################################

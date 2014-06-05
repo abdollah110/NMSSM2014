@@ -37,13 +37,17 @@ reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("inter
 //    LumiWeights_11 = new reweight::LumiReWeighting("interface/Fall11_PU_observed.root", "interface/dataPileUpHistogram_Observed_2011.root", "mcPU", "pileup"); // Last Bug found in 25 Nov
 
 
-unsigned int Channel = 0;
-unsigned int Run = 0;
-unsigned int Lumi = 0;
-unsigned int Event = 0;
+int Channel = 0;
+int Run = 0;
+int Lumi = 0;
+int Event = 0;
+//unsigned int Channel = 0;
+//unsigned int Run = 0;
+//unsigned int Lumi = 0;
+//unsigned int Event = 0;
 float mvis = 0;
 float met, metphi, mvamet, mvametphi, mvametNoRecoil, mvametphiNoRecoil;
-float l1M, l1Px, l1Py, l1Pz, l1E, l1Pt, l1Phi, l1Eta, l1Charge, l1_muIso, l1_eleIso, l1_eleMVANonTrg, l1_eleNumHit, l1_tauIsoMVA2raw = -10;
+float l1M, l1Px, l1Py, l1Pz, l1E, l1Pt, l1Phi, l1Eta, l1Charge, l1_muIso, l1_eleIso, l1_eleMVANonTrg, l1_eleNumHit, l1_tauIsoMVA2raw, l1_d0, l1_dZ_in = -10;
 float l2M, l2Px, l2Py, l2Pz, l2E, l2Pt, l2Phi, l2Eta, l2Charge, l2_muIso, l2_eleIso, l2_eleMVANonTrg, l2_eleNumHit, l2_tauIsoMVA2raw, byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = -10;
 float l2_RefJetPt, l2_RefJetEta, l2_RefJetPhi = -10;
 bool l1_muId_Loose, l1_muId_Tight, l1_eleId_Loose, l1_eleId_Tight, l2_muId_Loose, l2_eleId_Loose, l2_muId_Tight, l2_eleId_Tight;
@@ -52,14 +56,14 @@ bool l1_tauIso3HitL, l1_tauIso3HitM, l1_tauIso3HitT, l1_tauRejMu2L, l1_tauRejMu2
 bool l1_tauIsoVL, l1_tauIsoMVA2L, l1_tauIsoMVA2M, l1_tauIsoMVA2T;
 bool l2_tauIsoL, l2_tauIsoM, l2_tauIsoT, l2_tauRejMuL, l2_tauRejMuM, l2_tauRejMuT, l2_tauRejEleL, l2_tauRejEleM, l2_tauRejEleMVA;
 bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu2L, l2_tauRejMu2M, l2_tauRejMu2T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
-bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T;
+bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T, l2_DecayModeFinding;
 
 //float mvacov00_mutau, mvacov01_mutau, mvacov10_mutau, mvacov11_mutau;
 //float mvacov00_etau, mvacov01_etau, mvacov10_etau, mvacov11_etau;
 float mvacov00, mvacov01, mvacov10, mvacov11;
 float metcov00, metcov01, metcov10, metcov11;
 float eff_Correction, pu_Weight;
-int num_PV,  npu, mcdata;
+int num_PV, npu, mcdata;
 int mu_Size, BareMuon_Size, electron_Size, BareElectron_Size, tau_Size, BareTau_Size;
 float l1_CloseJetPt, l2_CloseJetPt;
 float l1_CloseJetEta, l2_CloseJetEta;
@@ -108,14 +112,15 @@ float jdphi;
 float jetpt;
 float dijetphi;
 
-void fillTree(TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string ThisChannel, myobject obj1, myobject obj2) {
+void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
 
 
 
-    if (ThisChannel == "mutau") Channel = 1;
-    else if (ThisChannel == "eltau") Channel = 2;
-    else Channel = 3;
+    //    if (FinalState == "mutau") Channel = 1;
+    //    else if (FinalState == "eltau") Channel = 2;
+    //    else Channel = 3;
+    Channel = chnl;
 
     if (is_data_mc == "mc11") mcdata = 1;
     if (is_data_mc == "data11") mcdata = 2;
@@ -158,7 +163,7 @@ void fillTree(TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string 
 
 
 
-    if (ThisChannel == "mutau") {
+    if (FinalState == "mutau") {
         mvamet = MVAMetRecoil_mutau.front().pt;
         mvametphi = MVAMetRecoil_mutau.front().phi;
         mvametNoRecoil = MVAMet_mutau.front().pt;
@@ -170,7 +175,7 @@ void fillTree(TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string 
         mt_1 = TMass(obj1, MVAMetRecoil_mutau.front());
         mt_2 = TMass(obj2, MVAMetRecoil_mutau.front());
     }
-    if (ThisChannel == "eltau") {
+    if (FinalState == "eltau") {
         mvamet = MVAMetRecoil_etau.front().pt;
         mvametphi = MVAMetRecoil_etau.front().phi;
         mvametNoRecoil = MVAMet_etau.front().pt;
@@ -302,6 +307,7 @@ void fillTree(TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string 
     l2_tauRejEleMVA3L = obj2.discriminationByElectronMVA5Loose;
     l2_tauRejEleMVA3M = obj2.discriminationByElectronMVA5Medium;
     l2_tauRejEleMVA3T = obj2.discriminationByElectronMVA5Tight;
+    l2_DecayModeFinding= obj2.discriminationByDecayModeFinding;
     //    l2_tauRejEleMVA = obj2.discriminationByElectronMVA;
     //    l2_tauRejEleMVA3L = obj2.discriminationByElectronMVA3Loose;
     //    l2_tauRejEleMVA3M = obj2.discriminationByElectronMVA3Medium;
@@ -318,7 +324,7 @@ void fillTree(TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string 
     //  Other Information
     //  ########## ########## ########## ########## ########## ##########
     rho = m->Rho;
-    eff_Correction = getCorrFactor(ThisChannel, is_data_mc, obj1, obj2, obj2);
+    eff_Correction = getCorrFactor(FinalState, is_data_mc, obj1, obj2, obj2);
     vector<myobject> Vertex = m->Vertex;
     num_PV = Vertex.size();
     pu_Weight = PU_Weight;
@@ -326,9 +332,9 @@ void fillTree(TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string 
     mvis = InvarMass_2(obj1, obj2);
 
 
-    idweight_1 = getCorrIdIsoLep(ThisChannel, is_data_mc, obj2);
-    trigweight_1 = getCorrTriggerLep(ThisChannel, is_data_mc, obj1);
-    trigweight_2 = getCorrTriggerTau(ThisChannel, is_data_mc, obj2);
+    idweight_1 = getCorrIdIsoLep(FinalState, is_data_mc, obj2);
+    trigweight_1 = getCorrTriggerLep(FinalState, is_data_mc, obj1);
+    trigweight_2 = getCorrTriggerTau(FinalState, is_data_mc, obj2);
 
     Run_Tree->Fill();
 }
