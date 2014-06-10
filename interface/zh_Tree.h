@@ -271,7 +271,8 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l1_CloseJetPt = Find_Closet_Jet(obj1, m)[0];
     l1_CloseJetEta = Find_Closet_Jet(obj1, m)[1];
     l1_CloseJetPhi = Find_Closet_Jet(obj1, m)[2];
-
+    l1_d0 = obj1.d0;
+    l1_dZ_in = obj1.dZ_in; //the impact parameter in the transverse plane
     //  ########## ########## ########## ########## ########## ##########
     //  Tau Information
     //  ########## ########## ########## ########## ########## ##########
@@ -307,7 +308,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2_tauRejEleMVA3L = obj2.discriminationByElectronMVA5Loose;
     l2_tauRejEleMVA3M = obj2.discriminationByElectronMVA5Medium;
     l2_tauRejEleMVA3T = obj2.discriminationByElectronMVA5Tight;
-    l2_DecayModeFinding= obj2.discriminationByDecayModeFinding;
+    l2_DecayModeFinding = obj2.discriminationByDecayModeFinding;
     //    l2_tauRejEleMVA = obj2.discriminationByElectronMVA;
     //    l2_tauRejEleMVA3L = obj2.discriminationByElectronMVA3Loose;
     //    l2_tauRejEleMVA3M = obj2.discriminationByElectronMVA3Medium;
@@ -335,6 +336,8 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     idweight_1 = getCorrIdIsoLep(FinalState, is_data_mc, obj2);
     trigweight_1 = getCorrTriggerLep(FinalState, is_data_mc, obj1);
     trigweight_2 = getCorrTriggerTau(FinalState, is_data_mc, obj2);
+
+
 
     Run_Tree->Fill();
 }

@@ -156,6 +156,10 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("nbtag", &nbtag);
     Run_Tree->SetBranchAddress("mcdata", &mcdata);
 
+    Run_Tree->SetBranchAddress("l1_d0", &l1_d0);
+    Run_Tree->SetBranchAddress("l1_dZ_in", &l1_dZ_in);
+    Run_Tree->SetBranchAddress("l2_DecayModeFinding", &l2_DecayModeFinding);
+
 
 
     //
@@ -233,14 +237,14 @@ int main(int argc, char** argv) {
             bool Mu_IdTight = l1_muId_Tight;
             bool Mu_d0 = 1; //the impact parameter in the transverse plane
             bool Mu_dZ = 1; //the impact parameter in the transverse plane
-            //        bool Mu_d0 = mu_[i].d0 < 0.045; //the impact parameter in the transverse plane
-            //        bool Mu_dZ = mu_[i].dZ_in < 0.2; //the impact parameter in the transverse plane
+//            bool Mu_d0 = l1_d0 < 0.045; //the impact parameter in the transverse plane
+//            bool Mu_dZ = l1_dZ_in < 0.2; //the impact parameter in the transverse plane
             bool Mu_Iso = l1_muIso < 0.10;
             bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
             bool Tau_PtEta = l2Pt > 20 && fabs(l2Eta) < 2.3;
             //        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
-            bool Tau_DMF = 1;
+            bool Tau_DMF = l2_DecayModeFinding;
             bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
             bool Tau_antiEl = l2_tauRejEleL;
             bool Tau_antiMu = l2_tauRejMu2T;
@@ -258,16 +262,16 @@ int main(int argc, char** argv) {
         }
 
 
-        if (Channel == 2) {
+        if (Channel == 3) {
 
 
-            bool El_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
+            bool El_PtEta = l1Pt > 24 && fabs(l1Eta) < 2.1;
             bool El_IdTight = l1_eleId_Tight;
             bool El_Iso = l1_eleIso < 0.1;
             bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
             bool Tau_PtEta = l2Pt > 20 && fabs(l2Eta) < 2.3;
-            bool Tau_DMF = 1;
+            bool Tau_DMF = l2_DecayModeFinding;
             //            bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
             bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
             bool Tau_antiEl = l2_tauRejEleMVA3M;
