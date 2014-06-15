@@ -34,6 +34,7 @@
 #include "interface/zh_Tree.h"
 #include "interface/Leptons_IdIso.h"
 #include "interface/zh_Functions.h"
+#include "DoAnalysis/myHelper.h"
 
 int main(int argc, char** argv) {
 
@@ -84,118 +85,10 @@ int main(int argc, char** argv) {
     //#################################################################################################
     //############## defining Tree Branches Filled via fillTree function                ###############
     //#################################################################################################
-    TTree *Run_Tree = new TTree("TauCheck", "TauCheck");
+    TTree *Run_Tree = new TTree("InfoTree", "InfoTree");
     //    To force a memory-resident Tree
     Run_Tree->SetDirectory(0);
 
-
-    //
-    //
-    //    //    run
-    //    //    lumi
-    //    //    evt
-    //    //    npv
-    //    //    npu
-    //    //    rho
-    //    //    mcweight
-    //    //    puweight
-    //    //    trigweight_1
-    //    //    trigweight_2
-    //    //    idweight_1
-    //    //    idweight_2  // Empty
-    //    //    isoweight_1  not filled
-    //    //    isoweight_2  Empty
-    //    //    effweight
-    //    weight
-    //    embeddedWeight
-    //    //    mvis
-    //    m_sv
-    //    pt_sv
-    //    eta_sv
-    //    phi_sv
-    //    m_sv_Up
-    //    m_sv_Down
-    //
-    //    //    pt_1
-    //    //    phi_1
-    //    //    eta_1
-    //    //    m_1
-    //    //    q_1
-    //    //    iso_1   NOT Now  For Mu Ele
-    //    //    mva_1   NOT now   For Mu Ele
-    //    //    passid_1  not needed
-    //    //    passiso_1  not needed
-    //    //    mt_1
-    //
-    //    //    pt_2
-    //    //    phi_2
-    //    //    eta_2
-    //    //    m_2
-    //    //    q_2
-    //    //    iso_2
-    //    //    mva_2
-    //    //    passid_2   not needed
-    //    //    passiso_2   not needed
-    //    //    mt_2
-    //
-    //    //    byCombinedIsolationDeltaBetaCorrRaw3Hits_2
-    //    //    againstElectronMVA3raw_2
-    //    //    byIsolationMVA2raw_2
-    //    //    againstMuonLoose2_2
-    //    //    againstMuonMedium2_2
-    //    //    againstMuonTight2_2
-    //    //    met
-    //    //    metphi
-    //    //    mvamet
-    //    //    mvametphi
-    //    pzetavis
-    //    pzetamiss
-    //
-    //    //    metcov00
-    //    //    metcov01
-    //    //    metcov10
-    //    //    metcov11
-    //    //    mvacov00
-    //    //    mvacov01
-    //    //    mvacov10
-    //    //    mvacov11
-    //    //    jpt_1
-    //    //    jeta_1
-    //    //    jphi_1
-    //    jptraw_1
-    //    jptunc_1
-    //    jmva_1
-    //    jlrm_1
-    //    jctm_1
-    //    //    jpass_1
-    //    //    jpt_2
-    //    //    jeta_2
-    //    //    jphi_2
-    //    jptraw_2
-    //    jptunc_2
-    //    jmva_2
-    //    jlrm_2
-    //    jctm_2
-    //    //    jpass_2
-    //    //    bpt
-    //    //    beta
-    //    //    bphi
-    //    //    mjj
-    //    //    jdeta
-    //    njetingap
-    //    mva
-    //    //    jdphi
-    //    //    dijetpt
-    //    //    dijetphi
-    //    hdijetphi
-    //    visjeteta
-    //    ptvis
-    //    //    nbtag
-    //    //    njets
-    //    //    njetpt20
-    //    //    mva_gf   noinfo
-    //    //    mva_vbf   noinfo
-    //
 
 
     Run_Tree->Branch("Channel", &Channel, "Channel/I");
@@ -319,6 +212,14 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("beta_2", &beta_2, "beta_2/F");
     Run_Tree->Branch("bphi_2", &bphi_2, "bphi_2/F");
     Run_Tree->Branch("bdiscriminant_2", &bdiscriminant_2, "bdiscriminant_2/F");
+    Run_Tree->Branch("loosebpt", &loosebpt, "loosebpt/F");
+    Run_Tree->Branch("loosebeta", &loosebeta, "loosebeta/F");
+    Run_Tree->Branch("loosebphi", &loosebphi, "loosebphi/F");
+    Run_Tree->Branch("loosebdiscriminant", &loosebdiscriminant, "loosebdiscriminant/F");
+    Run_Tree->Branch("loosebpt_2", &loosebpt_2, "loosebpt_2/F");
+    Run_Tree->Branch("loosebeta_2", &loosebeta_2, "loosebeta_2/F");
+    Run_Tree->Branch("loosebphi_2", &loosebphi_2, "loosebphi_2/F");
+    Run_Tree->Branch("loosebdiscriminant_2", &loosebdiscriminant_2, "loosebdiscriminant_2/F");
     Run_Tree->Branch("mjj", &mjj, "mjj/F");
     Run_Tree->Branch("jdeta", &jdeta, "jdeta/F");
     Run_Tree->Branch("jdphi", &jdphi, "jdphi/F");
@@ -332,6 +233,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l1_d0", &l1_d0, "l1_d0/F");
     Run_Tree->Branch("l1_dZ_in", &l1_dZ_in, "l1_dZ_in/F");
     Run_Tree->Branch("l2_DecayModeFinding", &l2_DecayModeFinding, "l2_DecayModeFinding/O");
+    Run_Tree->Branch("zCategory", &zCategory, "zCategory/I");
 
 
     //#################################################################################################
@@ -414,15 +316,17 @@ int main(int argc, char** argv) {
                             bool Veto_MME = Multi_Lepton_Veto("MME", m);
 
 
-                            if (Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
+                            bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME;
+
+                            //Loose Selection
+                            if (LooseSelection) {
                                 fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
                             }
+                            //Final selection
                             if (MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
                                 plotFill("mutau", ++mutau, 20, 0., 20.);
                                 fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
                                 break;
-                                //                                cout << "tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits= " << tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits << "\t";
-
                             }
                         }
                     }
@@ -465,14 +369,15 @@ int main(int argc, char** argv) {
                             bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
                             bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
+                            //Loose Selection
                             if (El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
                                 fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                             }
+                            //Final selection
                             if (EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
                                 plotFill("eltau", ++eltau, 20, 0., 20.);
                                 fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                                 break;
-                                //                                cout << "----------------------------- tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits=   " << tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits << "   ___   "<< Event <<endl;
 
                             }
 

@@ -33,7 +33,20 @@ inline double deltaPhi(myobject const& a, myobject const& b) {
     return fabs(result);
 }
 
+inline double deltaPhi(myGenobject const& a, myobject const& b) {
+    double result = a.phi - b.phi;
+    while (result > M_PI) result -= 2 * M_PI;
+    while (result <= -M_PI) result += 2 * M_PI;
+    return fabs(result);
+}
+
 inline double deltaR2(myobject const& a, myobject const& b) {
+    double deta = a.eta - b.eta;
+    double dphi = deltaPhi(a, b);
+    return deta * deta + dphi*dphi;
+}
+
+inline double deltaR2(myGenobject const& a, myobject const& b) {
     double deta = a.eta - b.eta;
     double dphi = deltaPhi(a, b);
     return deta * deta + dphi*dphi;
@@ -47,25 +60,46 @@ inline double deltaR2(myobject const& a, myobject const& b) {
 inline double deltaR(myobject const& a, myobject const& b) {
     return sqrt(deltaR2(a, b));
 }
+
+inline double deltaR(myGenobject const& a, myobject const& b) {
+    return sqrt(deltaR2(a, b));
+}
 //inline double deltaR(double eta1, double phi1, double eta2, double phi2) {
 //    return sqrt(deltaR2(eta1, phi1, eta2, phi2));
 //}
 
-double delta(myevent *m, myobject * tau) {
-    vector<myobject> jet;
-    jet = m->RecPFJetsAK5;
-    double minDis = 1000;
-    double mydeltaR;
-    for (vector<myobject>::iterator itjet = jet.begin(); itjet != jet.end(); itjet++) {
-        if (itjet->pt > 20) {
-            mydeltaR = deltaR(*tau, *itjet);
-            if (mydeltaR > 0.1)
-                if (mydeltaR < minDis) minDis = mydeltaR;
-        }
-    }
+//double delta(myevent *m, myobject * tau) {
+//    vector<myobject> jet;
+//    jet = m->RecPFJetsAK5;
+//    double minDis = 1000;
+//    double mydeltaR;
+//    for (vector<myobject>::iterator itjet = jet.begin(); itjet != jet.end(); itjet++) {
+//        if (itjet->pt > 20) {
+//            mydeltaR = deltaR(*tau, *itjet);
+//            if (mydeltaR > 0.1)
+//                if (mydeltaR < minDis) minDis = mydeltaR;
+//        }
+//    }
+//
+//    return minDis;
+//}
 
-    return minDis;
+int ZCategory(myevent *m, myobject const& tau) {
+    int numGenTau = 0;
+    bool RecoTauMatchToGenLep = false;
+
+    vector<myGenobject> genPar = m->RecGenParticle;
+    for (int gg = 0; gg < genPar.size(); gg++) {
+
+        if (abs(genPar[gg].mod_pdgId) == 23 && abs(genPar[gg].pdgId) == 15) numGenTau++;
+        if (genPar[gg].pt > 8 && (abs(genPar[gg].pdgId) == 11 || abs(genPar[gg].pdgId) == 13) && deltaR(genPar[gg], tau) < 0.5) RecoTauMatchToGenLep = true;
+    }
+    if (numGenTau == 2 && !RecoTauMatchToGenLep) return 1;
+    if (numGenTau == 0 && RecoTauMatchToGenLep) return 2;
+    if (numGenTau == 0 && !RecoTauMatchToGenLep) return 3;
+    else return -10;
 }
+
 
 //struct  InvarMass_2{
 //    double InvarMass_2 ()(myobject const& a, myobject const& b) const {

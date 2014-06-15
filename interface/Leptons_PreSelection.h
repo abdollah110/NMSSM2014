@@ -320,6 +320,21 @@ vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b) {
     sort(goodbJet.begin(), goodbJet.end(), myobject_grt());
     return goodbJet;
 }
+vector<myobject> GoodLoosebJet20(myevent *m, myobject const& a, myobject const& b) {
+
+    vector<myobject> goodbJet;
+    vector<myobject> jet = GoodJet20(m);
+
+    //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
+    for (int k = 0; k < jet.size(); k++) {
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.244 ) {
+            //            if (NonOverLapWithMuEle(m, jet[k])) goodbJet.push_back(jet[k]);
+            if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
+        }
+    }
+    sort(goodbJet.begin(), goodbJet.end(), myobject_grt());
+    return goodbJet;
+}
 
 //*********************************************************************************************
 //****************************    Removing OverLaps  for GoodLeptons ***************************************

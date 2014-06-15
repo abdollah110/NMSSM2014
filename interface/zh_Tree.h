@@ -105,12 +105,23 @@ float beta_2;
 float bphi_2;
 float bdiscriminant_2;
 
+float loosebpt;
+float loosebeta;
+float loosebphi;
+float loosebdiscriminant;
+
+float loosebpt_2;
+float loosebeta_2;
+float loosebphi_2;
+float loosebdiscriminant_2;
+
 float mjj;
 float jdeta;
 float jdphi;
 
 float jetpt;
 float dijetphi;
+int zCategory= -10;
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -201,6 +212,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //  ########## ########## ########## ########## ########## ##########
     vector<myobject> JETS = GoodJet30(m, obj1, obj2);
     vector<myobject> BJETS = GoodbJet20(m, obj1, obj2);
+    vector<myobject> BLooseJETS = GoodLoosebJet20(m, obj1, obj2);
 
     njetpt20 = GoodJet20(m).size();
     njets = JETS.size();
@@ -227,6 +239,16 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     beta_2 = (BJETS.size() > 1 ? BJETS[1].eta : -1000);
     bphi_2 = (BJETS.size() > 1 ? BJETS[1].phi : -1000);
     bdiscriminant_2 = (BJETS.size() > 1 ? BJETS[1].bDiscriminatiors_CSV : -1000);
+
+    loosebpt = (BLooseJETS.size() > 0 ? BLooseJETS[0].pt : -1000);
+    loosebeta = (BLooseJETS.size() > 0 ? BLooseJETS[0].eta : -1000);
+    loosebphi = (BLooseJETS.size() > 0 ? BLooseJETS[0].phi : -1000);
+    loosebdiscriminant = (BLooseJETS.size() > 0 ? BLooseJETS[0].bDiscriminatiors_CSV : -1000);
+
+    loosebpt_2 = (BLooseJETS.size() > 1 ? BLooseJETS[1].pt : -1000);
+    loosebeta_2 = (BLooseJETS.size() > 1 ? BLooseJETS[1].eta : -1000);
+    loosebphi_2 = (BLooseJETS.size() > 1 ? BLooseJETS[1].phi : -1000);
+    loosebdiscriminant_2 = (BLooseJETS.size() > 1 ? BLooseJETS[1].bDiscriminatiors_CSV : -1000);
 
     mjj = (JETS.size() > 1 ? InvarMass_2(JETS[0], JETS[1]) : -1000);
     jdeta = (JETS.size() > 1 ? fabs(JETS[0].eta - JETS[1].eta) : -1000);
@@ -336,6 +358,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     idweight_1 = getCorrIdIsoLep(FinalState, is_data_mc, obj2);
     trigweight_1 = getCorrTriggerLep(FinalState, is_data_mc, obj1);
     trigweight_2 = getCorrTriggerTau(FinalState, is_data_mc, obj2);
+    zCategory = ZCategory(m, obj2);
 
 
 

@@ -226,7 +226,7 @@ int main(int argc, char** argv) {
 
 
         //####################################################
-        // MMTT FakeRateation
+        // MT FakeRateation
         //####################################################
 
         if (Channel == 1) {
@@ -237,8 +237,8 @@ int main(int argc, char** argv) {
             bool Mu_IdTight = l1_muId_Tight;
             bool Mu_d0 = 1; //the impact parameter in the transverse plane
             bool Mu_dZ = 1; //the impact parameter in the transverse plane
-//            bool Mu_d0 = l1_d0 < 0.045; //the impact parameter in the transverse plane
-//            bool Mu_dZ = l1_dZ_in < 0.2; //the impact parameter in the transverse plane
+            //            bool Mu_d0 = l1_d0 < 0.045; //the impact parameter in the transverse plane
+            //            bool Mu_dZ = l1_dZ_in < 0.2; //the impact parameter in the transverse plane
             bool Mu_Iso = l1_muIso < 0.10;
             bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
@@ -259,8 +259,46 @@ int main(int argc, char** argv) {
                 plotFill("Multiplicity_mutau", 0, 1, 0, 1);
                 Event_Double[1][1] = Event;
             }
+
+            //####################################################
+            float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
+            bool OS = l1Charge * l2Charge < 0;
+            bool SS = l1Charge * l2Charge > 0;
+            if (MU_CUTS && TAU_CUTS && (Event != Event_Double[1][2])) { //SameSign
+                plotFill("Mass_NOCorrection_mutau", mvis, 400, 0, 400);
+                plotFill("Mass_mutau", mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                if (SS && mT < 30) {
+                    Event_Double[1][2] = Event;
+                    plotFill("Mass_NOCorrection_mutau_mTLess30_SS", mvis, 400, 0, 400);
+                    plotFill("Mass_mutau_mTLess30_SS", mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                }
+                if (SS && mT > 70) {
+                    Event_Double[1][2] = Event;
+                    plotFill("Mass_NOCorrection_mutau_mTHigher70_SS", mvis, 400, 0, 400);
+                    plotFill("Mass_mutau_mTHigher70_SS", mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                }
+                if (OS && mT > 70) {
+                    Event_Double[1][2] = Event;
+                    plotFill("Mass_NOCorrection_mutau_mTHigher70_OS", mvis, 400, 0, 400);
+                    plotFill("Mass_mutau_mTHigher70_OS", mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                }
+
+            }
+            //####################################################
+            if (SS && Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && SS && l1_muIso > 0.2 && l1_muIso < 0.5 && TAU_CUTS) {
+                plotFill("Mass_NOCorrection_mutau_shape_SS", mvis, 400, 0, 400);
+                plotFill("Mass_mutau_shape_SS", mvis, 400, 0, 400, pu_Weight * eff_Correction);
+            }
+
+
+
+
+
         }
 
+        //####################################################
+        // ET FakeRateation
+        //####################################################
 
         if (Channel == 3) {
 
@@ -286,6 +324,13 @@ int main(int argc, char** argv) {
                 plotFill("Multiplicity_eletau", 0, 1, 0, 1);
                 Event_Double[2][1] = Event;
 
+            }
+
+            float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
+            if (EL_CUTS && TAU_CUTS && ElTau_Charge && mT < 30 && (Event != Event_Double[2][2])) {
+                plotFill("Mass_NOCorrection_eletau", mvis, 400, 0, 400);
+                plotFill("Mass_eletau", mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                Event_Double[2][2] = Event;
             }
         }
 
