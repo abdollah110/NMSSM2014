@@ -97,6 +97,7 @@ int ZCategory(myevent *m, myobject const& tau) {
     if (numGenTau == 2 && !RecoTauMatchToGenLep) return 1;
     if (numGenTau == 0 && RecoTauMatchToGenLep) return 2;
     if (numGenTau == 0 && !RecoTauMatchToGenLep) return 3;
+    if (numGenTau == 2 && RecoTauMatchToGenLep) return 4;
     else return -10;
 }
 

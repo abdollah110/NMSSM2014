@@ -1,3 +1,10 @@
+// Missing for next time is
+// 1) tau decay  correction
+// 2) btag correction at analysis level from Veelken
+// 3) check the trigger eff efficiency correction
+// 4) pu reweighting correction
+
+
 // The code to do teh ZH totautau Analysis
 // to make it excutable run: ./Make.sh nMSSM_Analysis.cc 
 // to make it excutable run: ./nMSSM_Analysis.exe   mc12  out.root InputFile.root
@@ -227,6 +234,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("njets", &njets, "njets/I");
     Run_Tree->Branch("njetpt20", &njetpt20, "njetpt20/I");
     Run_Tree->Branch("nbtag", &nbtag, "nbtag/I");
+    Run_Tree->Branch("nbtagLoose", &nbtagLoose, "nbtagLoose/I");
     Run_Tree->Branch("mcdata", &mcdata, "mcdata/I");
 
     //Newly added

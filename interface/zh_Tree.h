@@ -217,6 +217,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     njetpt20 = GoodJet20(m).size();
     njets = JETS.size();
     nbtag = BJETS.size();
+    nbtagLoose = BLooseJETS.size();
 
     jpt_1 = (JETS.size() > 0 ? JETS[0].pt : -1000);
     jeta_1 = (JETS.size() > 0 ? JETS[0].eta : -1000);

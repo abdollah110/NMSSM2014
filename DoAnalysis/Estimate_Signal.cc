@@ -22,8 +22,8 @@ int main(int argc, char** argv) {
     myMap2 = new map<string, TH2F*>();
     //
     TFile *f_Double = new TFile(input.c_str());
-    TTree *Run_Tree = (TTree*) f_Double->Get("TauCheck");
-    //    Run_Tree->AddFriend("Mass_tree");
+    TTree *Run_Tree = (TTree*) f_Double->Get("InfoTree");
+    //    Run_Tree->AddFriend("visibleMass_tree");
 
 
 
@@ -147,6 +147,14 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("beta_2", &beta_2);
     Run_Tree->SetBranchAddress("bphi_2", &bphi_2);
     Run_Tree->SetBranchAddress("bdiscriminant_2", &bdiscriminant_2);
+    Run_Tree->SetBranchAddress("loosebpt", &loosebpt);
+    Run_Tree->SetBranchAddress("loosebeta", &loosebeta);
+    Run_Tree->SetBranchAddress("loosebphi", &loosebphi);
+    Run_Tree->SetBranchAddress("loosebdiscriminant", &loosebdiscriminant);
+    Run_Tree->SetBranchAddress("loosebpt_2", &loosebpt_2);
+    Run_Tree->SetBranchAddress("loosebeta_2", &loosebeta_2);
+    Run_Tree->SetBranchAddress("loosebphi_2", &loosebphi_2);
+    Run_Tree->SetBranchAddress("loosebdiscriminant_2", &loosebdiscriminant_2);
     Run_Tree->SetBranchAddress("mjj", &mjj);
     Run_Tree->SetBranchAddress("jdeta", &jdeta);
     Run_Tree->SetBranchAddress("jdphi", &jdphi);
@@ -160,7 +168,7 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("l1_dZ_in", &l1_dZ_in);
     Run_Tree->SetBranchAddress("l2_DecayModeFinding", &l2_DecayModeFinding);
 
-
+    Run_Tree->SetBranchAddress("zCategory", &zCategory);
 
     //
     //    //New BG_Tree
@@ -211,10 +219,7 @@ int main(int argc, char** argv) {
     //Just each categori should be filled once
     int Event_Double[8][9];
     memset(Event_Double, 0, sizeof (Event_Double[0][0]) * 8 * 9);
-    int Ev_double_tau = 0; //need to be checked gloat instead of integer!!!!!!!!
-    int Ev_double_ele = 0;
-    int Ev_double_mu = 0;
-    int Ev_double_Ltau = 0;
+    float QCD_OSSS_SFactor = 1.06;
     //###############################################################################################
 
     Int_t nentries_wtn = (Int_t) Run_Tree->GetEntries();
@@ -235,15 +240,12 @@ int main(int argc, char** argv) {
 
             bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
             bool Mu_IdTight = l1_muId_Tight;
-            bool Mu_d0 = 1; //the impact parameter in the transverse plane
-            bool Mu_dZ = 1; //the impact parameter in the transverse plane
-            //            bool Mu_d0 = l1_d0 < 0.045; //the impact parameter in the transverse plane
-            //            bool Mu_dZ = l1_dZ_in < 0.2; //the impact parameter in the transverse plane
+            bool Mu_d0 = l1_d0 < 0.045; //the impact parameter in the transverse plane
+            bool Mu_dZ = l1_dZ_in < 0.2; //the impact parameter in the transverse plane
             bool Mu_Iso = l1_muIso < 0.10;
             bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
             bool Tau_PtEta = l2Pt > 20 && fabs(l2Eta) < 2.3;
-            //        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
             bool Tau_DMF = l2_DecayModeFinding;
             bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
             bool Tau_antiEl = l2_tauRejEleL;
@@ -252,48 +254,96 @@ int main(int argc, char** argv) {
 
             bool MuTau_Charge = l1Charge * l2Charge < 0;
 
+            bool selection_inclusive = 1;
+            bool selection_nobtag = nbtag < 1;
+            bool selection_btag = nbtag > 0 && njets < 2;
+            bool selection_btagLoose = loosebpt > 0 && njets < 2;
+            bool MSSM_Category[4] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
+            std::string index[4] = {"_inclusive", "_nobtag", "_btag","_btagLoose"};
+            //Loop Over 3 Categories
+            for (int icat = 0; icat < 4; icat++) {
+                if (MSSM_Category[icat]) {
+                    //################# Signal Selectiopn
+                    if (MU_CUTS && TAU_CUTS && MuTau_Charge && (Event != Event_Double[1][1])) {
+                        plotFill("mutau_visibleMass_NOCorrection" + index[icat], mvis, 400, 0, 400);
+                        plotFill("mutau_visibleMass" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                        plotFill("mutau_Multiplicity" + index[icat], 0, 1, 0, 1);
+                        //                        Event_Double[1][1] = Event;
+                    }
+                    //################# ZTT Selectiopn
+                    if (MU_CUTS && TAU_CUTS && MuTau_Charge && zCategory == 1 && (Event != Event_Double[1][3])) {
+                        plotFill("mutau_visibleMass_NOCorrection_ZTT" + index[icat], mvis, 400, 0, 400);
+                        plotFill("mutau_visibleMass_ZTT" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                        //                        Event_Double[1][3] = Event;
+                    }
+                    //################# ZL Selectiopn
+                    if (MU_CUTS && TAU_CUTS && MuTau_Charge && zCategory == 2 && (Event != Event_Double[1][3])) {
+                        plotFill("mutau_visibleMass_NOCorrection_ZL" + index[icat], mvis, 400, 0, 400);
+                        plotFill("mutau_visibleMass_ZL" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                        //                        Event_Double[1][3] = Event;
+                    }
+                    //################# ZJ Selectiopn
+                    if (MU_CUTS && TAU_CUTS && MuTau_Charge && zCategory == 3 && (Event != Event_Double[1][3])) {
+                        plotFill("mutau_visibleMass_NOCorrection_ZJ" + index[icat], mvis, 400, 0, 400);
+                        plotFill("mutau_visibleMass_ZJ" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                        //                        Event_Double[1][3] = Event;
+                    }
 
-            if (MU_CUTS && TAU_CUTS && MuTau_Charge && (Event != Event_Double[1][1])) {
-                plotFill("Mass_NOCorrection_mutau", mvis, 400, 0, 400);
-                plotFill("Mass_mutau", mvis, 400, 0, 400, pu_Weight * eff_Correction);
-                plotFill("Multiplicity_mutau", 0, 1, 0, 1);
-                Event_Double[1][1] = Event;
-            }
-
-            //####################################################
-            float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
-            bool OS = l1Charge * l2Charge < 0;
-            bool SS = l1Charge * l2Charge > 0;
-            if (MU_CUTS && TAU_CUTS && (Event != Event_Double[1][2])) { //SameSign
-                plotFill("Mass_NOCorrection_mutau", mvis, 400, 0, 400);
-                plotFill("Mass_mutau", mvis, 400, 0, 400, pu_Weight * eff_Correction);
-                if (SS && mT < 30) {
-                    Event_Double[1][2] = Event;
-                    plotFill("Mass_NOCorrection_mutau_mTLess30_SS", mvis, 400, 0, 400);
-                    plotFill("Mass_mutau_mTLess30_SS", mvis, 400, 0, 400, pu_Weight * eff_Correction);
-                }
-                if (SS && mT > 70) {
-                    Event_Double[1][2] = Event;
-                    plotFill("Mass_NOCorrection_mutau_mTHigher70_SS", mvis, 400, 0, 400);
-                    plotFill("Mass_mutau_mTHigher70_SS", mvis, 400, 0, 400, pu_Weight * eff_Correction);
-                }
-                if (OS && mT > 70) {
-                    Event_Double[1][2] = Event;
-                    plotFill("Mass_NOCorrection_mutau_mTHigher70_OS", mvis, 400, 0, 400);
-                    plotFill("Mass_mutau_mTHigher70_OS", mvis, 400, 0, 400, pu_Weight * eff_Correction);
-                }
-
-            }
-            //####################################################
-            if (SS && Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && SS && l1_muIso > 0.2 && l1_muIso < 0.5 && TAU_CUTS) {
-                plotFill("Mass_NOCorrection_mutau_shape_SS", mvis, 400, 0, 400);
-                plotFill("Mass_mutau_shape_SS", mvis, 400, 0, 400, pu_Weight * eff_Correction);
-            }
+                    //####################################################
+                    float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
+                    bool OS = l1Charge * l2Charge < 0;
+                    bool SS = l1Charge * l2Charge > 0;
+                    //#################  Selection for QCD Normalization from data
+                    if (MU_CUTS && TAU_CUTS && (Event != Event_Double[1][2])) { //SameSign
+                        plotFill("mutau_visibleMass_NOCorrection" + index[icat], mvis, 400, 0, 400);
+                        plotFill("mutau_visibleMass" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                        //################# Selection for QCD Normalization from data
+                        //                 Yield from (sideband normalisation)*(fixed extrapolation factor) in each category.
+                        //                 Sideband in data is ss && mT<30. Subtract contribution from all other background processes:
+                        //                 ZTT, ZL, ZJ, W, TOP, VV. DYJets MC is used to estimate directly the ZTT contribution in
+                        //                 this sideband. The W contribution similar to the default method above: normalisation is
+                        //                 data sideband ss && mT>70, and extrapolation factor from mT>70 to mT<30 from WJets
+                        //                 inclusive+njet samples using the category selection and ss events. The os/ss factor is 1.06.
 
 
 
+                        if (SS && mT < 30) {
+                            //                            Event_Double[1][2] = Event;
+                            plotFill("mutau_visibleMass_NOCorrection_mTLess30_SS" + index[icat], mvis, 400, 0, 400);
+                            plotFill("mutau_visibleMass_mTLess30_SS" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction * QCD_OSSS_SFactor);
+                        }
+                        if (OS && mT < 30) {
+                            //                            Event_Double[1][2] = Event;
+                            plotFill("mutau_visibleMass_NOCorrection_mTLess30_OS" + index[icat], mvis, 400, 0, 400);
+                            plotFill("mutau_visibleMass_mTLess30_OS" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction * QCD_OSSS_SFactor);
+                        }
+                        //################# W Subtraction for QCD Normalization from data
+                        if (SS && mT > 70) {
+                            //                            Event_Double[1][2] = Event;
+                            plotFill("mutau_visibleMass_NOCorrection_mTHigher70_SS" + index[icat], mvis, 400, 0, 400);
+                            plotFill("mutau_visibleMass_mTHigher70_SS" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                        }
+                        //################# Needed to Estimate WJets [need other BG to be subtracted]
+                        if (OS && mT > 70) {
+                            //                            Event_Double[1][2] = Event;
+                            plotFill("mutau_visibleMass_NOCorrection_mTHigher70_OS" + index[icat], mvis, 400, 0, 400);
+                            plotFill("mutau_visibleMass_mTHigher70_OS" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                        }
+
+                    }
+                    //####################################################
+                    //################# QCD Shape from anti-isolated without subtraction any other BG
+                    //            Take shape from anti-isolated ( 0.2<e/mu iso<0.5) and ss region in data,
+                    //            without subtracting any other background contributions.
+                    if (SS && Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && SS && l1_muIso > 0.2 && l1_muIso < 0.5 && TAU_CUTS) {
+                        plotFill("mutau_visibleMass_NOCorrection_shape_SS" + index[icat], mvis, 400, 0, 400);
+                        plotFill("mutau_visibleMass_shape_SS" + index[icat], mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                    }
 
 
+
+                } //check if category is passed
+            } // loop over categories
         }
 
         //####################################################
@@ -309,8 +359,8 @@ int main(int argc, char** argv) {
             bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
             bool Tau_PtEta = l2Pt > 20 && fabs(l2Eta) < 2.3;
+            //            bool Tau_DMF = 1;
             bool Tau_DMF = l2_DecayModeFinding;
-            //            bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
             bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
             bool Tau_antiEl = l2_tauRejEleMVA3M;
             bool Tau_antiMu = l2_tauRejMu2L;
@@ -319,17 +369,17 @@ int main(int argc, char** argv) {
             bool ElTau_Charge = l1Charge * l2Charge < 0;
 
             if (EL_CUTS && TAU_CUTS && ElTau_Charge && (Event != Event_Double[2][1])) {
-                plotFill("Mass_NOCorrection_eletau", mvis, 400, 0, 400);
-                plotFill("Mass_eletau", mvis, 400, 0, 400, pu_Weight * eff_Correction);
-                plotFill("Multiplicity_eletau", 0, 1, 0, 1);
+                plotFill("eletau_visibleMass_NOCorrection_eletau", mvis, 400, 0, 400);
+                plotFill("eletau_visibleMass_eletau", mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                plotFill("eletau_Multiplicity_eletau", 0, 1, 0, 1);
                 Event_Double[2][1] = Event;
 
             }
 
             float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
             if (EL_CUTS && TAU_CUTS && ElTau_Charge && mT < 30 && (Event != Event_Double[2][2])) {
-                plotFill("Mass_NOCorrection_eletau", mvis, 400, 0, 400);
-                plotFill("Mass_eletau", mvis, 400, 0, 400, pu_Weight * eff_Correction);
+                plotFill("eletau_visibleMass_NOCorrection_eletau", mvis, 400, 0, 400);
+                plotFill("eletau_visibleMass_eletau", mvis, 400, 0, 400, pu_Weight * eff_Correction);
                 Event_Double[2][2] = Event;
             }
         }

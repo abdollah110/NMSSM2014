@@ -13,10 +13,10 @@ import shutil
 Run_Over = {
 
     ##### Unfiltered
-#    1:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "35:00:00"),
-    2:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/Data", "data12", "35:00:00"),
-#    3:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples/53X/MC", "mc12", "25:00:00"),
-    4:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/Embedded", "data12", "35:00:00"),
+#    1:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "15:00:00"),
+    2:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/Data", "data12", "15:00:00"),
+#    3:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples/53X/MC", "mc12", "15:00:00"),
+    4:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/Embedded", "data12", "15:00:00"),
     
 }
 
@@ -55,7 +55,7 @@ def make_submit_form(order, pnfn, data_year, timing):
 
             #Writing on out Files
             command3 = "qsub -q localgrid@cream02.wn -o " + files[0:-1] + ".stdout -e " + files[0:-1] + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
-            command4 = "hadd -f ROOT/" + data_year + "/" + files[0:-1] + ".root\t" + "Out_" + files[0:-1] + "/*.root" + "\n"
+            command4 = "hadd -f ROOT/" + data_year + "/" + files[0:-1] +"_"+str(numMod)+ ".root\t" + "Out_" + files[0:-1] + "/*.root" + "\n"
             submit_File.write(command3)
             Hadd_File.write(command4)
 
