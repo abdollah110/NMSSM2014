@@ -181,6 +181,13 @@ def getHistoNorm_W_Z(PostFix,CoMEnergy,Name,chan,cat,Histogram):
         valueEr = round(valueEr, digit)
     return value, valueEr
 
+def getEmbeddedWeight(PostFix,CoMEnergy,Name,chan,cat,Histogram):
+    myfileSub = TFile(SubRootDir + "out_"+Name+chan +CoMEnergy+ '.root')
+    HistoInclusive = myfileSub.Get(chan+Histogram+ "_inclusive"+PostFix )
+    HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
+    value = HistoSub.Integral(low_bin,high_bin)/ HistoInclusive.Integral(low_bin,high_bin)
+    return value
+
     
 
 def make2DTable(PostFix,CoMEnergy):
@@ -283,7 +290,29 @@ def make2DTable(PostFix,CoMEnergy):
                 FullError.SetBinContent(XLoc , YLoc, valueEr)
                 FullError.GetYaxis().SetBinLabel(YLoc, Name)
                 if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
-            print "FullResults.GetBinContent(2,2)= ", FullResults.GetBinContent(2,2)
+
+#        #######################################  Filling Reducible BG ##########
+            print "Doing ZTT, BG estimation"
+            for BG_ZTT in range(len(Z_BackGround)):
+
+                Histogram = "_visibleMass_ZTT"
+                XLoc= categ + 3*chl + 1
+                YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+ lenghtZJ+ BG_ZTT+ 1
+                Name= str(Z_BackGround[BG_ZTT])
+
+                EmbedEff = getEmbeddedWeight(PostFix,CoMEnergy, "Embedded",channel[chl],category[categ],"_visibleMass")
+                value = getHistoNorm_W_Z(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",Histogram)[0] * Weight(Name, CoMEnergy) * EmbedEff
+                FullResults.SetBinContent(XLoc,YLoc , value)
+                FullResults.GetYaxis().SetBinLabel(YLoc, Name)
+
+                valueEr = getHistoNorm_W_Z(PostFix,CoMEnergy,Name ,channel[chl],"_inclusive",Histogram)[1] * Weight(Name, CoMEnergy) * EmbedEff
+                FullError.SetBinContent(XLoc , YLoc, valueEr)
+                FullError.GetYaxis().SetBinLabel(YLoc, Name)
+                if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr, "  embedEff=",EmbedEff
+
+
+
+
 
                 
 #        #######################################  Filling Reducible BG ##########
