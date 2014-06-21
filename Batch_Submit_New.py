@@ -24,7 +24,7 @@ Run_Over = {
 def make_submit_form(order, pnfn, data_year, timing):
 
     location = os.getcwd()
-    location = location.replace("/localgrid_mnt", "") #nedd to remove the first part of address while submitting
+#    location = location.replace("/localgrid_mnt", "") #nedd to remove the first part of address while submitting
     Sample = os.popen(("ls " + pnfn + " | sort "))
     name_submitFile = "Submit_" + data_year + "_"  + order + ".sh"
     name_haddFile = "Hadd_" + data_year + "_" +  order + ".sh"
@@ -54,7 +54,8 @@ def make_submit_form(order, pnfn, data_year, timing):
                     outFile.write(command2)
 
             #Writing on out Files
-            command3 = "qsub -q localgrid@cream02.wn -o " + files[0:-1] + ".stdout -e " + files[0:-1] + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
+#            command3 = "qsub -q localgrid@cream02.wn -o " + files[0:-1] + ".stdout -e " + files[0:-1] + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
+            command3 = "qsub -q localgrid@cream02 -o " + files[0:-1] + ".stdout -e " + files[0:-1] + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
             command4 = "hadd -f ROOT/" + data_year + "/" + files[0:-1] +"_"+str(numMod)+ ".root\t" + "Out_" + files[0:-1] +"_"+str(numMod)+ "/*.root" + "\n"
             submit_File.write(command3)
             Hadd_File.write(command4)
