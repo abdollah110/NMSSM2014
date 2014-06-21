@@ -37,7 +37,7 @@
 #include "interface/Leptons_PreSelection.h"
 #include "interface/zh_Auxiliary.h"
 #include "interface/Corrector.h"
-#include "interface/zh_Trigger.h"
+#include "interface/htt_Trigger.h"
 #include "interface/zh_Tree.h"
 #include "interface/Leptons_IdIso.h"
 #include "interface/zh_Functions.h"
@@ -65,7 +65,8 @@ int main(int argc, char** argv) {
     bool mc11 = (is_data_mc.compare("mc11") == 0 ? true : false);
     bool data12 = (is_data_mc.compare("data12") == 0 ? true : false);
     bool data11 = (is_data_mc.compare("data11") == 0 ? true : false);
-    if (!(mc12 || mc11 || data12 || data11))
+    bool embed12 = (is_data_mc.compare("embed12") == 0 ? true : false);
+    if (!(mc12 || mc11 || data12 || data11 || embed12))
         cout << "xxxxxxxxxxxxxxx Error, please slecet between: mc12 || mc11 || data12 || data11 " << endl;
 
     //#################################################################################################
@@ -276,9 +277,10 @@ int main(int argc, char** argv) {
             //*********************************************************************************************
             bool Trigger;
             if (mc12) Trigger = Trg_MC_12(m);
-            if (mc11) Trigger = Trg_MC_11(m);
+//            if (mc11) Trigger = Trg_MC_11(m);
             if (data12) Trigger = Trg_Data_12(m);
-            if (data11) Trigger = Trg_Data_11(m);
+            if (embed12) Trigger = 1;
+//            if (data11) Trigger = Trg_Data_11(m);
 
             //#################################################################################################
             bool doMuTauAnalysis = true;

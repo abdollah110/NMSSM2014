@@ -81,7 +81,7 @@ float rho;
 
 int njets;
 int njetpt20;
-int nbtag;
+int nbtag, nbtagLoose;
 
 float jpt_1;
 float jeta_1;
@@ -137,6 +137,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     if (is_data_mc == "data11") mcdata = 2;
     if (is_data_mc == "mc12") mcdata = 3;
     if (is_data_mc == "data12") mcdata = 4;
+    if (is_data_mc == "embed12") mcdata = 5;
 
     //*********************************************************************************************
     //****************************    PileUp re weighting    ***************************************

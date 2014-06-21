@@ -75,17 +75,17 @@ def XSection(mX, CoMEnergy):
 
 def Weight(mX, CoMEnergy):
     if CoMEnergy == '_8TeV':
-        if mX == 'DYJetsToLL':  return 0.242
-        if mX == 'DY1JetsToLL':  return  0.128
-        if mX == 'DY2JetsToLL':  return 0.0914
-        if mX == 'DY3JetsToLL':  return 0.0109
-        if mX == 'DY4JetsToLL':  return  0.00540
+        if mX == 'DYJetsToLL':  return 0.242 * 0.001
+        if mX == 'DY1JetsToLL':  return  0.128* 0.001
+        if mX == 'DY2JetsToLL':  return 0.0914* 0.001
+        if mX == 'DY3JetsToLL':  return 0.0109* 0.001
+        if mX == 'DY4JetsToLL':  return  0.00540* 0.001
 
-        if mX == 'WJetsToLNu':  return 6.149
-        if mX == 'W1JetsToLNu':  return  0.306
-        if mX == 'W2JetsToLNu':  return 0.153
-        if mX == 'W3JetsToLNu':  return 0.0436
-        if mX == 'W4JetsToLNu':  return  0.0597
+        if mX == 'WJetsToLNu':  return 6.149* 0.001
+        if mX == 'W1JetsToLNu':  return  0.306* 0.001
+        if mX == 'W2JetsToLNu':  return 0.153* 0.001
+        if mX == 'W3JetsToLNu':  return 0.0436* 0.001
+        if mX == 'W4JetsToLNu':  return  0.0597* 0.001
 
 #    if CoMEnergy == '_7TeV':
 #        if mX == 90:  return  [0.007537, 0.0001432]
@@ -148,10 +148,12 @@ lenghtVV = len(DiBoson_BackGround) +1
 lenghtTop = len(Top_BackGround) +1
 lenghtZL = len(Z_BackGround) + 1
 lenghtZJ = len(Z_BackGround) + 1
+lenghtZTT = len(Z_BackGround) + 1
 low_bin = 0
 high_bin = 1000
 digit = 3
 verbos_ = True
+QCDScaleFactor = 1.06
 
 
 def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
@@ -182,11 +184,30 @@ def getHistoNorm_W_Z(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     return value, valueEr
 
 def getEmbeddedWeight(PostFix,CoMEnergy,Name,chan,cat,Histogram):
-    myfileSub = TFile(SubRootDir + "out_"+Name+chan +CoMEnergy+ '.root')
+    myfileSub = TFile(SubRootDir + "out_"+Name+chan +CoMEnergy+ '.root') #need chan due to embedded name include MuTau
     HistoInclusive = myfileSub.Get(chan+Histogram+ "_inclusive"+PostFix )
     HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
     value = HistoSub.Integral(low_bin,high_bin)/ HistoInclusive.Integral(low_bin,high_bin)
     return value
+
+def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
+    myfileSub = TFile(SubRootDir + "out_"+Name+CoMEnergy+ '.root')
+    HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
+    HistoDenum = myfileSub.Get(chan+HistogramDenum+ cat+PostFix )
+    value = HistoNum.Integral(low_bin,high_bin)/ HistoDenum.Integral(low_bin,high_bin)
+    return value
+
+def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
+    myfileSub = TFile(SubRootDir + "out_"+Name +CoMEnergy+ '.root')
+    HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
+    value = 10E-7
+    valueEr = 10E-7
+    if (HistoSub):
+        value = HistoSub.Integral(low_bin,high_bin)
+        value = round(value, digit)
+        valueEr = math.sqrt(HistoSub.Integral(low_bin,high_bin))
+        valueEr = round(valueEr, digit)
+    return value, valueEr
 
     
 
@@ -199,10 +220,27 @@ def make2DTable(PostFix,CoMEnergy):
         for chl in range(len(channel)):
             print "starting category and channel", category[categ], channel[chl]
             ###################################### Filling Signal ZH and WH ########
+            VV_NormForWSub =0
+            TOP_NormForWSub =0
+            ZL_NormForWSub=0
+            ZJ_NormForWSub=0
+            ZTT_NormForWSub=0
+            VV_NormForWforQCD =0
+            TOP_NormForWforQCD =0
+            ZL_NormForWforQCD=0
+            ZJ_NormForWforQCD=0
+            ZTT_NormForWforQCD=0
+            VV_NormForQCD =0
+            TOP_NormForQCD =0
+            ZL_NormForQCD=0
+            ZJ_NormForQCD=0
+            ZTT_NormForQCD=0
+
+            ###################################### Filling Signal ZH and WH ########
             for sig in range(len(signal)):
                 for m in range(len(mass)):#    for m in range(110, 145, 5):
 
-                    Histogram = "_visibleMass"
+                    Histogram = "_visibleMass_mTLess30_OS"
                     XLoc= categ + 3*chl + 1
                     YLoc= sig * len(mass) + m + 1
                     Name= str(signal[sig]) + "_"+str(mass[m])
@@ -215,12 +253,14 @@ def make2DTable(PostFix,CoMEnergy):
                     FullError.SetBinContent(XLoc , YLoc, valueEr)
                     FullError.GetYaxis().SetBinLabel(YLoc, Name)
                     if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
-
 #        #######################################  Filling Reducible BG ##########
             print "Doing VV BG estimation"
             for BG_VV in range(len(DiBoson_BackGround)):
 
-                Histogram = "_visibleMass"
+                Histogram = "_visibleMass_mTLess30_OS"
+                HistogramForWNorm = "_visibleMass_mTHigher70_OS"
+                HistogramForWNorminQCD = "_visibleMass_mTHigher70_SS"
+                HistogramForQCD = "_visibleMass_mTLess30_SS"
                 XLoc= categ + 3*chl + 1
                 YLoc= lenghtSig + BG_VV + 1
                 Name= str(DiBoson_BackGround[BG_VV])
@@ -233,13 +273,17 @@ def make2DTable(PostFix,CoMEnergy):
                 FullError.SetBinContent(XLoc , YLoc, valueEr)
                 FullError.GetYaxis().SetBinLabel(YLoc, Name)
                 if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
-                
-            
+                VV_NormForWSub += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorm)[0] * XSection(Name, CoMEnergy)
+                VV_NormForWforQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorminQCD)[0] * XSection(Name, CoMEnergy)
+                VV_NormForQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForQCD)[0] * XSection(Name, CoMEnergy)
 #        #######################################  Filling Reducible BG ##########
             print "Doing TOP and Single BG estimation"
             for BG_T in range(len(Top_BackGround)):
 
-                Histogram = "_visibleMass"
+                Histogram = "_visibleMass_mTLess30_OS"
+                HistogramForWNorm = "_visibleMass_mTHigher70_OS"
+                HistogramForWNorminQCD = "_visibleMass_mTHigher70_SS"
+                HistogramForQCD = "_visibleMass_mTLess30_SS"
                 XLoc= categ + 3*chl + 1
                 YLoc= lenghtSig + lenghtVV+  BG_T + 1
                 Name= str(Top_BackGround[BG_T])
@@ -252,12 +296,17 @@ def make2DTable(PostFix,CoMEnergy):
                 FullError.SetBinContent(XLoc , YLoc, valueEr)
                 FullError.GetYaxis().SetBinLabel(YLoc, Name)
                 if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
-
+                TOP_NormForWSub += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorm)[0] * XSection(Name, CoMEnergy)
+                TOP_NormForWforQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorminQCD)[0] * XSection(Name, CoMEnergy)
+                TOP_NormForQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForQCD)[0] * XSection(Name, CoMEnergy)
 #        #######################################  Filling Reducible BG ##########
             print "Doing ZL, BG estimation"
             for BG_ZL in range(len(Z_BackGround)):
                 
-                Histogram = "_visibleMass_ZL"
+                Histogram = "_visibleMass_mTLess30_OS_ZL"
+                HistogramForWNorm = "_visibleMass_mTHigher70_OS_ZL"
+                HistogramForWNorminQCD = "_visibleMass_mTHigher70_SS_ZL"
+                HistogramForQCD = "_visibleMass_mTLess30_SS_ZL"
                 XLoc= categ + 3*chl + 1
                 YLoc= lenghtSig + lenghtVV+ lenghtTop +BG_ZL +1
                 Name= str(Z_BackGround[BG_ZL])
@@ -271,12 +320,17 @@ def make2DTable(PostFix,CoMEnergy):
                 FullError.SetBinContent(XLoc , YLoc, valueEr)
                 FullError.GetYaxis().SetBinLabel(YLoc, Name)
                 if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
-
+                ZL_NormForWSub += getHistoNorm_W_Z(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorm)[0] * Weight(Name, CoMEnergy)
+                ZL_NormForWforQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorminQCD)[0] * Weight(Name, CoMEnergy)
+                ZL_NormForQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForQCD)[0] * Weight(Name, CoMEnergy)
 #        #######################################  Filling Reducible BG ##########
             print "Doing ZJ, BG estimation"
             for BG_ZJ in range(len(Z_BackGround)):
 
-                Histogram = "_visibleMass_ZJ"
+                Histogram = "_visibleMass_mTLess30_OS_ZJ"
+                HistogramForWNorm = "_visibleMass_mTHigher70_OS_ZJ"
+                HistogramForWNorminQCD = "_visibleMass_mTHigher70_SS_ZJ"
+                HistogramForQCD = "_visibleMass_mTLess30_SS_ZJ"
                 XLoc= categ + 3*chl + 1
                 YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+ BG_ZJ+ 1
                 Name= str(Z_BackGround[BG_ZJ])
@@ -290,17 +344,22 @@ def make2DTable(PostFix,CoMEnergy):
                 FullError.SetBinContent(XLoc , YLoc, valueEr)
                 FullError.GetYaxis().SetBinLabel(YLoc, Name)
                 if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
-
+                ZJ_NormForWSub += getHistoNorm_W_Z(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorm)[0] * Weight(Name, CoMEnergy)
+                ZJ_NormForWforQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorminQCD)[0] * Weight(Name, CoMEnergy)
+                ZJ_NormForQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForQCD)[0] * Weight(Name, CoMEnergy)
 #        #######################################  Filling Reducible BG ##########
             print "Doing ZTT, BG estimation"
             for BG_ZTT in range(len(Z_BackGround)):
 
-                Histogram = "_visibleMass_ZTT"
+                Histogram = "_visibleMass_mTLess30_OS_ZTT"
+                HistogramForWNorm = "_visibleMass_mTHigher70_OS_ZTT"
+                HistogramForWNorminQCD = "_visibleMass_mTHigher70_SS_ZJ"
+                HistogramForQCD = "_visibleMass_mTLess30_SS_ZJ"
                 XLoc= categ + 3*chl + 1
                 YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+ lenghtZJ+ BG_ZTT+ 1
                 Name= str(Z_BackGround[BG_ZTT])
 
-                EmbedEff = getEmbeddedWeight(PostFix,CoMEnergy, "Embedded",channel[chl],category[categ],"_visibleMass")
+                EmbedEff = getEmbeddedWeight(PostFix,CoMEnergy, "Embedded",channel[chl],category[categ],"_visibleMass_mTLess30_OS")
                 value = getHistoNorm_W_Z(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",Histogram)[0] * Weight(Name, CoMEnergy) * EmbedEff
                 FullResults.SetBinContent(XLoc,YLoc , value)
                 FullResults.GetYaxis().SetBinLabel(YLoc, Name)
@@ -309,6 +368,149 @@ def make2DTable(PostFix,CoMEnergy):
                 FullError.SetBinContent(XLoc , YLoc, valueEr)
                 FullError.GetYaxis().SetBinLabel(YLoc, Name)
                 if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr, "  embedEff=",EmbedEff
+                ZTT_NormForWSub += getHistoNorm_W_Z(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorm)[0] * Weight(Name, CoMEnergy)
+                ZTT_NormForWforQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorminQCD)[0] * Weight(Name, CoMEnergy)
+                ZTT_NormForQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForQCD)[0] * Weight(Name, CoMEnergy)
+#        #######################################  Filling Reducible BG ##########
+            print "Doing ExtraPolationFactor for W estimation"
+
+            numeratorW="_visibleMass_mTLess30_OS"
+            denumeratorW="_visibleMass_mTHigher70_OS"
+            ExPolFactorW_ = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[0]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+            ExPolFactorW1 = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[1]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+            ExPolFactorW2 = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[2]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+            ExPolFactorW3 = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[3]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+            ExPolFactorW4 = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[4]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+
+            Histogram = "_visibleMass_mTHigher70_OS"
+            WeightedEventsW_= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[0]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[0]), CoMEnergy)
+            WeightedEventsW1= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[1]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[1]), CoMEnergy)
+            WeightedEventsW2= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[2]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[2]), CoMEnergy)
+            WeightedEventsW3= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[3]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[3]), CoMEnergy)
+            WeightedEventsW4= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[4]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[4]), CoMEnergy)
+
+            ExtraPolationFactorNum = ExPolFactorW_ * WeightedEventsW_ + ExPolFactorW1 * WeightedEventsW1 + ExPolFactorW2 * WeightedEventsW2 + ExPolFactorW3 * WeightedEventsW3 + ExPolFactorW4 * WeightedEventsW4
+            ExtraPolationFactorDenum =  WeightedEventsW_ + WeightedEventsW1 + WeightedEventsW2 +  WeightedEventsW3 +  WeightedEventsW4
+            ExtraPolationFactorFinal = ExtraPolationFactorNum / ExtraPolationFactorDenum
+            if (verbos_):print "******************ExPolFactorW_=", ExPolFactorW_
+            if (verbos_):print "******************ExPolFactorW1=", ExPolFactorW1
+            if (verbos_):print "******************ExPolFactorW2=", ExPolFactorW2
+            if (verbos_):print "******************ExPolFactorW3=", ExPolFactorW3
+            if (verbos_):print "******************ExPolFactorW3=", ExPolFactorW4
+            if (verbos_):print "******************ExtraPolationFactorFinal=", ExtraPolationFactorFinal
+
+            if (verbos_):print "VV_NOrmalization ToTal = ", VV_NormForWSub
+            if (verbos_):print "TOP_NOrmalization ToTal = ", TOP_NormForWSub
+            if (verbos_):print "ZL_NOrmalization ToTal = ", ZL_NormForWSub
+            if (verbos_):print "ZJ_NOrmalization ToTal = ", ZJ_NormForWSub
+            if (verbos_):print "ZTT_NOrmalization ToTal = ", ZTT_NormForWSub
+
+
+            Histogram = "_visibleMass_mTHigher70_OS"
+            XLoc= categ + 3*chl + 1
+            YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+lenghtZJ+lenghtZTT+0+1
+            Name='Data'
+            WNormInSideBandData=getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0]
+            print "WNormInSideBandData= ", WNormInSideBandData
+            value =(WNormInSideBandData - (VV_NormForWSub + TOP_NormForWSub +ZL_NormForWSub + ZJ_NormForWSub + ZTT_NormForWSub )) * ExtraPolationFactorFinal
+            print "Final W Value=", value
+            FullResults.SetBinContent(XLoc,YLoc , value)
+            FullResults.GetYaxis().SetBinLabel(YLoc, "W")
+
+
+#        #######################################  Filling Reducible BG ##########
+#        #######################################  Filling Reducible BG ##########
+            print "Doing ExtraPolationFactor for W estimation for QCD Estimation"
+
+            numeratorW="_visibleMass_mTLess30_SS"
+            denumeratorW="_visibleMass_mTHigher70_SS"
+            ExPolFactorW_ = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[0]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+            ExPolFactorW1 = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[1]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+            ExPolFactorW2 = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[2]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+            ExPolFactorW3 = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[3]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+            ExPolFactorW4 = getWExtraPol(PostFix,CoMEnergy,str(W_BackGround[4]) ,channel[chl],category[categ],numeratorW,denumeratorW)
+
+            Histogram = "_visibleMass_mTHigher70_SS"
+            WeightedEventsW_= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[0]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[0]), CoMEnergy)
+            WeightedEventsW1= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[1]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[1]), CoMEnergy)
+            WeightedEventsW2= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[2]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[2]), CoMEnergy)
+            WeightedEventsW3= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[3]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[3]), CoMEnergy)
+            WeightedEventsW4= getHistoNorm_W_Z(PostFix,CoMEnergy, str(W_BackGround[4]),channel[chl],category[categ],Histogram)[0] * Weight(str(W_BackGround[4]), CoMEnergy)
+
+            ExtraPolationFactorNum = ExPolFactorW_ * WeightedEventsW_ + ExPolFactorW1 * WeightedEventsW1 + ExPolFactorW2 * WeightedEventsW2 + ExPolFactorW3 * WeightedEventsW3 + ExPolFactorW4 * WeightedEventsW4
+            ExtraPolationFactorDenum =  WeightedEventsW_ + WeightedEventsW1 + WeightedEventsW2 +  WeightedEventsW3 +  WeightedEventsW4
+            ExtraPolationFactorFinal = ExtraPolationFactorNum / ExtraPolationFactorDenum
+            if (verbos_):print "******************ExPolFactorW_=", ExPolFactorW_
+            if (verbos_):print "******************ExPolFactorW1=", ExPolFactorW1
+            if (verbos_):print "******************ExPolFactorW2=", ExPolFactorW2
+            if (verbos_):print "******************ExPolFactorW3=", ExPolFactorW3
+            if (verbos_):print "******************ExPolFactorW3=", ExPolFactorW4
+            if (verbos_):print "******************ExtraPolationFactorFinal=", ExtraPolationFactorFinal
+
+            if (verbos_):print "VV_NOrmalization ToTal = ", VV_NormForWforQCD
+            if (verbos_):print "TOP_NOrmalization ToTal = ", TOP_NormForWforQCD
+            if (verbos_):print "ZL_NOrmalization ToTal = ", ZL_NormForWforQCD
+            if (verbos_):print "ZJ_NOrmalization ToTal = ", ZJ_NormForWforQCD
+            if (verbos_):print "ZTT_NOrmalization ToTal = ", ZTT_NormForWforQCD
+
+
+            Histogram = "_visibleMass_mTHigher70_SS"
+            XLoc= categ + 3*chl + 1
+            YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+lenghtZJ+lenghtZTT+0+1
+            Name='Data'
+            WNormInSideBandDataForQCD=getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0]
+            print "WNormInSideBandData= ", WNormInSideBandData
+            WNormInQCD =(WNormInSideBandDataForQCD - (VV_NormForWforQCD + TOP_NormForWforQCD +ZL_NormForWforQCD + ZJ_NormForWforQCD + ZTT_NormForWforQCD )) * ExtraPolationFactorFinal
+            print "WNormInQCD =", WNormInQCD
+
+            
+
+
+#        #######################################  Filling Reducible BG ##########
+            print "Starting QCD  estimation"
+            Histogram = "_visibleMass_mTLess30_SS"
+            XLoc= categ + 3*chl + 1
+            YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+lenghtZJ+lenghtZTT+1+1
+            Name='Data'
+            QCDNormBare=getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0]
+            print "WNormInSideBandData= ", WNormInSideBandData
+            FinalQCDNorm =(QCDNormBare - (VV_NormForQCD + TOP_NormForQCD +ZL_NormForQCD + ZJ_NormForQCD + ZTT_NormForQCD )) * QCDScaleFactor
+            print "WNormInQCD =", FinalQCDNorm
+            FullResults.SetBinContent(XLoc,YLoc , FinalQCDNorm)
+            FullResults.GetYaxis().SetBinLabel(YLoc, "QCD")
+
+#        #######################################  Filling Data ##########
+            print "Starting Data  estimation"
+            Histogram = "_visibleMass_mTLess30_OS"
+            XLoc= categ + 3*chl + 1
+            YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+lenghtZJ+lenghtZTT+2+1
+            Name='Data'
+            DataNorm=getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0]
+            print "Data= ", DataNorm
+            FullResults.SetBinContent(XLoc,YLoc , DataNorm)
+            FullResults.GetYaxis().SetBinLabel(YLoc, Name)
+            
+            
+
+#
+#            for BG_W in range(len(W_BackGround)):
+#
+#                Histogram = "_visibleMass_ZTT"
+#                XLoc= categ + 3*chl + 1
+#                YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+ lenghtZJ+ + lenghtZTT +BG_W+ 1
+#                Name= str(W_BackGround[BG_W])
+#
+#                "MuTau_visibleMass_mTLess30_OS" + index[icat]
+#                if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr, "  ExPolFactor=",ExPolFactor
+                
+#                value = getHistoNorm_W_Z(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",Histogram)[0] * Weight(Name, CoMEnergy) * EmbedEff
+#                FullResults.SetBinContent(XLoc,YLoc , value)
+#                FullResults.GetYaxis().SetBinLabel(YLoc, Name)
+#
+#                valueEr = getHistoNorm_W_Z(PostFix,CoMEnergy,Name ,channel[chl],"_inclusive",Histogram)[1] * Weight(Name, CoMEnergy) * EmbedEff
+#                FullError.SetBinContent(XLoc , YLoc, valueEr)
+#                FullError.GetYaxis().SetBinLabel(YLoc, Name)
+
 
 
 

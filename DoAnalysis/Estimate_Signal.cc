@@ -254,96 +254,85 @@ int main(int argc, char** argv) {
             bool Tau_antiMu = l2_tauRejMu2T;
             bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
 
-            bool MuTau_Charge = l1Charge * l2Charge < 0;
+            bool OS = l1Charge * l2Charge < 0;
+            bool SS = l1Charge * l2Charge > 0;
+            float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
 
+            //MSSM Categorization
             bool selection_inclusive = 1;
             bool selection_nobtag = nbtag < 1;
             bool selection_btag = nbtag > 0 && njets < 2;
             bool selection_btagLoose = loosebpt > 0 && njets < 2;
             bool MSSM_Category[4] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
             std::string index[4] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
+
+            bool sel_No_Z = 1;
+            bool sel_ZTT = zCategory == 1;
+            bool sel_ZL = zCategory == 2;
+            bool sel_ZJ = zCategory == 3;
+            bool Z_Category[4] = {sel_No_Z, sel_ZTT, sel_ZL, sel_ZJ};
+            std::string ZCat[4] = {"", "_ZTT", "_ZL", "_ZJ"};
+
+
             //Loop Over 3 Categories
             for (int icat = 0; icat < 4; icat++) {
                 if (MSSM_Category[icat]) {
-                    //################# Signal Selectiopn
-                    if (MU_CUTS && TAU_CUTS && MuTau_Charge && (Event != Event_Double[1][1])) {
-                        plotFill("MuTau_visibleMass_NOCorrection" + index[icat], mvis, high_bin, 0, high_bin);
-                        plotFill("MuTau_visibleMass" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                        plotFill("MuTau_Multiplicity" + index[icat], 0, 1, 0, 1);
-                        //                        Event_Double[1][1] = Event;
-                    }
-                    //################# ZTT Selectiopn
-                    if (MU_CUTS && TAU_CUTS && MuTau_Charge && zCategory == 1 && (Event != Event_Double[1][3])) {
-                        plotFill("MuTau_visibleMass_NOCorrection_ZTT" + index[icat], mvis, high_bin, 0, high_bin);
-                        plotFill("MuTau_visibleMass_ZTT" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                        //                        Event_Double[1][3] = Event;
-                    }
-                    //################# ZL Selectiopn
-                    if (MU_CUTS && TAU_CUTS && MuTau_Charge && zCategory == 2 && (Event != Event_Double[1][3])) {
-                        plotFill("MuTau_visibleMass_NOCorrection_ZL" + index[icat], mvis, high_bin, 0, high_bin);
-                        plotFill("MuTau_visibleMass_ZL" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                        //                        Event_Double[1][3] = Event;
-                    }
-                    //################# ZJ Selectiopn
-                    if (MU_CUTS && TAU_CUTS && MuTau_Charge && zCategory == 3 && (Event != Event_Double[1][3])) {
-                        plotFill("MuTau_visibleMass_NOCorrection_ZJ" + index[icat], mvis, high_bin, 0, high_bin);
-                        plotFill("MuTau_visibleMass_ZJ" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                        //                        Event_Double[1][3] = Event;
-                    }
+                    memset(Event_Double, 0, sizeof (Event_Double[0][0]) * 8 * 9);
+                    for (int zcat = 0; zcat < 4; zcat++) {
+                        if (Z_Category[zcat]) {
 
-                    //####################################################
-                    float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
-                    bool OS = l1Charge * l2Charge < 0;
-                    bool SS = l1Charge * l2Charge > 0;
-                    //#################  Selection for QCD Normalization from data
-                    if (MU_CUTS && TAU_CUTS && (Event != Event_Double[1][2])) { //SameSign
-                        plotFill("MuTau_visibleMass_NOCorrection" + index[icat], mvis, high_bin, 0, high_bin);
-                        plotFill("MuTau_visibleMass" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                        //################# Selection for QCD Normalization from data
-                        //                 Yield from (sideband normalisation)*(fixed extrapolation factor) in each category.
-                        //                 Sideband in data is ss && mT<30. Subtract contribution from all other background processes:
-                        //                 ZTT, ZL, ZJ, W, TOP, VV. DYJets MC is used to estimate directly the ZTT contribution in
-                        //                 this sideband. The W contribution similar to the default method above: normalisation is
-                        //                 data sideband ss && mT>70, and extrapolation factor from mT>70 to mT<30 from WJets
-                        //                 inclusive+njet samples using the category selection and ss events. The os/ss factor is 1.06.
+
+                            //####################################################
+                            //#################  Selection for QCD Normalization from data
+                            //################# Selection for QCD Normalization from data
+                            //                 Yield from (sideband normalisation)*(fixed extrapolation factor) in each category.
+                            //                 Sideband in data is ss && mT<30. Subtract contribution from all other background processes:
+                            //                 ZTT, ZL, ZJ, W, TOP, VV. DYJets MC is used to estimate directly the ZTT contribution in
+                            //                 this sideband. The W contribution similar to the default method above: normalisation is
+                            //                 data sideband ss && mT>70, and extrapolation factor from mT>70 to mT<30 from WJets
+                            //                 inclusive+njet samples using the category selection and ss events. The os/ss factor is 1.06.
 
 
 
-                        if (SS && mT < 30) {
-                            //                            Event_Double[1][2] = Event;
-                            plotFill("MuTau_visibleMass_NOCorrection_mTLess30_SS" + index[icat], mvis, high_bin, 0, high_bin);
-                            plotFill("MuTau_visibleMass_mTLess30_SS" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction * QCD_OSSS_SFactor);
+                            //################# Signal Selectiopn
+                            if (MU_CUTS && TAU_CUTS && OS && mT < 30 && (Event != Event_Double[1][1])) {
+//                            if (MU_CUTS && TAU_CUTS && OS &&  (Event != Event_Double[1][1])) {
+                                plotFill("MuTau_visibleMass_mTLess30_OS_NOCorrection" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin);
+                                plotFill("MuTau_visibleMass_mTLess30_OS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+                                plotFill("MuTau_Multiplicity" + ZCat[zcat] + index[icat], 0, 1, 0, 1);
+//                                Event_Double[1][1] = Event;
+                            }
+                            if (MU_CUTS && TAU_CUTS && SS && mT < 30 && (Event != Event_Double[1][1])) {
+//                                Event_Double[1][1] = Event;
+                                plotFill("MuTau_visibleMass_NOCorrection_mTLess30_SS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin);
+                                plotFill("MuTau_visibleMass_mTLess30_SS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+                            }
+                            //################# Needed to Estimate WJets [need other BG to be subtracted]
+                            if (MU_CUTS && TAU_CUTS && OS && mT > 70 && (Event != Event_Double[1][1])) {
+//                                Event_Double[1][1] = Event;
+                                plotFill("MuTau_visibleMass_NOCorrection_mTHigher70_OS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin);
+                                plotFill("MuTau_visibleMass_mTHigher70_OS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+                            }
+                            //################# W Subtraction for QCD Normalization from data
+                            if (MU_CUTS && TAU_CUTS && SS && mT > 70 && (Event != Event_Double[1][1])) {
+//                                Event_Double[1][1] = Event;
+                                plotFill("MuTau_visibleMass_NOCorrection_mTHigher70_SS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin);
+                                plotFill("MuTau_visibleMass_mTHigher70_SS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+                            }
+
+                            //####################################################
+                            //################# QCD Shape from anti-isolated without subtraction any other BG
+                            //            Take shape from anti-isolated ( 0.2<e/mu iso<0.5) and ss region in data,
+                            //            without subtracting any other background contributions.
+                            if (SS && Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && SS && l1_muIso > 0.2 && l1_muIso < 0.5 && TAU_CUTS) {
+                                plotFill("MuTau_visibleMass_NOCorrection_shape_SS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin);
+                                plotFill("MuTau_visibleMass_shape_SS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+                            }
+
+
+
                         }
-                        if (OS && mT < 30) {
-                            //                            Event_Double[1][2] = Event;
-                            plotFill("MuTau_visibleMass_NOCorrection_mTLess30_OS" + index[icat], mvis, high_bin, 0, high_bin);
-                            plotFill("MuTau_visibleMass_mTLess30_OS" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction * QCD_OSSS_SFactor);
-                        }
-                        //################# W Subtraction for QCD Normalization from data
-                        if (SS && mT > 70) {
-                            //                            Event_Double[1][2] = Event;
-                            plotFill("MuTau_visibleMass_NOCorrection_mTHigher70_SS" + index[icat], mvis, high_bin, 0, high_bin);
-                            plotFill("MuTau_visibleMass_mTHigher70_SS" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                        }
-                        //################# Needed to Estimate WJets [need other BG to be subtracted]
-                        if (OS && mT > 70) {
-                            //                            Event_Double[1][2] = Event;
-                            plotFill("MuTau_visibleMass_NOCorrection_mTHigher70_OS" + index[icat], mvis, high_bin, 0, high_bin);
-                            plotFill("MuTau_visibleMass_mTHigher70_OS" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                        }
-
                     }
-                    //####################################################
-                    //################# QCD Shape from anti-isolated without subtraction any other BG
-                    //            Take shape from anti-isolated ( 0.2<e/mu iso<0.5) and ss region in data,
-                    //            without subtracting any other background contributions.
-                    if (SS && Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && SS && l1_muIso > 0.2 && l1_muIso < 0.5 && TAU_CUTS) {
-                        plotFill("MuTau_visibleMass_NOCorrection_shape_SS" + index[icat], mvis, high_bin, 0, high_bin);
-                        plotFill("MuTau_visibleMass_shape_SS" + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                    }
-
-
-
                 } //check if category is passed
             } // loop over categories
         }
