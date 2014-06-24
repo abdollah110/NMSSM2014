@@ -13,10 +13,10 @@ import shutil
 Run_Over = {
 
     ##### Unfiltered
-#    1:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "15:00:00"),
-    2:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/Data", "data12", "9:00:00"),
-#    3:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples/53X/MC", "mc12", "15:00:00"),
-    4:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/Embedded", "embed12", "9:00:00"),
+    1:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/MC", "mc12", "15:00:00"),
+    2:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/Data", "data12", "15:00:00"),
+    3:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples/53X/MC", "mc12", "15:00:00"),
+    4:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples/53X/Embedded", "embed12", "15:00:00"),
     
 }
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 	make_submit_form(str(i), R1, R2, R3)
 
     maindir = 'ROOT'
-    dirs = ['data11', 'data12', 'mc11', 'mc12']
+    dirs = ['data11', 'data12', 'mc11', 'mc12','embed12']
     if  os.path.exists(maindir):
 	shutil.rmtree(maindir)
     for i in dirs:

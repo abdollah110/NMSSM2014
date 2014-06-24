@@ -277,10 +277,10 @@ int main(int argc, char** argv) {
             //*********************************************************************************************
             bool Trigger;
             if (mc12) Trigger = Trg_MC_12(m);
-//            if (mc11) Trigger = Trg_MC_11(m);
+            //            if (mc11) Trigger = Trg_MC_11(m);
             if (data12) Trigger = Trg_Data_12(m);
             if (embed12) Trigger = 1;
-//            if (data11) Trigger = Trg_Data_11(m);
+            //            if (data11) Trigger = Trg_Data_11(m);
 
             //#################################################################################################
             bool doMuTauAnalysis = true;
@@ -310,7 +310,7 @@ int main(int argc, char** argv) {
                             bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                             bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                            bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
+                            bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
                             bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                             bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                             bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
@@ -327,17 +327,19 @@ int main(int argc, char** argv) {
 
 
                             bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME;
+                            bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
+                            //                            bool VLooseMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.5;
 
                             //Loose Selection
-                            if (LooseSelection) {
+                            if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
                                 fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
                             }
-                            //Final selection
-                            if (MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
-                                plotFill("mutau", ++mutau, 20, 0., 20.);
-                                fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
-                                break;
-                            }
+//                            //Final selection
+//                            if (MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
+//                                plotFill("mutau", ++mutau, 20, 0., 20.);
+//                                fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
+//                                break;
+//                            }
                         }
                     }
                 }
@@ -365,7 +367,7 @@ int main(int argc, char** argv) {
                             bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                             bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                            bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
+                            bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
                             bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                             bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                             bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
@@ -379,17 +381,20 @@ int main(int argc, char** argv) {
                             bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
                             bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
+                            bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE;
+                            bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
+                            //                            bool VLooseEl_Iso = Iso_Ele_dBeta(electron_[i]) < 1;
                             //Loose Selection
-                            if (El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
+                            if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
                                 fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                             }
                             //Final selection
-                            if (EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
-                                plotFill("eltau", ++eltau, 20, 0., 20.);
-                                fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
-                                break;
-
-                            }
+//                            if (EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
+//                                plotFill("eltau", ++eltau, 20, 0., 20.);
+//                                fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
+//                                break;
+//
+//                            }
 
 
                         }
