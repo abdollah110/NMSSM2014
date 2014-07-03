@@ -57,6 +57,7 @@ bool l1_tauIsoVL, l1_tauIsoMVA2L, l1_tauIsoMVA2M, l1_tauIsoMVA2T;
 bool l2_tauIsoL, l2_tauIsoM, l2_tauIsoT, l2_tauRejMuL, l2_tauRejMuM, l2_tauRejMuT, l2_tauRejEleL, l2_tauRejEleM, l2_tauRejEleMVA;
 bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu2L, l2_tauRejMu2M, l2_tauRejMu2T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
 bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T, l2_DecayModeFinding;
+int l2_DecayMode;
 
 //float mvacov00_mutau, mvacov01_mutau, mvacov10_mutau, mvacov11_mutau;
 //float mvacov00_etau, mvacov01_etau, mvacov10_etau, mvacov11_etau;
@@ -121,7 +122,10 @@ float jdphi;
 
 float jetpt;
 float dijetphi;
-int zCategory= -10;
+int zCategory = -10;
+double SVMass, SVMassUnc;
+double SVMassUp, SVMassUncUp;
+double SVMassDown, SVMassUncDown;
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -333,6 +337,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2_tauRejEleMVA3M = obj2.discriminationByElectronMVA5Medium;
     l2_tauRejEleMVA3T = obj2.discriminationByElectronMVA5Tight;
     l2_DecayModeFinding = obj2.discriminationByDecayModeFinding;
+    l2_DecayMode = obj2.decayMode;
     //    l2_tauRejEleMVA = obj2.discriminationByElectronMVA;
     //    l2_tauRejEleMVA3L = obj2.discriminationByElectronMVA3Loose;
     //    l2_tauRejEleMVA3M = obj2.discriminationByElectronMVA3Medium;

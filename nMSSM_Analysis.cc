@@ -243,6 +243,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l1_dZ_in", &l1_dZ_in, "l1_dZ_in/F");
     Run_Tree->Branch("l2_DecayModeFinding", &l2_DecayModeFinding, "l2_DecayModeFinding/O");
     Run_Tree->Branch("zCategory", &zCategory, "zCategory/I");
+    Run_Tree->Branch("l2_DecayMode;", &l2_DecayMode, "l2_DecayMode/I");
 
 
     //#################################################################################################

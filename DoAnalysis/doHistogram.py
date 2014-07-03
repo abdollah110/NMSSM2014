@@ -19,6 +19,8 @@ from ROOT import gBenchmark
 from ROOT import gROOT
 from ROOT import gRandom
 from ROOT import gSystem
+from ctypes import *
+import array
 
 gROOT.Reset()
 import os
@@ -51,6 +53,7 @@ lenghtSig = len(signal) * len(mass)
 #Histogram = "VisibleMass_"
 #category_ = ["_inclusive"]
 category_ = ["_inclusive", "_nobtag", "_btag"]
+#category_ = ["_inclusive", "_nobtag"]
 #channel = ["MuTau", "ETau"]
 channel = ["MuTau"]
 lenghtSig = len(signal) * len(mass) +1
@@ -65,33 +68,25 @@ digit = 3
 verbos_ = True
 QCDScaleFactor = 1.06
 
+Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,1000,1500])
+Binning_BTag = array.array("d",[0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,1000,1500])
 
 def _Return_Value_Signal(bb,Name, channel,cat,Histo,PostFix,CoMEnergy,changeHistoName ):
     myfile = TFile(SubRootDir + "out_"+ Name +CoMEnergy+ '.root')
     if cat=="_btag" and changeHistoName : cat = "_btagLoose" #; print "___________+++++++++++++++++++", str(channel)+str(Histo) + str(cat)
     Histo =  myfile.Get(channel+Histo + cat+ PostFix)
-#    print "___________+++++++++++++++++++", str(channel)+str(Histo) + str(cat)
     binCont = 0
     binErr = 0
     if Histo:
-        Histo.Rebin(reb_)
-        binCont = Histo.GetBinContent(bb)
-        binErr = Histo.GetBinError(bb)
+        if cat=="_nobtag" or cat=="_inclusive"  : RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
+        if cat=="_btag" or   cat == "_btagLoose": RebinedHist = Histo.Rebin(len(Binning_BTag)-1,"BTag",Binning_BTag)
+
+        binCont = RebinedHist.GetBinContent(bb)
+        binErr = RebinedHist.GetBinError(bb)
     myfile.Close()
     return binCont , binErr
 
-def _Return_Value_BG(bb,backG, channel,histoName,PostFix,CoMEnergy ):
-    myfile = TFile(DIR_ROOT + str(backG)  +CoMEnergy+ '.root')
-    Histo =  myfile.Get(histoName + str(channel)+"_pp"+ PostFix)
-    binCont = 0
-    binErr = 0
-    if Histo:
-        Histo.Rebin(reb_)
-        binCont = Histo.GetBinContent(bb)
-        binErr = Histo.GetBinError(bb)
-    myfile.Close()
-    return binCont , binErr
-def MakeTheHistogram(channel,CoMEnergy,chl):
+def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
     myOut = TFile("TotalRootForLimit_"+channel + CoMEnergy+".root" , 'RECREATE')
     Table_File = TFile("Yield"+CoMEnergy+""+".root")
     Table_Hist = Table_File.Get('FullResults')
@@ -109,266 +104,249 @@ def MakeTheHistogram(channel,CoMEnergy,chl):
     for category in category_:
         categ =categ +1
         print "starting category and channel", category, channel
-#        tDirectory= myOut.mkdir(channel + str(category))
-#        myOut.rmdir(channel + str(category))
+        if category=="_nobtag" or category=="_inclusive"  : BinCateg = Binning_NoBTag
+        if category=="_btag" or   category == "_btagLoose": BinCateg = Binning_BTag
         tDirectory= myOut.mkdir(channel + str(category))
         tDirectory.cd()
         ###################################### Filling Signal ZH and WH ########
         for sig in range(len(signal)):
             for m in range(len(mass)):#    for m in range(110, 145, 5):
-                ################################################
-                #Norm
+   
                 tDirectory.cd()
-
-                Histogram = "_visibleMass_mTLess30_OS"
+                Histogram = Observable+"_mTLess30_OS"
                 XLoc= categ + 3*chl + 1
                 YLoc= sig * len(mass) + m + 1
                 normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
-
                 Name= str(signal[sig]) + "_"+str(mass[m])
-                NewHist =TH1F(Name,"",n_bin,low_bin,high_bin)
+                NewHIST =TH1F(Name,"",len(BinCateg)-1,BinCateg)
+                
+                for bb in range(0,len(BinCateg)-1):
+                    NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,False)[0])
+                    NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,False)[1])
 
-                for bb in range(0,n_bin):
-                    NewHist.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,False)[0])
-                    NewHist.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,False)[1])
-
-                print "NOrmal is= " , normal
-                if NewHist.Integral(): NewHist.Scale(normal/NewHist.Integral())
+                if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
                 myOut.Write()
-                ################################################
-                #  Filling VV
-                ################################################
+
+           ################################################
+#            #  Filling VV
+#            ################################################
+        print "Doing VV, BG estimation"
         tDirectory.cd()
-        NewHist2 =TH1F("VV","",n_bin,low_bin,high_bin)
-        print "Doing VV BG estimation"
-        for BG_VV in range(len(DiBoson_BackGround)):
 
-            Histogram = "_visibleMass_mTLess30_OS"
-            XLoc= categ + 3*chl + 1
-            YLoc= lenghtSig + BG_VV + 1
-            normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
-            Name= str(DiBoson_BackGround[BG_VV])
-            NewHist =TH1F(Name,"",n_bin,low_bin,high_bin)
+        Histogram = Observable+"_mTLess30_OS"
+        XLoc= categ + 3*chl + 1
+        YLoc= lenghtSig  +1
+        normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
+        Name= "VVAll"
+        NewHIST =TH1F("VV","",len(BinCateg)-1,BinCateg)
 
-            for bb in range(0,n_bin):
-                NewHist.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,False)[0])
-                NewHist.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,False)[1])
 
-            print "NOrmal is= " , normal
-            if NewHist.Integral(): NewHist.Scale(normal/NewHist.Integral())
-            NewHist2.Add(NewHist)
+        for bb in range(0,len(BinCateg)-1):
+            NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
+            NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
 
+        if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
         myOut.Write()
             ################################################
-            #  Filling Top
+            #  Filling TOP
             ################################################
+        print "Doing TOP, BG estimation"
         tDirectory.cd()
-        NewHist2 =TH1F("TT","",n_bin,low_bin,high_bin)
-        print "Doing TOP and Single BG estimation"
-        for BG_T in range(len(Top_BackGround)):
 
-            Histogram = "_visibleMass_mTLess30_OS"
-            XLoc= categ + 3*chl + 1
-            YLoc= lenghtSig + lenghtVV+  BG_T + 1
-            normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
-            Name= str(DiBoson_BackGround[BG_T])
-            NewHist =TH1F(Name,"",n_bin,low_bin,high_bin)
+        Histogram = Observable+"_mTLess30_OS"
+        XLoc= categ + 3*chl + 1
+        YLoc= lenghtSig  +2
+        normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
+        Name= "TTAll"
+        NewHIST =TH1F("TT","",len(BinCateg)-1,BinCateg)
 
-            for bb in range(0,n_bin):
-                NewHist.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,False)[0])
-                NewHist.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,False)[1])
 
-            print "NOrmal is= " , normal
-            if NewHist.Integral(): NewHist.Scale(normal/NewHist.Integral())
-            NewHist2.Add(NewHist)
+        for bb in range(0,len(BinCateg)-1):
+            NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
+            NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
 
+        if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
         myOut.Write()
-
-            ################################################
-            #  Filling ZL
             ################################################
         print "Doing ZL, BG estimation"
         tDirectory.cd()
-        NewHist2 =TH1F("ZL","",n_bin,low_bin,high_bin)
-        for BG_ZL in range(len(Z_BackGround)):
 
-            Histogram = "_visibleMass_mTLess30_OS_ZL"
-            XLoc= categ + 3*chl + 1
-            YLoc= lenghtSig + lenghtVV+ lenghtTop +BG_ZL +1
-            normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
-            Name= str(Z_BackGround[BG_ZL])
+        Histogram = Observable+"_mTLess30_OS_ZL"
+        XLoc= categ + 3*chl + 1
+        YLoc= lenghtSig  +3
+        normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
+        Name= "DYJetsAll"
+        NewHIST =TH1F("ZL","",len(BinCateg)-1,BinCateg)
 
-            NewHist =TH1F(Name,"",n_bin,low_bin,high_bin)
 
-            for bb in range(0,n_bin):
-                NewHist.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
-                NewHist.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
+        for bb in range(0,len(BinCateg)-1):
+            NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
+            NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
 
-            print "NOrmal is= " , normal
-            if NewHist.Integral(): NewHist.Scale(normal/NewHist.Integral())
-            NewHist2.Add(NewHist)
-
+        if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
         myOut.Write()
 
         #######################################  Filling Reducible BG ##########
         print "Doing ZJ, BG estimation"
         tDirectory.cd()
-        NewHist2 =TH1F("ZJ","",n_bin,low_bin,high_bin)
-        for BG_ZJ in range(len(Z_BackGround)):
+        Histogram = Observable+"_mTLess30_OS_ZJ"
+        XLoc= categ + 3*chl + 1
+        YLoc= lenghtSig + 4
+        normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
+        Name= "DYJetsAll"
+        NewHIST =TH1F("ZJ","",len(BinCateg)-1,BinCateg)
 
-            Histogram = "_visibleMass_mTLess30_OS_ZJ"
-            XLoc= categ + 3*chl + 1
-            YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+ BG_ZJ+ 1
-            normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
-            Name= str(Z_BackGround[BG_ZJ])
 
-            NewHist =TH1F(Name,"",n_bin,low_bin,high_bin)
+        for bb in range(0,len(BinCateg)-1):
+            NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
+            NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
 
-            for bb in range(0,n_bin):
-                NewHist.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
-                NewHist.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
-
-            print "NOrmal is= " , normal
-            if NewHist.Integral(): NewHist.Scale(normal/NewHist.Integral())
-            NewHist2.Add(NewHist)
-
+        if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
         myOut.Write()
-
-
 
         #        #######################################  Filling Reducible BG ##########
         print "Doing ZTT, BG estimation"
         tDirectory.cd()
-        NewHist2 =TH1F("ZTT","",n_bin,low_bin,high_bin)
-        for BG_ZTT in range(len(Z_BackGround)):
+        Histogram = Observable+"_mTLess30_OS"
+        XLoc= categ + 3*chl + 1
+        YLoc= lenghtSig + 5
+        normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
+        Name= "Embedded"+ channel
+        NewHIST =TH1F("ZTT","",len(BinCateg)-1,BinCateg)
 
-            Histogram = "_visibleMass_mTLess30_OS"
-            XLoc= categ + 3*chl + 1
-            YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+ lenghtZJ+ BG_ZTT+ 1
-            normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
-            Name= "EmbeddedMuTau"
 
-            NewHist =TH1F(Name+str(BG_ZTT),"",n_bin,low_bin,high_bin)
+        for bb in range(0,len(BinCateg)-1):
+            NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,False)[0])
+            NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,False)[1])
 
-            for bb in range(0,n_bin):
-                NewHist.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,False)[0])
-                NewHist.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,False)[1])
-
-            print "NOrmal is= " , normal
-            if NewHist.Integral(): NewHist.Scale(normal/NewHist.Integral())
-            NewHist2.Add(NewHist)
+        if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
 
         myOut.Write()
-        #        #######################################  Filling Reducible BG ##########
         #        #######################################  Filling Reducible BG ##########
         print "Doing W, BG estimation"
         tDirectory.cd()
-        NewHist2 =TH1F("W","",n_bin,low_bin,high_bin)
-        Histogram = "_visibleMass_mTLess30_OS"
+        Histogram = Observable+"_mTLess30_OS"
         XLoc= categ + 3*chl + 1
-        YLoc= lenghtSig + lenghtVV+ lenghtTop +lenghtZL+lenghtZJ+lenghtZTT+0+1
+        YLoc= lenghtSig + 6
         normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
-        Name='WJetsToLNu'
+        Name='WJetsAll'
+        NewHIST =TH1F("W","",len(BinCateg)-1,BinCateg)
 
-        NewHist =TH1F(Name,"",n_bin,low_bin,high_bin)
 
-        for bb in range(0,n_bin):
-            NewHist.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
-            NewHist.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
+        for bb in range(0,len(BinCateg)-1):
+            NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
+            NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
 
-        print "NOrmal is= " , normal
-        if NewHist.Integral(): NewHist.Scale(normal/NewHist.Integral())
-        NewHist2.Add(NewHist)
+        if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
 
         myOut.Write()
-        #        #######################################  Filling Reducible BG ##########
+        #        #######################################  Filling Reducible BG QCD ##########
+        print "Doing QCD, BG estimation"
+
+        Histogram = Observable+"_QCDshape_SS"
+        XLoc= categ + 3*chl + 1
+        YLoc= lenghtSig + 7
+        normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
+        Name='Data'
+#        if category=="_btag"  : category = "_btagLoose"
+        if category=="_btag"  : category = "_inclusive"
 
 
 
-            
 
-#            value = getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0] * XSection(Name, CoMEnergy)
-#            FullResults.SetBinContent(XLoc,YLoc , value)
-#            FullResults.GetYaxis().SetBinLabel(YLoc, Name)
-#
-#            valueEr = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1] * XSection(Name, CoMEnergy)
-#            FullError.SetBinContent(XLoc , YLoc, valueEr)
-#            FullError.GetYaxis().SetBinLabel(YLoc, Name)
-#            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
-#            VV_NormForWSub += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorm)[0] * XSection(Name, CoMEnergy)
-#            VV_NormForWforQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForWNorminQCD)[0] * XSection(Name, CoMEnergy)
-#            VV_NormForQCD += getHistoNorm(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistogramForQCD)[0] * XSection(Name, CoMEnergy)
-#                #ScaleUp
-#                MMM.cd()
-#                NewHistUp =TH1F(str(signalname[sig]) + str(mass[m])+scaleNameUp,"",n_bin,low_bin,high_bin)
-#                for bb in range(0,n_bin):
-#                    NewHistUp.SetBinContent(bb,_Return_Value_Signal(bb,signal[sig], mass[m], channel[chl], histoName, "_Up",CoMEnergy)[0])
-#                    NewHistUp.SetBinError(bb,_Return_Value_Signal(bb,signal[sig], mass[m], channel[chl],histoName, "_Up",CoMEnergy)[1])
-#
-#                normalUp = Table_HistUp.GetBinContent(chl + 1, sig * len(mass) + m + 1)
-#                if (HWWasSignal and sig==1): normalUp = Table_HistUp.GetBinContent(chl + 1, sig * len(mass) + 7 + 1) #7 is due to 125 GeV
-#                if NewHistUp.Integral(): NewHistUp.Scale(normalUp/NewHistUp.Integral())
-#                ################################################
-#                #ScaleDown
-#                MMM.cd()
-#                NewHistDown =TH1F(str(signalname[sig]) + str(mass[m])+scaleNameDown,"",n_bin,low_bin,high_bin)
-#                for bb in range(0,n_bin):
-#                    NewHistDown.SetBinContent(bb,_Return_Value_Signal(bb,signal[sig], mass[m], channel[chl], histoName, "_Down",CoMEnergy)[0])
-#                    NewHistDown.SetBinError(bb,_Return_Value_Signal(bb,signal[sig], mass[m], channel[chl],histoName, "_Down",CoMEnergy)[1])
-#
-#                normalDown = Table_HistDown.GetBinContent(chl + 1, sig * len(mass) + m + 1)
-#                if (HWWasSignal and sig==1): normalDown = Table_HistDown.GetBinContent(chl + 1, sig * len(mass) + 7 + 1) #7 is due to 125 GeV
-#                if NewHistDown.Integral(): NewHistDown.Scale(normalDown/NewHistDown.Integral())
-#                myOut.Write()
+        XLocQCD= categ + 3*(chl+2) + 1
+        YLoc= lenghtSig +  1
+        file_VV = TFile(SubRootDir + "out_VVAll"+ CoMEnergy+ '.root')
+        Histo_VV =  file_VV.Get(channel+Histogram + category+ "")
+        Histo_VV.Scale(Table_Hist.GetBinContent(XLocQCD,YLoc))
 
-#        ###################################### Filling Reducible ########
-#        MMM.cd()
-#        NewHist =TH1F('Zjets',"",n_bin,low_bin,high_bin)
-#        myfile = TFile(DIR_ROOT + 'Data'+CoMEnergy+'.root')
-##        Histo =  myfile.Get("VisibleMass_Shape_"+ channel[chl])  ## BUG found in 21 July
-#        Histo =  myfile.Get(histoName+"Shape_"+ channel[chl])
-#        Histo.Rebin(reb_)
-#        for bb in range(0,n_bin):
-#            NewHist.SetBinContent(bb,Histo.GetBinContent(bb))
-#            NewHist.SetBinError(bb,Histo.GetBinError(bb))
-#        normal = Table_Hist.GetBinContent(chl + 1, lenghtSig  + 2)
-#        NewHist.Scale(normal/NewHist.Integral())
-#        myOut.Write()
-#        ###################################### Filling ZZ and Data ########
-#        for bg in range (len(BackGround)):
-#            #  Norm   #####################################
-#            MMM.cd()
-#            NewHist =TH1F(BackGroundname[bg],"",n_bin,low_bin,high_bin)
-#            for bb in range(0,n_bin):
-#                    NewHist.SetBinContent(bb,_Return_Value_BG(bb,BackGround[bg], channel[chl], histoName, "",CoMEnergy,True)[0])
-#                    NewHist.SetBinError(bb,_Return_Value_BG(bb,BackGround[bg], channel[chl],histoName, "",CoMEnergy,True)[1])
-#
-#            normal = Table_Hist.GetBinContent(chl + 1, lenghtSig + bg + 3)
-#            if NewHist.Integral(): NewHist.Scale(normal/NewHist.Integral())
-#            #  ScaleUp   #####################################
-#            MMM.cd()
-#            NewHistUp =TH1F(BackGroundname[bg]+scaleNameUp,"",n_bin,low_bin,high_bin)
-#            for bb in range(0,n_bin):
-#                    NewHistUp.SetBinContent(bb,_Return_Value_BG(bb,BackGround[bg], channel[chl], histoName, "_Up",CoMEnergy)[0])
-#                    NewHistUp.SetBinError(bb,_Return_Value_BG(bb,BackGround[bg], channel[chl],histoName, "_Up",CoMEnergy)[1])
-#
-#            normalUp = Table_HistUp.GetBinContent(chl + 1, lenghtSig + bg + 3)
-#            if NewHistUp.Integral(): NewHistUp.Scale(normalUp/NewHistUp.Integral())
-#            #  ScaleDown   #####################################
-#            MMM.cd()
-#            NewHistDown =TH1F(BackGroundname[bg]+scaleNameDown,"",n_bin,low_bin,high_bin)
-#            for bb in range(0,n_bin):
-#                    NewHistDown.SetBinContent(bb,_Return_Value_BG(bb,BackGround[bg], channel[chl], histoName, "_Down",CoMEnergy)[0])
-#                    NewHistDown.SetBinError(bb,_Return_Value_BG(bb,BackGround[bg], channel[chl],histoName, "_Down",CoMEnergy)[1])
-#
-#            normalDown = Table_HistDown.GetBinContent(chl + 1, lenghtSig + bg + 3)
-#            if NewHistDown.Integral(): NewHistDown.Scale(normalDown/NewHistDown.Integral())
-#            myOut.Write()
+        XLocQCD= categ + 3*(chl+2) + 1
+        YLoc= lenghtSig + 2
+        file_TT = TFile(SubRootDir + "out_TTAll"+  CoMEnergy+ '.root')
+        Histo_TT =  file_TT.Get(channel+Histogram + category+ "")
+        Histo_TT.Scale(Table_Hist.GetBinContent(XLocQCD,YLoc))
+
+        XLocQCD= categ + 3*(chl+2) + 1
+        YLoc= lenghtSig + 3
+        file_ZL = TFile(SubRootDir + "out_DYJetsAll"+  CoMEnergy+ '.root')
+        Histo_ZL =  file_ZL.Get(channel+Observable+"_QCDshape_SS_ZL" + category+ "")
+        Histo_ZL.Scale(Table_Hist.GetBinContent(XLocQCD,YLoc))
+
+        XLocQCD= categ + 3*(chl+2) + 1
+        YLoc= lenghtSig + 4
+        file_ZJ = TFile(SubRootDir + "out_DYJetsAll"+  CoMEnergy+ '.root')
+        Histo_ZJ =  file_ZJ.Get(channel+Observable+"_QCDshape_SS_ZJ" + category+ "")
+        Histo_ZJ.Scale(Table_Hist.GetBinContent(XLocQCD,YLoc))
+
+        XLocQCD= categ + 3*(chl+2) + 1
+        YLoc= lenghtSig + 5
+        file_ZTT = TFile(SubRootDir + "out_DYJetsAll"+  CoMEnergy+ '.root')
+        Histo_ZTT =  file_ZTT.Get(channel+Observable+"_QCDshape_SS_ZTT" + category+ "")
+        Histo_ZTT.Scale(Table_Hist.GetBinContent(XLocQCD,YLoc))
+
+#        if category=="_btagLoose"  : category = "_nobtag"
+        if category=="_btagLoose"  : category = "_inclusive"
+        XLocQCD= categ + 3*(chl+2) + 1
+        YLoc= lenghtSig + 6
+        file_W = TFile(SubRootDir + "out_WJetsAll"+  CoMEnergy+ '.root')
+        Histo_W =  file_W.Get(channel+Observable+"_QCDshape_SS" + category+ "")
+        Histo_W.Scale(Table_Hist.GetBinContent(XLocQCD,YLoc))
+
+        file_QCD = TFile(SubRootDir + "out_"+ Name +CoMEnergy+ '.root')
+        Histo_QCD =  file_QCD.Get(channel+Histogram + category+ "")
+
+
+        print "Histo_VV= ", Histo_VV.Integral()
+        Histo_VV.Add(Histo_TT)
+        print "Histo_VV= ", Histo_VV.Integral()
+        Histo_VV.Add(Histo_ZL)
+        print "Histo_VV= ", Histo_VV.Integral()
+        Histo_VV.Add(Histo_ZJ)
+        print "Histo_VV= ", Histo_VV.Integral()
+        Histo_VV.Add(Histo_ZTT)
+        print "Histo_VV= ", Histo_VV.Integral()
+        Histo_VV.Add(Histo_W)
+        print "Histo_VV= ", Histo_VV.Integral()
+        Histo_VV.Scale(-1)
+        print "Histo_VV= ", Histo_VV.Integral()
+        Histo_QCD.Add(Histo_VV)
+        print "Histo_QCD= ", Histo_QCD.Integral()
+
+
+        if category=="_nobtag" or category=="_inclusive"  : Histo_QCDN= Histo_QCD.Rebin(len(Binning_NoBTag)-1,"",Binning_NoBTag)
+        if category=="_btag" or   category == "_btagLoose": Histo_QCDN = Histo_QCD.Rebin(len(Binning_BTag)-1,"",Binning_BTag)
+
+        tDirectory.cd()
+        NewHIST =TH1F("QCD","",len(BinCateg)-1,BinCateg)
+        for bb in range(0,len(BinCateg)-1):
+            NewHIST.SetBinContent(bb,Histo_QCDN.GetBinContent(bb))
+            NewHIST.SetBinError(bb,Histo_QCDN.GetBinError(bb))
+        if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+        myOut.Write()
+
+        #        #######################################  Filling Data ##########
+        print "Doing Data estimation"
+        tDirectory.cd()
+        Histogram = Observable+"_mTLess30_OS"
+        XLoc= categ + 3*chl + 1
+        YLoc= lenghtSig + 8
+        normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
+        Name='Data'
+        NewHIST =TH1F("data_obs","",len(BinCateg)-1,BinCateg)
+
+
+        for bb in range(0,len(BinCateg)-1):
+            NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,True)[0])
+            NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,category,Histogram, "",CoMEnergy,True)[1])
+
+        if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+        myOut.Write()
 
             
 if __name__ == "__main__":
 
-    MakeTheHistogram("MuTau","_8TeV",0)
+    MakeTheHistogram("MuTau","_SVMass","_8TeV",0)
+    MakeTheHistogram("EleTau","_SVMass","_8TeV",1)
 #    MakeTheHistogram("_inclusive","MuTau","_8TeV",0,0)
 #    MakeTheHistogram("_nobtag","MuTau","_8TeV",1,0)
 #    MakeTheHistogram("_btag","MuTau","_8TeV",2,0)
