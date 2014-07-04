@@ -37,7 +37,7 @@ def make_submit_form(order, pnfn, data_year, timing):
         for numMod in xrange(0,10):
             f = os.popen("ls " + pnfn + "/" + files[0:-1] + " | sort ")
             dir = "dcap://maite.iihe.ac.be" + pnfn + "/" + files[0:-1] + "/"
-            name_out = "__" + data_year + "_" +  files[0:-1] +"_"+str(numMod)+ ".sh"
+            name_out = "_" + data_year + "_" +  files[0:-1] +"_"+str(numMod)+ ".sh"
             outFile = open(name_out, 'w')
             command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
             command1 = command1 + "cd " + location + "\n"
@@ -48,7 +48,6 @@ def make_submit_form(order, pnfn, data_year, timing):
             for i in f.readlines():
                 QName=i[0:-1]
                 XName=int(float(QName[15:-11]))
-#                print "QName= ", QName, " XName=",XName
                 outName= files[0:-1] + "_"+str(XName) +".root"
                 if (XName % 10 == numMod):
                     command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " "   +outName + " " + dir + "/" + i[0:-1]
@@ -59,8 +58,7 @@ def make_submit_form(order, pnfn, data_year, timing):
             #Writing on out Files
 #            command3 = "qsub -q localgrid@cream02.wn -o " + files[0:-1] + ".stdout -e " + files[0:-1] + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
             Name1=files[0:-1]
-            shortName=Name1[0:-15]+"_"+str(numMod)
-#            shortName=files[0:-1]
+            shortName=Name1[0:-10]+"_"+str(numMod)
             command3 = "qsub -q localgrid@cream02 -o " + shortName + ".stdout -e " + shortName + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
             command4 = "hadd -f ROOT/" + data_year + "/" + files[0:-1] +"_"+str(numMod)+ ".root\t" + "Out_" + files[0:-1] +"_"+str(numMod)+ "/*.root" + "\n"
             submit_File.write(command3)
