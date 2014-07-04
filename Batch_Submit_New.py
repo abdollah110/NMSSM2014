@@ -59,7 +59,7 @@ def make_submit_form(order, pnfn, data_year, timing):
             #Writing on out Files
 #            command3 = "qsub -q localgrid@cream02.wn -o " + files[0:-1] + ".stdout -e " + files[0:-1] + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
             Name1=files[0:-1]
-            shortName=Name1[0:-10]+str(numMod)
+            shortName=Name1[0:-15]+"_"+str(numMod)
 #            shortName=files[0:-1]
             command3 = "qsub -q localgrid@cream02 -o " + shortName + ".stdout -e " + shortName + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
             command4 = "hadd -f ROOT/" + data_year + "/" + files[0:-1] +"_"+str(numMod)+ ".root\t" + "Out_" + files[0:-1] +"_"+str(numMod)+ "/*.root" + "\n"
@@ -73,7 +73,7 @@ def make_submit_form(order, pnfn, data_year, timing):
 if __name__ == "__main__":
     for i in Run_Over:
         R1, R2, R3 = Run_Over[i]
-        print "preparing the submission files for-->  " + R1 + "  which is " + R2
+        print "preparing the submission files for-->  " + R1 + "  which is " + R2 + "\n"
 	make_submit_form(str(i), R1, R2, R3)
 
     maindir = 'ROOT'
