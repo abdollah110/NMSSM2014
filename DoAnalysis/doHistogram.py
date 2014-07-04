@@ -41,7 +41,7 @@ Z_BackGround = ['DYJetsToLL', 'DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4J
 Top_BackGround = ['TTJets_FullLeptMGDecays','TTJets_SemiLeptMGDecays',  'TTJets_HadronicMGDecays', 'Tbar_tW', 'T_tW']
 DiBoson_BackGround = [ 'WWJetsTo2L2Nu',  'WZJetsTo2L2Q', 'WZJetsTo3LNu',  'ZZJetsTo2L2Nu', 'ZZJetsTo2L2Q','ZZJetsTo4L' ]
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
-Embedded = ['EmbeddedMuTau', 'EmbeddedETau']
+Embedded = ['EmbeddedmuTau', 'EmbeddedeleTau']
 Data = ['Data']
 
 
@@ -55,7 +55,7 @@ lenghtSig = len(signal) * len(mass)
 category_ = ["_inclusive", "_nobtag", "_btag"]
 #category_ = ["_inclusive", "_nobtag"]
 #channel = ["MuTau", "ETau"]
-channel = ["MuTau"]
+#channel = ["MuTau"]
 lenghtSig = len(signal) * len(mass) +1
 lenghtVV = len(DiBoson_BackGround) +1
 lenghtTop = len(Top_BackGround) +1
@@ -345,8 +345,8 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             
 if __name__ == "__main__":
 
-    MakeTheHistogram("MuTau","_SVMass","_8TeV",0)
-    MakeTheHistogram("EleTau","_SVMass","_8TeV",1)
+    MakeTheHistogram("muTau","_SVMass","_8TeV",0)
+    MakeTheHistogram("eleTau","_SVMass","_8TeV",1)
 #    MakeTheHistogram("_inclusive","MuTau","_8TeV",0,0)
 #    MakeTheHistogram("_nobtag","MuTau","_8TeV",1,0)
 #    MakeTheHistogram("_btag","MuTau","_8TeV",2,0)

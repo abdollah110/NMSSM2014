@@ -52,8 +52,9 @@ public:
     vector<myobject> CorrectedL1ETM;
     vector<myobject> UncorrectedL1ETM;
     vector<myobject> CorrectedCaloMetNoHF;
-    vector<myobject> GenTauMatchedCaloJet;
     vector<myobject> MetNoHFresidualCorrected;
+    vector<myobject> MetNoHFresidualCorrectedUp;
+    vector<myobject> MetNoHFresidualCorrectedDown;
     vector<myobject> MetNoHF;
     vector<myobject> RectcMet;
     vector<myobject> RecPFMetCorElectronEnUp;
@@ -81,6 +82,7 @@ public:
     unsigned int runNumber;
     unsigned int eventNumber;
     unsigned int lumiNumber;
+    float embeddingWeight;
     unsigned int HLT_DiElectron;
     unsigned int HLT_DiMuon;
     int PUInfo;

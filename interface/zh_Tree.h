@@ -32,8 +32,10 @@
 //############## initializing the PU correction                                    ###############
 //#################################################################################################
 
-reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/Summer12_PU.root", "interface/dataPileUpHistogram_True_2012.root", "mcPU", "pileup");
-reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("interface/Fall11_PU.root", "interface/dataPileUpHistogram_True_2011.root", "mcPU", "pileup");
+reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Summer12_PU_S10-600bins.root", "interface/HTTRootFiles/Data_Pileup_2012_ReReco-600bins.root", "pileup", "pileup");
+reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Fall11_PU_S6-500bins.root", "interface/HTTRootFiles/Data_Pileup_2011_HCP-500bins.root", "pileup", "pileup");
+//reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/Summer12_PU.root", "interface/dataPileUpHistogram_True_2012.root", "mcPU", "pileup"); //changed to be sync with HTT
+//reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("interface/Fall11_PU.root", "interface/dataPileUpHistogram_True_2011.root", "mcPU", "pileup");  //changed to be sync with HTT
 //    LumiWeights_11 = new reweight::LumiReWeighting("interface/Fall11_PU_observed.root", "interface/dataPileUpHistogram_Observed_2011.root", "mcPU", "pileup"); // Last Bug found in 25 Nov
 
 
@@ -82,7 +84,7 @@ float rho;
 
 int njets;
 int njetpt20;
-int nbtag, nbtagLoose;
+int nbtag, nbtagLoose, nbtagNoCor;
 
 float jpt_1;
 float jeta_1;
@@ -96,20 +98,20 @@ float jphi_2;
 float jE_2;
 bool jpass_2;
 
-float bpt;
-float beta;
-float bphi;
-float bdiscriminant;
+float bpt_1;
+float beta_1;
+float bphi_1;
+float bdiscriminant_1;
 
 float bpt_2;
 float beta_2;
 float bphi_2;
 float bdiscriminant_2;
 
-float loosebpt;
-float loosebeta;
-float loosebphi;
-float loosebdiscriminant;
+float loosebpt_1;
+float loosebeta_1;
+float loosebphi_1;
+float loosebdiscriminant_1;
 
 float loosebpt_2;
 float loosebeta_2;
@@ -126,6 +128,7 @@ int zCategory = -10;
 double SVMass, SVMassUnc;
 double SVMassUp, SVMassUncUp;
 double SVMassDown, SVMassUncDown;
+float embedWeight;
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -142,6 +145,8 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     if (is_data_mc == "mc12") mcdata = 3;
     if (is_data_mc == "data12") mcdata = 4;
     if (is_data_mc == "embed12") mcdata = 5;
+    bool isdata = (mcdata == 2 || mcdata == 4 || mcdata == 5);
+    bool is2012 = (mcdata == 3 || mcdata == 4 || mcdata == 5);
 
     //*********************************************************************************************
     //****************************    PileUp re weighting    ***************************************
@@ -165,6 +170,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     Run = m->runNumber;
     Lumi = m->lumiNumber;
     Event = m->eventNumber;
+    embedWeight =m->embeddingWeight;
 
 
 
@@ -216,13 +222,15 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //  Jet Information
     //  ########## ########## ########## ########## ########## ##########
     vector<myobject> JETS = GoodJet30(m, obj1, obj2);
-    vector<myobject> BJETS = GoodbJet20(m, obj1, obj2);
+    vector<myobject> BJETS = GoodbJet20(m, obj1, obj2,isdata,is2012);
     vector<myobject> BLooseJETS = GoodLoosebJet20(m, obj1, obj2);
+    vector<myobject> BJETSNoCor = GoodbJet20NoCor(m, obj1, obj2);
 
     njetpt20 = GoodJet20(m).size();
     njets = JETS.size();
     nbtag = BJETS.size();
     nbtagLoose = BLooseJETS.size();
+    nbtagNoCor = BJETSNoCor.size();
 
     jpt_1 = (JETS.size() > 0 ? JETS[0].pt : -1000);
     jeta_1 = (JETS.size() > 0 ? JETS[0].eta : -1000);
@@ -236,20 +244,20 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     jE_2 = (JETS.size() > 1 ? JETS[1].E : -1000);
     jpass_2 = (JETS.size() > 1 ? JETS[1].puJetIdLoose : -1000);
 
-    bpt = (BJETS.size() > 0 ? BJETS[0].pt : -1000);
-    beta = (BJETS.size() > 0 ? BJETS[0].eta : -1000);
-    bphi = (BJETS.size() > 0 ? BJETS[0].phi : -1000);
-    bdiscriminant = (BJETS.size() > 0 ? BJETS[0].bDiscriminatiors_CSV : -1000);
+    bpt_1 = (BJETS.size() > 0 ? BJETS[0].pt : -1000);
+    beta_1 = (BJETS.size() > 0 ? BJETS[0].eta : -1000);
+    bphi_1 = (BJETS.size() > 0 ? BJETS[0].phi : -1000);
+    bdiscriminant_1 = (BJETS.size() > 0 ? BJETS[0].bDiscriminatiors_CSV : -1000);
 
     bpt_2 = (BJETS.size() > 1 ? BJETS[1].pt : -1000);
     beta_2 = (BJETS.size() > 1 ? BJETS[1].eta : -1000);
     bphi_2 = (BJETS.size() > 1 ? BJETS[1].phi : -1000);
     bdiscriminant_2 = (BJETS.size() > 1 ? BJETS[1].bDiscriminatiors_CSV : -1000);
 
-    loosebpt = (BLooseJETS.size() > 0 ? BLooseJETS[0].pt : -1000);
-    loosebeta = (BLooseJETS.size() > 0 ? BLooseJETS[0].eta : -1000);
-    loosebphi = (BLooseJETS.size() > 0 ? BLooseJETS[0].phi : -1000);
-    loosebdiscriminant = (BLooseJETS.size() > 0 ? BLooseJETS[0].bDiscriminatiors_CSV : -1000);
+    loosebpt_1 = (BLooseJETS.size() > 0 ? BLooseJETS[0].pt : -1000);
+    loosebeta_1 = (BLooseJETS.size() > 0 ? BLooseJETS[0].eta : -1000);
+    loosebphi_1 = (BLooseJETS.size() > 0 ? BLooseJETS[0].phi : -1000);
+    loosebdiscriminant_1 = (BLooseJETS.size() > 0 ? BLooseJETS[0].bDiscriminatiors_CSV : -1000);
 
     loosebpt_2 = (BLooseJETS.size() > 1 ? BLooseJETS[1].pt : -1000);
     loosebeta_2 = (BLooseJETS.size() > 1 ? BLooseJETS[1].eta : -1000);

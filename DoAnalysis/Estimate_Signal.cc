@@ -262,6 +262,8 @@ int main(int argc, char** argv) {
         std::string ZCat[4] = {"", "_ZTT", "_ZL", "_ZJ"};
 
         //####################################################
+        if (Run > 160431 &&  Run < 163261) cout << "Buggy Runs= " << Run << endl;
+        //####################################################
         // MuTau Channel
         //####################################################
         if (Channel == 1) {
@@ -485,20 +487,20 @@ int main(int argc, char** argv) {
             } // loop over categories
 
 
-//            if (EL_CUTS && TAU_CUTS && ElTau_Charge && (Event != Event_Double[2][1])) {
-//                plotFill("ETau_visibleMass_NOCorrection", mvis, high_bin, 0, high_bin);
-//                plotFill("ETau_visibleMass", mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-//                plotFill("ETau_Multiplicity", 0, 1, 0, 1);
-//                Event_Double[2][1] = Event;
-//
-//            }
-//
-//            float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
-//            if (EL_CUTS && TAU_CUTS && ElTau_Charge && mT < 30 && (Event != Event_Double[2][2])) {
-//                plotFill("ETau_visibleMass_NOCorrection", mvis, high_bin, 0, high_bin);
-//                plotFill("ETau_visibleMass", mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-//                Event_Double[2][2] = Event;
-//            }
+            //            if (EL_CUTS && TAU_CUTS && ElTau_Charge && (Event != Event_Double[2][1])) {
+            //                plotFill("ETau_visibleMass_NOCorrection", mvis, high_bin, 0, high_bin);
+            //                plotFill("ETau_visibleMass", mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+            //                plotFill("ETau_Multiplicity", 0, 1, 0, 1);
+            //                Event_Double[2][1] = Event;
+            //
+            //            }
+            //
+            //            float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
+            //            if (EL_CUTS && TAU_CUTS && ElTau_Charge && mT < 30 && (Event != Event_Double[2][2])) {
+            //                plotFill("ETau_visibleMass_NOCorrection", mvis, high_bin, 0, high_bin);
+            //                plotFill("ETau_visibleMass", mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+            //                Event_Double[2][2] = Event;
+            //            }
 
 
 

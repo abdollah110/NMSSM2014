@@ -28,6 +28,7 @@
 #include "myobject.h"
 #include "Leptons_IdIso.h"
 #include "zh_Auxiliary.h"
+#include "BtagSF.h"
 
 
 
@@ -296,7 +297,7 @@ vector<myobject> GoodJet30(myevent *m, myobject const& a, myobject const& b) {
     vector<myobject> Jet = GoodJet20(m);
 
     for (int i = 0; i < Jet.size(); i++) {
-        if (Jet[i].pt > 30 && TMath::Abs(Jet[i].eta) < 4.7  && Jet[i].puJetIdLoose > 0.5) {
+        if (Jet[i].pt > 30 && TMath::Abs(Jet[i].eta) < 4.7 && Jet[i].puJetIdLoose > 0.5) {
             //            if (NonOverLapWithMuEle(m, Jet[i])) goodJet.push_back(Jet[i]);
             if (NonOverLapWithAB(a, b, Jet[i])) goodJet.push_back(Jet[i]);
         }
@@ -305,21 +306,27 @@ vector<myobject> GoodJet30(myevent *m, myobject const& a, myobject const& b) {
     return goodJet;
 }
 
-vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b) {
+vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b,bool isdata, bool is2012) {
 
     vector<myobject> goodbJet;
     vector<myobject> jet = GoodJet20(m);
+    bool isBtagged = false;
+    BtagSF isBJ;
 
     //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
     for (int k = 0; k < jet.size(); k++) {
-        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.679) {
-            //            if (NonOverLapWithMuEle(m, jet[k])) goodbJet.push_back(jet[k]);
+        int jetGenpdgid_ = jetGenpdgid(m, jet[k]);
+        isBtagged = isBJ.isbtagged13(jet[k].pt, jet[k].eta, jet[k].bDiscriminatiors_CSV, jetGenpdgid_, isdata, 0, 0, is2012);
+
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && isBtagged) {
+            //        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.679) {
             if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
         }
     }
     sort(goodbJet.begin(), goodbJet.end(), myobject_grt());
     return goodbJet;
 }
+
 vector<myobject> GoodLoosebJet20(myevent *m, myobject const& a, myobject const& b) {
 
     vector<myobject> goodbJet;
@@ -327,8 +334,22 @@ vector<myobject> GoodLoosebJet20(myevent *m, myobject const& a, myobject const& 
 
     //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
     for (int k = 0; k < jet.size(); k++) {
-        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.244 ) {
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.244) {
             //            if (NonOverLapWithMuEle(m, jet[k])) goodbJet.push_back(jet[k]);
+            if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
+        }
+    }
+    sort(goodbJet.begin(), goodbJet.end(), myobject_grt());
+    return goodbJet;
+}
+
+vector<myobject> GoodbJet20NoCor(myevent *m, myobject const& a, myobject const& b) {
+
+    vector<myobject> goodbJet;
+    vector<myobject> jet = GoodLoosebJet20(m,a,b);
+
+    for (int k = 0; k < jet.size(); k++) {
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.679) {
             if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
         }
     }
@@ -642,63 +663,3 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
 
 
 #endif	/* _GOODMUON_H */
-
-
-
-
-//
-//
-//skimOutput_14_1_FHP.root
-//skimOutput_1_1_vtr.root
-//skimOutput_6_1_dbC.root
-//skimOutput_15_1_hGi.root
-//skimOutput_11_1_Qay.root
-//skimOutput_26_1_oPQ.root
-//skimOutput_123_1_k1C.root
-//skimOutput_149_1_Brf.root
-//skimOutput_138_1_m7N.root
-//skimOutput_108_1_Kdt.root
-//skimOutput_174_1_l0o.root
-//skimOutput_135_1_d0X.root
-//skimOutput_147_1_5P1.root
-//skimOutput_197_1_9uM.root
-//skimOutput_189_1_3jh.root
-//skimOutput_55_1_dEV.root
-//skimOutput_205_1_snV.root
-//skimOutput_20_1_15p.root
-//skimOutput_196_1_WPR.root
-//skimOutput_124_1_LDG.root
-//skimOutput_167_1_kex.root
-//skimOutput_251_1_lio.root
-//skimOutput_42_1_v3J.root
-//skimOutput_27_1_UIP.root
-//skimOutput_49_1_TNI.root
-//skimOutput_316_1_AeL.root
-//skimOutput_303_1_xjg.root
-//skimOutput_330_1_RoS.root
-//skimOutput_248_1_1l1.root
-//skimOutput_237_1_wsA.root
-//skimOutput_155_1_EMZ.root
-//skimOutput_311_1_NKp.root
-//skimOutput_231_1_LpL.root
-//skimOutput_353_1_gjq.root
-//skimOutput_481_1_O6d.root
-//
-//
-//
-//
-//
-//15535192026 10:03 skimOutput_14_1_aNY.root
-//15495146126 10:08 skimOutput_15_1_b6b.root
-//15327723326 10:10 skimOutput_6_1_ZSj.root
-//14284175626 10:15 skimOutput_11_1_WkA.root
-//15179004126 10:49 skimOutput_1_1_2Ko.root
-//13336873226 12:09 skimOutput_174_1_JzW.root
-//13561739726 12:12 skimOutput_189_1_nc3.root
-//17910126226 12:12 skimOutput_147_1_4Ws.root
-//15283154426 12:13 skimOutput_149_1_ZfO.root
-//14576044426 12:14 skimOutput_197_1_2HB.root
-//15998551926 12:16 skimOutput_124_1_LBb.root
-//15075548126 12:17 skimOutput_138_1_S83.root
-//14974771226 12:22 skimOutput_108_1_OBv.root
-//15999781026 12:25 skimOutput_123_1_rD7.root

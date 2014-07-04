@@ -1,6 +1,6 @@
 // Missing for next time is
-// 1) tau decay  correction
-// 2) btag correction at analysis level from Veelken
+// 1) tau decay  correction  DONE
+// 2) btag correction at analysis level from Veelken  DONE
 // 3) check the trigger eff efficiency correction
 // 4) pu reweighting correction
 
@@ -212,18 +212,18 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("jE_2", &jE_2, "jE_2/F");
     Run_Tree->Branch("jpass_1", &jpass_1, "jpass_1/O");
     Run_Tree->Branch("jpass_2", &jpass_2, "jpass_2/O");
-    Run_Tree->Branch("bpt", &bpt, "bpt/F");
-    Run_Tree->Branch("beta", &beta, "beta/F");
-    Run_Tree->Branch("bphi", &bphi, "bphi/F");
-    Run_Tree->Branch("bdiscriminant", &bdiscriminant, "bdiscriminant/F");
+    Run_Tree->Branch("bpt_1", &bpt_1, "bpt_1/F");
+    Run_Tree->Branch("beta_1", &beta_1, "beta_1/F");
+    Run_Tree->Branch("bphi_1", &bphi_1, "bphi_1/F");
+    Run_Tree->Branch("bdiscriminant_1", &bdiscriminant_1, "bdiscriminant_1/F");
     Run_Tree->Branch("bpt_2", &bpt_2, "bpt_2/F");
     Run_Tree->Branch("beta_2", &beta_2, "beta_2/F");
     Run_Tree->Branch("bphi_2", &bphi_2, "bphi_2/F");
     Run_Tree->Branch("bdiscriminant_2", &bdiscriminant_2, "bdiscriminant_2/F");
-    Run_Tree->Branch("loosebpt", &loosebpt, "loosebpt/F");
-    Run_Tree->Branch("loosebeta", &loosebeta, "loosebeta/F");
-    Run_Tree->Branch("loosebphi", &loosebphi, "loosebphi/F");
-    Run_Tree->Branch("loosebdiscriminant", &loosebdiscriminant, "loosebdiscriminant/F");
+    Run_Tree->Branch("loosebpt_1", &loosebpt_1, "loosebpt_1/F");
+    Run_Tree->Branch("loosebeta_1", &loosebeta_1, "loosebeta_1/F");
+    Run_Tree->Branch("loosebphi_1", &loosebphi_1, "loosebphi_1/F");
+    Run_Tree->Branch("loosebdiscriminant_1", &loosebdiscriminant_1, "loosebdiscriminant_1/F");
     Run_Tree->Branch("loosebpt_2", &loosebpt_2, "loosebpt_2/F");
     Run_Tree->Branch("loosebeta_2", &loosebeta_2, "loosebeta_2/F");
     Run_Tree->Branch("loosebphi_2", &loosebphi_2, "loosebphi_2/F");
@@ -244,6 +244,8 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l2_DecayModeFinding", &l2_DecayModeFinding, "l2_DecayModeFinding/O");
     Run_Tree->Branch("zCategory", &zCategory, "zCategory/I");
     Run_Tree->Branch("l2_DecayMode;", &l2_DecayMode, "l2_DecayMode/I");
+    Run_Tree->Branch("embedWeight;", &embedWeight, "embedWeight/F");
+    Run_Tree->Branch("nbtagNoCor;", &nbtagNoCor, "nbtagNoCor/I");
 
 
     //#################################################################################################

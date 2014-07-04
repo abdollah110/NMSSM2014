@@ -101,6 +101,23 @@ int ZCategory(myevent *m, myobject const& tau) {
     else return -10;
 }
 
+int jetGenpdgid(myevent *m, myobject const& jet) {
+    int pdgGenJet = 0;
+    float minimuDist = 10;
+
+    vector<myGenobject> genPar = m->RecGenParticle;
+    for (int gg = 0; gg < genPar.size(); gg++) {
+        if (fabs(genPar[gg].pdgId) < 7 || fabs(genPar[gg].pdgId) == 21) {
+            if (deltaR(genPar[gg], jet) < minimuDist) {
+                pdgGenJet = abs(genPar[gg].pdgId);
+            }
+        }
+    }
+    return pdgGenJet;
+}
+
+
+
 
 //struct  InvarMass_2{
 //    double InvarMass_2 ()(myobject const& a, myobject const& b) const {
