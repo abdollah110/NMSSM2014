@@ -33,7 +33,7 @@ def make_submit_form(order, pnfn, data_year, timing):
 
     #Make loop over the files in the given directories
     for files in Sample.readlines():
-        print file
+        print file[0:-1]
         for numMod in xrange(0,10):
             f = os.popen("ls " + pnfn + "/" + files[0:-1] + " | sort ")
             dir = "dcap://maite.iihe.ac.be" + pnfn + "/" + files[0:-1] + "/"
