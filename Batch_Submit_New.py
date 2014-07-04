@@ -47,6 +47,7 @@ def make_submit_form(order, pnfn, data_year, timing):
             for i in f.readlines():
                 QName=i[0:-1]
                 XName=int(float(QName[15:-11]))
+                print "QName= ", QName, " XName=",XName
                 if (XName % 10 == numMod):
                     command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " "   + files[0:-1] + i[0:-1] + " " + dir + "/" + i[0:-1]
                     command2 = command2 + " \n" + " mv  " + data_year + "_" +  files[0:-1] + i[0:-1] + "\t" + "Out_" + files[0:-1]+"_"+str(numMod)
