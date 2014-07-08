@@ -31,10 +31,10 @@ def make_submit_form():
     location = os.getcwd()
 #    location = location.replace("/localgrid_mnt", "") #nedd to remove the first part of address while submitting
 #    Sample = os.popen(("ls " + pnfn + " | sort "))
-    name_submitFile = "Submit_" + data_year + ".sh"
-    name_haddFile = "Hadd_" + data_year  + ".sh"
-    submit_File = open(name_submitFile, 'w')
-    Hadd_File = open(name_haddFile, 'w')
+#    name_submitFile = "Submit_" + data_year + ".sh"
+#    name_haddFile = "Hadd_" + data_year  + ".sh"
+#    submit_File = open(name_submitFile, 'w')
+#    Hadd_File = open(name_haddFile, 'w')
     #Make loop over the files in the given directories
     for files in TextSamples.readlines():
         sample_info = files.split()
