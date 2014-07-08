@@ -44,7 +44,7 @@ def make_submit_form():
                 outName= sampleName + "_"+str(XName) +".root"
                 if (XName % 10 == numMod):
                     command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " "   +outName + " " + dir + "/" + i[0:-1]
-                    command2 = command2 + " \n" + " mv  " + data_year + "_" +  outName + "\t" + "Out_" + files[0:-1]+"_"+str(numMod)
+                    command2 = command2 + " \n" + " mv  " + data_year + "_" +  outName + "\t" + "Out_" + sampleName+"_"+str(numMod)
                     command2 = command2 + " \n\n\n"
                     outFile.write(command2)
 
