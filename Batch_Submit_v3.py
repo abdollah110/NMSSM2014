@@ -47,13 +47,14 @@ def make_submit_form():
         data_year= files[0:-1].split(",")[1]
         timing= files[0:-1].split(",")[2]
         print pnfn, data_year, timing
-        print "_________________=", files[0:-1].split("/")[10]
         sampleName2= files[0:-1].split("/")[10]
+        print "sampleName2=", sampleName2
         sampleName= sampleName2.split(",")[0]
+        print "sampleName=", sampleName
         
 
         for numMod in xrange(0,10):
-            f = os.popen("ls " + pnfn + "/" + sampleName + " | sort ")
+            f = os.popen("ls " + pnfn + "/" + " | sort ")
             dir = "dcap://maite.iihe.ac.be" + pnfn + "/" + sampleName+ "/"
             name_out = "_" + data_year + "_" +  sampleName +"_"+str(numMod)+ ".sh"
             outFile = open(name_out, 'w')
