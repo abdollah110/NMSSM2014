@@ -41,7 +41,7 @@ def make_submit_form():
 
 #            sample_info = files.split()
             print files[0:-1]
-            print files[0:-1][i]
+            print i
 #        for numMod in xrange(0,10):
 #            f = os.popen("ls " + TextSamples + "/" + files[0:-1] + " | sort ")
 #            dir = "dcap://maite.iihe.ac.be" + TextSamples + "/" + files[0:-1] + "/"
