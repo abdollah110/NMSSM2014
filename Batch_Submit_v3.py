@@ -37,10 +37,9 @@ def make_submit_form():
 #    Hadd_File = open(name_haddFile, 'w')
     #Make loop over the files in the given directories
     for files in TextSamples.readlines():
+        print files[0:-1]
         for i in files[0:-1].split(","):
-
 #            sample_info = files.split()
-            print files[0:-1]
             print i
 #        for numMod in xrange(0,10):
 #            f = os.popen("ls " + TextSamples + "/" + files[0:-1] + " | sort ")
