@@ -21,18 +21,19 @@ Run_Over = {
 }
 
     ########################################################################################
-def make_submit_form(order, pnfn, data_year, timing):
-
+#def make_submit_form(order, pnfn, data_year, timing):
+def make_submit_form():
+    TextSamples = open("SelectSample.txt", "r")
     location = os.getcwd()
 #    location = location.replace("/localgrid_mnt", "") #nedd to remove the first part of address while submitting
 #    Sample = os.popen(("ls " + pnfn + " | sort "))
-    name_submitFile = "Submit_" + data_year + "_"  + order + ".sh"
-    name_haddFile = "Hadd_" + data_year + "_" +  order + ".sh"
+    name_submitFile = "Submit_" + data_year + ".sh"
+    name_haddFile = "Hadd_" + data_year  + ".sh"
     submit_File = open(name_submitFile, 'w')
     Hadd_File = open(name_haddFile, 'w')
 
     #Make loop over the files in the given directories
-    for files in pnfn.readlines():
+    for files in TextSamples.readlines():
         print files[0:-1]
         for numMod in xrange(0,10):
             f = os.popen("ls " + pnfn + "/" + files[0:-1] + " | sort ")
@@ -72,7 +73,7 @@ def make_Ready(order, pnfn, data_year, timing,outFile):
 	Sample = os.popen(("ls " + pnfn + " | sort "))
 	for files in Sample.readlines():
 		command= ""
-		command = command +  '"'+files[0:-1] + ','+ data_year+ ','  + timing+'"\n'
+		command = command +  '"'+ pnfn + "/" +files[0:-1] + '","'+ data_year+ '","'  + timing+'"\n'
 		outFile.write(command)
 	
 
@@ -88,7 +89,8 @@ if __name__ == "__main__":
 		
 	make_Ready(str(i), R1, R2, R3, outFile)
      outFile.close()
-       # make_submit_form(str(i), R1, R2, R3)
+     
+#     make_submit_form()
 
 #    rm TotalSubmit.sh; ls Submit_* | xargs -n 1 -I {} echo 'sh {}' >> TotalSubmit.sh
 #    rm TotalHadd.sh;   ls Hadd_* | xargs -n 1 -I {} echo 'sh {}' >> TotalHadd.sh
