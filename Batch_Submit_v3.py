@@ -87,7 +87,7 @@ def make_Ready(order, pnfn, data_year, timing,outFile):
 	for files in Sample.readlines():
 		command= ""
 #		command = command +  '"'+ pnfn + "/" +files[0:-1] + '","'+ data_year+ '","'  + timing+'"\n'
-		command = command +  ''+ pnfn + "/" +files[0:-1] + ' , '+ data_year+ ' , '  + timing+'\n'
+		command = command +  ''+ pnfn + "/" +files[0:-1] + ','+ data_year+ ','  + timing+'\n'
 		outFile.write(command)
 	
 
