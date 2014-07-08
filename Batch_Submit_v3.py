@@ -36,6 +36,10 @@ def make_submit_form():
 #    submit_File = open(name_submitFile, 'w')
 #    Hadd_File = open(name_haddFile, 'w')
     #Make loop over the files in the given directories
+    name_submitFile = "Submit_" +  "_"  + ".sh"
+    name_haddFile = "Hadd_" +  ".sh"
+    submit_File = open(name_submitFile, 'w')
+    Hadd_File = open(name_haddFile, 'w')
     for files in TextSamples.readlines():
         print files[0:-1]
 #        for i in files[0:-1].split(","):
