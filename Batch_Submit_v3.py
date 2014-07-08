@@ -48,7 +48,8 @@ def make_submit_form():
         timing= files[0:-1].split(",")[2]
         print pnfn, data_year, timing
         print "_________________=", files[0:-1].split("/")[10]
-        sampleName= files[0:-1].split("/")[10]
+        sampleName2= files[0:-1].split("/")[10]
+        sampleName= sampleName2.split(",")[0]
         
 
         for numMod in xrange(0,10):
