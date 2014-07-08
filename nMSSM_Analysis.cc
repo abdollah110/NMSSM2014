@@ -174,9 +174,9 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l2_tauRejMuL", &l2_tauRejMuL, "l2_tauRejMuL/O");
     Run_Tree->Branch("l2_tauRejMuM", &l2_tauRejMuM, "l2_tauRejMuM/O");
     Run_Tree->Branch("l2_tauRejMuT", &l2_tauRejMuT, "l2_tauRejMuT/O");
-    Run_Tree->Branch("againstMuonLoose2_2", &l2_tauRejMu2L, "againstMuonLoose2_2/O");
-    Run_Tree->Branch("againstMuonMedium2_2", &l2_tauRejMu2M, "againstMuonMedium2_2/O");
-    Run_Tree->Branch("againstMuonTight2_2", &l2_tauRejMu2T, "againstMuonTight2_2/O");
+    Run_Tree->Branch("againstMuonLoose3", &l2_tauRejMu3L, "againstMuonLoose3/O");
+    Run_Tree->Branch("againstMuonMedium3", &l2_tauRejMu2M, "againstMuonMedium3/O");
+    Run_Tree->Branch("againstMuonTight3", &l2_tauRejMu3T, "againstMuonTight3/O");
 
     Run_Tree->Branch("againstElectronMVA3raw_2", &l2_tauRejEleMVA, "againstElectronMVA3raw_2/F");
     Run_Tree->Branch("l2_tauRejEleL", &l2_tauRejEleL, "l2_tauRejEleL/O");
@@ -243,9 +243,66 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l1_dZ_in", &l1_dZ_in, "l1_dZ_in/F");
     Run_Tree->Branch("l2_DecayModeFinding", &l2_DecayModeFinding, "l2_DecayModeFinding/O");
     Run_Tree->Branch("zCategory", &zCategory, "zCategory/I");
-    Run_Tree->Branch("l2_DecayMode;", &l2_DecayMode, "l2_DecayMode/I");
-    Run_Tree->Branch("embedWeight;", &embedWeight, "embedWeight/F");
-    Run_Tree->Branch("nbtagNoCor;", &nbtagNoCor, "nbtagNoCor/I");
+    Run_Tree->Branch("l2_DecayMode", &l2_DecayMode, "l2_DecayMode/I");
+    Run_Tree->Branch("embedWeight", &embedWeight, "embedWeight/F");
+    Run_Tree->Branch("nbtagNoCor", &nbtagNoCor, "nbtagNoCor/I");
+
+
+    Run_Tree->Branch("l2_LoosetauIsoMVA3newDMwLT", &l2_LoosetauIsoMVA3newDMwLT, "l2_LoosetauIsoMVA3newDMwLT/O");
+    Run_Tree->Branch("l2_MediumtauIsoMVA3newDMwLT", &l2_MediumtauIsoMVA3newDMwLT, "l2_MediumtauIsoMVA3newDMwLT/O");
+    Run_Tree->Branch("l2_TighttauIsoMVA3newDMwLT", &l2_TighttauIsoMVA3newDMwLT, "l2_TighttauIsoMVA3newDMwLT/O");
+    Run_Tree->Branch("l2_LoosetauIsoMVA3oldDMwLT", &l2_LoosetauIsoMVA3oldDMwLT, "l2_LoosetauIsoMVA3oldDMwLT/O");
+    Run_Tree->Branch("l2_MediumtauIsoMVA3oldDMwLT", &l2_MediumtauIsoMVA3oldDMwLT, "l2_MediumtauIsoMVA3oldDMwLT/O");
+    Run_Tree->Branch("l2_TighttauIsoMVA3oldDMwLT", &l2_TighttauIsoMVA3oldDMwLT, "l2_TighttauIsoMVA3oldDMwLT/O");
+    Run_Tree->Branch("l2_LoosetauIsoMVA3newDMwoLT", &l2_LoosetauIsoMVA3newDMwoLT, "l2_LoosetauIsoMVA3newDMwoLT/O");
+    Run_Tree->Branch("l2_MediumtauIsoMVA3newDMwoLT", &l2_MediumtauIsoMVA3newDMwoLT, "l2_MediumtauIsoMVA3newDMwoLT/O");
+    Run_Tree->Branch("l2_TighttauIsoMVA3newDMwoLT", &l2_TighttauIsoMVA3newDMwoLT, "l2_TighttauIsoMVA3newDMwoLT/O");
+    Run_Tree->Branch("l2_LoosetauIsoMVA3oldDMwoLT", &l2_LoosetauIsoMVA3oldDMwoLT, "l2_LoosetauIsoMVA3oldDMwoLT/O");
+    Run_Tree->Branch("l2_MediumtauIsoMVA3oldDMwoLT", &l2_MediumtauIsoMVA3oldDMwoLT, "l2_MediumtauIsoMVA3oldDMwoLT/O");
+    Run_Tree->Branch("l2_TighttauIsoMVA3oldDMwoLT", &l2_TighttauIsoMVA3oldDMwoLT, "l2_TighttauIsoMVA3oldDMwoLT/O");
+
+
+    Run_Tree->Branch("l2_DecayModeFindingNewDMs", &l2_DecayModeFindingNewDMs, "l2_DecayModeFindingNewDMs/O");
+    Run_Tree->Branch("l2_DecayModeFindingOldDMs", &l2_DecayModeFindingOldDMs, "l2_DecayModeFindingOldDMs/O");
+
+    Run_Tree->Branch("l2_tauIsoMVAraw3newDMwLTraw", &l2_tauIsoMVAraw3newDMwLTraw, "l2_tauIsoMVAraw3newDMwLTraw/F");
+    Run_Tree->Branch("l2_tauIsoMVAraw3newDMwoLTraw", &l2_tauIsoMVAraw3newDMwoLTraw, "l2_tauIsoMVAraw3newDMwoLTraw/F");
+    Run_Tree->Branch("l2_tauIsoMVAraw3oldDMwLTraw", &l2_tauIsoMVAraw3oldDMwLTraw, "l2_tauIsoMVAraw3oldDMwLTraw/F");
+    Run_Tree->Branch("l2_tauIsoMVAraw3oldDMwoLTraw", &l2_tauIsoMVAraw3oldDMwoLTraw, "l2_tauIsoMVAraw3oldDMwoLTraw/F");
+
+
+
+    Run_Tree->Branch("Trigger_LepTau12", &Trigger_LepTau12, "Trigger_LepTau12/O");
+    Run_Tree->Branch("Trigger_MuTau12", &Trigger_MuTau12, "Trigger_MuTau12/O");
+    Run_Tree->Branch("Trigger_EleTau12", &Trigger_EleTau12, "Trigger_EleTau12/O");
+    Run_Tree->Branch("Trigger_SingleMu12", &Trigger_SingleMu12, "Trigger_SingleMu12/O");
+    Run_Tree->Branch("Trigger_SingleEle12", &Trigger_SingleEle12, "Trigger_SingleEle12/O");
+    Run_Tree->Branch("Trigger_SingleJet12", &Trigger_SingleJet12, "Trigger_SingleJet12/O");
+
+
+    Run_Tree->Branch("l1_trgMatche_Ele20Tau20", &l1_trgMatche_Ele20Tau20, "l1_trgMatche_Ele20Tau20/O");
+    Run_Tree->Branch("l1_trgMatche_Mu17Tau20", &l1_trgMatche_Mu17Tau20, "l1_trgMatche_Mu17Tau20/O");
+    Run_Tree->Branch("l1_trgMatche_Mu18Tau25", &l1_trgMatche_Mu18Tau25, "l1_trgMatche_Mu18Tau25/O");
+    Run_Tree->Branch("l1_trgMatche_Mu24", &l1_trgMatche_Mu24, "l1_trgMatche_Mu24/O");
+    Run_Tree->Branch("l2_trgMatche_Ele20Tau20", &l2_trgMatche_Ele20Tau20, "l2_trgMatche_Ele20Tau20/O");
+    Run_Tree->Branch("l2_trgMatche_Mu17Tau20", &l2_trgMatche_Mu17Tau20, "l2_trgMatche_Mu17Tau20/O");
+    Run_Tree->Branch("l2_trgMatche_Mu18Tau25", &l2_trgMatche_Mu18Tau25, "l2_trgMatche_Mu18Tau25/O");
+
+
+    Run_Tree->Branch("gen_Higgs_pt", &gen_Higgs_pt, "gen_Higgs_pt/F");
+
+    Run_Tree->Branch("l1_ConversionVeto", &l1_ConversionVeto, "l1_ConversionVeto/O");
+    Run_Tree->Branch("l1_dxy_PV", &l1_dxy_PV, "l1_dxy_PV/F");
+    Run_Tree->Branch("l1_dz_PV", &l1_dz_PV, "l1_dz_PV/F");
+    Run_Tree->Branch("l2_dxy_PV", &l2_dxy_PV, "l2_dxy_PV/F");
+    Run_Tree->Branch("l2_dz_PV", &l2_dz_PV, "l2_dz_PV/F");
+
+
+
+
+
+
+
 
 
     //#################################################################################################
@@ -275,16 +332,6 @@ int main(int argc, char** argv) {
             vector<myobject> electron_ = GoodElectron10GeV(m);
             vector<myobject> tau_ = GoodTau20GeV(m);
 
-            //*********************************************************************************************
-            //****************************    Trigger      ************************************************
-            //*********************************************************************************************
-            bool Trigger;
-            if (mc12) Trigger = Trg_MC_12(m);
-            //            if (mc11) Trigger = Trg_MC_11(m);
-            if (data12) Trigger = Trg_Data_12(m);
-            if (embed12) Trigger = 1;
-            //            if (data11) Trigger = Trg_Data_11(m);
-
             //#################################################################################################
             bool doMuTauAnalysis = true;
             bool doElTauAnalysis = true;
@@ -300,50 +347,46 @@ int main(int argc, char** argv) {
                 int mutau = -1;
                 plotFill("TotalEventsNumber", 0, 1, 0, 1);
                 plotFill("mutau", ++mutau, 20, 0., 20.);
-                if (Trigger) {
-                    plotFill("mutau", ++mutau, 20, 0., 20.);
 
-                    for (int i = 0; i < mu_.size(); i++) {
-                        for (int k = 0; k < tau_.size(); k++) {
+                for (int i = 0; i < mu_.size(); i++) {
+                    for (int k = 0; k < tau_.size(); k++) {
 
-                            bool Mu_PtEta = mu_[i].pt > 20 && fabs(mu_[i].eta) < 2.1;
-                            bool Mu_IdTight = Id_Mu_Tight(mu_[i]);
-                            bool Mu_d0 = mu_[i].d0 < 0.045; //the impact parameter in the transverse plane
-                            bool Mu_dZ = mu_[i].dZ_in < 0.2; //the impact parameter in the transverse plane
-                            bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
-                            bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
+                        bool Mu_PtEta = mu_[i].pt > 20 && fabs(mu_[i].eta) < 2.1;
+                        bool Mu_IdTight = Id_Mu_Tight(mu_[i]);
+                        bool Mu_d0 = mu_[i].d0 < 0.045; //the impact parameter in the transverse plane
+                        bool Mu_dZ = mu_[i].dZ_in < 0.2; //the impact parameter in the transverse plane
+                        bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
+                        bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                            bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
-                            bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
-                            bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
-                            bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
-                            bool Tau_antiMu = tau_[k].discriminationByMuonTight2;
-                            bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
+                        bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
+                        bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
+                        bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
+                        bool Tau_antiMu = tau_[k].discriminationByMuonTight2;
+                        bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
 
-                            bool MuTau_Charge = mu_[i].charge * tau_[k].charge < 0;
-                            bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
+                        bool MuTau_Charge = mu_[i].charge * tau_[k].charge < 0;
+                        bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
 
-                            bool Veto_MM = Multi_Lepton_Veto("MM", m);
-                            bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
-                            bool Veto_MME = Multi_Lepton_Veto("MME", m);
+                        bool Veto_MM = Multi_Lepton_Veto("MM", m);
+                        bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
+                        bool Veto_MME = Multi_Lepton_Veto("MME", m);
 
 
-                            bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME;
-                            bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
-                            //                            bool VLooseMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.5;
+                        bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME;
+                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
 
-                            //Loose Selection
-                            if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
-                                fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
-                            }
-//                            //Final selection
-//                            if (MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
-//                                plotFill("mutau", ++mutau, 20, 0., 20.);
-//                                fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
-//                                break;
-//                            }
+                        //Loose Selection
+                        if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
+                            fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
                         }
+                        //                            //Final selection
+                        //                            if (MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
+                        //                                plotFill("mutau", ++mutau, 20, 0., 20.);
+                        //                                fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
+                        //                                break;
+                        //                            }
                     }
                 }
             }//end of only Muon
@@ -359,48 +402,47 @@ int main(int argc, char** argv) {
                 std::string FinalState = "eltau";
                 int eltau = -1;
                 plotFill("eltau", ++eltau, 20, 0., 20.);
-                if (Trigger) {
-                    plotFill("eltau", ++eltau, 20, 0., 20.);
+                for (int i = 0; i < electron_.size(); i++) {
+                    for (int k = 0; k < tau_.size(); k++) {
 
-                    for (int i = 0; i < electron_.size(); i++) {
-                        for (int k = 0; k < tau_.size(); k++) {
+                        bool El_PtEta = electron_[i].pt > 24 && fabs(electron_[i].eta) < 2.1;
+                        bool El_IdTight = EleMVANonTrigId_Tight(electron_[i]);
+                        bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
+                        bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                            bool El_PtEta = electron_[i].pt > 24 && fabs(electron_[i].eta) < 2.1;
-                            bool El_IdTight = EleMVANonTrigId_Tight(electron_[i]);
-                            bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
-                            bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
+                        bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
+                        bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
+                        bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
+                        bool Tau_antiMu = tau_[k].discriminationByMuonLoose2;
+                        bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
 
-                            bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
-                            bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
-                            bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
-                            bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
-                            bool Tau_antiMu = tau_[k].discriminationByMuonLoose2;
-                            bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
+                        bool ElTau_Charge = electron_[i].charge * tau_[k].charge < 0;
+                        bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
 
-                            bool ElTau_Charge = electron_[i].charge * tau_[k].charge < 0;
-                            bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
+                        bool Veto_EE = Multi_Lepton_Veto("EE", m);
+                        bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
+                        bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
-                            bool Veto_EE = Multi_Lepton_Veto("EE", m);
-                            bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
-                            bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
-
-                            bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE;
-                            bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
-                            //                            bool VLooseEl_Iso = Iso_Ele_dBeta(electron_[i]) < 1;
-                            //Loose Selection
-                            if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
-                                fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
-                            }
-                            //Final selection
-//                            if (EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
-//                                plotFill("eltau", ++eltau, 20, 0., 20.);
-//                                fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
-//                                break;
-//
-//                            }
-
-
+                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE;
+                        //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3newDMwLT;
+                        //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3oldDMwLT;
+                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
+                        //                        bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
+                        //                            bool VLooseEl_Iso = Iso_Ele_dBeta(electron_[i]) < 1;
+                        //Loose Selection
+                        if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
+                            fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                         }
+                        //Final selection
+                        //                            if (EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
+                        //                                plotFill("eltau", ++eltau, 20, 0., 20.);
+                        //                                fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
+                        //                                break;
+                        //
+                        //                            }
+
+
                     }
                 }
             }//end of Only Electron

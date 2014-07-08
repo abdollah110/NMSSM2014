@@ -169,6 +169,13 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("l2_DecayModeFinding", &l2_DecayModeFinding);
 
     Run_Tree->SetBranchAddress("zCategory", &zCategory);
+
+
+    Run_Tree->SetBranchAddress("l2_DecayMode;", &l2_DecayMode);
+    Run_Tree->SetBranchAddress("embedWeight;", &embedWeight);
+    Run_Tree->SetBranchAddress("nbtagNoCor;", &nbtagNoCor);
+
+
     //SVMass from another Tree
     Run_Tree->SetBranchAddress("SVMass", &SVMass);
     Run_Tree->SetBranchAddress("SVMassUnc", &SVMassUnc);
@@ -262,7 +269,7 @@ int main(int argc, char** argv) {
         std::string ZCat[4] = {"", "_ZTT", "_ZL", "_ZJ"};
 
         //####################################################
-        if (Run > 160431 &&  Run < 163261) cout << "Buggy Runs= " << Run << endl;
+        if (Run > 160431 && Run < 163261) cout << "Buggy Runs= " << Run << endl;
         //####################################################
         // MuTau Channel
         //####################################################
@@ -278,7 +285,7 @@ int main(int argc, char** argv) {
             bool MU_CUTS_Loose = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso_Loose;
 
             bool Tau_PtEta = l2Pt > 30 && fabs(l2Eta) < 2.3;
-            bool Tau_DMF = l2_DecayModeFinding;
+            bool Tau_DMF = l2_DecayModeFinding && (l2_DecayMode < 4 || l2_DecayMode > 8);
             //            bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
             bool Tau_Isolation = l2_tauIsoMVA2T > 0.5;
             bool Tau_antiEl = l2_tauRejEleL;
@@ -308,6 +315,7 @@ int main(int argc, char** argv) {
 
                             //################# Signal Selectiopn
                             if (MU_CUTS && TAU_CUTS && OS && mT < 30 && (Event != Event_Double[1][1])) {
+                            cout<<"l2_DecayMode= "<<l2_DecayMode<<endl;
                                 plotFill("muTau_visibleMass_mTLess30_OS_NOCorrection" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin);
                                 plotFill("muTau_visibleMass_mTLess30_OS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
                                 plotFill("muTau_SVMass_mTLess30_OS" + ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction);
@@ -389,7 +397,7 @@ int main(int argc, char** argv) {
             bool EL_CUTS_Loose = El_PtEta && El_IdTight && El_Iso_Loose;
 
             bool Tau_PtEta = l2Pt > 30 && fabs(l2Eta) < 2.3;
-            bool Tau_DMF = l2_DecayModeFinding;
+            bool Tau_DMF = l2_DecayModeFinding && (l2_DecayMode < 4 || l2_DecayMode > 8);
             //            bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
             bool Tau_Isolation = l2_tauIsoMVA2T > 0.5;
             bool Tau_antiEl = l2_tauRejEleMVA3M;

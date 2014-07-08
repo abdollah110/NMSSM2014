@@ -25,6 +25,7 @@
 #include "Leptons_PreSelection.h"
 #include "zh_Functions.h"
 #include "LumiReweightingStandAlone.h"
+#include "htt_Trigger.h"
 
 
 
@@ -57,7 +58,7 @@ bool l1_tauIsoL, l1_tauIsoM, l1_tauIsoT, l1_tauRejMuL, l1_tauRejMuM, l1_tauRejMu
 bool l1_tauIso3HitL, l1_tauIso3HitM, l1_tauIso3HitT, l1_tauRejMu2L, l1_tauRejMu2M, l1_tauRejMu2T, l1_tauRejEleMVA3L, l1_tauRejEleMVA3M, l1_tauRejEleMVA3T;
 bool l1_tauIsoVL, l1_tauIsoMVA2L, l1_tauIsoMVA2M, l1_tauIsoMVA2T;
 bool l2_tauIsoL, l2_tauIsoM, l2_tauIsoT, l2_tauRejMuL, l2_tauRejMuM, l2_tauRejMuT, l2_tauRejEleL, l2_tauRejEleM, l2_tauRejEleMVA;
-bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu2L, l2_tauRejMu2M, l2_tauRejMu2T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
+bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu3L, l2_tauRejMu2M, l2_tauRejMu3T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
 bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T, l2_DecayModeFinding;
 int l2_DecayMode;
 
@@ -130,6 +131,50 @@ double SVMassUp, SVMassUncUp;
 double SVMassDown, SVMassUncDown;
 float embedWeight;
 
+
+bool l2_LoosetauIsoMVA3newDMwLT;
+bool l2_MediumtauIsoMVA3newDMwLT;
+bool l2_TighttauIsoMVA3newDMwLT;
+bool l2_LoosetauIsoMVA3oldDMwLT;
+bool l2_MediumtauIsoMVA3oldDMwLT;
+bool l2_TighttauIsoMVA3oldDMwLT;
+bool l2_LoosetauIsoMVA3newDMwoLT;
+bool l2_MediumtauIsoMVA3newDMwoLT;
+bool l2_TighttauIsoMVA3newDMwoLT;
+bool l2_LoosetauIsoMVA3oldDMwoLT;
+bool l2_MediumtauIsoMVA3oldDMwoLT;
+bool l2_TighttauIsoMVA3oldDMwoLT;
+
+bool l2_DecayModeFindingNewDMs;
+bool l2_DecayModeFindingOldDMs;
+
+float l2_tauIsoMVAraw3newDMwLTraw;
+float l2_tauIsoMVAraw3newDMwoLTraw;
+float l2_tauIsoMVAraw3oldDMwLTraw;
+float l2_tauIsoMVAraw3oldDMwoLTraw;
+
+bool Trigger_LepTau12;
+bool Trigger_MuTau12;
+bool Trigger_EleTau12;
+bool Trigger_SingleMu12;
+bool Trigger_SingleEle12;
+bool Trigger_SingleJet12;
+
+bool l1_trgMatche_Ele20Tau20;
+bool l1_trgMatche_Mu17Tau20;
+bool l1_trgMatche_Mu18Tau25;
+bool l1_trgMatche_Mu24;
+bool l2_trgMatche_Ele20Tau20;
+bool l2_trgMatche_Mu17Tau20;
+bool l2_trgMatche_Mu18Tau25;
+float gen_Higgs_pt;
+
+bool l1_ConversionVeto;
+float l1_dxy_PV;
+float l1_dz_PV;
+float l2_dxy_PV;
+float l2_dz_PV;
+
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
 
@@ -170,7 +215,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     Run = m->runNumber;
     Lumi = m->lumiNumber;
     Event = m->eventNumber;
-    embedWeight =m->embeddingWeight;
+    embedWeight = m->embeddingWeight;
 
 
 
@@ -222,7 +267,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //  Jet Information
     //  ########## ########## ########## ########## ########## ##########
     vector<myobject> JETS = GoodJet30(m, obj1, obj2);
-    vector<myobject> BJETS = GoodbJet20(m, obj1, obj2,isdata,is2012);
+    vector<myobject> BJETS = GoodbJet20(m, obj1, obj2, isdata, is2012);
     vector<myobject> BLooseJETS = GoodLoosebJet20(m, obj1, obj2);
     vector<myobject> BJETSNoCor = GoodbJet20NoCor(m, obj1, obj2);
 
@@ -309,6 +354,14 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l1_CloseJetPhi = Find_Closet_Jet(obj1, m)[2];
     l1_d0 = obj1.d0;
     l1_dZ_in = obj1.dZ_in; //the impact parameter in the transverse plane
+    l1_ConversionVeto = obj1.passConversionVeto;
+    l1_dxy_PV = obj1.dxy_PV; //the impact parameter in the transverse plane
+    l1_dz_PV = obj1.dz_PV; //the impact parameter in the transverse plane
+
+    l1_trgMatche_Ele20Tau20 = obj1.hasTrgObject_Ele20Tau20;
+    l1_trgMatche_Mu17Tau20 = obj1.hasTrgObject_Mu17Tau20;
+    l1_trgMatche_Mu18Tau25 = obj1.hasTrgObject_Mu18Tau25;
+    l1_trgMatche_Mu24 = obj1.hasTrgObject_Mu24;
     //  ########## ########## ########## ########## ########## ##########
     //  Tau Information
     //  ########## ########## ########## ########## ########## ##########
@@ -320,36 +373,54 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2Phi = obj2.phi;
     l2Pz = obj2.pz;
     l2Eta = obj2.eta;
-    l2_tauIsoMVA2raw = obj2.byIsolationMVA3newDMwLTraw;
+
+    l2_DecayMode = obj2.decayMode;
+    l2_DecayModeFinding = obj2.discriminationByDecayModeFinding;
+    l2_DecayModeFindingNewDMs = obj2.discriminationByDecayModeFindingNewDMs;
+    l2_DecayModeFindingOldDMs = obj2.discriminationByDecayModeFindingOldDMs;
+
+    l2_tauIsoMVAraw3newDMwLTraw = obj2.byIsolationMVA3newDMwLTraw;
+    l2_tauIsoMVAraw3newDMwoLTraw = obj2.byIsolationMVA3newDMwoLTraw;
+    l2_tauIsoMVAraw3oldDMwLTraw = obj2.byIsolationMVA3oldDMwLTraw;
+    l2_tauIsoMVAraw3oldDMwoLTraw = obj2.byIsolationMVA3oldDMwoLTraw;
+
     byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = obj2.byRawCombinedIsolationDeltaBetaCorr3Hits;
     l2_tauIsoVL = obj2.byVLooseCombinedIsolationDeltaBetaCorr;
     l2_tauIsoL = obj2.byLooseCombinedIsolationDeltaBetaCorr;
-    l2_tauIso3HitL = obj2.byLooseCombinedIsolationDeltaBetaCorr3Hits;
-    l2_tauIsoMVA2L = obj2.byLooseIsolationMVA3newDMwLT;
     l2_tauIsoM = obj2.byMediumCombinedIsolationDeltaBetaCorr;
-    l2_tauIso3HitM = obj2.byMediumCombinedIsolationDeltaBetaCorr3Hits;
-    l2_tauIsoMVA2M = obj2.byMediumIsolationMVA3newDMwLT;
     l2_tauIsoT = obj2.byTightCombinedIsolationDeltaBetaCorr;
+    l2_tauIso3HitL = obj2.byLooseCombinedIsolationDeltaBetaCorr3Hits;
+    l2_tauIso3HitM = obj2.byMediumCombinedIsolationDeltaBetaCorr3Hits;
     l2_tauIso3HitT = obj2.byTightCombinedIsolationDeltaBetaCorr3Hits;
-    l2_tauIsoMVA2T = obj2.byTightIsolationMVA3newDMwLT;
+
+    l2_LoosetauIsoMVA3newDMwLT = obj2.byLooseIsolationMVA3newDMwLT;
+    l2_MediumtauIsoMVA3newDMwLT = obj2.byMediumIsolationMVA3newDMwLT;
+    l2_TighttauIsoMVA3newDMwLT = obj2.byTightIsolationMVA3newDMwLT;
+    l2_LoosetauIsoMVA3oldDMwLT = obj2.byLooseIsolationMVA3oldDMwLT;
+    l2_MediumtauIsoMVA3oldDMwLT = obj2.byMediumIsolationMVA3oldDMwLT;
+    l2_TighttauIsoMVA3oldDMwLT = obj2.byTightIsolationMVA3oldDMwLT;
+    l2_LoosetauIsoMVA3newDMwoLT = obj2.byLooseIsolationMVA3newDMwoLT;
+    l2_MediumtauIsoMVA3newDMwoLT = obj2.byMediumIsolationMVA3newDMwoLT;
+    l2_TighttauIsoMVA3newDMwoLT = obj2.byTightIsolationMVA3newDMwoLT;
+    l2_LoosetauIsoMVA3oldDMwoLT = obj2.byLooseIsolationMVA3oldDMwoLT;
+    l2_MediumtauIsoMVA3oldDMwoLT = obj2.byMediumIsolationMVA3oldDMwoLT;
+    l2_TighttauIsoMVA3oldDMwoLT = obj2.byTightIsolationMVA3oldDMwoLT;
+
+
     l2_tauRejMuL = obj2.discriminationByMuonLoose;
-    l2_tauRejMu2L = obj2.discriminationByMuonLoose2;
     l2_tauRejMuM = obj2.discriminationByMuonMedium;
-    l2_tauRejMu2M = obj2.discriminationByMuonMedium2;
     l2_tauRejMuT = obj2.discriminationByMuonTight;
-    l2_tauRejMu2T = obj2.discriminationByMuonTight2;
+    l2_tauRejMu3L = obj2.discriminationByMuonLoose3;
+    l2_tauRejMu2M = obj2.discriminationByMuonMedium2; // it is 2???
+    l2_tauRejMu3T = obj2.discriminationByMuonTight3;
+
     l2_tauRejEleL = obj2.discriminationByElectronLoose;
     l2_tauRejEleM = obj2.discriminationByElectronMedium;
     l2_tauRejEleMVA = obj2.discriminationByMVA5rawElectronRejection;
     l2_tauRejEleMVA3L = obj2.discriminationByElectronMVA5Loose;
     l2_tauRejEleMVA3M = obj2.discriminationByElectronMVA5Medium;
     l2_tauRejEleMVA3T = obj2.discriminationByElectronMVA5Tight;
-    l2_DecayModeFinding = obj2.discriminationByDecayModeFinding;
-    l2_DecayMode = obj2.decayMode;
-    //    l2_tauRejEleMVA = obj2.discriminationByElectronMVA;
-    //    l2_tauRejEleMVA3L = obj2.discriminationByElectronMVA3Loose;
-    //    l2_tauRejEleMVA3M = obj2.discriminationByElectronMVA3Medium;
-    //    l2_tauRejEleMVA3T = obj2.discriminationByElectronMVA3Tight;
+
     l2Charge = obj2.charge;
     l2_CloseJetPt = Find_Closet_Jet(obj2, m)[0];
     l2_CloseJetEta = Find_Closet_Jet(obj2, m)[1];
@@ -357,6 +428,13 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2_RefJetPt = obj2.jetPt;
     l2_RefJetEta = obj2.jetEta;
     l2_RefJetPhi = obj2.jetPhi;
+    l2_trgMatche_Ele20Tau20 = obj2.hasTrgObject_Ele20Tau20;
+    l2_trgMatche_Mu17Tau20 = obj2.hasTrgObject_Mu17Tau20;
+    l2_trgMatche_Mu18Tau25 = obj2.hasTrgObject_Mu18Tau25;
+
+    l2_dxy_PV = obj2.dxy_PV; //the impact parameter in the transverse plane
+    l2_dz_PV = obj2.dz_PV; //the impact parameter in the transverse plane
+
 
     //  ########## ########## ########## ########## ########## ##########
     //  Other Information
@@ -374,6 +452,19 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     trigweight_1 = getCorrTriggerLep(FinalState, is_data_mc, obj1);
     trigweight_2 = getCorrTriggerTau(FinalState, is_data_mc, obj2);
     zCategory = ZCategory(m, obj2);
+    gen_Higgs_pt = get_gen_Higgs_pt(m);
+
+    //  ########## ########## ########## ########## ########## ##########
+    //  Trigger
+    //  ########## ########## ########## ########## ########## ##########
+
+    Trigger_LepTau12 = Trigger_12(m);
+    Trigger_MuTau12 = Trigger_MuTau_12(m);
+    Trigger_EleTau12 = Trigger_EleTau_12(m);
+    Trigger_SingleMu12 = Trigger_SingleMu_12(m);
+    Trigger_SingleEle12 = Trigger_SingleEle_12(m);
+    Trigger_SingleJet12 = Trigger_SingleJet_12(m);
+
 
 
 

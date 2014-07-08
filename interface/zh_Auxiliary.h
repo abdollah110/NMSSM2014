@@ -116,6 +116,15 @@ int jetGenpdgid(myevent *m, myobject const& jet) {
     return pdgGenJet;
 }
 
+float get_gen_Higgs_pt(myevent *m) {
+    vector<myGenobject> genPar = m->RecGenParticle;
+    float gen_Higgs_pt = 0;
+    for (int i = 0; i < genPar.size(); ++i) {
+        if (genPar[i].status == 3 && (fabs(genPar[i].pdgId) == 25 || fabs(genPar[i].pdgId) == 35 || fabs(genPar[i].pdgId) == 36))
+            gen_Higgs_pt = genPar[i].pt;
+    }
+    return gen_Higgs_pt;
+}
 
 
 

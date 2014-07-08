@@ -55,7 +55,7 @@ float embedWeight;
 //unsigned int Event = 0;
 float mvis = 0;
 float met, metphi, mvamet, mvametphi, mvametNoRecoil, mvametphiNoRecoil;
-float l1M, l1Px, l1Py, l1Pz, l1E, l1Pt, l1Phi, l1Eta, l1Charge, l1_muIso, l1_eleIso, l1_eleMVANonTrg, l1_eleNumHit, l1_tauIsoMVA2raw , l1_dZ_in, l1_d0= -10;
+float l1M, l1Px, l1Py, l1Pz, l1E, l1Pt, l1Phi, l1Eta, l1Charge, l1_muIso, l1_eleIso, l1_eleMVANonTrg, l1_eleNumHit, l1_tauIsoMVA2raw, l1_dZ_in, l1_d0 = -10;
 float l2M, l2Px, l2Py, l2Pz, l2E, l2Pt, l2Phi, l2Eta, l2Charge, l2_muIso, l2_eleIso, l2_eleMVANonTrg, l2_eleNumHit, l2_tauIsoMVA2raw, byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = -10;
 float l2_RefJetPt, l2_RefJetEta, l2_RefJetPhi = -10;
 bool l1_muId_Loose, l1_muId_Tight, l1_eleId_Loose, l1_eleId_Tight, l2_muId_Loose, l2_eleId_Loose, l2_muId_Tight, l2_eleId_Tight;
@@ -64,7 +64,7 @@ bool l1_tauIso3HitL, l1_tauIso3HitM, l1_tauIso3HitT, l1_tauRejMu2L, l1_tauRejMu2
 bool l1_tauIsoVL, l1_tauIsoMVA2L, l1_tauIsoMVA2M, l1_tauIsoMVA2T;
 bool l2_tauIsoL, l2_tauIsoM, l2_tauIsoT, l2_tauRejMuL, l2_tauRejMuM, l2_tauRejMuT, l2_tauRejEleL, l2_tauRejEleM;
 float l2_tauRejEleMVA;
-bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu2L, l2_tauRejMu2M, l2_tauRejMu2T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
+bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu3L, l2_tauRejMu2M, l2_tauRejMu3T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
 bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T;
 
 //float mvacov00_mutau, mvacov01_mutau, mvacov10_mutau, mvacov11_mutau;
@@ -90,7 +90,7 @@ float rho;
 
 int njets;
 int njetpt20;
-int nbtag, nbtagLoose;
+int nbtag, nbtagLoose, nbtagNoCor;
 
 float jpt_1;
 float jeta_1;
@@ -140,11 +140,56 @@ float jetpt;
 float dijetphi;
 bool l2_DecayModeFinding;
 int l2_DecayMode;
-int zCategory= -10;
+int zCategory = -10;
 
 double SVMass, SVMassUnc;
 double SVMassUp, SVMassUncUp;
 double SVMassDown, SVMassUncDown;
+
+
+
+bool l2_LoosetauIsoMVA3newDMwLT;
+bool l2_MediumtauIsoMVA3newDMwLT;
+bool l2_TighttauIsoMVA3newDMwLT;
+bool l2_LoosetauIsoMVA3oldDMwLT;
+bool l2_MediumtauIsoMVA3oldDMwLT;
+bool l2_TighttauIsoMVA3oldDMwLT;
+bool l2_LoosetauIsoMVA3newDMwoLT;
+bool l2_MediumtauIsoMVA3newDMwoLT;
+bool l2_TighttauIsoMVA3newDMwoLT;
+bool l2_LoosetauIsoMVA3oldDMwoLT;
+bool l2_MediumtauIsoMVA3oldDMwoLT;
+bool l2_TighttauIsoMVA3oldDMwoLT;
+
+bool l2_DecayModeFindingNewDMs;
+bool l2_DecayModeFindingOldDMs;
+
+float l2_tauIsoMVAraw3newDMwLTraw;
+float l2_tauIsoMVAraw3newDMwoLTraw;
+float l2_tauIsoMVAraw3oldDMwLTraw;
+float l2_tauIsoMVAraw3oldDMwoLTraw;
+
+bool Trigger_LepTau12;
+bool Trigger_MuTau12;
+bool Trigger_EleTau12;
+bool Trigger_SingleMu12;
+bool Trigger_SingleEle12;
+bool Trigger_SingleJet12;
+
+bool l1_trgMatche_Ele20Tau20;
+bool l1_trgMatche_Mu17Tau20;
+bool l1_trgMatche_Mu18Tau25;
+bool l1_trgMatche_Mu24;
+bool l2_trgMatche_Ele20Tau20;
+bool l2_trgMatche_Mu17Tau20;
+bool l2_trgMatche_Mu18Tau25;
+float gen_Higgs_pt;
+
+bool l1_ConversionVeto;
+float l1_dxy_PV;
+float l1_dz_PV;
+float l2_dxy_PV;
+float l2_dz_PV;
 
 //void fillTreeN(TTree* BG_Tree, int Channel, int subChannel, float HMass, double SVMass, int trRun, int trLumi, int trEvent, float l3Pt, float l3Eta, float l3_CloseJetPt, float l3_CloseJetEta, float l4Pt, float l4Eta, float l4_CloseJetPt, float l4_CloseJetEta, float met, float metPhi, float covMet11, float covMet12, float covMet21, float covMet22, float l3M, float l3Px, float l3Py, float l3Pz, float l4M, float l4Px, float l4Py, float l4Pz, float eff_Correction, float pu_Weight) {
 //

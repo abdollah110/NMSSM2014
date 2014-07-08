@@ -1,5 +1,5 @@
 /* 
- * File:   trg_data_.h
+ * File:   Trigger_data_.h
  * Author: abdollah
  *
  * Created on April 18, 2012, 12:12 PM
@@ -21,7 +21,7 @@
 #include "myevent.h"
 #include "myobject.h"
 
-bool Trg_Data_12(myevent *m) {
+bool Trigger_12(myevent *m) {
     map<string, int> myHLT = m->HLT;
     bool Trigger = false;
     bool TriggerEle1 = false;
@@ -30,7 +30,7 @@ bool Trg_Data_12(myevent *m) {
     bool TriggerMu2 = false;
 
     string EleTau1 = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20";
-    string EleTau2 = "Ele22_eta2p1_WP90Rho_LooseIsoPFTau20";
+    string EleTau2 = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20";
     string MuTau1 = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20";
     string MuTau2 = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20";
 
@@ -56,33 +56,143 @@ bool Trg_Data_12(myevent *m) {
     return Trigger;
 }
 
-bool Trg_MC_12(myevent *m) {
+bool Trigger_MuTau_12(myevent *m) {
     map<string, int> myHLT = m->HLT;
     bool Trigger = false;
-    bool TriggerEle = false;
-    bool TriggerMu = false;
+    bool TriggerMu1 = false;
+    bool TriggerMu2 = false;
 
-
-    string MuTauTrg = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20";
-    string ElTauTrg = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20";
+    string MuTau1 = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20";
+    string MuTau2 = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20";
 
     for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
 
         string name = ihlt->first;
-        size_t foundMu = name.find(MuTauTrg);
-        size_t foundEl = name.find(ElTauTrg);
+        size_t foundMu1 = name.find(MuTau1);
+        size_t foundMu2 = name.find(MuTau2);
 
-        if (foundMu != string::npos)
-            TriggerMu = ihlt->second;
-        if (foundEl != string::npos)
-            TriggerEle = ihlt->second;
+        if (foundMu1 != string::npos)
+            TriggerMu1 = ihlt->second;
+        if (foundMu2 != string::npos)
+            TriggerMu2 = ihlt->second;
 
-        Trigger = TriggerMu || TriggerEle;
+        Trigger = TriggerMu1 || TriggerMu2;
     }
     return Trigger;
 }
 
-//bool Trg_Data_11(myevent *m) {
+bool Trigger_EleTau_12(myevent *m) {
+    map<string, int> myHLT = m->HLT;
+    bool Trigger = false;
+    bool TriggerEle1 = false;
+    bool TriggerEle2 = false;
+
+    string EleTau1 = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20";
+    string EleTau2 = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20";
+
+    for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
+
+        string name = ihlt->first;
+        size_t foundEl1 = name.find(EleTau1);
+        size_t foundEl2 = name.find(EleTau2);
+
+        if (foundEl1 != string::npos)
+            TriggerEle1 = ihlt->second;
+        if (foundEl2 != string::npos)
+            TriggerEle2 = ihlt->second;
+
+        Trigger = TriggerEle1 || TriggerEle2;
+    }
+    return Trigger;
+}
+bool Trigger_SingleMu_12(myevent *m) {
+    map<string, int> myHLT = m->HLT;
+    bool Trigger = false;
+    bool TriggerMu1 = false;
+
+    string MuTau1 = "HLT_IsoMu24";
+
+    for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
+
+        string name = ihlt->first;
+        size_t foundMu1 = name.find(MuTau1);
+
+        if (foundMu1 != string::npos)
+            TriggerMu1 = ihlt->second;
+
+        Trigger = TriggerMu1 ;
+    }
+    return Trigger;
+}
+
+bool Trigger_SingleEle_12(myevent *m) {
+    map<string, int> myHLT = m->HLT;
+    bool Trigger = false;
+    bool TriggerEle1 = false;
+
+    string EleTau1 = "HLT_Ele27_WP80";
+
+    for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
+
+        string name = ihlt->first;
+        size_t foundEl1 = name.find(EleTau1);
+
+        if (foundEl1 != string::npos)
+            TriggerEle1 = ihlt->second;
+
+        Trigger = TriggerEle1;
+    }
+    return Trigger;
+}
+
+bool Trigger_SingleJet_12(myevent *m) {
+    map<string, int> myHLT = m->HLT;
+    bool Trigger = false;
+    bool TriggerJet = false;
+
+    string EleTau1 = "HLT_PFJet320";
+
+    for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
+
+        string name = ihlt->first;
+        size_t foundEl1 = name.find(EleTau1);
+
+        if (foundEl1 != string::npos)
+            TriggerJet = ihlt->second;
+
+        Trigger = TriggerJet;
+    }
+    return Trigger;
+}
+
+//bool Trigger_MC_12(myevent *m) {
+//    map<string, int> myHLT = m->HLT;
+//    bool Trigger = false;
+//    bool TriggerEle = false;
+//    bool TriggerMu = false;
+//
+//
+//    string MuTauTrg = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20";
+//    string ElTauTrg = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20";
+//
+//    for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
+//
+//        string name = ihlt->first;
+//        size_t foundMu = name.find(MuTauTrg);
+//        size_t foundEl = name.find(ElTauTrg);
+//
+//        if (foundMu != string::npos)
+//            TriggerMu = ihlt->second;
+//        if (foundEl != string::npos)
+//            TriggerEle = ihlt->second;
+//
+//        Trigger = TriggerMu || TriggerEle;
+//    }
+//    return Trigger;
+//}
+
+
+//bool Trigger_Data_11(myevent *m) {
 //    map<string, int> myHLT = m->HLT;
 //    bool Trigger = false;
 //    bool TriggerEle1 = false;
@@ -122,7 +232,7 @@ bool Trg_MC_12(myevent *m) {
 //    return Trigger;
 //}
 //
-//bool Trg_MC_11(myevent *m) {
+//bool Trigger_MC_11(myevent *m) {
 //
 //    map<string, int> myHLT = m->HLT;
 //    bool Trigger = false;
@@ -146,5 +256,5 @@ bool Trg_MC_12(myevent *m) {
 
 
 
-#endif	/* TRG_DATA__H */
+#endif	/* Trigger_DATA__H */
 
