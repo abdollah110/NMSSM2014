@@ -29,7 +29,7 @@ def make_submit_form():
 
         for numMod in xrange(0,10):
             f = os.popen("ls " + pnfn + "/" + " | sort ")
-            dir = "dcap://maite.iihe.ac.be" + pnfn + "/" + sampleName+ "/"
+            dir = "dcap://maite.iihe.ac.be" + pnfn + "/" 
             name_out = "_" + data_year + "_" +  sampleName +"_"+str(numMod)+ ".sh"
             outFile = open(name_out, 'w')
             command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
