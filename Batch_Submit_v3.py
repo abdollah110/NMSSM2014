@@ -37,11 +37,11 @@ def make_submit_form():
 #    Hadd_File = open(name_haddFile, 'w')
     #Make loop over the files in the given directories
     for files in TextSamples.readlines():
-        sample_info = files.split()
-        print files[0:-1]
-        print files[0:-1][0]
-        print files[0:-1][1]
-        print files[0:-1][2]
+        for i in files[0:-1].split(","):
+
+#            sample_info = files.split()
+            print files[0:-1]
+            print files[0:-1][i]
 #        for numMod in xrange(0,10):
 #            f = os.popen("ls " + TextSamples + "/" + files[0:-1] + " | sort ")
 #            dir = "dcap://maite.iihe.ac.be" + TextSamples + "/" + files[0:-1] + "/"
