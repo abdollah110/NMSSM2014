@@ -41,14 +41,14 @@ def make_submit_form():
     submit_File = open(name_submitFile, 'w')
     Hadd_File = open(name_haddFile, 'w')
     for files in TextSamples.readlines():
-        print files[0:-1]
+#        print files[0:-1]
 #        for i in files[0:-1].split(","):
         pnfn= files[0:-1].split(",")[0]
         data_year= files[0:-1].split(",")[1]
         timing= files[0:-1].split(",")[2]
-        print pnfn, data_year, timing
+#        print pnfn, data_year, timing
         sampleName2= files[0:-1].split("/")[10]
-        print "sampleName2=", sampleName2
+#        print "sampleName2=", sampleName2
         sampleName= sampleName2.split(",")[0]
         print "sampleName=", sampleName
         
