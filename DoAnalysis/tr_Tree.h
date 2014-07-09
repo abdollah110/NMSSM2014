@@ -48,7 +48,7 @@ int Channel = 0;
 int Run = 0;
 int Lumi = 0;
 int Event = 0;
-float embedWeight;
+float embedWeight =1;
 //unsigned int Channel = 0;
 //unsigned int Run = 0;
 //unsigned int Lumi = 0;
@@ -64,9 +64,8 @@ bool l1_tauIso3HitL, l1_tauIso3HitM, l1_tauIso3HitT, l1_tauRejMu2L, l1_tauRejMu2
 bool l1_tauIsoVL, l1_tauIsoMVA2L, l1_tauIsoMVA2M, l1_tauIsoMVA2T;
 bool l2_tauIsoL, l2_tauIsoM, l2_tauIsoT, l2_tauRejMuL, l2_tauRejMuM, l2_tauRejMuT, l2_tauRejEleL, l2_tauRejEleM;
 float l2_tauRejEleMVA;
-bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu3L, l2_tauRejMu2M, l2_tauRejMu3T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
+bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu3L,l2_tauRejMu2L, l2_tauRejMu2M, l2_tauRejMu3T, l2_tauRejMu2T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
 bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T;
-
 //float mvacov00_mutau, mvacov01_mutau, mvacov10_mutau, mvacov11_mutau;
 //float mvacov00_etau, mvacov01_etau, mvacov10_etau, mvacov11_etau;
 float mvacov00, mvacov01, mvacov10, mvacov11;
@@ -190,6 +189,7 @@ float l1_dxy_PV;
 float l1_dz_PV;
 float l2_dxy_PV;
 float l2_dz_PV;
+int num_gen_jets;
 
 //void fillTreeN(TTree* BG_Tree, int Channel, int subChannel, float HMass, double SVMass, int trRun, int trLumi, int trEvent, float l3Pt, float l3Eta, float l3_CloseJetPt, float l3_CloseJetEta, float l4Pt, float l4Eta, float l4_CloseJetPt, float l4_CloseJetEta, float met, float metPhi, float covMet11, float covMet12, float covMet21, float covMet22, float l3M, float l3Px, float l3Py, float l3Pz, float l4M, float l4Px, float l4Py, float l4Pz, float eff_Correction, float pu_Weight) {
 //

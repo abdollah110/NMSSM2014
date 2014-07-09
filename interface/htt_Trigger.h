@@ -21,40 +21,40 @@
 #include "myevent.h"
 #include "myobject.h"
 
-bool Trigger_12(myevent *m) {
-    map<string, int> myHLT = m->HLT;
-    bool Trigger = false;
-    bool TriggerEle1 = false;
-    bool TriggerEle2 = false;
-    bool TriggerMu1 = false;
-    bool TriggerMu2 = false;
-
-    string EleTau1 = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20";
-    string EleTau2 = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20";
-    string MuTau1 = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20";
-    string MuTau2 = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20";
-
-    for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
-
-        string name = ihlt->first;
-        size_t foundEl1 = name.find(EleTau1);
-        size_t foundEl2 = name.find(EleTau2);
-        size_t foundMu1 = name.find(MuTau1);
-        size_t foundMu2 = name.find(MuTau2);
-
-        if (foundEl1 != string::npos)
-            TriggerEle1 = ihlt->second;
-        if (foundEl2 != string::npos)
-            TriggerEle2 = ihlt->second;
-        if (foundMu1 != string::npos)
-            TriggerMu1 = ihlt->second;
-        if (foundMu2 != string::npos)
-            TriggerMu2 = ihlt->second;
-
-        Trigger = TriggerEle1 || TriggerEle2 || TriggerMu1 || TriggerMu2;
-    }
-    return Trigger;
-}
+//bool Trigger_12(myevent *m) {
+//    map<string, int> myHLT = m->HLT;
+//    bool Trigger = false;
+//    bool TriggerEle1 = false;
+//    bool TriggerEle2 = false;
+//    bool TriggerMu1 = false;
+//    bool TriggerMu2 = false;
+//
+//    string EleTau1 = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20";
+//    string EleTau2 = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20";
+//    string MuTau1 = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20";
+//    string MuTau2 = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20";
+//
+//    for (map<string, int> ::iterator ihlt = myHLT.begin(); ihlt != myHLT.end(); ihlt++) {
+//
+//        string name = ihlt->first;
+//        size_t foundEl1 = name.find(EleTau1);
+//        size_t foundEl2 = name.find(EleTau2);
+//        size_t foundMu1 = name.find(MuTau1);
+//        size_t foundMu2 = name.find(MuTau2);
+//
+//        if (foundEl1 != string::npos)
+//            TriggerEle1 = ihlt->second;
+//        if (foundEl2 != string::npos)
+//            TriggerEle2 = ihlt->second;
+//        if (foundMu1 != string::npos)
+//            TriggerMu1 = ihlt->second;
+//        if (foundMu2 != string::npos)
+//            TriggerMu2 = ihlt->second;
+//
+//        Trigger = TriggerEle1 || TriggerEle2 || TriggerMu1 || TriggerMu2;
+//    }
+//    return Trigger;
+//}
 
 bool Trigger_MuTau_12(myevent *m) {
     map<string, int> myHLT = m->HLT;

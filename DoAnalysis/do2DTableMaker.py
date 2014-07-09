@@ -35,31 +35,6 @@ def luminosity(CoMEnergy):
 
 def XSection(mX, CoMEnergy):
     if CoMEnergy == '_8TeV':
-        if mX == 90:  return [0.009186, 0.0001740]  # first argument is ZH_HTT and second is WH_ZH_TTH_HWW_Leptonic
-        if mX == 95:  return [0.007884, 0.0003351]
-        if mX == 100: return [0.006775, 0.0006694]
-        if mX == 105: return [0.005794, 0.001268]
-        if mX == 110: return [0.004918, 0.002178]    #  [.00471, .00206]  ????
-        if mX == 115: return [0.004102, 0.003407]  # [.00392, .00336]
-        if mX == 120: return [0.003349, 0.004866] # [.00319, .00479]
-        if mX == 125: return [0.002651, 0.006503]  # [.00251, .00640]
-        if mX == 130: return [0.002021, 0.008042]  #[.00191, .00789]
-        if mX == 135: return [0.001478, 0.009342]  #[.00139, .00917]
-        if mX == 140: return [0.001030, 0.01032]  #[.00097, .0102] # changed 0.0101 to 0.0102
-        if mX == 145: return [0.000681, 0.01095]   #[.00064, .0107] # Changed from 0.0140 to 0.0107
-        if mX == 150: return [0.000417, 0.01126]
-        if mX == 155: return [0.000218, 0.01136]
-        if mX == 160: return [0.000073, 0.01133]
-        if mX == 'ZZ4L':        return 0.130
-        if mX == 'Data':        return 1
-        if mX == 'TT2L2Nu':     return 23.64
-        if mX == 'GGToZZ2L2L':  return 0.01203
-        if mX == 'GGToZZ4L':    return 0.0048
-        if mX == 'TTZJets':     return 0.208
-        if mX == 'WZ3L':        return 0
-        if mX == 'WZJets3L':    return 1.057
-        if mX == 'DYJets':      return 3504.
-
         if mX == 'signal':      return 1.
 
         if mX == 'WWJetsTo2L2Nu': return 5.824
@@ -89,7 +64,7 @@ def XSection(mX, CoMEnergy):
 
 
 
-signal = ['ggh', 'bbh']
+signal = ['ggH', 'bbH']
 mass = [80,90,  100, 110,  120, 130, 140,  160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000]
 W_BackGround = ['WJetsToLNu', 'W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu']
 Z_BackGround = ['DYJetsToLL', 'DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL']
@@ -192,10 +167,13 @@ def make2DTable(Observable,PostFix,CoMEnergy):
 
     for categ in range(len(category)):
         for chl in range(len(channel)):
+            print "\n##################################################################################################"
             print "starting category and channel", category[categ], channel[chl]
+            print "##################################################################################################\n"
             ##################################################################################################
             #   Signal Estimation
             ##################################################################################################
+            print "\nDoing Signal estimation"
             for sig in range(len(signal)):
                 for m in range(len(mass)):#    for m in range(110, 145, 5):
 
@@ -215,7 +193,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
              ##################################################################################################
             #   VV Estimation
             ##################################################################################################
-            print "Doing VV, BG estimation"
+            print "\nDoing VV, BG estimation"
 
             DYIndex = ""
             Name= "VVAll"
@@ -248,7 +226,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ##################################################################################################
             #   TT Estimation
             ##################################################################################################
-            print "Doing TT, BG estimation"
+            print "\nDoing TT, BG estimation"
 
             DYIndex = ""
             Name= "TTAll"
@@ -280,7 +258,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ##################################################################################################
             #   ZL Estimation
             ##################################################################################################
-            print "Doing ZL, BG estimation"
+            print "\nDoing ZL, BG estimation"
 #            for BG_ZL in range(len(Z_BackGround)):
                 
             DYIndex = "_ZL"
@@ -313,7 +291,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ##################################################################################################
             #   ZJ Estimation
             #################################################################################################
-            print "Doing ZJ, BG estimation"
+            print "\nDoing ZJ, BG estimation"
 
             DYIndex = "_ZJ"
             Name= "DYJetsAll"
@@ -345,7 +323,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
         ##################################################################################################
         #   ZTT Estimation
         ##################################################################################################
-            print "Doing ZTT, BG estimation"
+            print "\nDoing ZTT, BG estimation"
 #            for BG_ZTT in range(len(Z_BackGround)):
 
             DYIndex = "_ZTT"
@@ -378,31 +356,29 @@ def make2DTable(Observable,PostFix,CoMEnergy):
         ##################################################################################################
         #   W Estimation
         ##################################################################################################
-            print "Doing ExtraPolationFactor for W estimation"
+            print "\nDoing W BG estimation"
 
             numeratorW=Observable+"_mTLess30_OS"
             denumeratorW=Observable+"_mTHigher70_OS"
             Histogram = Observable+"_mTHigher70_OS"
-            W_mcName= "WJetsAll"
             XLoc= categ + 3*chl + 1
             YLoc= lenghtSig + 6
+            W_mcName= "WJetsAll"
             Name='Data'
 
             ExtraPolationFactorFinal = getWExtraPol(PostFix,CoMEnergy,W_mcName ,channel[chl],category[categ],numeratorW,denumeratorW)
             WNormInSideBandData=getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0]
             value =(WNormInSideBandData - (VV_NormForWSub + TT_NormForWSub +ZL_NormForWSub + ZJ_NormForWSub + ZTT_NormForWSub )) * ExtraPolationFactorFinal
 
-            print "WNormInSideBandData= ", WNormInSideBandData
-            print "Final W Value=", value
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, "W")
+            if (verbos_): print "WNormInSideBandData= ", WNormInSideBandData, "   VV_NormForWSub=", VV_NormForWSub, "   TT_NormForWSub=", TT_NormForWSub,  "   ZL_NormForWSub=",ZL_NormForWSub, "   ZJ_NormForWSub=",ZJ_NormForWSub,"   ZTT_NormForWSub=",ZTT_NormForWSub
+            if (verbos_): print "Final W Value=", value, "   ExtraPolationFactorFinal=", ExtraPolationFactorFinal
             
-
-
         ##################################################################################################
         #   W Estimation for QCD Normalization
         ##################################################################################################
-            print "Doing ExtraPolationFactor for W estimation for QCD Normalization"
+            print "\nDoing W BG estimation for QCD Normalization"
 
             numeratorW=Observable+"_mTLess30_SS"
             denumeratorW=Observable+"_mTHigher70_SS"
@@ -415,16 +391,18 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ExtraPolationFactorFinal = getWExtraPol(PostFix,CoMEnergy,W_mcName ,channel[chl],category[categ],numeratorW,denumeratorW)
             WNormInSideBandDataForQCD=getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0]
             WNormInQCD =(WNormInSideBandDataForQCD - (VV_NormForWforQCD + TT_NormForWforQCD +ZL_NormForWforQCD + ZJ_NormForWforQCD + ZTT_NormForWforQCD )) * ExtraPolationFactorFinal
+            if (verbos_): print "WNormInSideBandDataForQCD= ", WNormInSideBandDataForQCD, "   VV_NormForWforQCD=", VV_NormForWforQCD, "   TT_NormForWforQCD=", TT_NormForWforQCD,  "   ZL_NormForWforQCD=",ZL_NormForWforQCD, "   ZJ_NormForWforQCD=",ZJ_NormForWforQCD,"   ZTT_NormForWforQCD=",ZTT_NormForWforQCD
+            if (verbos_): print "Final WNormInQCD=", WNormInQCD, "   ExtraPolationFactorFinal=", ExtraPolationFactorFinal
 
         ##################################################################################################
         #   W Estimation for QCD Shape
         ##################################################################################################
-            print "Doing ExtraPolationFactor for W estimation for QCD Shape"
+            print "\nDoing W BG estimation for QCD Shape"
 
-            numeratorW=Observable+"_mTLess30_QCDshape_OS"
-            denumeratorW=Observable+"_mTHigher70_QCDshape_OS"
-#            numeratorW=Observable+"_mTLess30_SS"
-#            denumeratorW=Observable+"_mTHigher70_SS"
+#            numeratorW=Observable+"_mTLess30_QCDshape_OS"
+#            denumeratorW=Observable+"_mTHigher70_QCDshape_OS"
+            numeratorW=Observable+"_mTLess30_SS"
+            denumeratorW=Observable+"_mTHigher70_SS"
             Histogram = Observable+"_QCDshape_SS"
             W_mcName= "WJetsAll"
             XLoc= categ + 3*chl + 1

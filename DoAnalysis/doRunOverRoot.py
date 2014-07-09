@@ -1,6 +1,7 @@
 import os
 
 InputFileLocation = '../FileROOT/NewROOTFiles/'
+#InputFileLocation = '../FileROOT/NewROOTFiles_TEMP/'
 OutPutFileLocation = 'OutFiles/'
 Sample = os.popen(("ls " + InputFileLocation + " | sort "))
 OutFile = open("RunFullSamples.txt", 'w')

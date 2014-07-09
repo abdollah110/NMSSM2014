@@ -139,18 +139,18 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("jE_2", &jE_2);
     Run_Tree->SetBranchAddress("jpass_1", &jpass_1);
     Run_Tree->SetBranchAddress("jpass_2", &jpass_2);
-    Run_Tree->SetBranchAddress("bpt", &bpt);
-    Run_Tree->SetBranchAddress("beta", &beta);
-    Run_Tree->SetBranchAddress("bphi", &bphi);
-    Run_Tree->SetBranchAddress("bdiscriminant", &bdiscriminant);
+    Run_Tree->SetBranchAddress("bpt_1", &bpt_1);
+    Run_Tree->SetBranchAddress("beta_1", &beta_1);
+    Run_Tree->SetBranchAddress("bphi_1", &bphi_1);
+    Run_Tree->SetBranchAddress("bdiscriminant_1", &bdiscriminant_1);
     Run_Tree->SetBranchAddress("bpt_2", &bpt_2);
     Run_Tree->SetBranchAddress("beta_2", &beta_2);
     Run_Tree->SetBranchAddress("bphi_2", &bphi_2);
     Run_Tree->SetBranchAddress("bdiscriminant_2", &bdiscriminant_2);
-    Run_Tree->SetBranchAddress("loosebpt", &loosebpt);
-    Run_Tree->SetBranchAddress("loosebeta", &loosebeta);
-    Run_Tree->SetBranchAddress("loosebphi", &loosebphi);
-    Run_Tree->SetBranchAddress("loosebdiscriminant", &loosebdiscriminant);
+    Run_Tree->SetBranchAddress("loosebpt_1", &loosebpt_1);
+    Run_Tree->SetBranchAddress("loosebeta_1", &loosebeta_1);
+    Run_Tree->SetBranchAddress("loosebphi_1", &loosebphi_1);
+    Run_Tree->SetBranchAddress("loosebdiscriminant_1", &loosebdiscriminant_1);
     Run_Tree->SetBranchAddress("loosebpt_2", &loosebpt_2);
     Run_Tree->SetBranchAddress("loosebeta_2", &loosebeta_2);
     Run_Tree->SetBranchAddress("loosebphi_2", &loosebphi_2);
@@ -162,6 +162,7 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("njets", &njets);
     Run_Tree->SetBranchAddress("njetpt20", &njetpt20);
     Run_Tree->SetBranchAddress("nbtag", &nbtag);
+    Run_Tree->SetBranchAddress("nbtagLoose", &nbtagLoose);
     Run_Tree->SetBranchAddress("mcdata", &mcdata);
 
     Run_Tree->SetBranchAddress("l1_d0", &l1_d0);
@@ -169,6 +170,7 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("l2_DecayModeFinding", &l2_DecayModeFinding);
 
     Run_Tree->SetBranchAddress("zCategory", &zCategory);
+//    Run_Tree->SetBranchAddress("zCategory", &zCategory);
 
 
     Run_Tree->SetBranchAddress("l2_DecayMode;", &l2_DecayMode);
@@ -252,12 +254,13 @@ int main(int argc, char** argv) {
         bool OS = l1Charge * l2Charge < 0;
         bool SS = l1Charge * l2Charge > 0;
         float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
+        if ((mt_1-mT) > 0.3) cout<<mt_1<<"  v.s.   "<<mT<<endl;
 
         //MSSM Categorization
         bool selection_inclusive = 1;
         bool selection_nobtag = nbtag < 1;
         bool selection_btag = nbtag > 0 && njets < 2;
-        bool selection_btagLoose = loosebpt > 0 && njets < 2;
+        bool selection_btagLoose = nbtagLoose > 0 && njets < 2;
         bool MSSM_Category[4] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
         std::string index[4] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
 
@@ -315,7 +318,7 @@ int main(int argc, char** argv) {
 
                             //################# Signal Selectiopn
                             if (MU_CUTS && TAU_CUTS && OS && mT < 30 && (Event != Event_Double[1][1])) {
-                            cout<<"l2_DecayMode= "<<l2_DecayMode<<endl;
+//                            cout<<"l2_DecayMode= "<<l2_DecayMode<<endl;
                                 plotFill("muTau_visibleMass_mTLess30_OS_NOCorrection" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin);
                                 plotFill("muTau_visibleMass_mTLess30_OS" + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
                                 plotFill("muTau_SVMass_mTLess30_OS" + ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction);

@@ -34,13 +34,15 @@ high_bin = 1000
 reb_ = high_bin / n_bin
 DIR_ROOT = 'outRoot_V3/'
 
-signal = ['ggh', 'bbh']
+#signal = ['ggh', 'bbh']
+signal = ['ggH', 'bbH']
 mass = [80,90,  100, 110,  120, 130, 140,  160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000]
 W_BackGround = ['WJetsToLNu', 'W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu']
 Z_BackGround = ['DYJetsToLL', 'DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL']
 Top_BackGround = ['TTJets_FullLeptMGDecays','TTJets_SemiLeptMGDecays',  'TTJets_HadronicMGDecays', 'Tbar_tW', 'T_tW']
 DiBoson_BackGround = [ 'WWJetsTo2L2Nu',  'WZJetsTo2L2Q', 'WZJetsTo3LNu',  'ZZJetsTo2L2Nu', 'ZZJetsTo2L2Q','ZZJetsTo4L' ]
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
+#Embedded = ['EmbeddedMuTau', 'EmbeddedETau']
 Embedded = ['EmbeddedmuTau', 'EmbeddedeleTau']
 Data = ['Data']
 
@@ -248,7 +250,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
         YLoc= lenghtSig + 7
         normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
         Name='Data'
-#        if category=="_btag"  : category = "_btagLoose"
+#        if category=="_btag"  : category = "_btagLoose"   #FIXME
         if category=="_btag"  : category = "_inclusive"
 
 
@@ -284,7 +286,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
         Histo_ZTT =  file_ZTT.Get(channel+Observable+"_QCDshape_SS_ZTT" + category+ "")
         Histo_ZTT.Scale(Table_Hist.GetBinContent(XLocQCD,YLoc))
 
-#        if category=="_btagLoose"  : category = "_nobtag"
+#        if category=="_btagLoose"  : category = "_nobtag"   #FIXME
         if category=="_btagLoose"  : category = "_inclusive"
         XLocQCD= categ + 3*(chl+2) + 1
         YLoc= lenghtSig + 6
@@ -345,6 +347,8 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             
 if __name__ == "__main__":
 
+#    MakeTheHistogram("muTau","_VisibleMass","_8TeV",0)
+#    MakeTheHistogram("eleTau","_VisibleMass","_8TeV",1)
     MakeTheHistogram("muTau","_SVMass","_8TeV",0)
     MakeTheHistogram("eleTau","_SVMass","_8TeV",1)
 #    MakeTheHistogram("_inclusive","MuTau","_8TeV",0,0)

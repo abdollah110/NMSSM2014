@@ -24,7 +24,8 @@ from ROOT import gSystem
 gROOT.Reset()
 import os
 ROOT.gROOT.SetBatch(True)
-InputFileLocation = '../FileROOT/NewROOTFiles/'
+#InputFileLocation = '../FileROOT/NewROOTFiles/'
+InputFileLocation = '../FileROOT/NewROOTFiles_TEMP/'
 
 
 def GetNumber(sample):
@@ -52,3 +53,25 @@ for sample in Z_BackGround:
 #DY2JetsToLL has =   2352304.0   events
 #DY3JetsToLL has =   5542076.0   events
 #DY4JetsToLL has =   5059363.0   events
+
+#WJetsToLNu has =   47789152.0   events
+#W1JetsToLNu has =   61298384.0   events
+#W2JetsToLNu has =   46465040.0   events
+#W3JetsToLNu has =   36190840.0   events
+#W4JetsToLNu has =   6632023.0   events
+#DYJetsToLL has =   5351581.0   events
+#DY1JetsToLL has =   5361365.0   events
+#DY2JetsToLL has =   1887101.0   events
+#DY3JetsToLL has =   7048974.0   events
+#DY4JetsToLL has =   5243719.0   events
+#[pb-d-128-141-133-21:~/GIT_abdollah110/NMSSM2014/DoAnalysis] abdollahmohammadi% python printValue_W_Z.py
+#WJetsToLNu has =   19516084.0   events
+#W1JetsToLNu has =   82678120.0   events
+#W2JetsToLNu has =   39532516.0   events
+#W3JetsToLNu has =   43091248.0   events
+#W4JetsToLNu has =   13382803.0   events
+#DYJetsToLL has =   30449350.0   events
+#DY1JetsToLL has =   24045248.0   events
+#DY2JetsToLL has =   2352304.0   events
+#DY3JetsToLL has =   11015445.0   events
+#DY4JetsToLL has =   6402827.0   events

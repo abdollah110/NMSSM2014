@@ -58,7 +58,7 @@ bool l1_tauIsoL, l1_tauIsoM, l1_tauIsoT, l1_tauRejMuL, l1_tauRejMuM, l1_tauRejMu
 bool l1_tauIso3HitL, l1_tauIso3HitM, l1_tauIso3HitT, l1_tauRejMu2L, l1_tauRejMu2M, l1_tauRejMu2T, l1_tauRejEleMVA3L, l1_tauRejEleMVA3M, l1_tauRejEleMVA3T;
 bool l1_tauIsoVL, l1_tauIsoMVA2L, l1_tauIsoMVA2M, l1_tauIsoMVA2T;
 bool l2_tauIsoL, l2_tauIsoM, l2_tauIsoT, l2_tauRejMuL, l2_tauRejMuM, l2_tauRejMuT, l2_tauRejEleL, l2_tauRejEleM, l2_tauRejEleMVA;
-bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu3L, l2_tauRejMu2M, l2_tauRejMu3T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
+bool l2_tauIso3HitL, l2_tauIso3HitM, l2_tauIso3HitT, l2_tauRejMu3L, l2_tauRejMu2L, l2_tauRejMu2M, l2_tauRejMu3T, l2_tauRejMu2T, l2_tauRejEleMVA3L, l2_tauRejEleMVA3M, l2_tauRejEleMVA3T;
 bool l2_tauIsoVL, l2_tauIsoMVA2L, l2_tauIsoMVA2M, l2_tauIsoMVA2T, l2_DecayModeFinding;
 int l2_DecayMode;
 
@@ -129,7 +129,7 @@ int zCategory = -10;
 double SVMass, SVMassUnc;
 double SVMassUp, SVMassUncUp;
 double SVMassDown, SVMassUncDown;
-float embedWeight;
+float embedWeight =1;
 
 
 bool l2_LoosetauIsoMVA3newDMwLT;
@@ -153,7 +153,7 @@ float l2_tauIsoMVAraw3newDMwoLTraw;
 float l2_tauIsoMVAraw3oldDMwLTraw;
 float l2_tauIsoMVAraw3oldDMwoLTraw;
 
-bool Trigger_LepTau12;
+//bool Trigger_LepTau12;
 bool Trigger_MuTau12;
 bool Trigger_EleTau12;
 bool Trigger_SingleMu12;
@@ -167,13 +167,14 @@ bool l1_trgMatche_Mu24;
 bool l2_trgMatche_Ele20Tau20;
 bool l2_trgMatche_Mu17Tau20;
 bool l2_trgMatche_Mu18Tau25;
-float gen_Higgs_pt;
+float gen_Higgs_pt= 0;
 
 bool l1_ConversionVeto;
 float l1_dxy_PV;
 float l1_dz_PV;
 float l2_dxy_PV;
 float l2_dz_PV;
+int num_gen_jets;
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -452,18 +453,43 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     trigweight_1 = getCorrTriggerLep(FinalState, is_data_mc, obj1);
     trigweight_2 = getCorrTriggerTau(FinalState, is_data_mc, obj2);
     zCategory = ZCategory(m, obj2);
-    gen_Higgs_pt = get_gen_Higgs_pt(m);
+    //    gen_Higgs_pt = get_gen_Higgs_pt(m);
 
     //  ########## ########## ########## ########## ########## ##########
     //  Trigger
     //  ########## ########## ########## ########## ########## ##########
 
-    Trigger_LepTau12 = Trigger_12(m);
+    //    Trigger_LepTau12 = Trigger_12(m);
     Trigger_MuTau12 = Trigger_MuTau_12(m);
     Trigger_EleTau12 = Trigger_EleTau_12(m);
     Trigger_SingleMu12 = Trigger_SingleMu_12(m);
     Trigger_SingleEle12 = Trigger_SingleEle_12(m);
     Trigger_SingleJet12 = Trigger_SingleJet_12(m);
+
+
+
+    //  ########## ########## ########## ########## ########## ##########
+    //  GEN Info
+    //  ########## ########## ########## ########## ########## ##########
+
+    int genParticleStatus3 = 0;
+
+    vector<myGenobject> genPar = m->RecGenParticle;
+    for (int gg = 0; gg < genPar.size(); gg++) {
+
+        // HIggs Pt
+        if (genPar[gg].status == 3 && (fabs(genPar[gg].pdgId) == 25 || fabs(genPar[gg].pdgId) == 35 || fabs(genPar[gg].pdgId) == 36)) gen_Higgs_pt = genPar[gg].pt;
+
+        // NumGen Jets
+        if (fabs(genPar[gg].status) == 3) genParticleStatus3++;
+
+    }
+
+
+
+    num_gen_jets = genParticleStatus3 - 9;
+
+
 
 
 
