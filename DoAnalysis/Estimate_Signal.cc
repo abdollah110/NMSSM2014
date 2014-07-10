@@ -1,4 +1,4 @@
-#include "tr_Tree.h"
+#include "../interface/tr_Tree.h"
 
 int main(int argc, char** argv) {
     //    std::string chanelType = *(argv + 1);

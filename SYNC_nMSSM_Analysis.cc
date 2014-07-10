@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
     //#################################################################################################
     //############## defining Tree Branches Filled via fillTree function                ###############
     //#################################################################################################
-    TTree *Run_Tree = new TTree("InfoTree", "InfoTree");
+    TTree *Run_Tree = new TTree("TauCheck", "TauCheck");
     //    To force a memory-resident Tree
     Run_Tree->SetDirectory(0);
 
@@ -212,10 +212,10 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("jE_2", &jE_2, "jE_2/F");
     Run_Tree->Branch("jpass_1", &jpass_1, "jpass_1/O");
     Run_Tree->Branch("jpass_2", &jpass_2, "jpass_2/O");
-    Run_Tree->Branch("bpt_1", &bpt_1, "bpt_1/F");
-    Run_Tree->Branch("beta_1", &beta_1, "beta_1/F");
-    Run_Tree->Branch("bphi_1", &bphi_1, "bphi_1/F");
-    Run_Tree->Branch("bdiscriminant_1", &bdiscriminant_1, "bdiscriminant_1/F");
+    Run_Tree->Branch("bpt", &bpt_1, "bpt_1/F");
+    Run_Tree->Branch("beta", &beta_1, "beta_1/F");
+    Run_Tree->Branch("bphi", &bphi_1, "bphi_1/F");
+    Run_Tree->Branch("bdiscriminant", &bdiscriminant_1, "bdiscriminant_1/F");
     Run_Tree->Branch("bpt_2", &bpt_2, "bpt_2/F");
     Run_Tree->Branch("beta_2", &beta_2, "beta_2/F");
     Run_Tree->Branch("bphi_2", &bphi_2, "bphi_2/F");
@@ -244,7 +244,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l2_DecayModeFinding", &l2_DecayModeFinding, "l2_DecayModeFinding/O");
     Run_Tree->Branch("zCategory", &zCategory, "zCategory/I");
     Run_Tree->Branch("l2_DecayMode", &l2_DecayMode, "l2_DecayMode/I");
-    Run_Tree->Branch("embedWeight", &embedWeight, "embedWeight/F");
+    Run_Tree->Branch("embeddedWeight", &embedWeight, "embedWeight/F");
     Run_Tree->Branch("nbtagNoCor", &nbtagNoCor, "nbtagNoCor/I");
 
 
