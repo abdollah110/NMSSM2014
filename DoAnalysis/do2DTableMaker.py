@@ -399,8 +399,8 @@ def make2DTable(Observable,PostFix,CoMEnergy):
         ##################################################################################################
             print "\nDoing W BG estimation for QCD Shape"
 
-#            numeratorW=Observable+"_mTLess30_QCDshape_OS"
-#            denumeratorW=Observable+"_mTHigher70_QCDshape_OS"
+#            numeratorW=Observable+"_QCDshape_mTLess30_OS"
+#            denumeratorW=Observable+"_QCDshape_mTHigher70_OS"
             numeratorW=Observable+"_mTLess30_SS"
             denumeratorW=Observable+"_mTHigher70_SS"
             Histogram = Observable+"_QCDshape_SS"

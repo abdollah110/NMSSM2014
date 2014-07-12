@@ -12,6 +12,7 @@ import shutil
 def make_submit_form():
     TextSamples = open("SelectSample.txt", "r")
     location = os.getcwd()
+    location = location.replace("/grid_mnt/volumes__Z2Volume__localgrid", "/localgrid")
     name_submitFile = "Submit_" +  "_"  + ".sh"
     name_haddFile = "Hadd_" +  ".sh"
     submit_File = open(name_submitFile, 'w')

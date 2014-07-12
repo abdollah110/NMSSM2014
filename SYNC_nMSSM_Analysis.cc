@@ -42,6 +42,7 @@
 #include "interface/Leptons_IdIso.h"
 #include "interface/zh_Functions.h"
 #include "DoAnalysis/myHelper.h"
+#include "interface/tr_Tree.h"
 
 int main(int argc, char** argv) {
 
@@ -360,7 +361,7 @@ int main(int argc, char** argv) {
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
                         bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
-                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
                         bool Tau_antiMu = tau_[k].discriminationByMuonTight2;
@@ -374,10 +375,10 @@ int main(int argc, char** argv) {
                         bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
                         bool Veto_MME = Multi_Lepton_Veto("MME", m);
 
-
+//                        cout<<"Trigger_MuTau12= "<<Trigger_MuTau_12(m)<<"\n";
 
                         //Final selection
-                        if (MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
+                        if (Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
                             plotFill("mutau", ++mutau, 20, 0., 20.);
                             fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
                             break;
@@ -406,7 +407,7 @@ int main(int argc, char** argv) {
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
                         bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
-                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
                         bool Tau_antiMu = tau_[k].discriminationByMuonLoose2;
@@ -419,8 +420,9 @@ int main(int argc, char** argv) {
                         bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
                         bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
+//                        cout<<"Trigger_EleTau12= "<<Trigger_EleTau_12(m)<<"\n";
                         //                        Final selection
-                        if (EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
+                        if (Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
                             plotFill("eltau", ++eltau, 20, 0., 20.);
                             fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                             break;
