@@ -306,7 +306,7 @@ vector<myobject> GoodJet30(myevent *m, myobject const& a, myobject const& b) {
     return goodJet;
 }
 
-vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b,bool isdata, bool is2012) {
+vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b, bool isdata, bool is2012) {
 
     vector<myobject> goodbJet;
     vector<myobject> jet = GoodJet20(m);
@@ -346,7 +346,7 @@ vector<myobject> GoodLoosebJet20(myevent *m, myobject const& a, myobject const& 
 vector<myobject> GoodbJet20NoCor(myevent *m, myobject const& a, myobject const& b) {
 
     vector<myobject> goodbJet;
-    vector<myobject> jet = GoodLoosebJet20(m,a,b);
+    vector<myobject> jet = GoodLoosebJet20(m, a, b);
 
     for (int k = 0; k < jet.size(); k++) {
         if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.679) {
@@ -538,6 +538,42 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
             }
         }
     }
+//    if (channel == "ME") {
+//        for (int i = 0; i < mu_.size(); i++) {
+//            for (int j = 0; j < electron_.size(); j++) {
+//                bool muEle_Pt = mu_[i].pt > 15 && electron_[j].pt > 15;
+//                bool muEle_Eta = fabs(electron_[j].eta) < 2.5;
+//                bool muEle_Id = EleLooseForEtauVeto(electron_[j]);
+//                bool muEle_Iso = Iso_Ele_dBeta(electron_[j]) < 0.3;
+//                //                bool muEle_charge = electron_[i].charge * electron_[j].charge < 0;
+//                bool muEle_charge = 1;
+//                bool muEle_dR = deltaR(mu_[i], electron_[j]) > 0.15;
+//
+//                if (muEle_Pt && muEle_Eta && muEle_Id && muEle_Iso && muEle_charge && muEle_dR)
+//                    ThisIsNoExtraLepton = false;
+//            }
+//        }
+//    }
+    if (channel == "ME") {
+        for (int i = 0; i < mu_.size(); i++) {
+            for (int j = 0; j < electron_.size(); j++) {
+                bool muEle_Pt = mu_[i].pt > 15 && electron_[j].pt > 10;
+                bool muEle_Eta = fabs(electron_[j].eta) < 2.5;
+                bool muEle_Id = EleMVANonTrigId_Loose(electron_[j]);;
+//                bool muEle_Id = EleLooseForEtauVeto(electron_[j]);
+                bool muEle_Iso = Iso_Ele_dBeta(electron_[j]) < 0.3;
+                //                bool muEle_charge = electron_[i].charge * electron_[j].charge < 0;
+                bool muEle_charge = 1;
+                bool muEle_dR = deltaR(mu_[i], electron_[j]) > 0.15;
+
+                if (muEle_Pt && muEle_Eta && muEle_Id && muEle_Iso && muEle_charge && muEle_dR)
+                    ThisIsNoExtraLepton = false;
+            }
+        }
+    }
+
+    //    mutau: Tri-lepton veto: veto event if it contains another electron of Pt > 10 GeV && abs(eta) 10 GeV && abs(eta)
+    //etau: Tri-lepton veto: veto event if it contains another electron of Pt > 10 GeV && abs(eta) 10 GeV && abs(eta)
 
     if (channel == "MMM") {
         for (int i = 0; i < mu_.size(); i++) {

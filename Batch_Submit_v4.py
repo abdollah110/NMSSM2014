@@ -17,6 +17,7 @@ def make_submit_form():
     name_haddFile = "Hadd_" +  ".sh"
     submit_File = open(name_submitFile, 'w')
     Hadd_File = open(name_haddFile, 'w')
+    CHNL= ["mu","ele"]
     for files in TextSamples.readlines():
 
         pnfn= files[0:-1].split(",")[0]
@@ -24,39 +25,38 @@ def make_submit_form():
         timing= files[0:-1].split(",")[2]
 
         sampleName2= files[0:-1].split("/")[10]
-        sampleName= sampleName2.split(",")[0]
-        print "sampleName=", sampleName
-        
+        for channel in CHNL:
+            sampleName= sampleName2.split(",")[0] + "_"+channel
+            print "sampleName=", sampleName
+            for numMod in xrange(0,10):
+                f = os.popen("ls " + pnfn + "/" + " | sort ")
+                dir = "dcap://maite.iihe.ac.be" + pnfn + "/"
+                name_out = "_" + data_year + "_" +  sampleName +"_"+str(numMod)+ ".sh"
+                outFile = open(name_out, 'w')
+                command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
+                command1 = command1 + "cd " + location + "\n"
+                command1 = command1 + "eval `scram runtime -sh` " + "\n\n"
+                command1 = command1 + "mkdir    Out_" + sampleName +"_"+str(numMod)+ "\n"
+                outFile.write(command1)
+                #Make loop over the rootfiles in the given file
+                for i in f.readlines():
+                    QName=i[0:-1]
+                    XName=int(float(QName[15:-11]))
+                    outName= sampleName + "_"+str(XName) +".root"
+                    if (XName % 10 == numMod):
+                        command2 = "\n" + "./SYNC_nMSSM_Analysis.exe " + data_year + " "+ channel+ " "   +outName + " " + dir + "/" + i[0:-1]
+                        command2 = command2 + " \n" + " mv  " + data_year + "_" +  outName + "\t" + "Out_" + sampleName+"_"+str(numMod)
+                        command2 = command2 + " \n\n\n"
+                        outFile.write(command2)
 
-        for numMod in xrange(0,10):
-            f = os.popen("ls " + pnfn + "/" + " | sort ")
-            dir = "dcap://maite.iihe.ac.be" + pnfn + "/" 
-            name_out = "_" + data_year + "_" +  sampleName +"_"+str(numMod)+ ".sh"
-            outFile = open(name_out, 'w')
-            command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
-            command1 = command1 + "cd " + location + "\n"
-            command1 = command1 + "eval `scram runtime -sh` " + "\n\n"
-            command1 = command1 + "mkdir    Out_" + sampleName +"_"+str(numMod)+ "\n"
-            outFile.write(command1)
-            #Make loop over the rootfiles in the given file
-            for i in f.readlines():
-                QName=i[0:-1]
-                XName=int(float(QName[15:-11]))
-                outName= sampleName + "_"+str(XName) +".root"
-                if (XName % 10 == numMod):
-                    command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " "   +outName + " " + dir + "/" + i[0:-1]
-                    command2 = command2 + " \n" + " mv  " + data_year + "_" +  outName + "\t" + "Out_" + sampleName+"_"+str(numMod)
-                    command2 = command2 + " \n\n\n"
-                    outFile.write(command2)
-
-            #Writing on out Files
-#            command3 = "qsub -q localgrid@cream02.wn -o " + files[0:-1] + ".stdout -e " + files[0:-1] + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
-            Name1=sampleName
-            shortName=Name1[0:-10]+"_"+str(numMod)
-            command3 = "qsub -q localgrid@cream02 -o " + shortName + ".stdout -e " + shortName + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
-            command4 = "hadd -f ROOT/" + data_year + "/" + sampleName +"_"+str(numMod)+ ".root\t" + "Out_" + sampleName +"_"+str(numMod)+ "/*.root" + "\n"
-            submit_File.write(command3)
-            Hadd_File.write(command4)
+                #Writing on out Files
+    #            command3 = "qsub -q localgrid@cream02.wn -o " + files[0:-1] + ".stdout -e " + files[0:-1] + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
+                Name1=sampleName
+                shortName=Name1[0:-10]+"_"+str(numMod)
+                command3 = "qsub -q localgrid@cream02 -o " + shortName + ".stdout -e " + shortName + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
+                command4 = "hadd -f ROOT/" + data_year + "/" + sampleName +"_"+str(numMod)+ ".root\t" + "Out_" + sampleName +"_"+str(numMod)+ "/*.root" + "\n"
+                submit_File.write(command3)
+                Hadd_File.write(command4)
 
     outFile.close()
     submit_File.close()

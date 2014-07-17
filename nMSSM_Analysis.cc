@@ -1,3 +1,9 @@
+// REmaining issue
+// add Muele and EleMu Veto
+// lower the tau Pt from 30 to 20 GeV
+// also run on nMSSM
+// no requirement on Tau decay mode finding
+
 // Missing for next time is
 // 1) tau decay  correction  DONE
 // 2) btag correction at analysis level from Veelken  DONE
