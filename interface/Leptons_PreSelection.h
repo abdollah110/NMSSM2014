@@ -557,7 +557,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
     if (channel == "ME") {
         for (int i = 0; i < mu_.size(); i++) {
             for (int j = 0; j < electron_.size(); j++) {
-                bool muEle_Pt = mu_[i].pt > 15 && electron_[j].pt > 10;
+                bool muEle_Pt = mu_[i].pt > 15 && electron_[j].pt > 15;
                 bool muEle_Eta = fabs(electron_[j].eta) < 2.5;
                 bool muEle_Id = EleMVANonTrigId_Loose(electron_[j]);
                 ;
@@ -696,7 +696,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
                 bool DiEl_Id = EleMVANonTrigId_Tight(electron_[i]);
                 bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
 
-                bool ThirdMu_Pt = mu_[k].pt > 10;
+                bool ThirdMu_Pt = mu_[k].pt > 15;
                 bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
                 bool ThirdMu_Id = Id_Mu_Loose(mu_[k]);
                 bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;

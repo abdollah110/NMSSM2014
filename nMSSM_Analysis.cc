@@ -369,19 +369,20 @@ int main(int argc, char** argv) {
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                         bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
-                        bool Tau_antiMu = tau_[k].discriminationByMuonTight2;
+                        bool Tau_antiMu = tau_[k].discriminationByMuonMVAMedium;
                         bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
 
                         bool MuTau_Charge = mu_[i].charge * tau_[k].charge < 0;
                         bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
 
+                        bool Veto_ME = Multi_Lepton_Veto("ME", m);
                         bool Veto_MM = Multi_Lepton_Veto("MM", m);
                         bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
                         bool Veto_MME = Multi_Lepton_Veto("MME", m);
 
 
-                        bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME;
+                        bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME && Veto_ME;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
 
                         //Loose Selection
@@ -421,17 +422,18 @@ int main(int argc, char** argv) {
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                         bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
-                        bool Tau_antiMu = tau_[k].discriminationByMuonLoose2;
+                        bool Tau_antiMu = tau_[k].discriminationByMuonLoose3;
                         bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
 
                         bool ElTau_Charge = electron_[i].charge * tau_[k].charge < 0;
                         bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
 
+                        bool Veto_EM = Multi_Lepton_Veto("EM", m);
                         bool Veto_EE = Multi_Lepton_Veto("EE", m);
                         bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
                         bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
-                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE;
+                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE && Veto_EM;
                         //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3newDMwLT;
                         //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
