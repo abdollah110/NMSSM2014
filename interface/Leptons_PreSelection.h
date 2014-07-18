@@ -538,29 +538,30 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
             }
         }
     }
-//    if (channel == "ME") {
-//        for (int i = 0; i < mu_.size(); i++) {
-//            for (int j = 0; j < electron_.size(); j++) {
-//                bool muEle_Pt = mu_[i].pt > 15 && electron_[j].pt > 15;
-//                bool muEle_Eta = fabs(electron_[j].eta) < 2.5;
-//                bool muEle_Id = EleLooseForEtauVeto(electron_[j]);
-//                bool muEle_Iso = Iso_Ele_dBeta(electron_[j]) < 0.3;
-//                //                bool muEle_charge = electron_[i].charge * electron_[j].charge < 0;
-//                bool muEle_charge = 1;
-//                bool muEle_dR = deltaR(mu_[i], electron_[j]) > 0.15;
-//
-//                if (muEle_Pt && muEle_Eta && muEle_Id && muEle_Iso && muEle_charge && muEle_dR)
-//                    ThisIsNoExtraLepton = false;
-//            }
-//        }
-//    }
+    //    if (channel == "ME") {
+    //        for (int i = 0; i < mu_.size(); i++) {
+    //            for (int j = 0; j < electron_.size(); j++) {
+    //                bool muEle_Pt = mu_[i].pt > 15 && electron_[j].pt > 15;
+    //                bool muEle_Eta = fabs(electron_[j].eta) < 2.5;
+    //                bool muEle_Id = EleLooseForEtauVeto(electron_[j]);
+    //                bool muEle_Iso = Iso_Ele_dBeta(electron_[j]) < 0.3;
+    //                //                bool muEle_charge = electron_[i].charge * electron_[j].charge < 0;
+    //                bool muEle_charge = 1;
+    //                bool muEle_dR = deltaR(mu_[i], electron_[j]) > 0.15;
+    //
+    //                if (muEle_Pt && muEle_Eta && muEle_Id && muEle_Iso && muEle_charge && muEle_dR)
+    //                    ThisIsNoExtraLepton = false;
+    //            }
+    //        }
+    //    }
     if (channel == "ME") {
         for (int i = 0; i < mu_.size(); i++) {
             for (int j = 0; j < electron_.size(); j++) {
                 bool muEle_Pt = mu_[i].pt > 15 && electron_[j].pt > 10;
                 bool muEle_Eta = fabs(electron_[j].eta) < 2.5;
-                bool muEle_Id = EleMVANonTrigId_Loose(electron_[j]);;
-//                bool muEle_Id = EleLooseForEtauVeto(electron_[j]);
+                bool muEle_Id = EleMVANonTrigId_Loose(electron_[j]);
+                ;
+                //                bool muEle_Id = EleLooseForEtauVeto(electron_[j]);
                 bool muEle_Iso = Iso_Ele_dBeta(electron_[j]) < 0.3;
                 //                bool muEle_charge = electron_[i].charge * electron_[j].charge < 0;
                 bool muEle_charge = 1;
@@ -684,6 +685,26 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
                     if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && DiEl_dZ && DiEl_charge && ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso)
                         ThisIsNoExtraLepton = false;
                 }
+            }
+        }
+    }
+    if (channel == "EM") {
+        for (int i = 0; i < electron_.size(); i++) {
+            for (int k = 0; k < mu_.size(); k++) {
+                bool DiEl_Pt = electron_[i].pt > 15;
+                bool DiEl_Eta = fabs(electron_[i].eta) < 2.5;
+                bool DiEl_Id = EleMVANonTrigId_Tight(electron_[i]);
+                bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
+
+                bool ThirdMu_Pt = mu_[k].pt > 10;
+                bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
+                bool ThirdMu_Id = Id_Mu_Loose(mu_[k]);
+                bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
+
+                bool muEle_dR = deltaR(mu_[k], electron_[i]) > 0.15;
+
+                if (muEle_dR && DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso)
+                    ThisIsNoExtraLepton = false;
             }
         }
     }

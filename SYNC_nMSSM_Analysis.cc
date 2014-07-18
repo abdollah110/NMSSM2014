@@ -76,9 +76,9 @@ int main(int argc, char** argv) {
 
     string CHANNEL = *(argv + 2);
 
-    bool isMu = (CHANNEL.compare("mu") == 0   ? true : false);
-    bool isEle = (CHANNEL.compare("ele") == 0   ? true : false);
-    bool isTot = (CHANNEL.compare("tot") == 0   ? true : false);
+    bool isMu = (CHANNEL.compare("mu") == 0 ? true : false);
+    bool isEle = (CHANNEL.compare("ele") == 0 ? true : false);
+    bool isTot = (CHANNEL.compare("tot") == 0 ? true : false);
 
     string out = *(argv + 3);
 
@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
     string outname = is_data_mc + "_" + out;
     //PRINTING THE OUTPUT name
     cout << "\n\n Channel IS:    " << CHANNEL << endl;
-    cout << "\n\n OUTPUT NAME IS:    " << outname << endl<<endl;
+    cout << "\n\n OUTPUT NAME IS:    " << outname << endl << endl;
     TFile *fout = TFile::Open(outname.c_str(), "RECREATE");
 
     //#################################################################################################
@@ -331,7 +331,7 @@ int main(int argc, char** argv) {
         // running over the root files
         for (int i = 0; i < nev; i++) {
             rootTree->GetEvent(i);
-            //            if (i % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
+            if (i % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
             fflush(stdout);
 
             //*********************************************************************************************
@@ -342,8 +342,8 @@ int main(int argc, char** argv) {
             vector<myobject> tau_ = GoodTau20GeV(m);
 
             //#################################################################################################
-//            bool doMuTauAnalysis = true;
-//            bool doElTauAnalysis = false;
+            //            bool doMuTauAnalysis = true;
+            //            bool doElTauAnalysis = false;
             //#################################################################################################
             //########################## MuTau Selection         ##############################################
             //#################################################################################################
@@ -378,7 +378,7 @@ int main(int argc, char** argv) {
                         bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
 
-//                        bool Veto_ME2 = Multi_Lepton_Veto("ME2", m);
+                        //                        bool Veto_ME2 = Multi_Lepton_Veto("ME2", m);
                         bool Veto_ME = Multi_Lepton_Veto("ME", m);
                         bool Veto_MM = Multi_Lepton_Veto("MM", m);
                         bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
@@ -400,12 +400,26 @@ int main(int argc, char** argv) {
                         //1:747:397790
                         //1:790:420841
                         //1:1654:881086
+
+
+                        //                        float MuIsoCH = mu_[i].pfIsoCharged;
+                        //                        float MuIsoTrk = mu_[i].pfIsoAll;
+                        //                        float MuIsoEcal = mu_[i].pfIsoGamma;
+                        //                        float MuIsoHcal = mu_[i].pfIsoNeutral;
+                        //                        float MuIsoPU = mu_[i].pfIsoPU;
                         //
-                        if (EVN == 303651 || EVN == 392656 || EVN == 397790 || EVN == 420841 || EVN == 881086) {
-                            cout << "Events=" << EVN << "   lumi=" << m->lumiNumber << "\t";
-                            cout <<Veto_ME<<hasMatchedTrigger << Trigger_MuTau_12(m) << MU_CUTS << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu << MuTau_Charge << MuTau_dR << Veto_MM << Veto_MMM << Veto_MME << "  mode is " << tau_[k].decayMode << "\n";
-//                            cout << "qmu=" << mu_[i].charge << "  qTau=" << tau_[k].charge << "  DMF=" << tau_[k].discriminationByDecayModeFindingOldDMs << "  ptMu= " << mu_[i].pt << "   ptTau=" << tau_[k].pt << endl;
-                        }
+                        //                        float relIso = (MuIsoTrk) / mu_[i].pt;
+                        //                        if (MuIsoEcal + MuIsoHcal - 0.5 * MuIsoPU > 0)
+                        //                            relIso = (MuIsoTrk + MuIsoEcal + MuIsoHcal - 0.5 * MuIsoPU) / (mu_[i].pt);
+                        //
+                        //                        //
+                        //                        //                        if (EVN == 303651 || EVN == 392656 || EVN == 397790 || EVN == 420841 || EVN == 881086) {
+                        //                        if (EVN == 355631) {
+                        //                            cout << "Events=" << EVN << "   lumi=" << m->lumiNumber << "\t";
+                        //                            cout << Iso_Mu_dBeta(mu_[i]) << "   was the muIso   muPt=" << mu_[i].pt << "  tauPt=  " << tau_[k].pt << Veto_ME << hasMatchedTrigger << Trigger_MuTau_12(m) << MU_CUTS << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu << MuTau_Charge << MuTau_dR << Veto_MM << Veto_MMM << Veto_MME << "  mode is " << tau_[k].decayMode << "\n";
+                        //                            cout<<MuIsoTrk <<"  "<< MuIsoEcal <<"  "<< MuIsoHcal<< "  "<< MuIsoPU<<"  "<<"\n";
+                        //                            //                            cout << "qmu=" << mu_[i].charge << "  qTau=" << tau_[k].charge << "  DMF=" << tau_[k].discriminationByDecayModeFindingOldDMs << "  ptMu= " << mu_[i].pt << "   ptTau=" << tau_[k].pt << endl;
+                        //                        }
                         if (hasMatchedTrigger && Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_ME && Veto_MM && Veto_MMM && Veto_MME) {
                             plotFill("mutau", ++mutau, 20, 0., 20.);
                             fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
@@ -436,7 +450,7 @@ int main(int argc, char** argv) {
 
                         bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
                         //                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
-                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
                         bool Tau_antiMu = tau_[k].discriminationByMuonLoose3;
@@ -445,15 +459,42 @@ int main(int argc, char** argv) {
                         bool ElTau_Charge = electron_[i].charge * tau_[k].charge < 0;
                         bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
 
+                        bool Veto_EM = Multi_Lepton_Veto("EM", m);
                         bool Veto_EE = Multi_Lepton_Veto("EE", m);
                         bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
                         bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
                         //                        cout<<"Trigger_EleTau12= "<<Trigger_EleTau_12(m)<<"\n";
-                        //                        bool hasMatchedTrigger = electron_[i].hasTrgObject_Ele20Tau20 && tau_[k].hasTrgObject_Ele20Tau20;
-                        bool hasMatchedTrigger = 1;
+                        bool hasMatchedTrigger = electron_[i].hasTrgObject_Ele20Tau20 && tau_[k].hasTrgObject_Ele20Tau20;
+                        //                        bool hasMatchedTrigger = 1;
                         //                        Final selection
-                        if (hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
+                        //1:353:187908
+                        //1:353:188146
+                        //1:570:303730
+                        //
+                        //                        1:623:331590
+                        //1:683:363577
+                        //1:747:397998
+                        //1:829:441426
+                        //1:829:441642 
+                        //                        float EleIsoTrk = electron_[i].pfIsoAll;
+                        //                        float EleIsoEcal = electron_[i].pfIsoGamma;
+                        //                        float EleIsoHcal = electron_[i].pfIsoNeutral;
+                        //                        float EleIsoPU = electron_[i].pfIsoPU;
+                        //1:858:456811
+                        //1:872:464325
+                        //1:908:483735
+                        //1:913:486141
+                        //1:1654:881323
+                        //                        int EVN = m->eventNumber;
+                        //                        if (ElTau_dR && (EVN == 331590 || EVN == 363577 || EVN == 397998 || EVN == 441426 || EVN == 441642 || EVN == 456811 || EVN == 464325 || EVN == 483735 || EVN == 486141 || EVN == 881323)) {
+                        //                            cout << "Events=" << EVN << "   lumi=" << m->lumiNumber << "\t";
+                        //                            cout <<EleIsoTrk << "  "<< EleIsoEcal<< "  "<<EleIsoHcal << "  "<<EleIsoPU << "  iso is "<<El_Iso << "  " << tau_[k].pt << " **   " << El_PtEta << El_IdTight << El_Iso << hasMatchedTrigger << Trigger_EleTau_12(m) << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu << Veto_EEM << Veto_EE << Veto_EEE << Veto_EM << "  mode is " << tau_[k].decayMode << "\n";
+                        //                            //                            cout << Iso_Ele_dBeta(electron_[i]) << "   was the muIso   muPt=" << electron_[i].pt << "  tauPt=  " << tau_[k].pt << " **   "   <<El_PtEta<< El_IdTight<<El_Iso <<hasMatchedTrigger << Trigger_EleTau_12(m) << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu <<  Veto_EEM << Veto_EE <<Veto_EEE <<Veto_EM << "  mode is " << tau_[k].decayMode << "\n";
+                        //                            //                            cout << MuIsoTrk << "  " << MuIsoEcal << "  " << MuIsoHcal << "  " << MuIsoPU << "  " << "\n";
+                        //                            //                            cout << "qmu=" << mu_[i].charge << "  qTau=" << tau_[k].charge << "  DMF=" << tau_[k].discriminationByDecayModeFindingOldDMs << "  ptMu= " << mu_[i].pt << "   ptTau=" << tau_[k].pt << endl;
+                        //                        }
+                        if (Veto_EM && hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
                             plotFill("eltau", ++eltau, 20, 0., 20.);
                             fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                             break;
