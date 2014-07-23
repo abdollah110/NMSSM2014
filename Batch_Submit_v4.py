@@ -37,18 +37,18 @@ def make_submit_form():
             command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
             command1 = command1 + "cd " + location + "\n"
             command1 = command1 + "eval `scram runtime -sh` " + "\n\n"
-            command1 = command1 + "setenv scratchdir  /scratch/ " + "\n\n"
+#            command1 = command1 + "setenv scratchdir  /scratch/ " + "\n\n"
             command1 = command1 + "mkdir    Out_" + sampleName +"_"+str(numMod)+ "\n"
             outFile.write(command1)
             #Make loop over the rootfiles in the given file
             for i in f.readlines():
                 QName=i[0:-1]
                 XName=int(float(QName[15:-11]))
-                outName= " scratchdir/"   +sampleName + "_"+str(XName) +".root"
+                outName= " /scratch/"   +sampleName + "_"+str(XName) +".root"
                 if (XName % 10 == numMod):
                     command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + outName + " " + dir + "/" + i[0:-1]
 #                    command2 = command2 + " \n" + " mv  $scratchdir/" + data_year + "_" +  outName + "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
-                    command2 = command2 + " \n" + " mv  scratchdir/" + outName + "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
+                    command2 = command2 + " \n" + " mv  " + outName + "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
                     command2 = command2 + " \n\n\n"
                     outFile.write(command2)
 
