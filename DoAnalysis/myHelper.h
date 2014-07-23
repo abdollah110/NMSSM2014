@@ -25,6 +25,34 @@
 #include <TLorentzVector.h>
 //#include "../interface/zh_Auxiliary.h"
 
+
+
+//    if (is_data_mc == "mc11") mcdata = 1;
+//    if (is_data_mc == "data11") mcdata = 2;
+//    if (is_data_mc == "mc12") mcdata = 3;
+//    if (is_data_mc == "data12") mcdata = 4;
+//    if (is_data_mc == "embed12") mcdata = 5;
+//
+//    cout<<l2_DecayMode
+//        Tau decay mode 	abs(eta) < 1.5 	abs(eta) > 1.5
+//Single hadron 	0.87 	0.96
+//Hadron + Strips 	1.06 	1.00
+//Three Hadrons 	1.02 	1.06
+
+float TauESWeight(int mcdata, int DM, float eta) {
+    if (mcdata == 2 || mcdata == 4)
+        return 1;
+    else {
+        if (DM == 0 && fabs(eta) < 1.5) return 0.87;
+        if (DM == 0 && fabs(eta) > 1.5) return 0.96;
+        if (DM == 1 && fabs(eta) < 1.5) return 1.06;
+        if (DM == 1 && fabs(eta) > 1.5) return 1.00;
+        if (DM == 10 && fabs(eta) < 1.5) return 1.02;
+        if (DM == 10 && fabs(eta) > 1.5) return 1.06;
+    }
+    return 1;
+}
+
 float TMass_F(float pt3lep, float px3lep, float py3lep, float met, float metPhi) {
     return sqrt(pow(pt3lep + met, 2) - pow(px3lep + met * cos(metPhi), 2) - pow(py3lep + met * sin(metPhi), 2));
 }

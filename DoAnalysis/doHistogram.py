@@ -119,8 +119,9 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 XLoc= categ + 3*chl + 1
                 YLoc= sig * len(mass) + m + 1
                 normal = Table_Hist.GetBinContent(XLoc,YLoc)    #Get the Noralization
-                Name= str(signal[sig]) + "_"+str(mass[m])
-                NewHIST =TH1F(Name,"",len(BinCateg)-1,BinCateg)
+                Name= str(signal[sig]) +"_"+str(mass[m])
+                Nameout= str(signal[sig]) +str(mass[m])
+                NewHIST =TH1F(Nameout,"",len(BinCateg)-1,BinCateg)
                 
                 for bb in range(0,len(BinCateg)-1):
                     NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,category, Histogram, "",CoMEnergy,False)[0])

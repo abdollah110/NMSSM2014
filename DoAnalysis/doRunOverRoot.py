@@ -9,7 +9,7 @@ firstCommand = "./Make.sh Estimate_Signal.cc\n"
 OutFile.write(firstCommand)
 outCommand = ""
 for files in Sample.readlines():
-    outCommand = outCommand + "./Estimate_Signal.exe  " + OutPutFileLocation + "out_" + files.replace('\n','') + " " + InputFileLocation + files + "\n"
+    outCommand = outCommand + "./Estimate_Signal.exe  " + OutPutFileLocation + "out_" + files.replace('\n','') + " " + InputFileLocation + files 
 OutFile.write(outCommand)
     
 

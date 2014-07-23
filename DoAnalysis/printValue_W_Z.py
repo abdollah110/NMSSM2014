@@ -24,8 +24,7 @@ from ROOT import gSystem
 gROOT.Reset()
 import os
 ROOT.gROOT.SetBatch(True)
-#InputFileLocation = '../FileROOT/NewROOTFiles/'
-InputFileLocation = '../FileROOT/NewROOTFiles_TEMP/'
+InputFileLocation = '../FileROOT/NewROOTFiles/'
 
 
 def GetNumber(sample):
@@ -69,6 +68,18 @@ for sample in Z_BackGround:
 #W1JetsToLNu has =   82678120.0   events
 #W2JetsToLNu has =   39532516.0   events
 #W3JetsToLNu has =   43091248.0   events
+#W4JetsToLNu has =   13382803.0   events
+#DYJetsToLL has =   30449350.0   events
+#DY1JetsToLL has =   24045248.0   events
+#DY2JetsToLL has =   2352304.0   events
+#DY3JetsToLL has =   11015445.0   events
+#DY4JetsToLL has =   6402827.0   events
+# 22 July 2014
+#[pb-d-128-141-133-21:~/GIT_abdollah110/NMSSM2014/DoAnalysis] abdollahmohammadi% python printValue_W_Z.py
+#WJetsToLNu has =   19516084.0   events
+#W1JetsToLNu has =   23141596.0   events
+#W2JetsToLNu has =   39532516.0   events
+#W3JetsToLNu has =   15474075.0   events
 #W4JetsToLNu has =   13382803.0   events
 #DYJetsToLL has =   30449350.0   events
 #DY1JetsToLL has =   24045248.0   events

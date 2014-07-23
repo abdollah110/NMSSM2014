@@ -30,11 +30,12 @@ canvas.SetGridx(10)
 canvas.SetGridy(10)
 
 category=["Tau_inclusive","Tau_nobtag","Tau_btag"]
-Sample=["VV","TT","ZL","ZJ","ZTT","W" ,"QCD","data_obs",]
+Sample=["ggH200","bbH600", "VV","TT","ZL","ZJ","ZTT","W" ,"QCD","data_obs"]
 
 for cat in category:
     for sample in Sample:
         Tfile_Abdollah= TFile("TotalRootForLimit_muTau_8TeV.root")
+#        Tfile_Christian= TFile("TotalRootForLimit_muTau_8TeV_NoTRG.root")
         Tfile_Christian= TFile("htt_mt.inputs-mssm-8TeV-0.root")
         TH1F_Abdollah = Tfile_Abdollah.Get("mu"+cat+"/"+sample)
         TH1F_Christian = Tfile_Christian.Get("mu"+cat+"/"+sample)
@@ -45,6 +46,7 @@ print "\n\n\n"
 for cat in category:
     for sample in Sample:
         Tfile_Abdollah= TFile("TotalRootForLimit_eleTau_8TeV.root")
+#        Tfile_Christian= TFile("TotalRootForLimit_eleTau_8TeV_NoTRG.root")
         Tfile_Christian= TFile("htt_et.inputs-mssm-8TeV-0.root")
         TH1F_Abdollah = Tfile_Abdollah.Get("ele"+cat+"/"+sample)
         TH1F_Christian = Tfile_Christian.Get("ele"+cat+"/"+sample)

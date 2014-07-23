@@ -339,6 +339,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             HistogramForQCDShape = Observable+"_QCDshape_SS"+DYIndex
 
             EmbedEff = getEmbeddedWeight(PostFix,CoMEnergy, "Embedded",channel[chl],category[categ],Observable+"_mTLess30_OS")
+            print "categ=", categ   , " and  EmbedEff=", EmbedEff
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",Histogram)[0]  * EmbedEff
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)

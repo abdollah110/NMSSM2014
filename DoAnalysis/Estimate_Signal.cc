@@ -1,5 +1,5 @@
-//#include "../interface/tr_Tree.h"
-#include "../interface/zh_Tree.h"
+#include "tr_Tree.h"
+//#include "../interface/zh_Tree.h"
 
 int main(int argc, char** argv) {
     //    std::string chanelType = *(argv + 1);
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
 
     cout.setf(ios::fixed, ios::floatfield);
-    cout.precision(1);
+    cout.precision(3);
 
     Run_Tree->SetBranchAddress("Channel", &Channel);
 
@@ -102,11 +102,11 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("l2_tauIsoMVA2T", &l2_tauIsoMVA2T);
     Run_Tree->SetBranchAddress("iso_2", &l2_tauIsoMVA2raw);
     Run_Tree->SetBranchAddress("l2_tauRejMuL", &l2_tauRejMuL);
-    Run_Tree->SetBranchAddress("againstMuonLoose2_2", &l2_tauRejMu2L);
+    //    Run_Tree->SetBranchAddress("againstMuonLoose2_2", &l2_tauRejMu2L);
     Run_Tree->SetBranchAddress("l2_tauRejMuM", &l2_tauRejMuM);
-    Run_Tree->SetBranchAddress("againstMuonMedium2_2", &l2_tauRejMu2M);
+    //    Run_Tree->SetBranchAddress("againstMuonMedium2_2", &l2_tauRejMu2M);
     Run_Tree->SetBranchAddress("l2_tauRejMuT", &l2_tauRejMuT);
-    Run_Tree->SetBranchAddress("againstMuonTight2_2", &l2_tauRejMu2T);
+    //    Run_Tree->SetBranchAddress("againstMuonTight2_2", &l2_tauRejMu2T);
     Run_Tree->SetBranchAddress("l2_tauRejEleL", &l2_tauRejEleL);
     Run_Tree->SetBranchAddress("l2_tauRejEleM", &l2_tauRejEleM);
     Run_Tree->SetBranchAddress("againstElectronMVA3raw_2", &l2_tauRejEleMVA);
@@ -169,14 +169,19 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("l1_d0", &l1_d0);
     Run_Tree->SetBranchAddress("l1_dZ_in", &l1_dZ_in);
     Run_Tree->SetBranchAddress("l2_DecayModeFinding", &l2_DecayModeFinding);
+    Run_Tree->SetBranchAddress("l2_DecayModeFindingOldDMs", &l2_DecayModeFindingOldDMs);
+
+
+    Run_Tree->SetBranchAddress("againstMuonLoose3", &l2_tauRejMu3L);
+    Run_Tree->SetBranchAddress("againstMuonTight3", &l2_tauRejMu3T);
 
     Run_Tree->SetBranchAddress("zCategory", &zCategory);
     //    Run_Tree->SetBranchAddress("zCategory", &zCategory);
 
 
-    Run_Tree->SetBranchAddress("l2_DecayMode;", &l2_DecayMode);
-    Run_Tree->SetBranchAddress("embedWeight;", &embedWeight);
-    Run_Tree->SetBranchAddress("nbtagNoCor;", &nbtagNoCor);
+    Run_Tree->SetBranchAddress("l2_DecayMode", &l2_DecayMode);
+    Run_Tree->SetBranchAddress("embedWeight", &embedWeight);
+    Run_Tree->SetBranchAddress("nbtagNoCor", &nbtagNoCor);
 
 
     //SVMass from another Tree
@@ -186,6 +191,26 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("SVMassUncUp", &SVMassUncUp);
     Run_Tree->SetBranchAddress("SVMassDown", &SVMassDown);
     Run_Tree->SetBranchAddress("SVMassUncDown", &SVMassUncDown);
+    Run_Tree->SetBranchAddress("l2_TighttauIsoMVA3oldDMwLT", &l2_TighttauIsoMVA3oldDMwLT);
+
+
+
+    Run_Tree->SetBranchAddress("Trigger_MuTau12", &Trigger_MuTau12);
+    Run_Tree->SetBranchAddress("Trigger_EleTau12", &Trigger_EleTau12);
+    Run_Tree->SetBranchAddress("Trigger_SingleMu12", &Trigger_SingleMu12);
+    Run_Tree->SetBranchAddress("Trigger_SingleEle12", &Trigger_SingleEle12);
+    Run_Tree->SetBranchAddress("Trigger_SingleJet12", &Trigger_SingleJet12);
+
+
+    Run_Tree->SetBranchAddress("l1_trgMatche_Ele20Tau20", &l1_trgMatche_Ele20Tau20);
+    Run_Tree->SetBranchAddress("l1_trgMatche_Mu17Tau20", &l1_trgMatche_Mu17Tau20);
+    Run_Tree->SetBranchAddress("l1_trgMatche_Mu18Tau25", &l1_trgMatche_Mu18Tau25);
+    Run_Tree->SetBranchAddress("l1_trgMatche_Mu24", &l1_trgMatche_Mu24);
+    Run_Tree->SetBranchAddress("l2_trgMatche_Ele20Tau20", &l2_trgMatche_Ele20Tau20);
+    Run_Tree->SetBranchAddress("l2_trgMatche_Mu17Tau20", &l2_trgMatche_Mu17Tau20);
+    Run_Tree->SetBranchAddress("l2_trgMatche_Mu18Tau25", &l2_trgMatche_Mu18Tau25);
+    Run_Tree->SetBranchAddress("num_gen_jets;", &num_gen_jets);
+
 
     //
     //    //New BG_Tree
@@ -257,6 +282,11 @@ int main(int argc, char** argv) {
         float mT = TMass_F(l1Pt, l1Px, l1Py, mvamet, mvametphi);
         if ((mt_1 - mT) > 0.3) cout << mt_1 << "  v.s.   " << mT << endl;
 
+
+        float tauESWeight = TauESWeight(mcdata, l2_DecayMode, l2Eta);
+        //        cout << "mcdata=" << mcdata << "  l2_DecayMode=" << l2_DecayMode << "   l2Eta=" << l2Eta << "   weight is= " << tauESWeight << endl;
+
+
         //####################################################
         // CATEGORIZATION
         //####################################################
@@ -292,6 +322,16 @@ int main(int argc, char** argv) {
         bool mT_category[3] = {noMT, mTLess30, mTHigh70};
         std::string mT_Cat[3] = {"", "_mTLess30", "_mTHigher70"};
 
+        //Number of GenJet Categorization
+        bool jetAll = 1;
+        bool jet0 = num_gen_jets == 0;
+        bool jet1 = num_gen_jets == 1;
+        bool jet2 = num_gen_jets == 2;
+        bool jet3 = num_gen_jets == 3;
+        bool jet4 = num_gen_jets == 4;
+        bool NgenJet_category[6] = {jetAll, jet0, jet1, jet2, jet3, jet4};
+        std::string Gjet_Cat[6] = {"", "0j", "1j", "2j", "3j", "4j"};
+
 
 
         //####################################################
@@ -299,7 +339,8 @@ int main(int argc, char** argv) {
         //####################################################
         // MuTau Channel
         //####################################################
-        if (Channel == 1) {
+        bool TriggerMatched_Mu = Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20;
+        if (Channel == 1 && TriggerMatched_Mu) {
 
             bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
             bool Mu_IdTight = l1_muId_Tight;
@@ -311,12 +352,90 @@ int main(int argc, char** argv) {
             bool MU_CUTS_Loose = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso_Loose;
 
             bool Tau_PtEta = l2Pt > 30 && fabs(l2Eta) < 2.3;
-            bool Tau_DMF = l2_DecayModeFinding && (l2_DecayMode < 4 || l2_DecayMode > 8);
+            bool Tau_DMF = l2_DecayModeFindingOldDMs;
+            //            bool Tau_DMF = l2_DecayModeFinding && (l2_DecayMode < 4 || l2_DecayMode > 8);
             //            bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
-            bool Tau_Isolation = l2_tauIsoMVA2T > 0.5;
-            bool Tau_antiEl = l2_tauRejEleL;
-            bool Tau_antiMu = l2_tauRejMu2T;
+            bool Tau_Isolation = l2_TighttauIsoMVA3oldDMwLT > 0.5;
+            //            bool Tau_Isolation = l2_tauIsoMVA2T > 0.5;
+            bool Tau_antiEl = 1; //applied at the level of tree Making
+            bool Tau_antiMu = 1; //applied at the level of tree Making
+            //            bool Tau_antiEl = l2_tauRejEleL;
+            //            bool Tau_antiMu = l2_tauRejMu3L;
+            //            bool Tau_antiMu = l2_tauRejMu2T;
             bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
+
+
+            //Loop Over  Categories
+            for (int Jetcat = 0; Jetcat < 6; Jetcat++) {
+                if (NgenJet_category[Jetcat]) {  //  HERE TOBEDONE TOMOORW
+                    for (int icat = 0; icat < 4; icat++) {
+                        if (MSSM_Category[icat]) {
+                            for (int zcat = 0; zcat < 4; zcat++) {
+                                if (Z_Category[zcat]) {
+                                    for (int qcat = 0; qcat < 3; qcat++) {
+                                        if (charge_category[qcat]) {
+                                            memset(Event_Double, 0, sizeof (Event_Double[0][0]) * 8 * 9);
+                                            for (int mTcat = 0; mTcat < 3; mTcat++) {
+                                                if (mT_category[mTcat]) {
+
+                                                    //###################################################
+                                                    //  Signal Selection   mT < 30 GeV
+                                                    //###################################################
+                                                    if (MU_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
+                                                        plotFill("muTau_visibleMass" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction * tauESWeight);
+                                                        plotFill("muTau_SVMass" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction * tauESWeight);
+                                                        //                                Event_Double[1][1] = Event;
+                                                    }
+                                                    //####################################################
+                                                    //QCD Shape
+                                                    //####################################################
+                                                    if (MU_CUTS_Loose && TAU_CUTS) {
+                                                        plotFill("muTau_visibleMass_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction * tauESWeight);
+                                                        plotFill("muTau_SVMass_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction * tauESWeight);
+                                                    }
+                                                    //####################################################
+
+                                                }
+                                            }
+                                        } //charge category
+                                    }
+                                } // Z category
+                            } //MSSM category
+                        } //check if category is passed
+                    } // loop over categories
+                }
+            }//categ GenJet
+        }
+
+        //####################################################
+        // ET FakeRateation
+        //####################################################
+
+        bool TriggerMatched_Ele = Trigger_EleTau12 && l1_trgMatche_Ele20Tau20 && l2_trgMatche_Ele20Tau20;
+        if (Channel == 3 && TriggerMatched_Ele) {
+
+
+            bool El_PtEta = l1Pt > 24 && fabs(l1Eta) < 2.1;
+            bool El_IdTight = l1_eleId_Tight;
+            bool El_Iso = l1_eleIso < 0.1;
+            bool El_Iso_Loose = l1_eleIso > 0.2 && l1_eleIso < 0.5;
+            bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
+            bool EL_CUTS_Loose = El_PtEta && El_IdTight && El_Iso_Loose;
+
+            bool Tau_PtEta = l2Pt > 30 && fabs(l2Eta) < 2.3;
+            bool Tau_DMF = l2_DecayModeFindingOldDMs;
+            //            bool Tau_DMF = l2_DecayModeFinding && (l2_DecayMode < 4 || l2_DecayMode > 8);
+            //            bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
+            bool Tau_Isolation = l2_TighttauIsoMVA3oldDMwLT > 0.5;
+            //            bool Tau_Isolation = l2_tauIsoMVA2T > 0.5;
+            bool Tau_antiEl = 1; //applied at the level of tree Making
+            bool Tau_antiMu = 1; //applied at the level of tree Making
+            //            bool Tau_antiEl = l2_tauRejEleMVA3M;
+            //            bool Tau_antiMu = l2_tauRejMu3L;
+            //            bool Tau_antiMu = l2_tauRejMu2L;
+            bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
+
+
 
 
             //Loop Over  Categories
@@ -333,81 +452,17 @@ int main(int argc, char** argv) {
                                             //###################################################
                                             //  Signal Selection   mT < 30 GeV
                                             //###################################################
-                                            if (MU_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
-                                                plotFill("muTau_visibleMass" +mT_Cat[mTcat]+q_Cat[qcat] +ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                                                plotFill("muTau_SVMass" +mT_Cat[mTcat]+q_Cat[qcat]+ ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                                                //                                Event_Double[1][1] = Event;
-                                            }
-                                            //####################################################
-                                            //QCD Shape
-                                            //####################################################
-                                            if (MU_CUTS_Loose && TAU_CUTS) {
-                                                plotFill("muTau_visibleMass_QCDshape" +mT_Cat[mTcat]+q_Cat[qcat]+ ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                                                plotFill("muTau_SVMass_QCDshape" +mT_Cat[mTcat]+q_Cat[qcat]+ ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                                            }
-                                            //####################################################
-
-                                        }
-                                    }
-                                } //charge category
-                            }
-                        } // Z category
-                    } //MSSM category
-                } //check if category is passed
-            } // loop over categories
-        }
-
-        //####################################################
-        // ET FakeRateation
-        //####################################################
-
-        if (Channel == 3) {
-
-
-            bool El_PtEta = l1Pt > 24 && fabs(l1Eta) < 2.1;
-            bool El_IdTight = l1_eleId_Tight;
-            bool El_Iso = l1_eleIso < 0.1;
-            bool El_Iso_Loose = l1_eleIso > 0.2 && l1_eleIso < 0.5;
-            bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
-            bool EL_CUTS_Loose = El_PtEta && El_IdTight && El_Iso_Loose;
-
-            bool Tau_PtEta = l2Pt > 30 && fabs(l2Eta) < 2.3;
-            bool Tau_DMF = l2_DecayModeFinding && (l2_DecayMode < 4 || l2_DecayMode > 8);
-            //            bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
-            bool Tau_Isolation = l2_tauIsoMVA2T > 0.5;
-            bool Tau_antiEl = l2_tauRejEleMVA3M;
-            bool Tau_antiMu = l2_tauRejMu2L;
-            bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
-
-
-
-
-
-                        //Loop Over  Categories
-            for (int icat = 0; icat < 4; icat++) {
-                if (MSSM_Category[icat]) {
-                    for (int zcat = 0; zcat < 4; zcat++) {
-                        if (Z_Category[zcat]) {
-                            for (int qcat = 0; qcat < 3; qcat++) {
-                                if (charge_category[qcat]) {
-                                    memset(Event_Double, 0, sizeof (Event_Double[0][0]) * 8 * 9);
-                                    for (int mTcat = 0; mTcat < 3; mTcat++) {
-                                        if (mT_category[mTcat]) {
-
-                                            //###################################################
-                                            //  Signal Selection   mT < 30 GeV
-                                            //###################################################
                                             if (EL_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
-                                                plotFill("eleTau_visibleMass" +mT_Cat[mTcat]+q_Cat[qcat] +ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                                                plotFill("eleTau_SVMass" +mT_Cat[mTcat]+q_Cat[qcat]+ ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+                                                plotFill("eleTau_visibleMass" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction * tauESWeight);
+                                                plotFill("eleTau_SVMass" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction * tauESWeight);
                                                 //                                Event_Double[1][1] = Event;
                                             }
                                             //####################################################
                                             //QCD Shape
                                             //####################################################
                                             if (EL_CUTS_Loose && TAU_CUTS) {
-                                                plotFill("eleTau_visibleMass_QCDshape" +mT_Cat[mTcat]+q_Cat[qcat]+ ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction);
-                                                plotFill("eleTau_SVMass_QCDshape" +mT_Cat[mTcat]+q_Cat[qcat]+ ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction);
+                                                plotFill("eleTau_visibleMass_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat], mvis, high_bin, 0, high_bin, pu_Weight * eff_Correction * tauESWeight);
+                                                plotFill("eleTau_SVMass_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat], SVMass, high_bin, 0, high_bin, pu_Weight * eff_Correction * tauESWeight);
                                             }
                                             //####################################################
 
