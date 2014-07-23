@@ -44,11 +44,11 @@ def make_submit_form():
             for i in f.readlines():
                 QName=i[0:-1]
                 XName=int(float(QName[15:-11]))
-                outName= " $scratchdir/"   +sampleName + "_"+str(XName) +".root"
+                outName= " scratchdir/"   +sampleName + "_"+str(XName) +".root"
                 if (XName % 10 == numMod):
                     command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + outName + " " + dir + "/" + i[0:-1]
 #                    command2 = command2 + " \n" + " mv  $scratchdir/" + data_year + "_" +  outName + "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
-                    command2 = command2 + " \n" + " mv  $scratchdir/" + outName + "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
+                    command2 = command2 + " \n" + " mv  scratchdir/" + outName + "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
                     command2 = command2 + " \n\n\n"
                     outFile.write(command2)
 
