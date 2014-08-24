@@ -207,7 +207,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("trigweight_2", &trigweight_2, "trigweight_2/F");
     Run_Tree->Branch("rho", &rho, "rho/F");
     Run_Tree->Branch("npv", &num_PV, "npv/I");
-    Run_Tree->Branch("npu", &npu, "npu/F"); // NNNEW
+    Run_Tree->Branch("npu", &npu, "npu/I"); // NNNEW
     Run_Tree->Branch("effweight", &eff_Correction, "effweight/F");
     Run_Tree->Branch("puweight", &pu_Weight, "puweight/F");
 
@@ -467,7 +467,7 @@ int main(int argc, char** argv) {
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                         bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
@@ -520,7 +520,7 @@ int main(int argc, char** argv) {
                         bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                         bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
