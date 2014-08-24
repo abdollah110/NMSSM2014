@@ -109,7 +109,9 @@ int jetGenpdgid(myevent *m, myobject const& jet) {
 
     vector<myGenobject> genPar = m->RecGenParticle;
     for (int gg = 0; gg < genPar.size(); gg++) {
-        if (fabs(genPar[gg].pdgId) < 7 || fabs(genPar[gg].pdgId) == 21) {
+        if ((fabs(genPar[gg].pdgId) < 6 || fabs(genPar[gg].pdgId) == 21)  &&( (genPar[gg].pt - jet.pt) /genPar[gg].pt  < 0.3)) {
+//        if ((fabs(genPar[gg].pdgId) < 6 || fabs(genPar[gg].pdgId) == 21) && (genPar[gg].status == 3) &&( (genPar[gg].pt - jet.pt) /genPar[gg].pt  < 0.5)) {
+//        if (fabs(genPar[gg].pdgId) < 7 ) {
             if (deltaR(genPar[gg], jet) < minimuDist) {
                 pdgGenJet = abs(genPar[gg].pdgId);
             }
@@ -133,6 +135,9 @@ int jetGenpdgid(myevent *m, myobject const& jet) {
 double InvarMass_2(myobject const& a, myobject const& b) {
     return sqrt(pow(a.E + b.E, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2) - pow(a.pz + b.pz, 2));
 }
+//double InvarMass_2(myGenobject const& a, myGenobject const& b) {
+//    return sqrt(pow(a.E + b.E, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2) - pow(a.pz + b.pz, 2));
+//}
 
 double TMass(myobject const& a, myobject const& b) {
     return sqrt(pow(a.et + b.et, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2));
@@ -153,8 +158,8 @@ double TMass(double et1, double et2, double px1, double px2, double py1, double 
 
 }
 
-double InvarMass(double et1, double et2, double px1, double px2, double py1, double py2, double pz1, double pz2) {
-    return sqrt(pow(et1 + et2, 2) - pow(px1 + px2, 2) - pow(py1 + py2, 2) - pow(pz1 + pz2, 2));
+double InvarMass(double e1, double e2, double px1, double px2, double py1, double py2, double pz1, double pz2) {
+    return sqrt(pow(e1 + e2, 2) - pow(px1 + px2, 2) - pow(py1 + py2, 2) - pow(pz1 + pz2, 2));
 }
 
 

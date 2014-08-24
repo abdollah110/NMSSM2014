@@ -318,6 +318,13 @@ vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b, bo
         int jetGenpdgid_ = jetGenpdgid(m, jet[k]);
         isBtagged = isBJ.isbtagged13(jet[k].pt, jet[k].eta, jet[k].bDiscriminatiors_CSV, jetGenpdgid_, isdata, 0, 0, is2012);
 
+
+//        int Event = m->eventNumber;
+//        if (NonOverLapWithAB(a, b, jet[k])) {
+//            if (Event == 392362 || Event == 188013 || Event == 188051 || Event == 193167 || Event == 193280 || Event == 303336 || Event == 331590 || Event == 331811 || Event == 95474 || Event == 95490 || Event == 954909 || Event == 954949) {
+//                cout << "btag check is    " << m->eventNumber << " " << jet[k].pt << " " << jet[k].eta << " " << jet[k].bDiscriminatiors_CSV << " " << jetGenpdgid_ << " " << isdata << " " << " " << is2012 << "   isBtagged=" << isBtagged << " \n";
+//            }
+//        }
         if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && isBtagged) {
             //        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.679) {
             if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);

@@ -360,14 +360,14 @@ int main(int argc, char** argv) {
                 for (int i = 0; i < mu_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
 
-                        bool Mu_PtEta = mu_[i].pt > 20 && fabs(mu_[i].eta) < 2.1;
+                        bool Mu_PtEta = mu_[i].pt > 18 && fabs(mu_[i].eta) < 2.1;
                         bool Mu_IdTight = Id_Mu_Tight(mu_[i]);
                         bool Mu_d0 = mu_[i].d0 < 0.045; //the impact parameter in the transverse plane
                         bool Mu_dZ = mu_[i].dZ_in < 0.2; //the impact parameter in the transverse plane
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 18 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                         bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
@@ -415,12 +415,12 @@ int main(int argc, char** argv) {
                 for (int i = 0; i < electron_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
 
-                        bool El_PtEta = electron_[i].pt > 24 && fabs(electron_[i].eta) < 2.1;
+                        bool El_PtEta = electron_[i].pt > 20 && fabs(electron_[i].eta) < 2.1;
                         bool El_IdTight = EleMVANonTrigId_Tight(electron_[i]);
                         bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 18 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                         bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;

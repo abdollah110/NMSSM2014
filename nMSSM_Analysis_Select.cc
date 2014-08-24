@@ -1,3 +1,10 @@
+// REmaining issue
+// Add MVA Medium   discriminationByMuonMVAMedium
+// add Muele and EleMu Veto
+// lower the tau Pt from 30 to 20 GeV
+// also run on nMSSM
+// no requirement on Tau decay mode finding
+
 // Missing for next time is
 // 1) tau decay  correction  DONE
 // 2) btag correction at analysis level from Veelken  DONE
@@ -41,8 +48,7 @@
 #include "interface/zh_Tree.h"
 #include "interface/Leptons_IdIso.h"
 #include "interface/zh_Functions.h"
-#include "DoAnalysis_MSSM/myHelper.h"
-//#include "interface/tr_Tree.h"
+#include "DoAnalysis/myHelper.h"
 
 int main(int argc, char** argv) {
 
@@ -74,34 +80,28 @@ int main(int argc, char** argv) {
     //############## Second anad Third Argument,   OutPut Name/ Input Files                         ########################
     //#################################################################################################
 
-    string CHANNEL = *(argv + 2);
-
-    bool isMu = (CHANNEL.compare("mu") == 0 ? true : false);
-    bool isEle = (CHANNEL.compare("ele") == 0 ? true : false);
-    bool isTot = (CHANNEL.compare("tot") == 0 ? true : false);
-
-    string out = *(argv + 3);
+    string out = *(argv + 2);
 
     std::vector<string> fileNames;
-    for (int f = 4; f < argc; f++) {
+    for (int f = 3; f < argc; f++) {
         fileNames.push_back(*(argv + f));
         // printing the input NAME
-        cout << "\n INPUT NAME IS:   " << fileNames[f - 4] << "\t";
+        cout << "\n INPUT NAME IS:   " << fileNames[f - 3] << "\t";
     }
     //#################################################################################################
     //############## defining an out_file name need on the given argument  information  ###############
     //#################################################################################################
 
-    string outname = is_data_mc + "_" + out;
+    //    string outname = is_data_mc + "_" + out;
+    string outname = out;
     //PRINTING THE OUTPUT name
-    cout << "\n\n Channel IS:    " << CHANNEL << endl;
-    cout << "\n\n OUTPUT NAME IS:    " << outname << endl << endl;
+    cout << "\n\n\n OUTPUT NAME IS:    " << outname << endl;
     TFile *fout = TFile::Open(outname.c_str(), "RECREATE");
 
     //#################################################################################################
     //############## defining Tree Branches Filled via fillTree function                ###############
     //#################################################################################################
-    TTree *Run_Tree = new TTree("TauCheck", "TauCheck");
+    TTree *Run_Tree = new TTree("InfoTree", "InfoTree");
     //    To force a memory-resident Tree
     Run_Tree->SetDirectory(0);
 
@@ -206,7 +206,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("trigweight_2", &trigweight_2, "trigweight_2/F");
     Run_Tree->Branch("rho", &rho, "rho/F");
     Run_Tree->Branch("npv", &num_PV, "npv/I");
-    Run_Tree->Branch("npu", &npu, "npu/F"); // NNNEW
+    Run_Tree->Branch("npu", &npu, "npu/I"); // NNNEW
     Run_Tree->Branch("effweight", &eff_Correction, "effweight/F");
     Run_Tree->Branch("puweight", &pu_Weight, "puweight/F");
 
@@ -220,10 +220,10 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("jE_2", &jE_2, "jE_2/F");
     Run_Tree->Branch("jpass_1", &jpass_1, "jpass_1/O");
     Run_Tree->Branch("jpass_2", &jpass_2, "jpass_2/O");
-    Run_Tree->Branch("bpt", &bpt_1, "bpt_1/F");
-    Run_Tree->Branch("beta", &beta_1, "beta_1/F");
-    Run_Tree->Branch("bphi", &bphi_1, "bphi_1/F");
-    Run_Tree->Branch("bdiscriminant", &bdiscriminant_1, "bdiscriminant_1/F");
+    Run_Tree->Branch("bpt_1", &bpt_1, "bpt_1/F");
+    Run_Tree->Branch("beta_1", &beta_1, "beta_1/F");
+    Run_Tree->Branch("bphi_1", &bphi_1, "bphi_1/F");
+    Run_Tree->Branch("bdiscriminant_1", &bdiscriminant_1, "bdiscriminant_1/F");
     Run_Tree->Branch("bpt_2", &bpt_2, "bpt_2/F");
     Run_Tree->Branch("beta_2", &beta_2, "beta_2/F");
     Run_Tree->Branch("bphi_2", &bphi_2, "bphi_2/F");
@@ -252,7 +252,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l2_DecayModeFinding", &l2_DecayModeFinding, "l2_DecayModeFinding/O");
     Run_Tree->Branch("zCategory", &zCategory, "zCategory/I");
     Run_Tree->Branch("l2_DecayMode", &l2_DecayMode, "l2_DecayMode/I");
-    Run_Tree->Branch("embeddedWeight", &embedWeight, "embedWeight/F");
+    Run_Tree->Branch("embedWeight", &embedWeight, "embedWeight/F");
     Run_Tree->Branch("nbtagNoCor", &nbtagNoCor, "nbtagNoCor/I");
 
 
@@ -326,17 +326,13 @@ int main(int argc, char** argv) {
         TBranch* branch = rootTree->GetBranch("myevent");
         branch->SetAddress(&m);
         cout << "number of entries is : " << nev << endl;
-        int counter = 0;
+
 
         // running over the root files
         for (int i = 0; i < nev; i++) {
             rootTree->GetEvent(i);
-            if (i % 1000 == 0) {
-                fprintf(stdout, "\r  Processed events : %8d of %8d ", i, nev);
-                fprintf(stdout, "\n");
-            }
-            fflush(stdout);
-
+//            if (i % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
+//            fflush(stdout);
 
             //*********************************************************************************************
             //****************************    Object definitions    ***************************************
@@ -344,32 +340,15 @@ int main(int argc, char** argv) {
             vector<myobject> mu_ = GoodMuon10GeV(m);
             vector<myobject> electron_ = GoodElectron10GeV(m);
             vector<myobject> tau_ = GoodTau20GeV(m);
-            vector<myobject> MVAMetRecoil_mutau = m->RecoilMetmutau;
-
-            int num_PU = 1;
-            float PU_Weight = 1;
-
-//            if (mcdata == 3) {
-                num_PU = m->PUInfo_true;
-                PU_Weight = LumiWeights_12->weight(num_PU);
-//            }
-//            if (mcdata == 1) {
-//                //                num_PU = m->PUInfo; // Last Bug found in 25 Nov
-//                num_PU = m->PUInfo_true;
-//                PU_Weight = LumiWeights_11->weight(num_PU);
-//
-//            }
-
-
 
             //#################################################################################################
-            //            bool doMuTauAnalysis = true;
-            //            bool doElTauAnalysis = false;
+            bool doMuTauAnalysis = true;
+            bool doElTauAnalysis = true;
             //#################################################################################################
             //########################## MuTau Selection         ##############################################
             //#################################################################################################
             //#################################################################################################
-            if (isMu || isTot) {
+            if (doMuTauAnalysis) {
                 //##############################################################################
                 // mutau
                 //##############################################################################
@@ -377,7 +356,6 @@ int main(int argc, char** argv) {
                 int mutau = -1;
                 plotFill("TotalEventsNumber", 0, 1, 0, 1);
                 plotFill("mutau", ++mutau, 20, 0., 20.);
-
 
                 for (int i = 0; i < mu_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
@@ -389,53 +367,38 @@ int main(int argc, char** argv) {
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
-                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
-                        bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
+                        bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
+                        bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
-                        //                        bool Tau_antiMu = tau_[k].discriminationByMuonTight3;
                         bool Tau_antiMu = tau_[k].discriminationByMuonMVAMedium;
                         bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
-
 
                         bool MuTau_Charge = mu_[i].charge * tau_[k].charge < 0;
                         bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
 
-                        //                        bool Veto_ME2 = Multi_Lepton_Veto("ME2", m);
                         bool Veto_ME = Multi_Lepton_Veto("ME", m);
                         bool Veto_MM = Multi_Lepton_Veto("MM", m);
                         bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
                         bool Veto_MME = Multi_Lepton_Veto("MME", m);
 
 
-                        vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
-                        vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
+                        bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME && Veto_ME;
+                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
 
+                        //Loose Selection
+                        if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
+                            fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
+                            cout << m->runNumber << ":" << m->lumiNumber << ":" << m->eventNumber << endl;
 
-                        //  ########## ########## ########## ########## ########## ##########
-                        //  Other Information
-                        //  ########## ########## ########## ########## ########## ##########
-                       float  npu = m->PUInfo_true;
-
-
-                        float idweight_1 = getCorrIdIsoLep("mutau", "mc12", tau_[k]);
-                        float trigweight_1 = getCorrTriggerLep("mutau", "mc12", mu_[i]);
-                       float  trigweight_2 = getCorrTriggerTau("mutau", "mc12", tau_[k]);
-
-
-                        bool hasMatchedTrigger = mu_[i].hasTrgObject_Mu17Tau20 && tau_[k].hasTrgObject_Mu17Tau20;
-                        if (hasMatchedTrigger && Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_ME && Veto_MM && Veto_MMM && Veto_MME) {
-                            counter++;
-                            plotFill("mutau", ++mutau, 20, 0., 20.);
-                            fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
-                            cout << "\n" << counter << "   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "   l1Pt=" << mu_[i].pt << "   l1eta=" << mu_[i].eta << "   l1Phi=" << mu_[i].phi << "   l2Pt=" << tau_[k].pt << "   l2Eta=" << tau_[k].eta << "   l2Phi=" << tau_[k].phi;
-//                            cout << "   MVAMet=" << MVAMetRecoil_mutau.front().pt << "   numJet30=" << JETS.size() << "   numBJet20=" << BJETS.size() << "   Jet1Pt=" << (BJETS.size() > 0 ? JETS[0].pt : -999) << "   Jet2Pt=" << JETS[1].pt << "   BJET1Pt=" << BJETS[0].pt << "   PU_Weight=" << PU_Weight << "   npu=" << npu << "   erightLepton_id_iso=" << idweight_1 ;
-                            cout << "   MVAMet=" << MVAMetRecoil_mutau.front().pt << "   numJet30=" << JETS.size() << "   numBJet20=" << BJETS.size() << "   PU_Weight=" << PU_Weight << "   npu=" << npu << "   erightLepton_id_iso=" << idweight_1 ;
-                            cout << "   lepton_trg_Weight=" << trigweight_1 << "   tau_Trg_Weight=" << trigweight_2 << "\n" ;
-
-                            break;
                         }
+                        //                            //Final selection
+                        //                            if (MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
+                        //                                plotFill("mutau", ++mutau, 20, 0., 20.);
+                        //                                fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
+                        //                                break;
+                        //                            }
                     }
                 }
             }//end of only Muon
@@ -444,7 +407,7 @@ int main(int argc, char** argv) {
             //#######################  EleTau Selection #######################
             //#################################################################################################
             //#################################################################################################
-            if (isEle || isTot) {
+            if (doElTauAnalysis) {
                 //##############################################################################
                 // eltau
                 //##############################################################################
@@ -459,10 +422,9 @@ int main(int argc, char** argv) {
                         bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
-                        //                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
-                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
-                        bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
+                        bool Tau_PtEta = tau_[k].pt > 30 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
+                        bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
                         bool Tau_antiMu = tau_[k].discriminationByMuonLoose3;
                         bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
@@ -475,14 +437,24 @@ int main(int argc, char** argv) {
                         bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
                         bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
-                        bool hasMatchedTrigger = electron_[i].hasTrgObject_Ele20Tau20 && tau_[k].hasTrgObject_Ele20Tau20;
-                        if (Veto_EM && hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
-                            plotFill("eltau", ++eltau, 20, 0., 20.);
-                            fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
-                            //                            cout<<"Event == "<<m->eventNumber<<"\n";
-                            break;
-
+                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE && Veto_EM;
+                        //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3newDMwLT;
+                        //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3oldDMwLT;
+                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
+                        //                        bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
+                        //                            bool VLooseEl_Iso = Iso_Ele_dBeta(electron_[i]) < 1;
+                        //Loose Selection
+                        if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
+                            fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
+                            cout << m->runNumber << ":" << m->lumiNumber << ":" << m->eventNumber << endl;
                         }
+                        //Final selection
+                        //                            if (EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
+                        //                                plotFill("eltau", ++eltau, 20, 0., 20.);
+                        //                                fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
+                        //                                break;
+                        //
+                        //                            }
 
 
                     }

@@ -83,10 +83,11 @@ public:
     unsigned int eventNumber;
     unsigned int lumiNumber;
     float embeddingWeight;
+    float spinnerWeight;
     unsigned int HLT_DiElectron;
     unsigned int HLT_DiMuon;
     int PUInfo;
-    int PUInfo_true;
+    float PUInfo_true;  // change from int to float
     int PUInfo_Bunch0;
     float RhoCorr;
     float RhoCenNeutral;

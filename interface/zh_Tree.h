@@ -25,6 +25,7 @@
 #include "Leptons_PreSelection.h"
 #include "zh_Functions.h"
 #include "LumiReweightingStandAlone.h"
+//#include "LumiReweighting.h"
 #include "htt_Trigger.h"
 
 
@@ -33,7 +34,8 @@
 //############## initializing the PU correction                                    ###############
 //#################################################################################################
 
-reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Summer12_PU_S10-600bins.root", "interface/HTTRootFiles/Data_Pileup_2012_ReReco-600bins.root", "pileup", "pileup");
+//reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Summer12_PU_S10-600bins.root", "interface/HTTRootFiles/Data_Pileup_2012_ReReco-600bins.root", "pileup", "pileup");
+reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Summer12_PU_S10-600bins.root", "interface/HTTRootFiles/Data_Pileup_2012_ReRecoPixel-600bins.root", "pileup", "pileup");
 reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Fall11_PU_S6-500bins.root", "interface/HTTRootFiles/Data_Pileup_2011_HCP-500bins.root", "pileup", "pileup");
 //reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/Summer12_PU.root", "interface/dataPileUpHistogram_True_2012.root", "mcPU", "pileup"); //changed to be sync with HTT
 //reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("interface/Fall11_PU.root", "interface/dataPileUpHistogram_True_2011.root", "mcPU", "pileup");  //changed to be sync with HTT
@@ -67,7 +69,8 @@ int l2_DecayMode;
 float mvacov00, mvacov01, mvacov10, mvacov11;
 float metcov00, metcov01, metcov10, metcov11;
 float eff_Correction, pu_Weight;
-int num_PV, npu, mcdata;
+int num_PV, mcdata;
+float npu;
 int mu_Size, BareMuon_Size, electron_Size, BareElectron_Size, tau_Size, BareTau_Size;
 float l1_CloseJetPt, l2_CloseJetPt;
 float l1_CloseJetEta, l2_CloseJetEta;
@@ -197,7 +200,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //*********************************************************************************************
     //****************************    PileUp re weighting    ***************************************
     //*********************************************************************************************
-    int num_PU = 1;
+    float num_PU = 1;
     float PU_Weight = 1;
 
     if (mcdata == 3) {
