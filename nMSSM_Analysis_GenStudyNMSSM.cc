@@ -186,6 +186,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("againstMuonLoose3", &l2_tauRejMu3L, "againstMuonLoose3/O");
     Run_Tree->Branch("againstMuonMedium3", &l2_tauRejMu2M, "againstMuonMedium3/O");
     Run_Tree->Branch("againstMuonTight3", &l2_tauRejMu3T, "againstMuonTight3/O");
+    Run_Tree->Branch("l2_discriminationByMuonMVAMedium", &l2_discriminationByMuonMVAMedium, "l2_discriminationByMuonMVAMedium/O");
 
     Run_Tree->Branch("againstElectronMVA3raw_2", &l2_tauRejEleMVA, "againstElectronMVA3raw_2/F");
     Run_Tree->Branch("l2_tauRejEleL", &l2_tauRejEleL, "l2_tauRejEleL/O");
@@ -333,7 +334,7 @@ int main(int argc, char** argv) {
         //                        for (int i = 0; i < 1; i++) {
         for (int i = 0; i < nev; i++) {
             rootTree->GetEvent(i);
-            if (i % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
+            if (i % 100 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
             fflush(stdout);
 
             //*********************************************************************************************
@@ -344,7 +345,7 @@ int main(int argc, char** argv) {
             vector<myobject> tau_ = GoodTau20GeV(m);
 
             //#################################################################################################
-            bool doMuTauAnalysis = false;
+            bool doMuTauAnalysis = true;
             bool doElTauAnalysis = false;
             //#################################################################################################
             //########################## MuTau Selection         ##############################################
@@ -353,72 +354,159 @@ int main(int argc, char** argv) {
             vector<myGenobject> genMet_ = m->RecGenMet;
             vector<myobject> recMet_ = m->RecMVAMet_mutau;
             vector<myobject> recMetRecoil_ = m->RecoilMet;
+            bool Trigger_MuTau12 = Trigger_MuTau_12(m);
+            bool Trigger_EleTau12 = Trigger_EleTau_12(m);
 
 
 
+            //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+            bool ItisMu = false;
+            bool ItisTau = false;
+            bool MuIsSelected = false;
+            bool TauMuIsSelected = false;
+            bool TauMuBJetIsSelected = false;
+            int numBjet = 0;
 
 
+            for (int j = 0; j < genPar_.size(); j++) {
+                bool muFromTau = fabs(genPar_[j].pdgId) == 13 && fabs(genPar_[j].status) == 1 && fabs(genPar_[j].mod_pdgId) == 15 && fabs(genPar_[j].mod_status) == 2 && fabs(genPar_[j].Gmod_pdgId) == 15 && fabs(genPar_[j].Gmod_status) == 3;
+                if (muFromTau) {
+                    plotFill("TotalEventsNumber_MU", 0, 1, 0, 1);
+                    ItisMu = true;
+
+                }
+            }
             for (int i = 0; i < genPar_.size(); i++) {
-                //                if (fabs(genPar_[i].pdgId) == 15 ) cout << fabs(genPar_[i].pdgId) << "  " << fabs(genPar_[i].mod_pdgId)<<"\n";
-                if (fabs(genPar_[i].pdgId) == 5 && genPar_[i].status == 3 && fabs(genPar_[i].mod_pdgId) == 21) plotFill("bJetPt", genPar_[i].pt, 50, 0, 50);
-                if (fabs(genPar_[i].pdgId) == 5 && genPar_[i].status == 3 && fabs(genPar_[i].mod_pdgId) == 21) plotFill("bJetEta", genPar_[i].eta, 50, -5, 5);
-                for (int j = i + 1; j < genPar_.size(); j++) {
-                    //                if (fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 15 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 22 && fabs(genPar_[i].pdgId) != 24 && fabs(genPar_[i].pdgId) != 211 && fabs(genPar_[i].pdgId) != 213 && fabs(genPar_[i].pdgId) != 20213&& fabs(genPar_[i].pdgId) != 321&& fabs(genPar_[i].pdgId) != 323) {
+                bool tauFromTau = (fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 24 && fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].mod_status) == 2 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 3);
+                //                bool tauFromW = (fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 24 && fabs(genPar_[i].mod_pdgId) == 24 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 2);
+                if (tauFromTau) {
+                    plotFill("TotalEventsNumber_Tau", 0, 1, 0, 1);
+                    ItisTau = true;
+                }
+            }
 
-                    /////////// EleTau
-                    if (fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 15 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 22 && fabs(genPar_[i].pdgId) != 24) {
-                        if (fabs(genPar_[j].mod_pdgId) == 15 && fabs(genPar_[j].pdgId) == 11) {
-                            plotFill("TauPt_etau", genPar_[i].pt, 50, 0, 50);
-                            plotFill("ElePt_etau", genPar_[j].pt, 50, 0, 50);
-                            plotFill("TauEta_etau", genPar_[i].eta, 50, -5, 5);
-                            plotFill("EleEta_etau", genPar_[j].eta, 50, -5, 5);
-                            plotFill("TauPtElePt2D_etau", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
-                            if (fabs(genPar_[i].eta) < 2.3 && fabs(genPar_[j].eta) < 2.1) plotFill("TauPtElePt2D_ER_etau", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
-                            if (genPar_[i].pt > 20 && genPar_[j].pt > 24) plotFill("dR_etau", dR(genPar_[i].eta, genPar_[i].phi, genPar_[j].eta, genPar_[j].eta), 100, 0, 10);
-                            if (genPar_[i].pt > 20 && genPar_[j].pt > 24) plotFill("dPhi_etau", deltaPhi(genPar_[i].phi, genPar_[j].eta), 100, 0, 10);
-                        }
-                    }
-                    /////////// MuTau
-                    if (fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 15 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 22 && fabs(genPar_[i].pdgId) != 24) {
-                        if (fabs(genPar_[j].mod_pdgId) == 15 && fabs(genPar_[j].pdgId) == 13) {
-                            plotFill("TauPt_mutau", genPar_[i].pt, 50, 0, 50);
-                            plotFill("MuPt_mutau", genPar_[j].pt, 50, 0, 50);
-                            plotFill("TauEta_mutau", genPar_[i].eta, 50, -5, 5);
-                            plotFill("MuEta_mutau", genPar_[j].eta, 50, -5, 5);
-                            plotFill("TauPtMuPt2D_mutau", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
-                            if (fabs(genPar_[i].eta) < 2.3 && fabs(genPar_[j].eta) < 2.1) plotFill("TauPtMuPt2D_ER_mutau", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
-                            if (genPar_[i].pt > 20 && genPar_[j].pt > 20) plotFill("dR_mutau", dR(genPar_[i].eta, genPar_[i].phi, genPar_[j].eta, genPar_[j].eta), 100, 0, 10);
-                            if (genPar_[i].pt > 20 && genPar_[j].pt > 20) plotFill("dPhi_mutau", deltaPhi(genPar_[i].phi, genPar_[j].eta), 100, 0, 10);
+            if (ItisMu && ItisTau) {
 
-                        }
-                    }
-                    /////////// EleMu
-                    if (fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].pdgId) == 11) {
-                        if (fabs(genPar_[j].mod_pdgId) == 15 && fabs(genPar_[j].pdgId) == 13) {
-                            plotFill("ElePt_emu", genPar_[i].pt, 50, 0, 50);
-                            plotFill("MuPt_emu", genPar_[j].pt, 50, 0, 50);
-                            plotFill("EleEta_emu", genPar_[i].eta, 50, -5, 5);
-                            plotFill("MuEta_emu", genPar_[j].eta, 50, -5, 5);
-                            plotFill("TauPtMuPt2D_emu", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
-                            if (fabs(genPar_[i].eta) < 2.5 && fabs(genPar_[j].eta) < 2.4) plotFill("TauPtMuPt2D_ER_emu", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
-                            if ((genPar_[i].pt > 20 && genPar_[j].pt > 10) || (genPar_[i].pt > 10 && genPar_[j].pt > 20)) plotFill("dR_emu", dR(genPar_[i].eta, genPar_[i].phi, genPar_[j].eta, genPar_[j].eta), 100, 0, 10);
-                            if ((genPar_[i].pt > 20 && genPar_[j].pt > 10) || (genPar_[i].pt > 10 && genPar_[j].pt > 20)) plotFill("dPhi_emu", deltaPhi(genPar_[i].phi, genPar_[j].eta), 100, 0, 10);
-                        }
-                    }
-
-
-                    if (fabs(genPar_[i].mod_pdgId) == 36 && fabs(genPar_[i].pdgId) == 15) {
-                        if (fabs(genPar_[j].mod_pdgId) == 36 && fabs(genPar_[j].pdgId) == 15) {
-                            TLorentzVector TV_i, TV_j, TV_tot;
-                            TV_i.SetPtEtaPhiM(genPar_[i].pt, genPar_[i].eta, genPar_[i].phi, genPar_[i].mass);
-                            TV_j.SetPtEtaPhiM(genPar_[j].pt, genPar_[j].eta, genPar_[j].phi, genPar_[j].mass);
-                            TV_tot = TV_i + TV_j;
-                            plotFill("Higgs_Mass", TV_tot.M(), 10000, 0, 100);
+                for (int i = 0; i < genPar_.size(); i++) {
+                    if (fabs(genPar_[i].pdgId) == 13 && fabs(genPar_[i].status) == 1 && fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].mod_status) == 2 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 3) {
+                        if (genPar_[i].pt > 20 && fabs(genPar_[i].eta) < 2.1) {
+                            plotFill("StandAloneMu", genPar_[i].pt, 100, 0, 100);
+                            MuIsSelected = true;
 
                         }
                     }
                 }
             }
+
+
+            if (MuIsSelected) {
+                for (int i = 0; i < genPar_.size(); i++) {
+
+                    if (fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 24 && fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].mod_status) == 2 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 3) {
+                        //                        cout<<m->eventNumber <<"    Moder= "<<fabs(genPar_[i].mod_pdgId) << "  pt= "<<genPar_[i].mod_pt << "             object= "<<fabs(genPar_[i].pdgId) << "  pt= "<<genPar_[i].pt << " \n";
+                        if (genPar_[i].pt > 20 && fabs(genPar_[i].eta) < 2.3) {
+                            plotFill("StandAloneTau", genPar_[i].pt, 100, 0, 100);
+                            TauMuIsSelected = true;
+                        }
+                    }
+                }
+            }
+            if (TauMuIsSelected) {
+                plotFill("ItisMuTauChannel", 0, 1, 0, 1);
+                for (int i = 0; i < genPar_.size(); i++) {
+                    if (fabs(genPar_[i].pdgId) == 5 && genPar_[i].status == 3 && genPar_[i].pt > 25 && fabs(genPar_[i].eta) < 2.4) {
+                        plotFill("StandAloneBJet", numBjet++, 10, 0, 10);
+                        TauMuBJetIsSelected = true;
+
+                    }
+                }
+            }
+
+            if (TauMuBJetIsSelected) plotFill("FinalAllCuts", 1, 10, 0, 10);
+
+
+
+
+            //
+            //            for (int i = 0; i < genPar_.size(); i++) {
+            //                //                if (fabs(genPar_[i].pdgId) == 15 ) cout << fabs(genPar_[i].pdgId) << "  " << fabs(genPar_[i].mod_pdgId)<<"\n";
+            //                if (fabs(genPar_[i].pdgId) == 5 && genPar_[i].status == 3 && fabs(genPar_[i].mod_pdgId) == 21) plotFill("bJetPt", genPar_[i].pt, 50, 0, 50);
+            //                if (fabs(genPar_[i].pdgId) == 5 && genPar_[i].status == 3 && fabs(genPar_[i].mod_pdgId) == 21) plotFill("bJetEta", genPar_[i].eta, 50, -5, 5);
+            //
+            //                //    For Filtering
+            //                //                if (fabs(genPar_[i].pdgId) == 5 && genPar_[i].status == 3 && fabs(genPar_[i].mod_pdgId) == 21 && genPar_[i].pt > 25 && fabs(genPar_[i].et) < 2.4) ThereIs1BJet = true;
+            //
+            //                if ((fabs(genPar_[i].pdgId) == 11 || fabs(genPar_[i].pdgId) == 13) && genPar_[i].pt > 15 && Just1Lep15) {
+            //                    plotFill("AtLeast1Lep15", genPar_[i].pt, 100, 0, 100);
+            //                    Just1Lep15 = false;
+            //                }
+            //                if ((fabs(genPar_[i].pdgId) == 11 || fabs(genPar_[i].pdgId) == 13) && genPar_[i].pt > 10 && Just1Lep10) {
+            //                    plotFill("AtLeast1Lep10", genPar_[i].pt, 100, 0, 100);
+            //                    Just1Lep10 = false;
+            //                }
+            //                //    For Filtering
+            //                for (int j = i + 1; j < genPar_.size(); j++) {
+            //                    //                if (fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 15 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 22 && fabs(genPar_[i].pdgId) != 24 && fabs(genPar_[i].pdgId) != 211 && fabs(genPar_[i].pdgId) != 213 && fabs(genPar_[i].pdgId) != 20213&& fabs(genPar_[i].pdgId) != 321&& fabs(genPar_[i].pdgId) != 323) {
+            //
+            //                    /////////// EleTau
+            //                    if (fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 24 && fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].mod_status) == 2 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 3) {
+            //                        if (fabs(genPar_[i].pdgId) == 11 && fabs(genPar_[i].status) == 1 && fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].mod_status) == 2 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 3) {
+            //                            plotFill("TauPt_etau", genPar_[i].pt, 50, 0, 50);
+            //                            plotFill("ElePt_etau", genPar_[j].pt, 50, 0, 50);
+            //                            plotFill("TauEta_etau", genPar_[i].eta, 50, -5, 5);
+            //                            plotFill("EleEta_etau", genPar_[j].eta, 50, -5, 5);
+            //                            plotFill("TauPtElePt2D_etau", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
+            //                            if (fabs(genPar_[i].eta) < 2.3 && fabs(genPar_[j].eta) < 2.1) plotFill("TauPtElePt2D_ER_etau", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
+            //                            if (genPar_[i].pt > 20 && genPar_[j].pt > 24) plotFill("dR_etau", dR(genPar_[i].eta, genPar_[i].phi, genPar_[j].eta, genPar_[j].eta), 100, 0, 10);
+            //                            if (genPar_[i].pt > 20 && genPar_[j].pt > 24) plotFill("dPhi_etau", deltaPhi(genPar_[i].phi, genPar_[j].eta), 100, 0, 10);
+            //                        }
+            //                    }
+            //                    /////////// MuTau
+            //                    if (fabs(genPar_[i].pdgId) != 11 && fabs(genPar_[i].pdgId) != 12 && fabs(genPar_[i].pdgId) != 13 && fabs(genPar_[i].pdgId) != 14 && fabs(genPar_[i].pdgId) != 16 && fabs(genPar_[i].pdgId) != 24 && fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].mod_status) == 2 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 3) {
+            //                        //                        if (fabs(genPar_[j].mod_pdgId) == 15 && fabs(genPar_[j].pdgId) == 13) {
+            //                        if (fabs(genPar_[i].pdgId) == 13 && fabs(genPar_[i].status) == 1 && fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].mod_status) == 2 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 3) {
+            //                            plotFill("TauPt_mutau", genPar_[i].pt, 50, 0, 50);
+            //                            plotFill("MuPt_mutau", genPar_[j].pt, 50, 0, 50);
+            //                            plotFill("TauEta_mutau", genPar_[i].eta, 50, -5, 5);
+            //                            plotFill("MuEta_mutau", genPar_[j].eta, 50, -5, 5);
+            //                            plotFill("TauPtMuPt2D_mutau", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
+            //                            if (fabs(genPar_[i].eta) < 2.3 && fabs(genPar_[j].eta) < 2.1) plotFill("TauPtMuPt2D_ER_mutau", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
+            //                            if (genPar_[i].pt > 20 && genPar_[j].pt > 20) plotFill("dR_mutau", dR(genPar_[i].eta, genPar_[i].phi, genPar_[j].eta, genPar_[j].eta), 100, 0, 10);
+            //                            if (genPar_[i].pt > 20 && genPar_[j].pt > 20) plotFill("dPhi_mutau", deltaPhi(genPar_[i].phi, genPar_[j].eta), 100, 0, 10);
+            //                            if (genPar_[i].pt > 20 && genPar_[j].pt > 20 && fabs(genPar_[i].eta) < 2.3 && fabs(genPar_[j].eta) < 2.1 && ThereIs1BJet) plotFill("FinalSelection", 1, 2, 0, 2);
+            //
+            //
+            //                        }
+            //                    }
+            //                    /////////// EleMu
+            //                    if (fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].pdgId) == 11) {
+            //                        if (fabs(genPar_[i].pdgId) == 13 && fabs(genPar_[i].status) == 1 && fabs(genPar_[i].mod_pdgId) == 15 && fabs(genPar_[i].mod_status) == 2 && fabs(genPar_[i].Gmod_pdgId) == 15 && fabs(genPar_[i].Gmod_status) == 3) {
+            //                            plotFill("ElePt_emu", genPar_[i].pt, 50, 0, 50);
+            //                            plotFill("MuPt_emu", genPar_[j].pt, 50, 0, 50);
+            //                            plotFill("EleEta_emu", genPar_[i].eta, 50, -5, 5);
+            //                            plotFill("MuEta_emu", genPar_[j].eta, 50, -5, 5);
+            //                            plotFill("TauPtMuPt2D_emu", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
+            //                            if (fabs(genPar_[i].eta) < 2.5 && fabs(genPar_[j].eta) < 2.4) plotFill("TauPtMuPt2D_ER_emu", genPar_[i].pt, genPar_[j].pt, 50, 0, 50, 50, 0, 50);
+            //                            if ((genPar_[i].pt > 20 && genPar_[j].pt > 10) || (genPar_[i].pt > 10 && genPar_[j].pt > 20)) plotFill("dR_emu", dR(genPar_[i].eta, genPar_[i].phi, genPar_[j].eta, genPar_[j].eta), 100, 0, 10);
+            //                            if ((genPar_[i].pt > 20 && genPar_[j].pt > 10) || (genPar_[i].pt > 10 && genPar_[j].pt > 20)) plotFill("dPhi_emu", deltaPhi(genPar_[i].phi, genPar_[j].eta), 100, 0, 10);
+            //                        }
+            //                    }
+            //
+            //
+            //                    if (fabs(genPar_[i].mod_pdgId) == 36 && fabs(genPar_[i].pdgId) == 15) {
+            //                        if (fabs(genPar_[j].mod_pdgId) == 36 && fabs(genPar_[j].pdgId) == 15) {
+            //                            TLorentzVector TV_i, TV_j, TV_tot;
+            //                            TV_i.SetPtEtaPhiM(genPar_[i].pt, genPar_[i].eta, genPar_[i].phi, genPar_[i].mass);
+            //                            TV_j.SetPtEtaPhiM(genPar_[j].pt, genPar_[j].eta, genPar_[j].phi, genPar_[j].mass);
+            //                            TV_tot = TV_i + TV_j;
+            //                            plotFill("Higgs_Mass", TV_tot.M(), 10000, 0, 100);
+            //
+            //                        }
+            //                    }
+            //                }
+            //
+            //
+            //            }
 
             //                        cout << "genPar_[i].pdgId= " << genPar_[i].pdgId << "   pt= " << genPar_[i].pt << "\n";
 
@@ -446,30 +534,34 @@ int main(int argc, char** argv) {
 
 
 
-
+            plotFill("TotalEventsNumber", 0, 1, 0, 1);
             //#################################################################################################
+            //            if (doMuTauAnalysis && Trigger_MuTau12) {
             if (doMuTauAnalysis) {
                 //##############################################################################
                 // mutau
                 //##############################################################################
                 std::string FinalState = "mutau";
+
                 int mutau = -1;
-                plotFill("TotalEventsNumber", 0, 1, 0, 1);
+                //                plotFill("TotalEventsNumber", 0, 1, 0, 1);
                 plotFill("mutau", ++mutau, 20, 0., 20.);
 
                 for (int i = 0; i < mu_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
 
-                        bool Mu_PtEta = mu_[i].pt > 20 && fabs(mu_[i].eta) < 2.1;
+                        //                        bool Mu_PtEta = mu_[i].pt > 20 && fabs(mu_[i].eta) < 2.1;
+                        bool Mu_PtEta = mu_[i].pt > 15 && fabs(mu_[i].eta) < 2.1;
                         bool Mu_IdTight = Id_Mu_Tight(mu_[i]);
                         bool Mu_d0 = mu_[i].d0 < 0.045; //the impact parameter in the transverse plane
                         bool Mu_dZ = mu_[i].dZ_in < 0.2; //the impact parameter in the transverse plane
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
-                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
-                        bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
+                        //                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 15 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
+                        bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT > 0.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
                         bool Tau_antiMu = tau_[k].discriminationByMuonMVAMedium;
                         bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
@@ -484,19 +576,48 @@ int main(int argc, char** argv) {
                         bool Veto_MME = Multi_Lepton_Veto("MME", m);
 
 
+                        vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
+                        vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
+                        vector<myobject> MVAMetRecoil_mutau = m->RecoilMetmutau;
+                        mt_1 = TMass_F(mu_[i].pt, mu_[i].px, mu_[i].py, MVAMetRecoil_mutau.front().pt, MVAMetRecoil_mutau.front().phi);
+
                         bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME && Veto_ME;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
+                        bool bjetCut_TMass = BJETS.size() > 0 && JETS.size() < 2 && mt_1 < 30;
 
-                        //Loose Selection
-                        if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
+                        //                        bool MatchedTrigger = mu_[i].hasTrgObject_Mu17Tau20 && tau_[k].hasTrgObject_Mu17Tau20;
+                        bool MatchedTrigger = 1;
+
+                        //                            //Final selection
+//                        if (MatchedTrigger && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME && bjetCut_TMass) {
+//                            plotFill("mutau", ++mutau, 20, 0., 20.);
+//                            float MaxPtLep = 0;
+//                            float MaxEtaLep = -100;
+//                            float MaxPhiLep = -100;
+//                            for (int ig = 0; ig < genPar_.size(); ig++) {
+//                                if (fabs(genPar_[ig].pdgId) == 13) {
+//                                    if (genPar_[ig].pt > MaxPtLep) {
+//                                        MaxPtLep = genPar_[ig].pt;
+//                                        MaxEtaLep = genPar_[ig].eta;
+//                                        MaxPhiLep = genPar_[ig].phi;
+//                                    }
+//                                }
+//                            }
+//
+//                            plotFill("GenMuonPT_InPassRecoEvents", MaxPtLep, 50, 0., 50.);
+//                            plotFill("GenMuon_InPassRecoEvents_DR", dR(MaxEtaLep, MaxPhiLep, mu_[i].eta, mu_[i].phi), 500, 0., 10);
+//
+//                            //                            fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
+////                            break;
+//                        }
+
+
+                        //##################################################################
+                        //  Filling Tree
+                        //##################################################################
+                        if (TauMuBJetIsSelected && Veto_MM && Veto_ME && Veto_MMM && Veto_MME) {
                             fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
                         }
-                        //                            //Final selection
-                        //                            if (MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME) {
-                        //                                plotFill("mutau", ++mutau, 20, 0., 20.);
-                        //                                fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
-                        //                                break;
-                        //                            }
                     }
                 }
             }//end of only Muon
@@ -505,24 +626,28 @@ int main(int argc, char** argv) {
             //#######################  EleTau Selection #######################
             //#################################################################################################
             //#################################################################################################
+            //            if (doElTauAnalysis && Trigger_EleTau12) {
             if (doElTauAnalysis) {
                 //##############################################################################
                 // eltau
                 //##############################################################################
+                int ThereExist1GenEle = 0;
                 std::string FinalState = "eltau";
                 int eltau = -1;
                 plotFill("eltau", ++eltau, 20, 0., 20.);
                 for (int i = 0; i < electron_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
 
-                        bool El_PtEta = electron_[i].pt > 24 && fabs(electron_[i].eta) < 2.1;
+                        //                        bool El_PtEta = electron_[i].pt > 24 && fabs(electron_[i].eta) < 2.1;
+                        bool El_PtEta = electron_[i].pt > 15 && fabs(electron_[i].eta) < 2.1;
                         bool El_IdTight = EleMVANonTrigId_Tight(electron_[i]);
                         bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
-                        bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
-                        bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
+                        //                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 15 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
+                        bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT > 0.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
                         bool Tau_antiMu = tau_[k].discriminationByMuonLoose3;
                         bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
@@ -541,18 +666,40 @@ int main(int argc, char** argv) {
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
                         //                        bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
                         //                            bool VLooseEl_Iso = Iso_Ele_dBeta(electron_[i]) < 1;
-                        //Loose Selection
+                        vector<myobject> JETS = GoodJet30(m, electron_[i], tau_[k]);
+                        vector<myobject> BJETS = GoodbJet20(m, electron_[i], tau_[k], 0, 1);
+                        vector<myobject> MVAMetRecoil_etau = m->RecoilMetetau;
+                        mt_1 = TMass_F(electron_[i].pt, electron_[i].px, electron_[i].py, MVAMetRecoil_etau.front().pt, MVAMetRecoil_etau.front().phi);
+
+                        bool bjetCut_TMass = BJETS.size() > 0 && JETS.size() < 2 && mt_1 < 30;
+                        //                        bool MatchedTrigger =electron_[i].hasTrgObject_Ele20Tau20  &&  tau_[k].hasTrgObject_Ele20Tau20;
+                        bool MatchedTrigger = 1;
+                        //                        Final selection
+                        if (MatchedTrigger && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE && bjetCut_TMass) {
+                            plotFill("eltau", ++eltau, 20, 0., 20.);
+                            float MaxPtLep = 0;
+                            float MaxEtaLep = -100;
+                            float MaxPhiLep = -100;
+                            for (int ig = 0; ig < genPar_.size(); ig++) {
+                                if (fabs(genPar_[ig].pdgId) == 11) {
+                                    if (genPar_[ig].pt > MaxPtLep) {
+                                        MaxPtLep = genPar_[ig].pt;
+                                        MaxEtaLep = genPar_[ig].eta;
+                                        MaxPhiLep = genPar_[ig].phi;
+                                    }
+                                }
+                            }
+                            plotFill("GenElePT_InPassRecoEvents", MaxPtLep, 50, 0., 50.);
+                            plotFill("GenEle_InPassRecoEvents_DR", dR(MaxEtaLep, MaxPhiLep, electron_[i].eta, electron_[i].phi), 500, 0., 10);
+//                            break;
+
+                        }
+                        //##################################################################
+                        //  Filling Tree
+                        //##################################################################
                         if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
                             fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                         }
-                        //Final selection
-                        //                            if (EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
-                        //                                plotFill("eltau", ++eltau, 20, 0., 20.);
-                        //                                fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
-                        //                                break;
-                        //
-                        //                            }
-
 
                     }
                 }

@@ -349,7 +349,7 @@ double eff2012Jet19fb(double pt, double eta) {
 
 float getCorrFactor(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c) {
 
-    if (type == "mc12") {
+    if (type == "mc12" || type == "embedmc12") {
         if (channel == "emu") {
             return (Cor_IDIso_EMu_Ele_2012(b) * Cor_IDIso_EMu_Mu_2012(a) * Corr_EMuTrg_MuLeg_2012(a) * Corr_EMuTrg_EleLeg_2012(b));
         }
@@ -374,7 +374,7 @@ float getCorrFactor(std::string channel, std::string type, myobject const& a, my
 
 float getCorrTriggerLep(std::string channel, std::string type, myobject const& a) {
 
-    if (type == "mc12") {
+    if (type == "mc12"|| type == "embedmc12") {
 
         if (channel == "eltau") {
             return (Eff_ETauTrg_Ele_Data_2012(a) / Eff_ETauTrg_Ele_MC_2012(a));
@@ -390,7 +390,7 @@ float getCorrTriggerLep(std::string channel, std::string type, myobject const& a
 
 float getCorrTriggerTau(std::string channel, std::string type, myobject const& b) {
 
-    if (type == "mc12") {
+    if (type == "mc12"|| type == "embedmc12") {
         return ((Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)));
     } else
         return 1;
@@ -399,7 +399,7 @@ float getCorrTriggerTau(std::string channel, std::string type, myobject const& b
 
 float getCorrIdIsoLep(std::string channel, std::string type, myobject const& a) {
 
-    if (type == "mc12") {
+    if (type == "mc12"|| type == "embedmc12") {
 
         if (channel == "eltau") {
             return Cor_IDIso_ETau_Ele_2012(a);

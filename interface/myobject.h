@@ -23,10 +23,11 @@ public:
     float pt, eta, px, py, phi, charge, E, et, pz, z, mass, dz_Ver_match, Energy, mt, jetMass, eta_SC;
     float mod_pt, mod_eta, mod_phi, mod_charge, mod_z, mod_mass;
     float Gmod_pt, Gmod_eta, Gmod_phi, Gmod_charge, Gmod_z, Gmod_mass;
-    float pfIsoAll, pfIsoCharged, pfIsoNeutral, pfIsoGamma, pfIsoPU, pfIsoPULow,Id_mvaTrg,Id_mvaNonTrg;
+    float pfIsoAll, pfIsoCharged, pfIsoNeutral, pfIsoGamma, pfIsoPU, pfIsoPULow,Id_mvaTrg,Id_mvaNonTrg,Id_mvaTrgNoIP;
     float pfIsoAll_NoPFId, pfIsoCharged_NoPFId, pfIsoNeutral_NoPFId, pfIsoGamma_NoPFId, pfIsoPU_NoPFId;
     float z_expo;
     float position_Rho, position_rho;
+    int partonFlavour;
 
      int pdgId, status, mod_pdgId, mod_status, Gmod_pdgId, Gmod_status, tracksSize;
      int gen_index, decay_mode;
@@ -202,6 +203,14 @@ public:
         float TrgObjectEta_Ele17Mu8 ;
         float TrgObjectPt_Ele17Mu8 ;
         float TrgObjectPhi_Ele17Mu8 ;
+        bool hasTrgObject_Mu17Mu8 ;
+        float TrgObjectEta_Mu17Mu8 ;
+        float TrgObjectPt_Mu17Mu8 ;
+        float TrgObjectPhi_Mu17Mu8 ;
+        bool hasTrgObject_Ele17Ele8 ;
+        float TrgObjectEta_Ele17Ele8 ;
+        float TrgObjectPt_Ele17Ele8 ;
+        float TrgObjectPhi_Ele17Ele8 ;
         bool hasTrgObject_Ditau30Jet30 ;
         float TrgObjectEta_Ditau30Jet30 ;
         float TrgObjectPt_Ditau30Jet30 ;

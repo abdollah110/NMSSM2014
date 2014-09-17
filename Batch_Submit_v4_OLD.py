@@ -12,7 +12,6 @@ import shutil
 def make_submit_form():
     TextSamples = open("SelectSample.txt", "r")
     location = os.getcwd()
-    location = location.replace("/grid_mnt/volumes__Z2Volume__localgrid", "/localgrid")
     name_submitFile = "Submit_" +  "_"  + ".sh"
     name_haddFile = "Hadd_" +  ".sh"
     submit_File = open(name_submitFile, 'w')
@@ -45,8 +44,7 @@ def make_submit_form():
                 outName= sampleName + "_"+str(XName) +".root"
                 if (XName % 10 == numMod):
                     command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " "   +outName + " " + dir + "/" + i[0:-1]
-                    command2 = command2 + " \n" + " mv  " +  outName + "\t" + "Out_" + sampleName+"_"+str(numMod)
-#                    command2 = command2 + " \n" + " mv  " + data_year + "_" +  outName + "\t" + "Out_" + sampleName+"_"+str(numMod)
+                    command2 = command2 + " \n" + " mv  " + data_year + "_" +  outName + "\t" + "Out_" + sampleName+"_"+str(numMod)
                     command2 = command2 + " \n\n\n"
                     outFile.write(command2)
 

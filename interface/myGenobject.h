@@ -20,7 +20,7 @@ public:
 
 
 
-    float pt, eta,  phi, charge, z, mass, et;
+    float E, Energy, px, py, pz, pt, eta,  phi, charge, z, mass, et;
     float mod_pt, mod_eta, mod_phi, mod_charge, mod_z, mod_mass;
     float Gmod_pt, Gmod_eta, Gmod_phi, Gmod_charge, Gmod_z, Gmod_mass;
     //    float pfIsoAll, pfIsoCharged, pfIsoNeutral, pfIsoGamma, pfIsoPU, pfIsoPULow,Id_mvaTrg,Id_mvaNonTrg;

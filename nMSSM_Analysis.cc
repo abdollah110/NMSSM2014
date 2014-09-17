@@ -45,10 +45,10 @@
 #include "interface/zh_Auxiliary.h"
 #include "interface/Corrector.h"
 #include "interface/htt_Trigger.h"
-#include "interface/zh_Tree.h"
+#include "interface/htt_Tree.h"
 #include "interface/Leptons_IdIso.h"
 #include "interface/zh_Functions.h"
-#include "DoAnalysis/myHelper.h"
+//#include "DoAnalysis_NMSSM/myHelper.h"
 
 int main(int argc, char** argv) {
 
@@ -72,8 +72,9 @@ int main(int argc, char** argv) {
     bool mc11 = (is_data_mc.compare("mc11") == 0 ? true : false);
     bool data12 = (is_data_mc.compare("data12") == 0 ? true : false);
     bool data11 = (is_data_mc.compare("data11") == 0 ? true : false);
-    bool embed12 = (is_data_mc.compare("embed12") == 0 ? true : false);
-    if (!(mc12 || mc11 || data12 || data11 || embed12))
+    bool embeddata12 = (is_data_mc.compare("embeddata12") == 0 ? true : false);
+    bool embedmc12 = (is_data_mc.compare("embedmc12") == 0 ? true : false);
+    if (!(mc12 || mc11 || data12 || data11 || embeddata12 || embedmc12))
         cout << "xxxxxxxxxxxxxxx Error, please slecet between: mc12 || mc11 || data12 || data11 " << endl;
 
     //#################################################################################################
@@ -92,8 +93,8 @@ int main(int argc, char** argv) {
     //############## defining an out_file name need on the given argument  information  ###############
     //#################################################################################################
 
-//    string outname = is_data_mc + "_" + out;
-    string outname =  out;
+    //    string outname = is_data_mc + "_" + out;
+    string outname = out;
     //PRINTING THE OUTPUT name
     cout << "\n\n\n OUTPUT NAME IS:    " << outname << endl;
     TFile *fout = TFile::Open(outname.c_str(), "RECREATE");
@@ -280,7 +281,7 @@ int main(int argc, char** argv) {
 
 
 
-//    Run_Tree->Branch("Trigger_LepTau12", &Trigger_LepTau12, "Trigger_LepTau12/O");
+    //    Run_Tree->Branch("Trigger_LepTau12", &Trigger_LepTau12, "Trigger_LepTau12/O");
     Run_Tree->Branch("Trigger_MuTau12", &Trigger_MuTau12, "Trigger_MuTau12/O");
     Run_Tree->Branch("Trigger_EleTau12", &Trigger_EleTau12, "Trigger_EleTau12/O");
     Run_Tree->Branch("Trigger_SingleMu12", &Trigger_SingleMu12, "Trigger_SingleMu12/O");
@@ -306,6 +307,10 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l2_dxy_PV", &l2_dxy_PV, "l2_dxy_PV/F");
     Run_Tree->Branch("l2_dz_PV", &l2_dz_PV, "l2_dz_PV/F");
 
+    Run_Tree->Branch("l1_Index;", &l1_Index, "l1_Index/I");
+    Run_Tree->Branch("l2_Index;", &l2_Index, "l2_Index/I");
+    Run_Tree->Branch("pu_Weight_old;", &pu_Weight_old, "pu_Weight_old/F");
+    Run_Tree->Branch("l1Eta_SC;", &l1Eta_SC, "l1Eta_SC/F");
 
 
 
@@ -344,6 +349,7 @@ int main(int argc, char** argv) {
             //#################################################################################################
             bool doMuTauAnalysis = true;
             bool doElTauAnalysis = true;
+            plotFill("TotalEventsNumber", 0, 1, 0, 1);
             //#################################################################################################
             //########################## MuTau Selection         ##############################################
             //#################################################################################################
@@ -353,14 +359,11 @@ int main(int argc, char** argv) {
                 // mutau
                 //##############################################################################
                 std::string FinalState = "mutau";
-                int mutau = -1;
-                plotFill("TotalEventsNumber", 0, 1, 0, 1);
-                plotFill("mutau", ++mutau, 20, 0., 20.);
 
                 for (int i = 0; i < mu_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
 
-                        bool Mu_PtEta = mu_[i].pt > 18 && fabs(mu_[i].eta) < 2.1;
+                        bool Mu_PtEta = mu_[i].pt > 17 && fabs(mu_[i].eta) < 2.1;
                         bool Mu_IdTight = Id_Mu_Tight(mu_[i]);
                         bool Mu_d0 = mu_[i].d0 < 0.045; //the impact parameter in the transverse plane
                         bool Mu_dZ = mu_[i].dZ_in < 0.2; //the impact parameter in the transverse plane
@@ -410,8 +413,6 @@ int main(int argc, char** argv) {
                 // eltau
                 //##############################################################################
                 std::string FinalState = "eltau";
-                int eltau = -1;
-                plotFill("eltau", ++eltau, 20, 0., 20.);
                 for (int i = 0; i < electron_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
 

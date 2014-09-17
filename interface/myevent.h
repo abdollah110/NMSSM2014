@@ -20,10 +20,6 @@ public:
     }
 
     vector<myobject> RecPFJetsAK5;
-    vector<myobject> RecPFJetsAK5_Up_SubTotal;
-    vector<myobject> RecPFJetsAK5_Down_SubTotal;
-    vector<myobject> RecPFJetsAK5_Up_Total;
-    vector<myobject> RecPFJetsAK5_Down_Total;
     vector<myGenobject> RecGenParticle;
     vector<myGenobject> RecGenMet;
     vector<myGenobject> RecGenJet;
@@ -35,20 +31,37 @@ public:
     vector<myobject> L1Etm;
     vector<myobject> PreSelectedMuons;
     vector<myobject> PreSelectedHPSTaus;
-    vector<myobject> SelectedHPSTaus;
+    vector<myobject> PreSelectedHPSTausLT;
+    vector<myobject> PreSelectedHPSTausTT;
     //    vector<myobject> RecMet;
     vector<myobject> RecPFMet;
     vector<myobject> RecPFMetCor;
     vector<myobject> RecMVAMet;
-    vector<myobject> RecMVAMet_ditau;
-    vector<myobject> RecMVAMet_mutau;
-    vector<myobject> RecMVAMet_etau;
-    vector<myobject> RecMVAMet_emu;
+    vector<myobject> PairMet_etau;
+    vector<myobject> PairMet_mutau;
+    vector<myobject> PairMet_tautau;
+    vector<myobject> PairMet_emu;
+    vector<myobject> PairRecoilMet_etau;
+    vector<myobject> PairRecoilMet_mutau;
+    vector<myobject> PairRecoilMet_tautau;
+    vector<myobject> PairRecoilMet_emu;
+    vector<float> PairMet_etau_sigMatrix_00;
+    vector<float> PairMet_etau_sigMatrix_10;
+    vector<float> PairMet_etau_sigMatrix_01;
+    vector<float> PairMet_etau_sigMatrix_11;
+    vector<float> PairMet_mutau_sigMatrix_00;
+    vector<float> PairMet_mutau_sigMatrix_10;
+    vector<float> PairMet_mutau_sigMatrix_01;
+    vector<float> PairMet_mutau_sigMatrix_11;
+    vector<float> PairMet_tautau_sigMatrix_00;
+    vector<float> PairMet_tautau_sigMatrix_10;
+    vector<float> PairMet_tautau_sigMatrix_01;
+    vector<float> PairMet_tautau_sigMatrix_11;
+    vector<float> PairMet_emu_sigMatrix_00;
+    vector<float> PairMet_emu_sigMatrix_10;
+    vector<float> PairMet_emu_sigMatrix_01;
+    vector<float> PairMet_emu_sigMatrix_11;
     vector<myobject> RecoilMet; 
- vector<myobject> RecoilMetditau; 
- vector<myobject> RecoilMetmutau; 
- vector<myobject> RecoilMetetau; 
- vector<myobject> RecoilMetemu; 
     vector<myobject> CorrectedL1ETM;
     vector<myobject> UncorrectedL1ETM;
     vector<myobject> CorrectedCaloMetNoHF;
@@ -84,10 +97,9 @@ public:
     unsigned int lumiNumber;
     float embeddingWeight;
     float spinnerWeight;
-    unsigned int HLT_DiElectron;
-    unsigned int HLT_DiMuon;
-    int PUInfo;
-    float PUInfo_true;  // change from int to float
+    float PU_Weight;
+    float PUInfo;
+    float PUInfo_true;
     int PUInfo_Bunch0;
     float RhoCorr;
     float RhoCenNeutral;
@@ -105,27 +117,6 @@ public:
     float MVAMet_sigMatrix_01;
     float MVAMet_sigMatrix_10;
     float MVAMet_sigMatrix_11;
-
-    float MVAMet_sigMatrix_00_emu;
-    float MVAMet_sigMatrix_01_emu;
-    float MVAMet_sigMatrix_10_emu;
-    float MVAMet_sigMatrix_11_emu;
-
-    float MVAMet_sigMatrix_00_mutau;
-    float MVAMet_sigMatrix_01_mutau;
-    float MVAMet_sigMatrix_10_mutau;
-    float MVAMet_sigMatrix_11_mutau;
-
-    float MVAMet_sigMatrix_00_etau;
-    float MVAMet_sigMatrix_01_etau;
-    float MVAMet_sigMatrix_10_etau;
-    float MVAMet_sigMatrix_11_etau;
-
-    float MVAMet_sigMatrix_00_ditau;
-    float MVAMet_sigMatrix_01_ditau;
-    float MVAMet_sigMatrix_10_ditau;
-    float MVAMet_sigMatrix_11_ditau;
-
 
 private:
 
