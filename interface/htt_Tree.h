@@ -55,7 +55,10 @@ float met, metphi, mvamet, mvametphi, mvametNoRecoil, mvametphiNoRecoil;
 float l1M, l1Px, l1Py, l1Pz, l1E, l1Pt, l1Phi, l1Eta, l1Eta_SC, l1Charge, l1_muIso, l1_eleIso, l1_eleMVANonTrg, l1_eleNumHit, l1_tauIsoMVA2raw, l1_d0, l1_dZ_in = -10;
 float l2M, l2Px, l2Py, l2Pz, l2E, l2Pt, l2Phi, l2Eta, l2Charge, l2_muIso, l2_eleIso, l2_eleMVANonTrg, l2_eleNumHit, l2_tauIsoMVA2raw, byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = -10;
 float l2_RefJetPt, l2_RefJetEta, l2_RefJetPhi = -10;
-bool l1_muId_Loose, l1_muId_Tight, l1_eleId_Loose, l1_eleId_Tight, l2_muId_Loose, l2_eleId_Loose, l2_muId_Tight, l2_eleId_Tight, l2_discriminationByMuonMVAMedium;
+bool l1_muId_Loose, l1_muId_Tight, l1_eleId_Loose, l1_eleId_Tight, l2_muId_Loose, l2_eleId_Loose, l2_muId_Tight, l2_eleId_Tight;
+bool l2_discriminationByMuonMVALoose,l2_discriminationByMuonMVAMedium, l2_discriminationByMuonMVATight;
+float  l2_discriminationByMuonMVAraw;
+
 bool l1_tauIsoL, l1_tauIsoM, l1_tauIsoT, l1_tauRejMuL, l1_tauRejMuM, l1_tauRejMuT, l1_tauRejEleL, l1_tauRejEleM, l1_tauRejEleMVA;
 bool l1_tauIso3HitL, l1_tauIso3HitM, l1_tauIso3HitT, l1_tauRejMu2L, l1_tauRejMu2M, l1_tauRejMu2T, l1_tauRejEleMVA3L, l1_tauRejEleMVA3M, l1_tauRejEleMVA3T;
 bool l1_tauIsoVL, l1_tauIsoMVA2L, l1_tauIsoMVA2M, l1_tauIsoMVA2T;
@@ -396,14 +399,10 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2_tauIsoMVAraw3oldDMwLTraw = obj2.byIsolationMVA3oldDMwLTraw;
     l2_tauIsoMVAraw3oldDMwoLTraw = obj2.byIsolationMVA3oldDMwoLTraw;
 
-    byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = obj2.byRawCombinedIsolationDeltaBetaCorr3Hits;
-    l2_tauIsoVL = obj2.byVLooseCombinedIsolationDeltaBetaCorr;
-    l2_tauIsoL = obj2.byLooseCombinedIsolationDeltaBetaCorr;
-    l2_tauIsoM = obj2.byMediumCombinedIsolationDeltaBetaCorr;
-    l2_tauIsoT = obj2.byTightCombinedIsolationDeltaBetaCorr;
     l2_tauIso3HitL = obj2.byLooseCombinedIsolationDeltaBetaCorr3Hits;
     l2_tauIso3HitM = obj2.byMediumCombinedIsolationDeltaBetaCorr3Hits;
     l2_tauIso3HitT = obj2.byTightCombinedIsolationDeltaBetaCorr3Hits;
+    byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = obj2.byRawCombinedIsolationDeltaBetaCorr3Hits;
 
     l2_LoosetauIsoMVA3newDMwLT = obj2.byLooseIsolationMVA3newDMwLT;
     l2_MediumtauIsoMVA3newDMwLT = obj2.byMediumIsolationMVA3newDMwLT;
@@ -419,13 +418,13 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2_TighttauIsoMVA3oldDMwoLT = obj2.byTightIsolationMVA3oldDMwoLT;
 
 
-    l2_tauRejMuL = obj2.discriminationByMuonLoose;
-    l2_tauRejMuM = obj2.discriminationByMuonMedium;
-    l2_tauRejMuT = obj2.discriminationByMuonTight;
     l2_tauRejMu3L = obj2.discriminationByMuonLoose3;
     l2_tauRejMu2M = obj2.discriminationByMuonMedium2; // it is 2???
     l2_tauRejMu3T = obj2.discriminationByMuonTight3;
+    l2_discriminationByMuonMVALoose = obj2.discriminationByMuonMVALoose;
     l2_discriminationByMuonMVAMedium = obj2.discriminationByMuonMVAMedium;
+    l2_discriminationByMuonMVATight = obj2.discriminationByMuonMVATight;
+    l2_discriminationByMuonMVAraw = obj2.discriminationByMuonMVAraw;
 
     l2_tauRejEleL = obj2.discriminationByElectronLoose;
     l2_tauRejEleM = obj2.discriminationByElectronMedium;
