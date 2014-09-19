@@ -56,8 +56,8 @@ float l1M, l1Px, l1Py, l1Pz, l1E, l1Pt, l1Phi, l1Eta, l1Eta_SC, l1Charge, l1_muI
 float l2M, l2Px, l2Py, l2Pz, l2E, l2Pt, l2Phi, l2Eta, l2Charge, l2_muIso, l2_eleIso, l2_eleMVANonTrg, l2_eleNumHit, l2_tauIsoMVA2raw, byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = -10;
 float l2_RefJetPt, l2_RefJetEta, l2_RefJetPhi = -10;
 bool l1_muId_Loose, l1_muId_Tight, l1_eleId_Loose, l1_eleId_Tight, l2_muId_Loose, l2_eleId_Loose, l2_muId_Tight, l2_eleId_Tight;
-bool l2_discriminationByMuonMVALoose,l2_discriminationByMuonMVAMedium, l2_discriminationByMuonMVATight;
-float  l2_discriminationByMuonMVAraw;
+bool l2_discriminationByMuonMVALoose, l2_discriminationByMuonMVAMedium, l2_discriminationByMuonMVATight;
+float l2_discriminationByMuonMVAraw;
 
 bool l1_tauIsoL, l1_tauIsoM, l1_tauIsoT, l1_tauRejMuL, l1_tauRejMuM, l1_tauRejMuT, l1_tauRejEleL, l1_tauRejEleM, l1_tauRejEleMVA;
 bool l1_tauIso3HitL, l1_tauIso3HitM, l1_tauIso3HitT, l1_tauRejMu2L, l1_tauRejMu2M, l1_tauRejMu2T, l1_tauRejEleMVA3L, l1_tauRejEleMVA3M, l1_tauRejEleMVA3T;
@@ -188,7 +188,6 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
 
 
 
-
     //    if (FinalState == "mutau") Channel = 1;
     //    else if (FinalState == "eltau") Channel = 2;
     //    else Channel = 3;
@@ -221,27 +220,31 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //*********************************************************************************************
 
 
-
     Run = m->runNumber;
     Lumi = m->lumiNumber;
     Event = m->eventNumber;
     embedWeight = m->embeddingWeight;
 
 
-
     //  ########## ########## ########## ########## ########## ##########
     //  MET Information
     //  ########## ########## ########## ########## ########## ##########
-    vector<myobject> MVAMetRecoil_mutau = m->PairRecoilMet_mutau;
+    vector<myobject> MVAMetRecoil_mutau;
+    vector<myobject> MVAMetRecoil_etau;
+    if (isdata) {
+        MVAMetRecoil_mutau = m->PairMet_mutau;
+        MVAMetRecoil_etau = m->PairMet_etau;
+    } else {
+        MVAMetRecoil_mutau = m->PairRecoilMet_mutau;
+        MVAMetRecoil_etau = m->PairRecoilMet_etau;
+    }
     vector<myobject> MVAMetNORecoil_mutau = m->PairMet_mutau;
-    vector<myobject> MVAMetRecoil_etau = m->PairRecoilMet_etau;
     vector<myobject> MVAMetNORecoil_etau = m->PairMet_etau;
 
 
     l1_Index = obj1.gen_index;
     l2_Index = obj2.gen_index;
     int pairIndex = obj1.gen_index * 10 + obj2.gen_index;
-
 
 
     if (FinalState == "mutau") {
@@ -261,12 +264,10 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
         mt_1 = TMass(obj1, MVAMetRecoil_etau[pairIndex]);
         mt_2 = TMass(obj2, MVAMetRecoil_etau[pairIndex]);
     }
-
     mvacov00 = m->MVAMet_sigMatrix_00;
     mvacov01 = m->MVAMet_sigMatrix_01;
     mvacov10 = m->MVAMet_sigMatrix_10;
     mvacov11 = m->MVAMet_sigMatrix_11;
-
     //PFMet
     vector<myobject> PFMet = m->RecPFMet;
     met = PFMet.front().pt;
@@ -275,7 +276,6 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     metcov01 = m->MET_sigMatrix_01;
     metcov10 = m->MET_sigMatrix_10;
     metcov11 = m->MET_sigMatrix_11;
-
 
     //  ########## ########## ########## ########## ########## ##########
     //  Jet Information
@@ -336,7 +336,6 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     }
     jetpt = (JETS.size() > 1 ? LorJetTot.Pt() : -1000);
     dijetphi = (JETS.size() > 1 ? LorJetTot.Phi() : -1000);
-
 
 
 
@@ -447,7 +446,6 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2_dxy_PV = obj2.dxy_PV; //the impact parameter in the transverse plane
     l2_dz_PV = obj2.dz_PV; //the impact parameter in the transverse plane
 
-
     //  ########## ########## ########## ########## ########## ##########
     //  Other Information
     //  ########## ########## ########## ########## ########## ##########
@@ -464,6 +462,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     idweight_1 = getCorrIdIsoLep(FinalState, is_data_mc, obj2);
     trigweight_1 = getCorrTriggerLep(FinalState, is_data_mc, obj1);
     trigweight_2 = getCorrTriggerTau(FinalState, is_data_mc, obj2);
+    //    zCategory = 0;
     zCategory = ZCategory(m, obj1, obj2);
     //    gen_Higgs_pt = get_gen_Higgs_pt(m);
 
@@ -477,7 +476,6 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     Trigger_SingleMu12 = Trigger_SingleMu_12(m);
     Trigger_SingleEle12 = Trigger_SingleEle_12(m);
     Trigger_SingleJet12 = Trigger_SingleJet_12(m);
-
 
 
     //  ########## ########## ########## ########## ########## ##########
@@ -500,7 +498,6 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
 
 
     num_gen_jets = genParticleStatus3 - 9;
-
 
 
 
