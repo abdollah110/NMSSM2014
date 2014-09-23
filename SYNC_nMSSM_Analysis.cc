@@ -38,10 +38,10 @@
 #include "interface/zh_Auxiliary.h"
 #include "interface/Corrector.h"
 #include "interface/htt_Trigger.h"
-#include "interface/zh_Tree.h"
+#include "interface/htt_Tree.h"
 #include "interface/Leptons_IdIso.h"
 #include "interface/zh_Functions.h"
-#include "DoAnalysis_MSSM/myHelper.h"
+//#include "interface/myHelper.h"
 //#include "interface/tr_Tree.h"
 
 int main(int argc, char** argv) {
@@ -74,19 +74,19 @@ int main(int argc, char** argv) {
     //############## Second anad Third Argument,   OutPut Name/ Input Files                         ########################
     //#################################################################################################
 
-    string CHANNEL = *(argv + 2);
+    //    string CHANNEL = *(argv + 2);
 
-    bool isMu = (CHANNEL.compare("mu") == 0 ? true : false);
-    bool isEle = (CHANNEL.compare("ele") == 0 ? true : false);
-    bool isTot = (CHANNEL.compare("tot") == 0 ? true : false);
+    bool isMu = 1;
+    bool isEle = 0;
+    bool isTot = 0;
 
-    string out = *(argv + 3);
+    string out = *(argv + 2);
 
     std::vector<string> fileNames;
-    for (int f = 4; f < argc; f++) {
+    for (int f = 3; f < argc; f++) {
         fileNames.push_back(*(argv + f));
         // printing the input NAME
-        cout << "\n INPUT NAME IS:   " << fileNames[f - 4] << "\t";
+        cout << "\n INPUT NAME IS:   " << fileNames[f - 3] << "\t";
     }
     //#################################################################################################
     //############## defining an out_file name need on the given argument  information  ###############
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
 
     string outname = is_data_mc + "_" + out;
     //PRINTING THE OUTPUT name
-    cout << "\n\n Channel IS:    " << CHANNEL << endl;
+    //    cout << "\n\n Channel IS:    " << CHANNEL << endl;
     cout << "\n\n OUTPUT NAME IS:    " << outname << endl << endl;
     TFile *fout = TFile::Open(outname.c_str(), "RECREATE");
 
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
     Run_Tree->SetDirectory(0);
 
 
-
+    //
     Run_Tree->Branch("Channel", &Channel, "Channel/I");
     Run_Tree->Branch("run", &Run, "run/I");
     Run_Tree->Branch("lumi", &Lumi, "lumi/I");
@@ -305,8 +305,8 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l1_dz_PV", &l1_dz_PV, "l1_dz_PV/F");
     Run_Tree->Branch("l2_dxy_PV", &l2_dxy_PV, "l2_dxy_PV/F");
     Run_Tree->Branch("l2_dz_PV", &l2_dz_PV, "l2_dz_PV/F");
-
-
+    //
+    //
 
 
 
@@ -344,21 +344,18 @@ int main(int argc, char** argv) {
             vector<myobject> mu_ = GoodMuon10GeV(m);
             vector<myobject> electron_ = GoodElectron10GeV(m);
             vector<myobject> tau_ = GoodTau20GeV(m);
-            vector<myobject> MVAMetRecoil_mutau = m->RecoilMetmutau;
+            vector<myobject> MVAMetRecoil_mutau = m->PairRecoilMet_mutau;
+            vector<myobject> MVAMetNORecoil_mutau = m->PairMet_mutau;
+            vector<myobject> MVAMetRecoil_etau = m->PairRecoilMet_etau;
+            vector<myobject> MVAMetNORecoil_etau = m->PairMet_etau;
+            vector<myobject> RAWPFMet = m->RecPFMetCor;
 
             int num_PU = 1;
             float PU_Weight = 1;
 
-//            if (mcdata == 3) {
-                num_PU = m->PUInfo_true;
-                PU_Weight = LumiWeights_12->weight(num_PU);
-//            }
-//            if (mcdata == 1) {
-//                //                num_PU = m->PUInfo; // Last Bug found in 25 Nov
-//                num_PU = m->PUInfo_true;
-//                PU_Weight = LumiWeights_11->weight(num_PU);
-//
-//            }
+            num_PU = m->PUInfo_true;
+            PU_Weight = LumiWeights_12->weight(num_PU);
+
 
 
 
@@ -402,37 +399,44 @@ int main(int argc, char** argv) {
                         bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
 
-                        //                        bool Veto_ME2 = Multi_Lepton_Veto("ME2", m);
                         bool Veto_ME = Multi_Lepton_Veto("ME", m);
                         bool Veto_MM = Multi_Lepton_Veto("MM", m);
                         bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
                         bool Veto_MME = Multi_Lepton_Veto("MME", m);
 
 
-                        vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
-                        vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
-
-
                         //  ########## ########## ########## ########## ########## ##########
                         //  Other Information
                         //  ########## ########## ########## ########## ########## ##########
-                       float  npu = m->PUInfo_true;
+                        vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
+                        vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
 
+                        int pairIndex = mu_[i].gen_index * 10 + tau_[k].gen_index;
+                        float MetPair_MT = MVAMetRecoil_mutau[mu_[i].gen_index * 10 + tau_[k].gen_index].pt;
+                        float MetPair_MTNoRecoil = MVAMetNORecoil_mutau[mu_[i].gen_index * 10 + tau_[k].gen_index].pt;
+
+                        float npu = m->PUInfo_true;
 
                         float idweight_1 = getCorrIdIsoLep("mutau", "mc12", tau_[k]);
                         float trigweight_1 = getCorrTriggerLep("mutau", "mc12", mu_[i]);
-                       float  trigweight_2 = getCorrTriggerTau("mutau", "mc12", tau_[k]);
-
+                        float trigweight_2 = getCorrTriggerTau("mutau", "mc12", tau_[k]);
 
                         bool hasMatchedTrigger = mu_[i].hasTrgObject_Mu17Tau20 && tau_[k].hasTrgObject_Mu17Tau20;
+                        //  ########## ########## ########## ########## ########## ##########
+
                         if (hasMatchedTrigger && Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_ME && Veto_MM && Veto_MMM && Veto_MME) {
-                            counter++;
                             plotFill("mutau", ++mutau, 20, 0., 20.);
-                            fillTree(2, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
-                            cout << "\n" << counter << "   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "   l1Pt=" << mu_[i].pt << "   l1eta=" << mu_[i].eta << "   l1Phi=" << mu_[i].phi << "   l2Pt=" << tau_[k].pt << "   l2Eta=" << tau_[k].eta << "   l2Phi=" << tau_[k].phi;
-//                            cout << "   MVAMet=" << MVAMetRecoil_mutau.front().pt << "   numJet30=" << JETS.size() << "   numBJet20=" << BJETS.size() << "   Jet1Pt=" << (BJETS.size() > 0 ? JETS[0].pt : -999) << "   Jet2Pt=" << JETS[1].pt << "   BJET1Pt=" << BJETS[0].pt << "   PU_Weight=" << PU_Weight << "   npu=" << npu << "   erightLepton_id_iso=" << idweight_1 ;
-                            cout << "   MVAMet=" << MVAMetRecoil_mutau.front().pt << "   numJet30=" << JETS.size() << "   numBJet20=" << BJETS.size() << "   PU_Weight=" << PU_Weight << "   npu=" << npu << "   erightLepton_id_iso=" << idweight_1 ;
-                            cout << "   lepton_trg_Weight=" << trigweight_1 << "   tau_Trg_Weight=" << trigweight_2 << "\n" ;
+                            fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
+                            //                            counter++;
+                            //                            cout << "\n" << counter << "   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "\n";
+                            //                            cout << "for leptons: - lepton pt/eta/phi = " << mu_[i].pt << "/" << mu_[i].eta << " /" << mu_[i].phi << "\n";
+                            //                            cout << "            - tau    E/pt/eta/phi =" << tau_[k].E << "/" << tau_[k].pt << "/" << tau_[k].eta << "/" << tau_[k].phi << "\n";
+                            //                            cout << "   MVAMetwithRecoil=" << MetPair_MT << "   MVAMet No Recoil= " << MetPair_MTNoRecoil << "   RAWPFMet= " << RAWPFMet.front().pt << "\n";
+                            //                            cout << " PairMet_mutau_sigMatrix_00  =" << m->PairMet_mutau_sigMatrix_00[pairIndex] << " PairMet_mutau_sigMatrix_01  =" << m->PairMet_mutau_sigMatrix_01[pairIndex] << " PairMet_mutau_sigMatrix_10  =" << m->PairMet_mutau_sigMatrix_10[pairIndex] << " PairMet_mutau_sigMatrix_11  =" << m->PairMet_mutau_sigMatrix_11[pairIndex] << "\n";
+                            //                            cout << "   numJet30=" << JETS.size() << "   Jet1Pt= " << (JETS.size() > 0 ? JETS[0].pt : -999) << "   Jet1eta= " << (JETS.size() > 0 ? JETS[0].eta : -999) << "   Jet1Flavour= " << (JETS.size() > 0 ? JETS[0].partonFlavour : -999) << "   Jet2Pt= " << (JETS.size() > 1 ? JETS[1].pt : -999) << "   Jet2eta=" << (JETS.size() > 1 ? JETS[1].eta : -999) << "   Jet2Falvour=" << (JETS.size() > 1 ? JETS[1].partonFlavour : -999) << "\n";
+                            //                            cout << "   numBJET=" << BJETS.size() << "   BJET1Pt=" << (BJETS.size() > 0 ? BJETS[0].pt : -999) << "   BJET1eta=" << (BJETS.size() > 0 ? BJETS[0].eta : -999) << "   BJET1Flavour=" << (BJETS.size() > 0 ? BJETS[0].partonFlavour : -999) << "   BJET2Pt=" << (BJETS.size() > 1 ? BJETS[1].pt : -999) << "   BJET2eta=" << (BJETS.size() > 1 ? BJETS[1].eta : -999) << "   BJET2Flavor=" << (BJETS.size() > 1 ? BJETS[1].partonFlavour : -999) << "\n";
+                            //                            cout << "   PU_Weight _OLD= " << PU_Weight << "   PU_Weight _New=" << m->PU_Weight << "   npu=" << npu << "\n";
+                            //                            cout << "   erightLepton_id_iso= " << idweight_1 << "   lepton_trg_Weight=" << trigweight_1 << "   tau_Trg_Weight=" << trigweight_2 << "\n\n\n\n";
 
                             break;
                         }
@@ -475,11 +479,41 @@ int main(int argc, char** argv) {
                         bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
                         bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
+                        //  ########## ########## ########## ########## ########## ##########
+                        //  Other Information
+                        //  ########## ########## ########## ########## ########## ##########
+                        vector<myobject> JETS = GoodJet30(m, electron_[i], tau_[k]);
+                        vector<myobject> BJETS = GoodbJet20(m, electron_[i], tau_[k], 0, 1);
+
+                        int pairIndex = electron_[i].gen_index * 10 + tau_[k].gen_index;
+                        float MetPair_MT = MVAMetRecoil_etau[electron_[i].gen_index * 10 + tau_[k].gen_index].pt;
+                        float MetPair_MTNoRecoil = MVAMetNORecoil_etau[electron_[i].gen_index * 10 + tau_[k].gen_index].pt;
+
+                        float npu = m->PUInfo_true;
+
+                        float idweight_1 = getCorrIdIsoLep("eltau", "mc12", tau_[k]);
+                        float trigweight_1 = getCorrTriggerLep("eltau", "mc12", electron_[i]);
+                        float trigweight_2 = getCorrTriggerTau("eltau", "mc12", tau_[k]);
+
                         bool hasMatchedTrigger = electron_[i].hasTrgObject_Ele20Tau20 && tau_[k].hasTrgObject_Ele20Tau20;
+                        //  ########## ########## ########## ########## ########## ##########
+
+
+
                         if (Veto_EM && hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
                             plotFill("eltau", ++eltau, 20, 0., 20.);
-                            fillTree(4, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
-                            //                            cout<<"Event == "<<m->eventNumber<<"\n";
+                             fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
+                            //                            counter++;
+                            //                            cout << "\n" << counter << "   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "\n";
+                            //                            cout << "for leptons: - lepton pt/eta/phi = " << electron_[i].pt << "/" << electron_[i].eta << " /" << electron_[i].phi << "\n";
+                            //                            cout << "            - tau    E/pt/eta/phi =" << tau_[k].E << "/" << tau_[k].pt << "/" << tau_[k].eta << "/" << tau_[k].phi << "\n";
+                            //                            cout << "   MVAMetwithRecoil=" << MetPair_MT << "   MVAMet No Recoil= " << MetPair_MTNoRecoil << "   RAWPFMet= " << RAWPFMet.front().pt << "\n";
+                            //                            cout << " PairMet_etau_sigMatrix_00  =" << m->PairMet_etau_sigMatrix_00[pairIndex] << " PairMet_etau_sigMatrix_01  =" << m->PairMet_etau_sigMatrix_01[pairIndex] << " PairMet_etau_sigMatrix_10  =" << m->PairMet_etau_sigMatrix_10[pairIndex] << " PairMet_etau_sigMatrix_11  =" << m->PairMet_etau_sigMatrix_11[pairIndex] << "\n";
+                            //                            cout << "   numJet30=" << JETS.size() << "   Jet1Pt= " << (JETS.size() > 0 ? JETS[0].pt : -999) << "   Jet1eta= " << (JETS.size() > 0 ? JETS[0].eta : -999) << "   Jet1Flavour= " << (JETS.size() > 0 ? JETS[0].partonFlavour : -999) << "   Jet2Pt= " << (JETS.size() > 1 ? JETS[1].pt : -999) << "   Jet2eta=" << (JETS.size() > 1 ? JETS[1].eta : -999) << "   Jet2Falvour=" << (JETS.size() > 1 ? JETS[1].partonFlavour : -999) << "\n";
+                            //                            cout << "   numBJET=" << BJETS.size() << "   BJET1Pt=" << (BJETS.size() > 0 ? BJETS[0].pt : -999) << "   BJET1eta=" << (BJETS.size() > 0 ? BJETS[0].eta : -999) << "   BJET1Flavour=" << (BJETS.size() > 0 ? BJETS[0].partonFlavour : -999) << "   BJET2Pt=" << (BJETS.size() > 1 ? BJETS[1].pt : -999) << "   BJET2eta=" << (BJETS.size() > 1 ? BJETS[1].eta : -999) << "   BJET2Flavor=" << (BJETS.size() > 1 ? BJETS[1].partonFlavour : -999) << "\n";
+                            //                            cout << "   PU_Weight _OLD= " << PU_Weight << "   PU_Weight _New=" << m->PU_Weight << "   npu=" << npu << "\n";
+                            //                            cout << "   erightLepton_id_iso= " << idweight_1 << "   lepton_trg_Weight=" << trigweight_1 << "   tau_Trg_Weight=" << trigweight_2 << "\n\n\n\n";
+
                             break;
 
                         }
@@ -517,3 +551,9 @@ int main(int argc, char** argv) {
     fout->Close();
     return 0;
 }
+
+
+
+
+
+

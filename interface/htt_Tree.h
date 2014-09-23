@@ -174,7 +174,7 @@ bool l1_trgMatche_Mu24;
 bool l2_trgMatche_Ele20Tau20;
 bool l2_trgMatche_Mu17Tau20;
 bool l2_trgMatche_Mu18Tau25;
-float gen_Higgs_pt = 0;
+float gen_Higgs_pt = -10; //changed 23Sep;
 
 bool l1_ConversionVeto;
 float l1_dxy_PV;
