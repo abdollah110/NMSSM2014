@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     //#################################################################################################
 
     //    string outname = is_data_mc + "_" + out;
-    string outname = out;
+    string outname = is_data_mc + "_" + out;
     //PRINTING THE OUTPUT name
     cout << "\n\n\n OUTPUT NAME IS:    " << outname << endl;
     TFile *fout = TFile::Open(outname.c_str(), "RECREATE");
