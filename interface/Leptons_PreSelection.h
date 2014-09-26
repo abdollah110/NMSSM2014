@@ -115,7 +115,7 @@ vector<myobject> GoodTau20GeV(myevent *m) {
     vector<myobject> goodHPSTau;
     vector<myobject> tau = m->PreSelectedHPSTausLT;
     for (int i = 0; i < tau.size(); i++) {
-        if (tau[i].pt > 18)
+        if (tau[i].pt > 19)
             goodHPSTau.push_back(tau[i]);
     }
     sort(goodHPSTau.begin(), goodHPSTau.end(), myobject_sort_TauIsolation());
@@ -222,7 +222,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
     if (channel == "MM") {
         for (int i = 0; i < mu_.size(); i++) {
             for (int j = i + 1; j < mu_.size(); j++) {
-                bool DiMu_Pt = mu_[i].pt > 15 && mu_[j].pt > 15;
+                bool DiMu_Pt = mu_[i].pt > 10 && mu_[j].pt > 10;
                 bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
                 bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
                 bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
@@ -255,7 +255,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
     if (channel == "ME") {
         for (int i = 0; i < mu_.size(); i++) {
             for (int j = 0; j < electron_.size(); j++) {
-                bool muEle_Pt = mu_[i].pt > 15 && electron_[j].pt > 15;
+                bool muEle_Pt = mu_[i].pt > 10 && electron_[j].pt > 10;
                 bool muEle_Eta = fabs(electron_[j].eta) < 2.5;
                 bool muEle_Id = EleMVANonTrigId_Loose(electron_[j]);
                 ;

@@ -176,22 +176,14 @@ int ZCategory(myevent *m, myobject const& obj1, myobject const& obj2) {
             if (genParticle[a].status == 3 && fabs(genParticle[a].mod_pdgId) == 23 && fabs(genParticle[a].pdgId) == 11) genElectronsFromZ.push_back(genParticle[a]);
             if (fabs(genParticle[a].mod_pdgId) == 15 && (fabs(genParticle[a].pdgId) == 11 || fabs(genParticle[a].pdgId) == 13)) genLeptonsFromTaus.push_back(genParticle[a]);
         }
-        if (genTausFromZ.size() == 2) {
-            if ((dR(genTausFromZ[0].eta, genTausFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genTausFromZ[1].eta, genTausFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) or(dR(genTausFromZ[0].eta, genTausFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genTausFromZ[1].eta, genTausFromZ[1].phi, obj1.eta, obj1.phi) < 0.3)) {
-                if (genLeptonsFromTaus.size() == 2) gen_ditau = 5;
-                else gen_ditau = 1;
-            } else gen_ditau = 2;
-        } else if (genMuonsFromZ.size() == 2) {
-            if ((dR(genMuonsFromZ[0].eta, genMuonsFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genMuonsFromZ[1].eta, genMuonsFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) or(dR(genMuonsFromZ[0].eta, genMuonsFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genMuonsFromZ[1].eta, genMuonsFromZ[1].phi, obj1.eta, obj1.phi) < 0.3)) gen_ditau = 4;
-        } else if (genElectronsFromZ.size() == 2) {
-            if ((dR(genElectronsFromZ[0].eta, genElectronsFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genElectronsFromZ[1].eta, genElectronsFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) or(dR(genElectronsFromZ[0].eta, genElectronsFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genElectronsFromZ[1].eta, genElectronsFromZ[1].phi, obj1.eta, obj1.phi) < 0.3)) gen_ditau = 3;
-        }
-
+        if (genTausFromZ.size() == 2 && ((dR(genTausFromZ[0].eta, genTausFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genTausFromZ[1].eta, genTausFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) || (dR(genTausFromZ[0].eta, genTausFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genTausFromZ[1].eta, genTausFromZ[1].phi, obj1.eta, obj1.phi) < 0.3))) gen_ditau = 1;
+        else if (genMuonsFromZ.size() == 2 && ((dR(genMuonsFromZ[0].eta, genMuonsFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genMuonsFromZ[1].eta, genMuonsFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) || (dR(genMuonsFromZ[0].eta, genMuonsFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genMuonsFromZ[1].eta, genMuonsFromZ[1].phi, obj1.eta, obj1.phi) < 0.3))) gen_ditau = 4;
+        else if (genElectronsFromZ.size() == 2 && ((dR(genElectronsFromZ[0].eta, genElectronsFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genElectronsFromZ[1].eta, genElectronsFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) || (dR(genElectronsFromZ[0].eta, genElectronsFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genElectronsFromZ[1].eta, genElectronsFromZ[1].phi, obj1.eta, obj1.phi) < 0.3))) gen_ditau = 3;
     }
     return gen_ditau;
-    // 1 or 5 will be  ZTT
+    // 1 or  will be  ZTT
     // 3 or 4 will be  ZLL
-    // 2 or 6 will be  ZJ
+    //  6 will be  ZJ
 }
 //int ZCategory(myevent *m, myobject const& tau) {
 //    int numGenTau = 0;

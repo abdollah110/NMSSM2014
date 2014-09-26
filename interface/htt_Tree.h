@@ -183,6 +183,9 @@ float l2_dxy_PV;
 float l2_dz_PV;
 int num_gen_jets;
 int l1_Index, l2_Index;
+float GenTopPt = -10;
+float GenAntiTopPt = -10;
+float Tau_Vertex_dz = -10;
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -363,9 +366,12 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l1_eleMVANonTrg = obj1.Id_mvaNonTrg;
     l1_eleNumHit = obj1.numHitEleInner;
     l1Charge = obj1.charge;
-    l1_CloseJetPt = Find_Closet_Jet(obj1, m)[0];
-    l1_CloseJetEta = Find_Closet_Jet(obj1, m)[1];
-    l1_CloseJetPhi = Find_Closet_Jet(obj1, m)[2];
+    l1_CloseJetPt = 0;
+    l1_CloseJetEta = 0;
+    l1_CloseJetPhi = 0;
+    //    l1_CloseJetPt = Find_Closet_Jet(obj1, m)[0];
+    //    l1_CloseJetEta = Find_Closet_Jet(obj1, m)[1];
+    //    l1_CloseJetPhi = Find_Closet_Jet(obj1, m)[2];
     l1_d0 = obj1.d0;
     l1_dZ_in = obj1.dZ_in; //the impact parameter in the transverse plane
     l1_ConversionVeto = obj1.passConversionVeto;
@@ -433,9 +439,12 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2_tauRejEleMVA3T = obj2.discriminationByElectronMVA5Tight;
 
     l2Charge = obj2.charge;
-    l2_CloseJetPt = Find_Closet_Jet(obj2, m)[0];
-    l2_CloseJetEta = Find_Closet_Jet(obj2, m)[1];
-    l2_CloseJetPhi = Find_Closet_Jet(obj2, m)[2];
+    l2_CloseJetPt = 0;
+    l2_CloseJetEta = 0;
+    l2_CloseJetPhi = 0;
+    //    l2_CloseJetPt = Find_Closet_Jet(obj2, m)[0];
+    //    l2_CloseJetEta = Find_Closet_Jet(obj2, m)[1];
+    //    l2_CloseJetPhi = Find_Closet_Jet(obj2, m)[2];
     l2_RefJetPt = obj2.jetPt;
     l2_RefJetEta = obj2.jetEta;
     l2_RefJetPhi = obj2.jetPhi;
@@ -455,7 +464,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     num_PV = Vertex.size();
     pu_Weight_old = PU_Weightold;
     pu_Weight = m->PU_Weight;
-//    cout <<pu_Weight_old << "   vs   " << pu_Weight  << "  del="<<pu_Weight_old-pu_Weight<<"\n";
+    //    cout <<pu_Weight_old << "   vs   " << pu_Weight  << "  del="<<pu_Weight_old-pu_Weight<<"\n";
     npu = m->PUInfo_true;
     mvis = InvarMass_2(obj1, obj2);
 
@@ -466,6 +475,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //    zCategory = 0;
     zCategory = ZCategory(m, obj1, obj2);
     //    gen_Higgs_pt = get_gen_Higgs_pt(m);
+    Tau_Vertex_dz = obj2.dz_Ver_match;
 
     //  ########## ########## ########## ########## ########## ##########
     //  Trigger
@@ -493,6 +503,8 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
 
         // NumGen Jets
         if (fabs(genPar[gg].status) == 3) genParticleStatus3++;
+        if (fabs(genPar[gg].status) == 3 && genPar[gg].pdgId == 6) GenTopPt = genPar[gg].pt;
+        if (fabs(genPar[gg].status) == 3 && genPar[gg].pdgId == -6) GenAntiTopPt = genPar[gg].pt;
 
     }
 

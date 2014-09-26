@@ -76,8 +76,8 @@ int main(int argc, char** argv) {
 
     //    string CHANNEL = *(argv + 2);
 
-    bool isMu = 1;
-    bool isEle = 0;
+    bool isMu = 0;
+    bool isEle = 1;
     bool isTot = 0;
 
     string out = *(argv + 2);
@@ -470,8 +470,9 @@ int main(int argc, char** argv) {
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
                         bool Tau_antiMu = tau_[k].discriminationByMuonLoose3;
-                        bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
-
+                        bool Tau_Vertex_dz = fabs(tau_[k].dz_Ver_match) < 0.2;
+                        bool TAU_CUTS = Tau_Vertex_dz && Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
+                        
                         bool ElTau_Charge = electron_[i].charge * tau_[k].charge < 0;
                         bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
 
@@ -501,7 +502,7 @@ int main(int argc, char** argv) {
 
 
 
-                        if (Veto_EM && hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
+                        if ( Veto_EM && hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
                             plotFill("eltau", ++eltau, 20, 0., 20.);
                              fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                             //                            counter++;

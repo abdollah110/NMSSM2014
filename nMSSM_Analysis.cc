@@ -304,6 +304,9 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l2_Index;", &l2_Index, "l2_Index/I");
     Run_Tree->Branch("pu_Weight_old;", &pu_Weight_old, "pu_Weight_old/F");
     Run_Tree->Branch("l1Eta_SC;", &l1Eta_SC, "l1Eta_SC/F");
+    Run_Tree->Branch("GenTopPt;", &GenTopPt, "GenTopPt/F");
+    Run_Tree->Branch("GenAntiTopPt;", &GenAntiTopPt, "GenAntiTopPt/F");
+    Run_Tree->Branch("Tau_Vertex_dz;", &Tau_Vertex_dz, "Tau_Vertex_dz/F");
 
 
 
@@ -363,7 +366,7 @@ int main(int argc, char** argv) {
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 18 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 19 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                         bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
@@ -381,7 +384,7 @@ int main(int argc, char** argv) {
 
 
                         bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME && Veto_ME;
-                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
+                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
 
                         //Loose Selection
                         if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
@@ -409,12 +412,12 @@ int main(int argc, char** argv) {
                 for (int i = 0; i < electron_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
 
-                        bool El_PtEta = electron_[i].pt > 20 && fabs(electron_[i].eta) < 2.1;
+                        bool El_PtEta = electron_[i].pt > 22 && fabs(electron_[i].eta) < 2.1;
                         bool El_IdTight = EleMVANonTrigId_Tight(electron_[i]);
                         bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 18 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 19 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFinding;
                         bool Tau_Isolation = tau_[k].byRawCombinedIsolationDeltaBetaCorr3Hits < 1.5;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
@@ -432,7 +435,7 @@ int main(int argc, char** argv) {
                         bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE && Veto_EM;
                         //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3newDMwLT;
                         //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3oldDMwLT;
-                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
+                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
                         //                        bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
                         //                            bool VLooseEl_Iso = Iso_Ele_dBeta(electron_[i]) < 1;
                         //Loose Selection
