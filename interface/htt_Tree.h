@@ -455,7 +455,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     num_PV = Vertex.size();
     pu_Weight_old = PU_Weightold;
     pu_Weight = m->PU_Weight;
-    cout <<pu_Weight_old << "   vs   " << pu_Weight  << "  del="<<pu_Weight_old-pu_Weight<<"\n";
+//    cout <<pu_Weight_old << "   vs   " << pu_Weight  << "  del="<<pu_Weight_old-pu_Weight<<"\n";
     npu = m->PUInfo_true;
     mvis = InvarMass_2(obj1, obj2);
 
