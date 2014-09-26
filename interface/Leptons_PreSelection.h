@@ -278,7 +278,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
         for (int i = 0; i < mu_.size(); i++) {
             for (int j = i + 1; j < mu_.size(); j++) {
                 for (int k = j + 1; k < mu_.size(); k++) {
-                    bool DiMu_Pt = mu_[i].pt > 15 && mu_[j].pt > 15;
+                    bool DiMu_Pt = mu_[i].pt > 10 && mu_[j].pt > 10;
                     bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
                     bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
                     bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
@@ -301,7 +301,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
         for (int i = 0; i < mu_.size(); i++) {
             for (int j = i + 1; j < mu_.size(); j++) {
                 for (int k = 0; k < electron_.size(); k++) {
-                    bool DiMu_Pt = mu_[i].pt > 15 && mu_[j].pt > 15;
+                    bool DiMu_Pt = mu_[i].pt > 10 && mu_[j].pt > 10;
                     bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
                     bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
                     bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
@@ -323,7 +323,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
     if (channel == "EE") {
         for (int i = 0; i < electron_.size(); i++) {
             for (int j = i + 1; j < electron_.size(); j++) {
-                bool DiEl_Pt = electron_[i].pt > 15 && electron_[j].pt > 15;
+                bool DiEl_Pt = electron_[i].pt > 10 && electron_[j].pt > 10;
                 bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
                 bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
                 bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
@@ -341,7 +341,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
         for (int i = 0; i < electron_.size(); i++) {
             for (int j = i + 1; j < electron_.size(); j++) {
                 for (int k = j + 1; k < electron_.size(); k++) {
-                    bool DiEl_Pt = electron_[i].pt > 15 && electron_[j].pt > 15;
+                    bool DiEl_Pt = electron_[i].pt > 10 && electron_[j].pt > 10;
                     bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
                     bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
                     bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
@@ -366,7 +366,7 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
         for (int i = 0; i < electron_.size(); i++) {
             for (int j = i + 1; j < electron_.size(); j++) {
                 for (int k = 0; k < mu_.size(); k++) {
-                    bool DiEl_Pt = electron_[i].pt > 15 && electron_[j].pt > 15;
+                    bool DiEl_Pt = electron_[i].pt > 10 && electron_[j].pt > 10;
                     bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
                     bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
                     bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
@@ -389,12 +389,12 @@ bool Multi_Lepton_Veto(std::string channel, myevent * m) {
     if (channel == "EM") {
         for (int i = 0; i < electron_.size(); i++) {
             for (int k = 0; k < mu_.size(); k++) {
-                bool DiEl_Pt = electron_[i].pt > 15;
+                bool DiEl_Pt = electron_[i].pt > 10;
                 bool DiEl_Eta = fabs(electron_[i].eta) < 2.5;
                 bool DiEl_Id = EleMVANonTrigId_Tight(electron_[i]);
                 bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
 
-                bool ThirdMu_Pt = mu_[k].pt > 15;
+                bool ThirdMu_Pt = mu_[k].pt > 10;
                 bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
                 bool ThirdMu_Id = Id_Mu_Loose(mu_[k]);
                 bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
