@@ -392,7 +392,8 @@ int main(int argc, char** argv) {
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
                         //                        bool Tau_antiMu = tau_[k].discriminationByMuonTight3;
                         bool Tau_antiMu = tau_[k].discriminationByMuonMVAMedium;
-                        bool TAU_CUTS = Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
+                        bool Tau_Vertex_dz = fabs(tau_[k].dz_Ver_match) < 0.2;
+                        bool TAU_CUTS = Tau_Vertex_dz && Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
 
 
                         bool MuTau_Charge = mu_[i].charge * tau_[k].charge < 0;

@@ -206,16 +206,16 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //****************************    PileUp re weighting    ***************************************
     //*********************************************************************************************
     float num_PU = 1;
-    float PU_Weight = 1;
+    float PU_Weightold = 1;
 
     if (mcdata == 3) {
         num_PU = m->PUInfo_true;
-        PU_Weight = LumiWeights_12->weight(num_PU);
+        PU_Weightold = LumiWeights_12->weight(num_PU);
     }
     if (mcdata == 1) {
         //                num_PU = m->PUInfo; // Last Bug found in 25 Nov
         num_PU = m->PUInfo_true;
-        PU_Weight = LumiWeights_11->weight(num_PU);
+        PU_Weightold = LumiWeights_11->weight(num_PU);
     }
     //*********************************************************************************************
 
@@ -453,8 +453,9 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     eff_Correction = getCorrFactor(FinalState, is_data_mc, obj1, obj2, obj2);
     vector<myobject> Vertex = m->Vertex;
     num_PV = Vertex.size();
-    pu_Weight_old = PU_Weight;
+    pu_Weight_old = PU_Weightold;
     pu_Weight = m->PU_Weight;
+    cout <<pu_Weight_old << "   vs   " << pu_Weight  << "  del="<<pu_Weight_old-pu_Weight<<"\n";
     npu = m->PUInfo_true;
     mvis = InvarMass_2(obj1, obj2);
 
