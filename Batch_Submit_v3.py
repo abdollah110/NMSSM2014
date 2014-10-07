@@ -14,10 +14,10 @@ Run_Over = {
 
     ##### Unfiltered
     1:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/MC", "mc12", "75:00:00"),
-    2:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Data", "data12", "75:00:00"),
-    3:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Embed_MC", "embedmc12", "75:00:00"),
-    4:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Embed_Data", "embeddata12", "75:00:00"),
-    5:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples_v3/53X/MC", "mc12", "75:00:00"),
+#    2:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Data", "data12", "75:00:00"),
+#    3:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Embed_MC", "embedmc12", "75:00:00"),
+#    4:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Embed_Data", "embeddata12", "75:00:00"),
+#    5:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples_v3/53X/MC", "mc12", "75:00:00"),
     
 }
     ########################################################################################
@@ -25,7 +25,9 @@ def make_Ready(order, pnfn, data_year, timing,outFile):
 	
 	Sample = os.popen(("ls " + pnfn + " | sort "))
 	for files in Sample.readlines():
-		command =   pnfn + "/" +files[0:-1] + ','+ data_year+ ','  + timing+'\n'
+                DIR = pnfn + '/' +files[0:-1]
+		FileSize= len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
+		command =   DIR + ','+ data_year+ ','  + timing+ ','+str(FileSize)+'\n'
 		outFile.write(command)
 
     ########################################################################################

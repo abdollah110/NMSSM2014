@@ -22,13 +22,15 @@ def make_submit_form():
         pnfn= files[0:-1].split(",")[0]
         data_year= files[0:-1].split(",")[1]
         timing= files[0:-1].split(",")[2]
+        FileSize= files[0:-1].split(",")[3]
 
         sampleName2= files[0:-1].split("/")[10]
         sampleName= sampleName2.split(",")[0]
         print "sampleName=", sampleName
         
-
-        for numMod in xrange(0,10):
+        NumberToBedevided= 10
+        if FileSize > 900 : NumberToBedevided=20
+        for numMod in xrange(0,NumberToBedevided):
             f = os.popen("ls " + pnfn + "/" + " | sort ")
             dir = "dcap://maite.iihe.ac.be" + pnfn + "/" 
             name_out = "_" + data_year + "_" +  sampleName +"_"+str(numMod)+ ".sh"
@@ -43,7 +45,7 @@ def make_submit_form():
                 QName=i[0:-1]
                 XName=int(float(QName[15:-11]))
                 outName= sampleName + "_"+str(XName) +".root"
-                if (XName % 10 == numMod):
+                if (XName % NumberToBedevided == numMod):
                     command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + " "   +outName + " " + dir + "/" + i[0:-1]
                     command2 = command2 + " \n" + " mv  " +  outName + "\t" + "Out_" + sampleName+"_"+str(numMod)
 #                    command2 = command2 + " \n" + " mv  " + data_year + "_" +  outName + "\t" + "Out_" + sampleName+"_"+str(numMod)
