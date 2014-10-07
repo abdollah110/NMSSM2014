@@ -344,17 +344,17 @@ int main(int argc, char** argv) {
             vector<myobject> mu_ = GoodMuon10GeV(m);
             vector<myobject> electron_ = GoodElectron10GeV(m);
             vector<myobject> tau_ = GoodTau20GeV(m);
-            vector<myobject> MVAMetRecoil_mutau = m->PairRecoilMet_mutau;
-            vector<myobject> MVAMetNORecoil_mutau = m->PairMet_mutau;
-            vector<myobject> MVAMetRecoil_etau = m->PairRecoilMet_etau;
-            vector<myobject> MVAMetNORecoil_etau = m->PairMet_etau;
-            vector<myobject> RAWPFMet = m->RecPFMetCor;
+//            vector<myobject> MVAMetRecoil_mutau = m->PairRecoilMet_mutau;
+//            vector<myobject> MVAMetNORecoil_mutau = m->PairMet_mutau;
+//            vector<myobject> MVAMetRecoil_etau = m->PairRecoilMet_etau;
+//            vector<myobject> MVAMetNORecoil_etau = m->PairMet_etau;
+//            vector<myobject> RAWPFMet = m->RecPFMetCor;
 
-            int num_PU = 1;
-            float PU_Weight = 1;
-
-            num_PU = m->PUInfo_true;
-            PU_Weight = LumiWeights_12->weight(num_PU);
+            //            int num_PU = 1;
+            //            float PU_Weight = 1;
+            //
+            //            num_PU = m->PUInfo_true;
+            //            PU_Weight = m->PU_Weight;
 
 
 
@@ -390,42 +390,39 @@ int main(int argc, char** argv) {
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
-                        //                        bool Tau_antiMu = tau_[k].discriminationByMuonTight3;
                         bool Tau_antiMu = tau_[k].discriminationByMuonMVAMedium;
                         bool Tau_Vertex_dz = fabs(tau_[k].dz_Ver_match) < 0.2;
                         bool TAU_CUTS = Tau_Vertex_dz && Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
 
-
                         bool MuTau_Charge = mu_[i].charge * tau_[k].charge < 0;
                         bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
+                        bool secondEleVeto = secondElectronVeto(m);
+                        bool secondMuVeto = secondMuonVeto(m);
+                        bool thirdEleVeto = thirdElectronVeto(m, mu_[i], tau_[k]);
+                        bool thirdMuVeto = thirdMuonVeto(m, mu_[i], tau_[k]);
 
-                        bool Veto_ME = Multi_Lepton_Veto("ME", m);
-                        bool Veto_MM = Multi_Lepton_Veto("MM", m);
-                        bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
-                        bool Veto_MME = Multi_Lepton_Veto("MME", m);
-
+                        bool hasMatchedTrigger = mu_[i].hasTrgObject_Mu17Tau20 && tau_[k].hasTrgObject_Mu17Tau20;
 
                         //  ########## ########## ########## ########## ########## ##########
                         //  Other Information
                         //  ########## ########## ########## ########## ########## ##########
-                        vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
-                        vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
+                        //                        vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
+                        //                        vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
+                        //
+                        //                        int pairIndex = mu_[i].gen_index * 10 + tau_[k].gen_index;
+                        //                        float MetPair_MT = MVAMetRecoil_mutau[mu_[i].gen_index * 10 + tau_[k].gen_index].pt;
+                        //                        float MetPair_MTNoRecoil = MVAMetNORecoil_mutau[mu_[i].gen_index * 10 + tau_[k].gen_index].pt;
+                        //
+                        //                        float npu = m->PUInfo_true;
+                        //
+                        //                        float idweight_1 = getCorrIdIsoLep("mutau", "mc12", tau_[k]);
+                        //                        float trigweight_1 = getCorrTriggerLep("mutau", "mc12", mu_[i]);
+                        //                        float trigweight_2 = getCorrTriggerTau("mutau", "mc12", tau_[k]);
 
-                        int pairIndex = mu_[i].gen_index * 10 + tau_[k].gen_index;
-                        float MetPair_MT = MVAMetRecoil_mutau[mu_[i].gen_index * 10 + tau_[k].gen_index].pt;
-                        float MetPair_MTNoRecoil = MVAMetNORecoil_mutau[mu_[i].gen_index * 10 + tau_[k].gen_index].pt;
-
-                        float npu = m->PUInfo_true;
-
-                        float idweight_1 = getCorrIdIsoLep("mutau", "mc12", tau_[k]);
-                        float trigweight_1 = getCorrTriggerLep("mutau", "mc12", mu_[i]);
-                        float trigweight_2 = getCorrTriggerTau("mutau", "mc12", tau_[k]);
-
-                        bool hasMatchedTrigger = mu_[i].hasTrgObject_Mu17Tau20 && tau_[k].hasTrgObject_Mu17Tau20;
                         //  ########## ########## ########## ########## ########## ##########
 
-                        if (hasMatchedTrigger && Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && Veto_ME && Veto_MM && Veto_MMM && Veto_MME) {
+                        if (hasMatchedTrigger && Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto) {
                             plotFill("mutau", ++mutau, 20, 0., 20.);
                             fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
                             //                            counter++;
@@ -465,46 +462,45 @@ int main(int argc, char** argv) {
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
                         bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
-                        //                        bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
                         bool Tau_antiMu = tau_[k].discriminationByMuonLoose3;
                         bool Tau_Vertex_dz = fabs(tau_[k].dz_Ver_match) < 0.2;
                         bool TAU_CUTS = Tau_Vertex_dz && Tau_PtEta && Tau_DMF && Tau_Isolation && Tau_antiEl && Tau_antiMu;
-                        
+
                         bool ElTau_Charge = electron_[i].charge * tau_[k].charge < 0;
                         bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
 
-                        bool Veto_EM = Multi_Lepton_Veto("EM", m);
-                        bool Veto_EE = Multi_Lepton_Veto("EE", m);
-                        bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
-                        bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
-
-                        //  ########## ########## ########## ########## ########## ##########
-                        //  Other Information
-                        //  ########## ########## ########## ########## ########## ##########
-                        vector<myobject> JETS = GoodJet30(m, electron_[i], tau_[k]);
-                        vector<myobject> BJETS = GoodbJet20(m, electron_[i], tau_[k], 0, 1);
-
-                        int pairIndex = electron_[i].gen_index * 10 + tau_[k].gen_index;
-                        float MetPair_MT = MVAMetRecoil_etau[electron_[i].gen_index * 10 + tau_[k].gen_index].pt;
-                        float MetPair_MTNoRecoil = MVAMetNORecoil_etau[electron_[i].gen_index * 10 + tau_[k].gen_index].pt;
-
-                        float npu = m->PUInfo_true;
-
-                        float idweight_1 = getCorrIdIsoLep("eltau", "mc12", tau_[k]);
-                        float trigweight_1 = getCorrTriggerLep("eltau", "mc12", electron_[i]);
-                        float trigweight_2 = getCorrTriggerTau("eltau", "mc12", tau_[k]);
+                        bool secondEleVeto = secondElectronVeto(m);
+                        bool secondMuVeto = secondMuonVeto(m);
+                        bool thirdEleVeto = thirdElectronVeto(m, electron_[i], tau_[k]);
+                        bool thirdMuVeto = thirdMuonVeto(m, electron_[i], tau_[k]);
 
                         bool hasMatchedTrigger = electron_[i].hasTrgObject_Ele20Tau20 && tau_[k].hasTrgObject_Ele20Tau20;
                         //  ########## ########## ########## ########## ########## ##########
+                        //  Other Information
+                        //                        //  ########## ########## ########## ########## ########## ##########
+                        //                        vector<myobject> JETS = GoodJet30(m, electron_[i], tau_[k]);
+                        //                        vector<myobject> BJETS = GoodbJet20(m, electron_[i], tau_[k], 0, 1);
+                        //
+                        //                        int pairIndex = electron_[i].gen_index * 10 + tau_[k].gen_index;
+                        //                        float MetPair_MT = MVAMetRecoil_etau[electron_[i].gen_index * 10 + tau_[k].gen_index].pt;
+                        //                        float MetPair_MTNoRecoil = MVAMetNORecoil_etau[electron_[i].gen_index * 10 + tau_[k].gen_index].pt;
+                        //
+                        //                        float npu = m->PUInfo_true;
+                        //
+                        //                        float idweight_1 = getCorrIdIsoLep("eltau", "mc12", tau_[k]);
+                        //                        float trigweight_1 = getCorrTriggerLep("eltau", "mc12", electron_[i]);
+                        //                        float trigweight_2 = getCorrTriggerTau("eltau", "mc12", tau_[k]);
+
+                        //  ########## ########## ########## ########## ########## ##########
 
 
 
-                        if ( Veto_EM && hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE) {
+                        if (hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto) {
                             plotFill("eltau", ++eltau, 20, 0., 20.);
-                             fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
+                            fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                             //                            counter++;
                             //                            cout << "\n" << counter << "   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "\n";
                             //                            cout << "for leptons: - lepton pt/eta/phi = " << electron_[i].pt << "/" << electron_[i].eta << " /" << electron_[i].phi << "\n";

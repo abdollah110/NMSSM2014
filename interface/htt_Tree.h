@@ -35,8 +35,8 @@
 //#################################################################################################
 
 //reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Summer12_PU_S10-600bins.root", "interface/HTTRootFiles/Data_Pileup_2012_ReReco-600bins.root", "pileup", "pileup");
-reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Summer12_PU_S10-600bins.root", "interface/HTTRootFiles/Data_Pileup_2012_ReRecoPixel-600bins.root", "pileup", "pileup");
-reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Fall11_PU_S6-500bins.root", "interface/HTTRootFiles/Data_Pileup_2011_HCP-500bins.root", "pileup", "pileup");
+//reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Summer12_PU_S10-600bins.root", "interface/HTTRootFiles/Data_Pileup_2012_ReRecoPixel-600bins.root", "pileup", "pileup");
+//reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("interface/HTTRootFiles/MC_Fall11_PU_S6-500bins.root", "interface/HTTRootFiles/Data_Pileup_2011_HCP-500bins.root", "pileup", "pileup");
 //reweight::LumiReWeighting* LumiWeights_12 = new reweight::LumiReWeighting("interface/Summer12_PU.root", "interface/dataPileUpHistogram_True_2012.root", "mcPU", "pileup"); //changed to be sync with HTT
 //reweight::LumiReWeighting* LumiWeights_11 = new reweight::LumiReWeighting("interface/Fall11_PU.root", "interface/dataPileUpHistogram_True_2011.root", "mcPU", "pileup");  //changed to be sync with HTT
 //    LumiWeights_11 = new reweight::LumiReWeighting("interface/Fall11_PU_observed.root", "interface/dataPileUpHistogram_Observed_2011.root", "mcPU", "pileup"); // Last Bug found in 25 Nov
@@ -208,18 +208,18 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //*********************************************************************************************
     //****************************    PileUp re weighting    ***************************************
     //*********************************************************************************************
-    float num_PU = 1;
+//    float num_PU = 1;
     float PU_Weightold = 1;
 
-    if (mcdata == 3) {
-        num_PU = m->PUInfo_true;
-        PU_Weightold = LumiWeights_12->weight(num_PU);
-    }
-    if (mcdata == 1) {
-        //                num_PU = m->PUInfo; // Last Bug found in 25 Nov
-        num_PU = m->PUInfo_true;
-        PU_Weightold = LumiWeights_11->weight(num_PU);
-    }
+//    if (mcdata == 3) {
+//        num_PU = m->PUInfo_true;
+//        PU_Weightold = LumiWeights_12->weight(num_PU);
+//    }
+//    if (mcdata == 1) {
+//        //                num_PU = m->PUInfo; // Last Bug found in 25 Nov
+//        num_PU = m->PUInfo_true;
+//        PU_Weightold = LumiWeights_11->weight(num_PU);
+//    }
     //*********************************************************************************************
 
 
@@ -286,13 +286,13 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     vector<myobject> JETS = GoodJet30(m, obj1, obj2);
     vector<myobject> BJETS = GoodbJet20(m, obj1, obj2, isdata, is2012);
     vector<myobject> BLooseJETS = GoodLoosebJet20(m, obj1, obj2);
-    vector<myobject> BJETSNoCor = GoodbJet20NoCor(m, obj1, obj2);
+//    vector<myobject> BJETSNoCor = GoodbJet20NoCor(m, obj1, obj2);
 
     njetpt20 = GoodJet20(m).size();
     njets = JETS.size();
     nbtag = BJETS.size();
     nbtagLoose = BLooseJETS.size();
-    nbtagNoCor = BJETSNoCor.size();
+//    nbtagNoCor = BJETSNoCor.size();
 
     jpt_1 = (JETS.size() > 0 ? JETS[0].pt : -1000);
     jeta_1 = (JETS.size() > 0 ? JETS[0].eta : -1000);

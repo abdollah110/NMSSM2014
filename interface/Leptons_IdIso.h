@@ -220,7 +220,7 @@ bool EleLooseForEtauVeto(myobject const& a) {
     float sihih = a.sigmaIetaIeta;
 
     if (EB && sihih < 0.010 && dphi < 0.80 && deta < 0.007 && hoe < 0.15) return true;
-    else if (EE && sihih < 0.030 && dphi < 0.70 && deta < 0.010 && hoe < 0.07) return true;
+    else if (EE && sihih < 0.030 && dphi < 0.70 && deta < 0.010 ) return true; //  hoe < 0.07 is droped at October 6th
     else return false;
 
 

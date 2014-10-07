@@ -377,13 +377,18 @@ int main(int argc, char** argv) {
                         bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
 
-                        bool Veto_ME = Multi_Lepton_Veto("ME", m);
-                        bool Veto_MM = Multi_Lepton_Veto("MM", m);
-                        bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
-                        bool Veto_MME = Multi_Lepton_Veto("MME", m);
+                        //                        bool Veto_ME = Multi_Lepton_Veto("ME", m);
+                        //                        bool Veto_MM = Multi_Lepton_Veto("MM", m);
+                        //                        bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
+                        //                        bool Veto_MME = Multi_Lepton_Veto("MME", m);
+
+                        bool secondEleVeto = secondElectronVeto(m);
+                        bool secondMuVeto = secondMuonVeto(m);
+                        bool thirdEleVeto = thirdElectronVeto(m, mu_[i], tau_[k]);
+                        bool thirdMuVeto = thirdMuonVeto(m, mu_[i], tau_[k]);
 
 
-                        bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME && Veto_ME;
+                        bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
 
                         //Loose Selection
@@ -427,17 +432,19 @@ int main(int argc, char** argv) {
                         bool ElTau_Charge = electron_[i].charge * tau_[k].charge < 0;
                         bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
 
-                        bool Veto_EM = Multi_Lepton_Veto("EM", m);
-                        bool Veto_EE = Multi_Lepton_Veto("EE", m);
-                        bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
-                        bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
+                        //                        bool Veto_EM = Multi_Lepton_Veto("EM", m);
+                        //                        bool Veto_EE = Multi_Lepton_Veto("EE", m);
+                        //                        bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
+                        //                        bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
-                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE && Veto_EM;
-                        //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3newDMwLT;
-                        //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3oldDMwLT;
+                        bool secondEleVeto = secondElectronVeto(m);
+                        bool secondMuVeto = secondMuonVeto(m);
+                        bool thirdEleVeto = thirdElectronVeto(m, electron_[i], tau_[k]);
+                        bool thirdMuVeto = thirdMuonVeto(m, electron_[i], tau_[k]);
+
+                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR&& secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
-                        //                        bool VLooseTauIso = tau_[k].byIsolationMVA3newDMwLTraw > 0;
-                        //                            bool VLooseEl_Iso = Iso_Ele_dBeta(electron_[i]) < 1;
+
                         //Loose Selection
                         if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
                             fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
