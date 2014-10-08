@@ -132,7 +132,7 @@ vector<myobject> GoodJet20(myevent *m) {
     vector<myobject> Jet = m->RecPFJetsAK5;
 
     for (int i = 0; i < Jet.size(); i++) {
-        if (Jet[i].pt > 20) {
+        if (Jet[i].pt > 20 && Jet[i].jetId_loose > 0.5) {
             goodJet.push_back(Jet[i]);
         }
     }
@@ -244,7 +244,7 @@ bool secondMuonVeto(myevent * m) {
             bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
             bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
             bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
-            bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2 && mu_[i].d0 < 0.045 && mu_[j].d0 < 0.045 ;
+            bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2 && mu_[i].d0 < 0.045 && mu_[j].d0 < 0.045;
             bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
             bool DiMu_dR = deltaR(mu_[i], mu_[j]) > 0.15;
 
@@ -264,7 +264,7 @@ bool thirdElectronVeto(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdEl_Eta = fabs(electron_[k].eta) < 2.5;
         bool ThirdEl_Id = EleMVANonTrigId_Loose(electron_[k]);
         bool ThirdEle_Iso = Iso_Ele_dBeta(electron_[k]) < 0.3;
-        bool ThirdEle_dZ =  electron_[k].dZ_in < 0.2;
+        bool ThirdEle_dZ = electron_[k].dZ_in < 0.2;
         bool NoOberLapwithOthers(deltaR(electron_[k], a) > 0.15 && deltaR(electron_[k], b) > 0.15);
 
         if (ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso && NoOberLapwithOthers && ThirdEle_dZ)
@@ -286,8 +286,8 @@ bool thirdMuonVeto(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
         bool ThirdMu_Id = Id_Mu_Tight(mu_[k]);
         bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
-        bool ThirdMu_dZ =  mu_[k].dZ_in < 0.2;
-        bool ThirdMu_d0 =  mu_[k].d0 < 0.045;
+        bool ThirdMu_dZ = mu_[k].dZ_in < 0.2;
+        bool ThirdMu_d0 = mu_[k].d0 < 0.045;
         bool NoOberLapwithOthers(deltaR(mu_[k], a) > 0.15 && deltaR(mu_[k], b) > 0.15);
 
         if (ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso && NoOberLapwithOthers && ThirdMu_dZ && ThirdMu_d0)
