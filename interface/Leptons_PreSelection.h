@@ -171,7 +171,7 @@ vector<myobject> GoodbJet20(myevent *m, myobject const& a, myobject const& b, bo
         int jetGenpdgid_ = jet[k].partonFlavour;
         isBtagged = isBJ.isbtagged13(jet[k].pt, jet[k].eta, jet[k].bDiscriminatiors_CSV, jetGenpdgid_, isdata, 0, 0, is2012);
 
-        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && isBtagged) {
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].puJetIdLoose > 0.5 && isBtagged) { //adding PUJetId for bjets as well
             if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
         }
     }
@@ -186,7 +186,7 @@ vector<myobject> GoodLoosebJet20(myevent *m, myobject const& a, myobject const& 
 
     //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
     for (int k = 0; k < jet.size(); k++) {
-        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.244) {
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].puJetIdLoose > 0.5 && jet[k].bDiscriminatiors_CSV > 0.244) {
             if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
         }
     }
@@ -200,7 +200,7 @@ vector<myobject> GoodbJet20NoCor(myevent *m, myobject const& a, myobject const& 
     vector<myobject> jet = GoodLoosebJet20(m, a, b);
 
     for (int k = 0; k < jet.size(); k++) {
-        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].bDiscriminatiors_CSV > 0.679) {
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].puJetIdLoose > 0.5 && jet[k].bDiscriminatiors_CSV > 0.679) {
             if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
         }
     }
@@ -244,7 +244,7 @@ bool secondMuonVeto(myevent * m) {
             bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
             bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
             bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
-            bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2;
+            bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2 && mu_[i].d0 < 0.045 && mu_[j].d0 < 0.045 ;
             bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
             bool DiMu_dR = deltaR(mu_[i], mu_[j]) > 0.15;
 
@@ -264,9 +264,10 @@ bool thirdElectronVeto(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdEl_Eta = fabs(electron_[k].eta) < 2.5;
         bool ThirdEl_Id = EleMVANonTrigId_Loose(electron_[k]);
         bool ThirdEle_Iso = Iso_Ele_dBeta(electron_[k]) < 0.3;
+        bool ThirdEle_dZ =  electron_[k].dZ_in < 0.2;
         bool NoOberLapwithOthers(deltaR(electron_[k], a) > 0.15 && deltaR(electron_[k], b) > 0.15);
 
-        if (ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso && NoOberLapwithOthers)
+        if (ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso && NoOberLapwithOthers && ThirdEle_dZ)
             ThereIsNoExtraLepton = false;
     }
 
@@ -285,9 +286,11 @@ bool thirdMuonVeto(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
         bool ThirdMu_Id = Id_Mu_Tight(mu_[k]);
         bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
+        bool ThirdMu_dZ =  mu_[k].dZ_in < 0.2;
+        bool ThirdMu_d0 =  mu_[k].d0 < 0.045;
         bool NoOberLapwithOthers(deltaR(mu_[k], a) > 0.15 && deltaR(mu_[k], b) > 0.15);
 
-        if (ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso && NoOberLapwithOthers)
+        if (ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso && NoOberLapwithOthers && ThirdMu_dZ && ThirdMu_d0)
             ThereIsNoExtraLepton = false;
     }
     return ThereIsNoExtraLepton;

@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
     //############## defining an out_file name need on the given argument  information  ###############
     //#################################################################################################
 
-    string outname = is_data_mc + "_" + out;
+    string outname = out;
     //PRINTING THE OUTPUT name
     //    cout << "\n\n Channel IS:    " << CHANNEL << endl;
     cout << "\n\n OUTPUT NAME IS:    " << outname << endl << endl;

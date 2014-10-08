@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     //#################################################################################################
 
     //    string outname = is_data_mc + "_" + out;
-    string outname = is_data_mc + "_" + out;
+    string outname = out;
     //PRINTING THE OUTPUT name
     cout << "\n\n\n OUTPUT NAME IS:    " << outname << endl;
     TFile *fout = TFile::Open(outname.c_str(), "RECREATE");
@@ -442,7 +442,7 @@ int main(int argc, char** argv) {
                         bool thirdEleVeto = thirdElectronVeto(m, electron_[i], tau_[k]);
                         bool thirdMuVeto = thirdMuonVeto(m, electron_[i], tau_[k]);
 
-                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR&& secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto;
+                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
 
                         //Loose Selection

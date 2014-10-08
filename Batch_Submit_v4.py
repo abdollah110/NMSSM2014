@@ -22,17 +22,18 @@ def make_submit_form():
         pnfn= files[0:-1].split(",")[0]
         data_year= files[0:-1].split(",")[1]
         timing= files[0:-1].split(",")[2]
-        FileSize= files[0:-1].split(",")[3]
+        FileSize= int(files[0:-1].split(",")[3])
 
         sampleName2= files[0:-1].split("/")[10]
         sampleName= sampleName2.split(",")[0]
         print "sampleName=", sampleName
-        
+
         NumberToBedevided= 10
         if FileSize > 900 : NumberToBedevided=20
+        if FileSize > 2000 : NumberToBedevided=30
         for numMod in xrange(0,NumberToBedevided):
             f = os.popen("ls " + pnfn + "/" + " | sort ")
-            dir = "dcap://maite.iihe.ac.be" + pnfn + "/" 
+            dir = "dcap://maite.iihe.ac.be" + pnfn + "/"
             name_out = "_" + data_year + "_" +  sampleName +"_"+str(numMod)+ ".sh"
             outFile = open(name_out, 'w')
             command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"

@@ -156,34 +156,45 @@ inline double deltaR(myGenobject const& a, myobject const& b) {
 //    return minDis;
 //}
 
+bool checkGenRecodR(myGenobject const& Gen1, myGenobject const& Gen2, myobject const& Reco1, myobject const& Reco2) {
+    bool check_11_22 = dR(Gen1.eta, Gen1.phi, Reco1.eta, Reco1.phi) < 0.3 && dR(Gen2.eta, Gen2.phi, Reco2.eta, Reco2.phi) < 0.3;
+    bool check_12_21 = dR(Gen1.eta, Gen1.phi, Reco2.eta, Reco2.phi) < 0.3 && dR(Gen2.eta, Gen2.phi, Reco1.eta, Reco1.phi) < 0.3;
+    if (check_11_22 || check_12_21)
+        return true;
+    else return false;
+
+}
+
 int ZCategory(myevent *m, myobject const& obj1, myobject const& obj2) {
 
     vector<myGenobject> genTausFromZ;
-    vector<myGenobject> genMuonsFromZ;
-    vector<myGenobject> genElectronsFromZ;
-    vector<myGenobject> genLeptonsFromTaus;
+    vector<myGenobject> genMuFromZ;
+    vector<myGenobject> genEleFromZ;
+    vector<myGenobject> genLepFromTaus;
     genTausFromZ.clear();
-    genMuonsFromZ.clear();
-    genElectronsFromZ.clear();
-    genLeptonsFromTaus.clear();
-    vector<myGenobject> genParticle = m->RecGenParticle;
+    genMuFromZ.clear();
+    genEleFromZ.clear();
+    genLepFromTaus.clear();
+    vector<myGenobject> genPar = m->RecGenParticle;
     int gen_ditau = 6;
-    if (genParticle.size() != 0) {
-        for (int a = 0; a < genParticle.size(); ++a) {
-            //            if (genParticle[a].status == 3 && fabs(genParticle[a].pdgId) == 6) top_reweighting = top_reweighting * Get_top_weight(genParticle[a].pt);
-            if (genParticle[a].status == 3 && fabs(genParticle[a].mod_pdgId) == 23 && fabs(genParticle[a].pdgId) == 15) genTausFromZ.push_back(genParticle[a]);
-            if (genParticle[a].status == 3 && fabs(genParticle[a].mod_pdgId) == 23 && fabs(genParticle[a].pdgId) == 13) genMuonsFromZ.push_back(genParticle[a]);
-            if (genParticle[a].status == 3 && fabs(genParticle[a].mod_pdgId) == 23 && fabs(genParticle[a].pdgId) == 11) genElectronsFromZ.push_back(genParticle[a]);
-            if (fabs(genParticle[a].mod_pdgId) == 15 && (fabs(genParticle[a].pdgId) == 11 || fabs(genParticle[a].pdgId) == 13)) genLeptonsFromTaus.push_back(genParticle[a]);
+    if (genPar.size() != 0) {
+        for (int a = 0; a < genPar.size(); ++a) {
+            if (genPar[a].status == 3 && fabs(genPar[a].mod_pdgId) == 23 && fabs(genPar[a].pdgId) == 15) genTausFromZ.push_back(genPar[a]);
+            if (genPar[a].status == 3 && fabs(genPar[a].mod_pdgId) == 23 && fabs(genPar[a].pdgId) == 13) genMuFromZ.push_back(genPar[a]);
+            if (genPar[a].status == 3 && fabs(genPar[a].mod_pdgId) == 23 && fabs(genPar[a].pdgId) == 11) genEleFromZ.push_back(genPar[a]);
+            if (fabs(genPar[a].mod_pdgId) == 15 && (fabs(genPar[a].pdgId) == 11 || fabs(genPar[a].pdgId) == 13)) genLepFromTaus.push_back(genPar[a]);
         }
-        if (genTausFromZ.size() == 2 && ((dR(genTausFromZ[0].eta, genTausFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genTausFromZ[1].eta, genTausFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) || (dR(genTausFromZ[0].eta, genTausFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genTausFromZ[1].eta, genTausFromZ[1].phi, obj1.eta, obj1.phi) < 0.3))) gen_ditau = 1;
-        else if (genMuonsFromZ.size() == 2 && ((dR(genMuonsFromZ[0].eta, genMuonsFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genMuonsFromZ[1].eta, genMuonsFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) || (dR(genMuonsFromZ[0].eta, genMuonsFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genMuonsFromZ[1].eta, genMuonsFromZ[1].phi, obj1.eta, obj1.phi) < 0.3))) gen_ditau = 4;
-        else if (genElectronsFromZ.size() == 2 && ((dR(genElectronsFromZ[0].eta, genElectronsFromZ[0].phi, obj1.eta, obj1.phi) < 0.3 && dR(genElectronsFromZ[1].eta, genElectronsFromZ[1].phi, obj2.eta, obj2.phi) < 0.3) || (dR(genElectronsFromZ[0].eta, genElectronsFromZ[0].phi, obj2.eta, obj2.phi) < 0.3 && dR(genElectronsFromZ[1].eta, genElectronsFromZ[1].phi, obj1.eta, obj1.phi) < 0.3))) gen_ditau = 3;
     }
+    if (genMuFromZ.size() == 2 && checkGenRecodR(genMuFromZ[0], genMuFromZ[1], obj1, obj2)) gen_ditau = 1; // THis is ZLL (ZMuMU)
+    else if (genEleFromZ.size() == 2 && checkGenRecodR(genEleFromZ[0], genEleFromZ[1], obj1, obj2)) gen_ditau = 2; // THis is ZLL (ZEE)
+    else if (genTausFromZ.size() == 2 && genLepFromTaus.size() == 1 && checkGenRecodR(genTausFromZ[0], genTausFromZ[1], obj1, obj2)) gen_ditau = 3; //This is ZTT (ZLepTau)
+    else if (genTausFromZ.size() == 2 && genLepFromTaus.size() == 2 && checkGenRecodR(genTausFromZ[0], genTausFromZ[1], obj1, obj2)) gen_ditau = 4; //This is ZL (ZTauTau_LepLep)
+    else gen_ditau = 5; //This is ZJ (ZTauTau_LepLep)
     return gen_ditau;
-    // 1 or  will be  ZTT
-    // 3 or 4 will be  ZLL
-    //  6 will be  ZJ
+    // 1 or 2 will be  ZLL
+    // 3 or  will be  ZTT
+    // 4 or  will be  ZL
+    //  5 will be  ZJ
 }
 //int ZCategory(myevent *m, myobject const& tau) {
 //    int numGenTau = 0;
@@ -233,6 +244,7 @@ int ZCategory(myevent *m, myobject const& obj1, myobject const& obj2) {
 //struct  InvarMass_2{
 
 double InvarMass_2(myobject const& a, myobject const& b) {
+
     return sqrt(pow(a.E + b.E, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2) - pow(a.pz + b.pz, 2));
 }
 //double InvarMass_2(myGenobject const& a, myGenobject const& b) {
@@ -240,20 +252,24 @@ double InvarMass_2(myobject const& a, myobject const& b) {
 //}
 
 double TMass(myobject const& a, myobject const& b) {
+
     return sqrt(pow(a.et + b.et, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2));
 }
 
 double TMass_2(myobject const& a, myobject const& b) {
+
     return sqrt(pow(a.et + b.et, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2));
 }
 
 double InvarMass_4(myobject const& a, myobject const& b, myobject const& c, myobject const& d) {
+
     return sqrt(pow(a.E + b.E + c.E + d.E, 2) - pow(a.px + b.px + c.px + d.px, 2) - pow(a.py + b.py + c.py + d.py, 2) - pow(a.pz + b.pz + c.pz + d.pz, 2));
     //        return (pow(a.pt+b.pt+c.pt+d.pt,2)-pow(a.px+b.px+c.px+d.px,2)-pow(a.py+b.py+c.py+d.py,2)-pow(a.pz+b.pz+c.pz+d.pz,2));
 }
 //};
 
 double TMass(double et1, double et2, double px1, double px2, double py1, double py2) {
+
     return sqrt(pow(et1 + et2, 2) - pow(px1 + px2, 2) - pow(py1 + py2, 2));
 
 }
