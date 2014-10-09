@@ -386,7 +386,7 @@ int main(int argc, char** argv) {
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = (tau_[k].pt)*1.01 > 20 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
@@ -460,7 +460,7 @@ int main(int argc, char** argv) {
                         bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = (tau_[k].pt)*1.01 > 20 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
