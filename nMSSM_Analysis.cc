@@ -382,13 +382,12 @@ int main(int argc, char** argv) {
                         //                        bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
                         //                        bool Veto_MME = Multi_Lepton_Veto("MME", m);
 
-                        bool secondEleVeto = secondElectronVeto(m);
                         bool secondMuVeto = secondMuonVeto(m);
-                        bool thirdEleVeto = thirdElectronVeto(m, mu_[i], tau_[k]);
-                        bool thirdMuVeto = thirdMuonVeto(m, mu_[i], tau_[k]);
+                        bool thirdEleVeto = thirdElectronVetoMuTau(m, mu_[i], tau_[k]);
+                        bool thirdMuVeto = thirdMuonVetoMuTau(m, mu_[i], tau_[k]);
 
 
-                        bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto;
+                        bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && secondMuVeto && thirdEleVeto && thirdMuVeto;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
 
                         //Loose Selection
@@ -438,11 +437,10 @@ int main(int argc, char** argv) {
                         //                        bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
 
                         bool secondEleVeto = secondElectronVeto(m);
-                        bool secondMuVeto = secondMuonVeto(m);
-                        bool thirdEleVeto = thirdElectronVeto(m, electron_[i], tau_[k]);
-                        bool thirdMuVeto = thirdMuonVeto(m, electron_[i], tau_[k]);
+                        bool thirdEleVeto = thirdElectronVetoETau(m, electron_[i], tau_[k]);
+                        bool thirdMuVeto = thirdMuonVetoETau(m, electron_[i], tau_[k]);
 
-                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto;
+                        bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && secondEleVeto &&  thirdEleVeto && thirdMuVeto;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
 
                         //Loose Selection

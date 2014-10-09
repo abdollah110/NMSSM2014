@@ -344,11 +344,11 @@ int main(int argc, char** argv) {
             vector<myobject> mu_ = GoodMuon10GeV(m);
             vector<myobject> electron_ = GoodElectron10GeV(m);
             vector<myobject> tau_ = GoodTau20GeV(m);
-//            vector<myobject> MVAMetRecoil_mutau = m->PairRecoilMet_mutau;
-//            vector<myobject> MVAMetNORecoil_mutau = m->PairMet_mutau;
-//            vector<myobject> MVAMetRecoil_etau = m->PairRecoilMet_etau;
-//            vector<myobject> MVAMetNORecoil_etau = m->PairMet_etau;
-//            vector<myobject> RAWPFMet = m->RecPFMetCor;
+            //            vector<myobject> MVAMetRecoil_mutau = m->PairRecoilMet_mutau;
+            //            vector<myobject> MVAMetNORecoil_mutau = m->PairMet_mutau;
+            //            vector<myobject> MVAMetRecoil_etau = m->PairRecoilMet_etau;
+            //            vector<myobject> MVAMetNORecoil_etau = m->PairMet_etau;
+            //            vector<myobject> RAWPFMet = m->RecPFMetCor;
 
             //            int num_PU = 1;
             //            float PU_Weight = 1;
@@ -397,10 +397,9 @@ int main(int argc, char** argv) {
                         bool MuTau_Charge = mu_[i].charge * tau_[k].charge < 0;
                         bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
-                        bool secondEleVeto = secondElectronVeto(m);
                         bool secondMuVeto = secondMuonVeto(m);
-                        bool thirdEleVeto = thirdElectronVeto(m, mu_[i], tau_[k]);
-                        bool thirdMuVeto = thirdMuonVeto(m, mu_[i], tau_[k]);
+                        bool thirdEleVeto = thirdElectronVetoMuTau(m, mu_[i], tau_[k]);
+                        bool thirdMuVeto = thirdMuonVetoMuTau(m, mu_[i], tau_[k]);
 
                         bool hasMatchedTrigger = mu_[i].hasTrgObject_Mu17Tau20 && tau_[k].hasTrgObject_Mu17Tau20;
 
@@ -422,7 +421,7 @@ int main(int argc, char** argv) {
 
                         //  ########## ########## ########## ########## ########## ##########
 
-                        if (hasMatchedTrigger && Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto) {
+                        if (hasMatchedTrigger && Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && secondMuVeto && thirdEleVeto && thirdMuVeto) {
                             plotFill("mutau", ++mutau, 20, 0., 20.);
                             fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
                             //                            counter++;
@@ -473,9 +472,8 @@ int main(int argc, char** argv) {
                         bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
 
                         bool secondEleVeto = secondElectronVeto(m);
-                        bool secondMuVeto = secondMuonVeto(m);
-                        bool thirdEleVeto = thirdElectronVeto(m, electron_[i], tau_[k]);
-                        bool thirdMuVeto = thirdMuonVeto(m, electron_[i], tau_[k]);
+                        bool thirdEleVeto = thirdElectronVetoETau(m, electron_[i], tau_[k]);
+                        bool thirdMuVeto = thirdMuonVetoETau(m, electron_[i], tau_[k]);
 
                         bool hasMatchedTrigger = electron_[i].hasTrgObject_Ele20Tau20 && tau_[k].hasTrgObject_Ele20Tau20;
                         //  ########## ########## ########## ########## ########## ##########
@@ -498,7 +496,7 @@ int main(int argc, char** argv) {
 
 
 
-                        if (hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && secondEleVeto && secondMuVeto && thirdEleVeto && thirdMuVeto) {
+                        if (hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && secondEleVeto && thirdEleVeto && thirdMuVeto) {
                             plotFill("eltau", ++eltau, 20, 0., 20.);
                             fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                             //                            counter++;

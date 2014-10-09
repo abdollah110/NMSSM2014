@@ -224,7 +224,7 @@ bool secondElectronVeto(myevent * m) {
             bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
             bool DiEl_dR = deltaR(electron_[i], electron_[j]) > 0.30; // changed from 0.15 on Oct9th
 
-            if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso &&  DiEl_charge && DiEl_dR)
+            if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && DiEl_charge && DiEl_dR)
                 ThereIsNoExtraLepton = false;
         }
     }
@@ -254,7 +254,7 @@ bool secondMuonVeto(myevent * m) {
     return ThereIsNoExtraLepton;
 }
 
-bool thirdElectronVeto(myevent *m, myobject const& a, myobject const& b) {
+bool thirdElectronVetoETau(myevent *m, myobject const& a, myobject const& b) {
     bool ThereIsNoExtraLepton = true;
     vector<myobject> electron_ = GoodElectron10GeV(m);
 
@@ -264,9 +264,10 @@ bool thirdElectronVeto(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdEl_Id = EleMVANonTrigId_Loose(electron_[k]);
         bool ThirdEle_Iso = Iso_Ele_dBeta(electron_[k]) < 0.3;
         bool ThirdEle_dZ = electron_[k].dZ_in < 0.2;
-        bool NoOberLapwithOthers(deltaR(electron_[k], a) > 0.15 && deltaR(electron_[k], b) > 0.15);
+        //        bool NoOverLapwithOthers(deltaR(electron_[k], a) > 0.15 && deltaR(electron_[k], b) > 0.15);  changed at October8 Sync with LLR
+        bool NoOverLapwithOthers = deltaR(electron_[k], a) > 0.30;
 
-        if (ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso && NoOberLapwithOthers && ThirdEle_dZ)
+        if (ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso && NoOverLapwithOthers && ThirdEle_dZ)
             ThereIsNoExtraLepton = false;
     }
 
@@ -274,7 +275,28 @@ bool thirdElectronVeto(myevent *m, myobject const& a, myobject const& b) {
 
 }
 
-bool thirdMuonVeto(myevent *m, myobject const& a, myobject const& b) {
+bool thirdElectronVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
+    bool ThereIsNoExtraLepton = true;
+    vector<myobject> electron_ = GoodElectron10GeV(m);
+
+    for (int k = 0; k < electron_.size(); k++) {
+        bool ThirdEl_Pt = electron_[k].pt > 10;
+        bool ThirdEl_Eta = fabs(electron_[k].eta) < 2.5;
+        bool ThirdEl_Id = EleMVANonTrigId_Loose(electron_[k]);
+        bool ThirdEle_Iso = Iso_Ele_dBeta(electron_[k]) < 0.3;
+        bool ThirdEle_dZ = electron_[k].dZ_in < 0.2;
+        //        bool NoOverLapwithOthers(deltaR(electron_[k], a) > 0.15 && deltaR(electron_[k], b) > 0.15);  changed at October8 Sync with LLR
+        //        bool NoOverLapwithOthers(deltaR(electron_[k], a) > 0.15);
+
+        if (ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso && ThirdEle_dZ)
+            ThereIsNoExtraLepton = false;
+    }
+
+    return ThereIsNoExtraLepton;
+
+}
+
+bool thirdMuonVetoETau(myevent *m, myobject const& a, myobject const& b) {
 
     vector<myobject> mu_ = GoodMuon10GeV(m);
     bool ThereIsNoExtraLepton = true;
@@ -287,9 +309,30 @@ bool thirdMuonVeto(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
         bool ThirdMu_dZ = mu_[k].dZ_in < 0.2;
         bool ThirdMu_d0 = mu_[k].d0 < 0.045;
-        bool NoOberLapwithOthers(deltaR(mu_[k], a) > 0.15 && deltaR(mu_[k], b) > 0.15);
+        //        bool NoOverLapwithOthers(deltaR(mu_[k], a) > 0.15 && deltaR(mu_[k], b) > 0.15);
 
-        if (ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso && NoOberLapwithOthers && ThirdMu_dZ && ThirdMu_d0)
+        if (ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso && ThirdMu_dZ && ThirdMu_d0)
+            ThereIsNoExtraLepton = false;
+    }
+    return ThereIsNoExtraLepton;
+}
+
+bool thirdMuonVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
+
+    vector<myobject> mu_ = GoodMuon10GeV(m);
+    bool ThereIsNoExtraLepton = true;
+
+    for (int k = 0; k < mu_.size(); k++) {
+
+        bool ThirdMu_Pt = mu_[k].pt > 10;
+        bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
+        bool ThirdMu_Id = Id_Mu_Tight(mu_[k]);
+        bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
+        bool ThirdMu_dZ = mu_[k].dZ_in < 0.2;
+        bool ThirdMu_d0 = mu_[k].d0 < 0.045;
+        bool NoOverLapwithOthers= deltaR(mu_[k], a) > 0.30 ;
+
+        if (ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso && NoOverLapwithOthers && ThirdMu_dZ && ThirdMu_d0)
             ThereIsNoExtraLepton = false;
     }
     return ThereIsNoExtraLepton;
