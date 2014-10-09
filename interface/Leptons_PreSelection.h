@@ -221,12 +221,10 @@ bool secondElectronVeto(myevent * m) {
             bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
             bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
             bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
-            bool DiEl_dZ = electron_[i].dZ_in < 0.2 && electron_[j].dZ_in < 0.2;
-            bool DiEl_dZ = electron_[i].dxy_PV < 0.045 && electron_[j].dxy_PV < 0.045;
             bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
             bool DiEl_dR = deltaR(electron_[i], electron_[j]) > 0.30; // changed from 0.15 on Oct9th
 
-            if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso && DiEl_dZ && DiEl_charge && DiEl_dR)
+            if (DiEl_Pt && DiEl_Eta && DiEl_Id && DiEl_Iso &&  DiEl_charge && DiEl_dR)
                 ThereIsNoExtraLepton = false;
         }
     }
