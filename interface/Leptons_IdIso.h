@@ -218,9 +218,11 @@ bool EleLooseForEtauVeto(myobject const& a) {
     float deta = fabs(a.deltaEtaSuperClusterTrackAtVtx);
     float dphi = fabs(a.deltaPhiSuperClusterTrackAtVtx);
     float sihih = a.sigmaIetaIeta;
-
-    if (EB && sihih < 0.010 && dphi < 0.80 && deta < 0.007 && hoe < 0.15) return true;
-    else if (EE && sihih < 0.030 && dphi < 0.70 && deta < 0.010 ) return true; //  hoe < 0.07 is droped at October 6th
+    bool Ele_d0 = a.dxy_PV < 0.045; //the impact parameter in the transverse plane
+    bool Ele_dZ = a.dz_PV < 0.2; //the impact parameter in the transverse plane
+    
+    if (Ele_d0 && Ele_dZ && EB && sihih < 0.010 && dphi < 0.80 && deta < 0.007 && hoe < 0.15) return true;
+    else if (Ele_d0 && Ele_dZ &&  EE && sihih < 0.030 && dphi < 0.70 && deta < 0.010 ) return true; //  hoe < 0.07 is droped at October 6th
     else return false;
 
 

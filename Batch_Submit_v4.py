@@ -34,7 +34,7 @@ def make_submit_form():
         for numMod in xrange(0,NumberToBedevided):
             f = os.popen("ls " + pnfn + "/" + " | sort ")
             dir = "dcap://maite.iihe.ac.be" + pnfn + "/"
-            name_out = "_" + data_year + "_" +  sampleName +"_"+str(numMod)+ ".sh"
+            name_out = "_" +  sampleName +"_"+str(numMod)+ ".sh"
             outFile = open(name_out, 'w')
             command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
             command1 = command1 + "cd " + location + "\n"
@@ -58,7 +58,7 @@ def make_submit_form():
             Name1=sampleName
             shortName=Name1[0:-10]+"_"+str(numMod)
             command3 = "qsub -q localgrid@cream02 -o " + shortName + ".stdout -e " + shortName + ".stderr -l walltime=" + timing + "  " + name_out + "\n"
-            command4 = "hadd -f ROOT/" + data_year + "/" + sampleName +"_"+str(numMod)+ ".root\t" + "Out_" + sampleName +"_"+str(numMod)+ "/*.root" + "\n"
+            command4 = "hadd -f ROOT/" + sampleName +"_"+str(numMod)+ ".root\t" + "Out_" + sampleName +"_"+str(numMod)+ "/*.root" + "\n"
             submit_File.write(command3)
             Hadd_File.write(command4)
 
