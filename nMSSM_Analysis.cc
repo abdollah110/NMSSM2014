@@ -389,7 +389,7 @@ int main(int argc, char** argv) {
 
 
                         bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && secondMuVeto && thirdEleVeto && thirdMuVeto;
-                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
+                        bool VLooseTauIso = tau_[k].byLooseIsolationMVA3oldDMwLT;
 
                         //Loose Selection
                         if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {
@@ -442,7 +442,7 @@ int main(int argc, char** argv) {
                         bool thirdMuVeto = thirdMuonVetoETau(m, electron_[i], tau_[k]);
 
                         bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && secondEleVeto &&  thirdEleVeto && thirdMuVeto;
-                        bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0.5;
+                        bool VLooseTauIso = tau_[k].byLooseIsolationMVA3oldDMwLT;
 
                         //Loose Selection
                         if (Tau_antiEl && Tau_antiMu && LooseSelection && VLooseTauIso) {

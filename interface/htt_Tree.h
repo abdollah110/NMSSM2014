@@ -475,8 +475,8 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     mvis = InvarMass_2(obj1, obj2);
 
 
-    idweight_1 = getCorrIDLep(FinalState, is_data_mc, obj2);
-    isoweight_1 = getCorrIsoLep(FinalState, is_data_mc, obj2);
+    idweight_1 = getCorrIDLep(FinalState, is_data_mc, obj1);
+    isoweight_1 = getCorrIsoLep(FinalState, is_data_mc, obj1);
     trigweight_1 = getCorrTriggerLep(FinalState, is_data_mc, obj1);
     trigweight_2 = getCorrTriggerTau(FinalState, is_data_mc, obj2);
     //    zCategory = 0;

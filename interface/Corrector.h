@@ -31,10 +31,14 @@ double correctionHighPtTail_Data(myobject const& a) {
     //    Double_t DataValEndcaps_pt = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt);
     //    Double_t DataValEndcaps_400 = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(400.);
 
-    if (a.pt < 800 && fabs(a.eta) < 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(a.pt));
+    if (a.pt > 140 && a.pt < 800 && fabs(a.eta) < 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(a.pt));
     else if (a.pt >= 800 && fabs(a.eta) <= 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(800.));
-    else if (a.pt < 400 && fabs(a.eta) > 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt));
+    else if (a.pt > 60 && a.pt < 400 && fabs(a.eta) > 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt));
     else if (a.pt >= 400 && fabs(a.eta) >= 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(400.));
+        //    if (a.pt < 800 && fabs(a.eta) < 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(a.pt));
+        //    else if (a.pt >= 800 && fabs(a.eta) <= 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(800.));
+        //    else if (a.pt < 400 && fabs(a.eta) > 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt));
+        //    else if (a.pt >= 400 && fabs(a.eta) >= 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(400.));
     else return 1;
 }
 
@@ -50,9 +54,9 @@ double correctionHighPtTail_MC(myobject const& a) {
     //    Double_t MCValEndcaps_400 = TriggerWeightEndcaps->Eval(400.);
 
 
-    if (a.pt < 800 && fabs(a.eta) < 1.5) return TriggerWeightBarrel->Eval(a.pt);
+    if (a.pt > 140 && a.pt < 800 && fabs(a.eta) < 1.5) return TriggerWeightBarrel->Eval(a.pt);
     else if (a.pt >= 800 && fabs(a.eta) <= 1.5) return TriggerWeightBarrel->Eval(800.);
-    else if (a.pt < 400 && fabs(a.eta) > 1.5) return TriggerWeightEndcaps->Eval(a.pt);
+    else if (a.pt > 60 && a.pt < 400 && fabs(a.eta) > 1.5) return TriggerWeightEndcaps->Eval(a.pt);
     else if (a.pt >= 400 && fabs(a.eta) >= 1.5) return TriggerWeightEndcaps->Eval(400.);
     else return 1;
 
@@ -527,9 +531,16 @@ float getCorrTriggerLep(std::string channel, std::string type, myobject const& a
 float getCorrTriggerTau(std::string channel, std::string type, myobject const& b) {
 
     if (type == "mc12" || type == "embedmc12") {
-        return ((Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)))*(correctionHighPtTail_Data(b) / correctionHighPtTail_MC(b));
+        if (channel == "eltau") {
+            return ((Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)))*(correctionHighPtTail_Data(b) / correctionHighPtTail_MC(b));
+        }
+        if (channel == "mutau") {
+            return ((Eff_MuTauTrg_Tau_Data_2012(b) / Eff_MuTauTrg_Tau_MC_2012(b)))*(correctionHighPtTail_Data(b) / correctionHighPtTail_MC(b));
+        }
+
     } else
         return 1;
+        return 1.0;
 }
 
 float getCorrTriggerLepTau(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c) {
