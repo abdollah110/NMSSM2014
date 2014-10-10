@@ -9,6 +9,7 @@
 #include "TH2F.h"
 #include "TTree.h"
 #include "TFile.h"
+#include "TF1.h"
 #include "TSystem.h"
 #include "myevent.h"
 #include "TMath.h" //M_PI is in TMath
@@ -19,51 +20,74 @@ using namespace std;
 
 //******************** ETau/MuTau turn-on *****************************
 
-double ratioEfficiencyTest(double m, double m0, double sigma, double alpha, double n, double norm) {
-    const double sqrtPiOver2 = 1.2533141373;
-    const double sqrt2 = 1.4142135624;
-    double sig = fabs((double) sigma);
-    double t = (m - m0) / sig;
-    if (alpha < 0)
-        t = -t;
-    double absAlpha = fabs(alpha / sig);
-    double a = TMath::Power(n / absAlpha, n) * exp(-0.5 * absAlpha * absAlpha);
-    double b = absAlpha - n / absAlpha;
-    double ApproxErf;
-    double arg = absAlpha / sqrt2;
-    if (arg > 5.) ApproxErf = 1;
-    else if (arg < -5.) ApproxErf = -1;
-    else ApproxErf = TMath::Erf(arg);
-    double leftArea = (1 + ApproxErf) * sqrtPiOver2;
-    double rightArea = (a * 1 / TMath::Power(absAlpha - b, n - 1)) / (n - 1);
-    double area = leftArea + rightArea;
-    if (t <= absAlpha) {
-        arg = t / sqrt2;
-        if (arg > 5.) ApproxErf = 1;
-        else if (arg < -5.) ApproxErf = -1;
-        else ApproxErf = TMath::Erf(arg);
-        return norm * (1 + ApproxErf) * sqrtPiOver2 / area;
-    } else {
-        return norm * (leftArea + a * (1 / TMath::Power(t - b, n - 1) -
-                1 / TMath::Power(absAlpha - b, n - 1)) / (1 - n)) / area;
-    }
-    //    //Additional corrections for high pT taus in muTau & eTau (Arun, Mar14)
-    //    TF1 *TriggerWeightBarrel = new TF1("AddTriggerWeightMuTauBarrel", "1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)", 0., 800.);
-    //    TF1 *TriggerWeightEndcaps = new TF1("AddTriggerWeightMuTauEndcaps", "1 - 1.81148e-03*(x - 60) + 5.44335e-07*(x - 60)*(x-60)", 0., 800.);
-    //
-    //    Double_t MCValBarrel_pt = TriggerWeightBarrel->Eval(m);
-    //    Double_t MCValBarrel_800 = TriggerWeightBarrel->Eval(800.);
-    //
-    //    Double_t MCValEndcaps_pt = TriggerWeightEndcaps->Eval(m);
-    //    Double_t MCValEndcaps_400 = TriggerWeightEndcaps->Eval(400.);
-    //
-    //    Double_t DataValBarrel_pt = 0.3 + 0.7 * TriggerWeightBarrel->Eval(m);
+double correctionHighPtTail_Data(myobject const& a) {
+    //Additional corrections for high pT taus in muTau & eTau (Arun, Mar14)
+    TF1 *TriggerWeightBarrel = new TF1("AddTriggerWeightMuTauBarrel", "1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)", 0., 800.);
+    TF1 *TriggerWeightEndcaps = new TF1("AddTriggerWeightMuTauEndcaps", "1 - 1.81148e-03*(x - 60) + 5.44335e-07*(x - 60)*(x-60)", 0., 800.);
+
+    //    Double_t DataValBarrel_pt = 0.3 + 0.7 * TriggerWeightBarrel->Eval(a.pt);
     //    Double_t DataValBarrel_800 = 0.3 + 0.7 * TriggerWeightBarrel->Eval(800.);
     //
-    //    Double_t DataValEndcaps_pt = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(m);
+    //    Double_t DataValEndcaps_pt = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt);
     //    Double_t DataValEndcaps_400 = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(400.);
 
+    if (a.pt < 800 && fabs(a.eta) < 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(a.pt));
+    else if (a.pt >= 800 && fabs(a.eta) <= 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(800.));
+    else if (a.pt < 400 && fabs(a.eta) > 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt));
+    else if (a.pt >= 400 && fabs(a.eta) >= 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(400.));
+    else return 1;
 }
+
+double correctionHighPtTail_MC(myobject const& a) {
+    //Additional corrections for high pT taus in muTau & eTau (Arun, Mar14)
+    TF1 *TriggerWeightBarrel = new TF1("AddTriggerWeightMuTauBarrel", "1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)", 0., 800.);
+    TF1 *TriggerWeightEndcaps = new TF1("AddTriggerWeightMuTauEndcaps", "1 - 1.81148e-03*(x - 60) + 5.44335e-07*(x - 60)*(x-60)", 0., 800.);
+
+    //    Double_t MCValBarrel_pt = TriggerWeightBarrel->Eval(a.pt);
+    //    Double_t MCValBarrel_800 = TriggerWeightBarrel->Eval(800.);
+    //
+    //    Double_t MCValEndcaps_pt = TriggerWeightEndcaps->Eval(a.pt);
+    //    Double_t MCValEndcaps_400 = TriggerWeightEndcaps->Eval(400.);
+
+
+    if (a.pt < 800 && fabs(a.eta) < 1.5) return TriggerWeightBarrel->Eval(a.pt);
+    else if (a.pt >= 800 && fabs(a.eta) <= 1.5) return TriggerWeightBarrel->Eval(800.);
+    else if (a.pt < 400 && fabs(a.eta) > 1.5) return TriggerWeightEndcaps->Eval(a.pt);
+    else if (a.pt >= 400 && fabs(a.eta) >= 1.5) return TriggerWeightEndcaps->Eval(400.);
+    else return 1;
+
+}
+
+//double efficiency(double m, double m0, double sigma, double alpha, double n, double norm) {
+//    const double sqrtPiOver2 = 1.2533141373;
+//    const double sqrt2 = 1.4142135624;
+//    double sig = fabs((double) sigma);
+//    double t = (m - m0) / sig;
+//    if (alpha < 0)
+//        t = -t;
+//    double absAlpha = fabs(alpha / sig);
+//    double a = TMath::Power(n / absAlpha, n) * exp(-0.5 * absAlpha * absAlpha);
+//    double b = absAlpha - n / absAlpha;
+//    double ApproxErf;
+//    double arg = absAlpha / sqrt2;
+//    if (arg > 5.) ApproxErf = 1;
+//    else if (arg < -5.) ApproxErf = -1;
+//    else ApproxErf = TMath::Erf(arg);
+//    double leftArea = (1 + ApproxErf) * sqrtPiOver2;
+//    double rightArea = (a * 1 / TMath::Power(absAlpha - b, n - 1)) / (n - 1);
+//    double area = leftArea + rightArea;
+//    if (t <= absAlpha) {
+//        arg = t / sqrt2;
+//        if (arg > 5.) ApproxErf = 1;
+//        else if (arg < -5.) ApproxErf = -1;
+//        else ApproxErf = TMath::Erf(arg);
+//        return norm * (1 + ApproxErf) * sqrtPiOver2 / area;
+//    } else {
+//        return norm * (leftArea + a * (1 / TMath::Power(t - b, n - 1) -
+//                1 / TMath::Power(absAlpha - b, n - 1)) / (1 - n)) / area;
+//    }
+//
+//}
 
 double efficiency(double m, double m0, double sigma, double alpha, double n, double norm) {
     const double sqrtPiOver2 = 1.2533141373;
@@ -171,14 +195,14 @@ float Eff_ETauTrg_Ele_Data_2012(myobject const& a) {
 // ABCD
 
 float Eff_ETauTrg_Tau_Data_2012(myobject const& a) {
-    if (fabs(a.eta) < 1.5) return ratioEfficiencyTest(a.pt, 1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00); //data barrel
-    else return ratioEfficiencyTest(a.pt, 1.80812e+01, 1.39482e+00, 1.14305e+00, 1.08989e+01, 8.97087e-01); //data end cap
+    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00); //data barrel
+    else return efficiency(a.pt, 1.80812e+01, 1.39482e+00, 1.14305e+00, 1.08989e+01, 8.97087e-01); //data end cap
 }
 // MC ABCD
 
 float Eff_ETauTrg_Tau_MC_2012(myobject const& a) {
-    if (fabs(a.eta) < 1.5) return ratioEfficiencyTest(a.pt, 1.83709e+01, 1.37806e-01, 1.64478e-01, 1.44798e+00, 9.92673e-01); //MC barrel
-    else return ratioEfficiencyTest(a.pt, 1.83074e+01, 1.43406e+00, 1.40743e+00, 1.41501e+02, 9.19457e-01); //MC end cap
+    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 1.83709e+01, 1.37806e-01, 1.64478e-01, 1.44798e+00, 9.92673e-01); //MC barrel
+    else return efficiency(a.pt, 1.83074e+01, 1.43406e+00, 1.40743e+00, 1.41501e+02, 9.19457e-01); //MC end cap
 }
 
 //*****************************************************
@@ -250,15 +274,15 @@ float Eff_MuTauTrg_Mu_MC_2012(myobject const& a) {
 // ABCD      antiEMed
 
 float Eff_MuTauTrg_Tau_Data_2012(myobject const& a) {
-    if (fabs(a.eta) < 1.5) return ratioEfficiencyTest(a.pt, 1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00); //data barrel
-    else return ratioEfficiencyTest(a.pt, 1.80812e+01, 1.39482e+00, 1.14305e+00, 1.08989e+01, 8.97087e-01); //data endcap
+    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00); //data barrel
+    else return efficiency(a.pt, 1.80812e+01, 1.39482e+00, 1.14305e+00, 1.08989e+01, 8.97087e-01); //data endcap
 }
 
 // MC ABCD   antiEMed
 
 float Eff_MuTauTrg_Tau_MC_2012(myobject const& a) {
-    if (fabs(a.eta) < 1.5) return ratioEfficiencyTest(a.pt, 1.83709e+01, 1.37806e-01, 1.64478e-01, 1.44798e+00, 9.92673e-01); //MC barrel
-    else return ratioEfficiencyTest(a.pt, 1.83074e+01, 1.43406e+00, 1.40743e+00, 1.41501e+02, 9.19457e-01); //MC endcap
+    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 1.83709e+01, 1.37806e-01, 1.64478e-01, 1.44798e+00, 9.92673e-01); //MC barrel
+    else return efficiency(a.pt, 1.83074e+01, 1.43406e+00, 1.40743e+00, 1.41501e+02, 9.19457e-01); //MC endcap
 }
 
 //*****************************************************
@@ -503,9 +527,14 @@ float getCorrTriggerLep(std::string channel, std::string type, myobject const& a
 float getCorrTriggerTau(std::string channel, std::string type, myobject const& b) {
 
     if (type == "mc12" || type == "embedmc12") {
-        return ((Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)));
+        return ((Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)))*(correctionHighPtTail_Data(b) / correctionHighPtTail_MC(b));
     } else
         return 1;
+}
+
+float getCorrTriggerLepTau(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c) {
+
+    return getCorrTriggerLep(channel, type, a) * getCorrTriggerTau(channel, type, b);
 }
 
 float getCorrIDIsoLep(std::string channel, std::string type, myobject const& a) {

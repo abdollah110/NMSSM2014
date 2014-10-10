@@ -288,7 +288,6 @@ bool thirdElectronVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
         //        bool NoOverLapwithOthers(deltaR(electron_[k], a) > 0.15 && deltaR(electron_[k], b) > 0.15);  changed at October8 Sync with LLR
         //        bool NoOverLapwithOthers(deltaR(electron_[k], a) > 0.15);
 
-        cout<<"Check= "<<ThirdEl_Pt << ThirdEl_Eta << ThirdEl_Id<< ThirdEle_Iso << ThirdEle_dZ <<"\n";
         if (ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso && ThirdEle_dZ)
             ThereIsNoExtraLepton = false;
     }

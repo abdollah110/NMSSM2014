@@ -175,6 +175,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("l2_tauIsoT", &l2_tauIsoT, "l2_tauIsoT/O");
 
     Run_Tree->Branch("mva_2", &l2_tauIsoMVA2L, "mva_2/O");
+    Run_Tree->Branch("iso_1", &iso_1, "iso_1/F");
     Run_Tree->Branch("iso_2", &l2_tauIsoMVA2raw, "iso_2/F");
     Run_Tree->Branch("l2_tauIsoMVA2M", &l2_tauIsoMVA2M, "l2_tauIsoMVA2M/O");
     Run_Tree->Branch("l2_tauIsoMVA2T", &l2_tauIsoMVA2T, "l2_tauIsoMVA2T/O");
