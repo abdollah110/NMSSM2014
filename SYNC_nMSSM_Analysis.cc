@@ -76,8 +76,8 @@ int main(int argc, char** argv) {
 
     //    string CHANNEL = *(argv + 2);
 
-    bool isMu = 0;
-    bool isEle = 1;
+    bool isMu = 1;
+    bool isEle = 0;
     bool isTot = 0;
 
     string out = *(argv + 2);
@@ -202,6 +202,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("mvis", &mvis, "mvis/F");
 
     Run_Tree->Branch("idweight_1", &idweight_1, "idweight_1/F");
+    Run_Tree->Branch("isoweight_1", &isoweight_1, "isoweight_1/F");
     Run_Tree->Branch("trigweight_1", &trigweight_1, "trigweight_1/F");
     Run_Tree->Branch("trigweight_2", &trigweight_2, "trigweight_2/F");
     Run_Tree->Branch("rho", &rho, "rho/F");
@@ -381,12 +382,12 @@ int main(int argc, char** argv) {
 
                         bool Mu_PtEta = mu_[i].pt > 20 && fabs(mu_[i].eta) < 2.1;
                         bool Mu_IdTight = Id_Mu_Tight(mu_[i]);
-                        bool Mu_d0 = mu_[i].d0 < 0.045; //the impact parameter in the transverse plane
-                        bool Mu_dZ = mu_[i].dZ_in < 0.2; //the impact parameter in the transverse plane
+                        bool Mu_d0 = fabs(mu_[i].d0) < 0.045; //the impact parameter in the transverse plane
+                        bool Mu_dZ = fabs(mu_[i].dZ_in) < 0.2; //the impact parameter in the transverse plane
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                        bool Tau_PtEta = (tau_[k].pt)*1.01 > 20 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
@@ -460,7 +461,7 @@ int main(int argc, char** argv) {
                         bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
 
-                        bool Tau_PtEta = (tau_[k].pt)*1.01 > 20 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;

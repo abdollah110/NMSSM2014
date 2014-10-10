@@ -307,6 +307,7 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("GenTopPt;", &GenTopPt, "GenTopPt/F");
     Run_Tree->Branch("GenAntiTopPt;", &GenAntiTopPt, "GenAntiTopPt/F");
     Run_Tree->Branch("Tau_Vertex_dz;", &Tau_Vertex_dz, "Tau_Vertex_dz/F");
+    Run_Tree->Branch("gen_Higgs_Mass;", &gen_Higgs_Mass, "gen_Higgs_Mass/F");
 
 
 
@@ -361,8 +362,8 @@ int main(int argc, char** argv) {
 
                         bool Mu_PtEta = mu_[i].pt > 17 && fabs(mu_[i].eta) < 2.1;
                         bool Mu_IdTight = Id_Mu_Tight(mu_[i]);
-                        bool Mu_d0 = mu_[i].d0 < 0.045; //the impact parameter in the transverse plane
-                        bool Mu_dZ = mu_[i].dZ_in < 0.2; //the impact parameter in the transverse plane
+                        bool Mu_d0 = fabs(mu_[i].d0) < 0.045; //the impact parameter in the transverse plane
+                        bool Mu_dZ = fabs(mu_[i].dZ_in) < 0.2; //the impact parameter in the transverse plane
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 

@@ -243,7 +243,7 @@ bool secondMuonVeto(myevent * m) {
             bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
             bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
             bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
-            bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2 && mu_[i].d0 < 0.045 && mu_[j].d0 < 0.045;
+            bool DiMu_dZ = fabs(mu_[i].dz_PV) < 0.2 && fabs(mu_[j].dz_PV) < 0.2 && fabs(mu_[i].d0) < 0.045 && fabs(mu_[j].d0) < 0.045;
             bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
             bool DiMu_dR = deltaR(mu_[i], mu_[j]) > 0.30;
 
@@ -263,7 +263,7 @@ bool thirdElectronVetoETau(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdEl_Eta = fabs(electron_[k].eta) < 2.5;
         bool ThirdEl_Id = EleMVANonTrigId_Loose(electron_[k]);
         bool ThirdEle_Iso = Iso_Ele_dBeta(electron_[k]) < 0.3;
-        bool ThirdEle_dZ = electron_[k].dZ_in < 0.2;
+        bool ThirdEle_dZ = fabs(electron_[k].dz_PV) < 0.2;
         //        bool NoOverLapwithOthers(deltaR(electron_[k], a) > 0.15 && deltaR(electron_[k], b) > 0.15);  changed at October8 Sync with LLR
         bool NoOverLapwithOthers = deltaR(electron_[k], a) > 0.30;
 
@@ -284,10 +284,11 @@ bool thirdElectronVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdEl_Eta = fabs(electron_[k].eta) < 2.5;
         bool ThirdEl_Id = EleMVANonTrigId_Loose(electron_[k]);
         bool ThirdEle_Iso = Iso_Ele_dBeta(electron_[k]) < 0.3;
-        bool ThirdEle_dZ = electron_[k].dZ_in < 0.2;
+        bool ThirdEle_dZ = fabs(electron_[k].dz_PV) < 0.2;
         //        bool NoOverLapwithOthers(deltaR(electron_[k], a) > 0.15 && deltaR(electron_[k], b) > 0.15);  changed at October8 Sync with LLR
         //        bool NoOverLapwithOthers(deltaR(electron_[k], a) > 0.15);
 
+        cout<<"Check= "<<ThirdEl_Pt << ThirdEl_Eta << ThirdEl_Id<< ThirdEle_Iso << ThirdEle_dZ <<"\n";
         if (ThirdEl_Pt && ThirdEl_Eta && ThirdEl_Id && ThirdEle_Iso && ThirdEle_dZ)
             ThereIsNoExtraLepton = false;
     }
@@ -307,8 +308,8 @@ bool thirdMuonVetoETau(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
         bool ThirdMu_Id = Id_Mu_Tight(mu_[k]);
         bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
-        bool ThirdMu_dZ = mu_[k].dZ_in < 0.2;
-        bool ThirdMu_d0 = mu_[k].d0 < 0.045;
+        bool ThirdMu_dZ = fabs(mu_[k].dz_PV) < 0.2;
+        bool ThirdMu_d0 = fabs(mu_[k].d0) < 0.045;
         //        bool NoOverLapwithOthers(deltaR(mu_[k], a) > 0.15 && deltaR(mu_[k], b) > 0.15);
 
         if (ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso && ThirdMu_dZ && ThirdMu_d0)
@@ -328,8 +329,8 @@ bool thirdMuonVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
         bool ThirdMu_Eta = fabs(mu_[k].eta) < 2.4;
         bool ThirdMu_Id = Id_Mu_Tight(mu_[k]);
         bool ThirdMu_Iso = Iso_Mu_dBeta(mu_[k]) < 0.3;
-        bool ThirdMu_dZ = mu_[k].dZ_in < 0.2;
-        bool ThirdMu_d0 = mu_[k].d0 < 0.045;
+        bool ThirdMu_dZ = fabs(mu_[k].dz_PV) < 0.2;
+        bool ThirdMu_d0 = fabs(mu_[k].d0) < 0.045;
         bool NoOverLapwithOthers= deltaR(mu_[k], a) > 0.30 ;
 
         if (ThirdMu_Pt && ThirdMu_Eta && ThirdMu_Id && ThirdMu_Iso && NoOverLapwithOthers && ThirdMu_dZ && ThirdMu_d0)
@@ -353,7 +354,7 @@ bool thirdMuonVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
 //                bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
 //                bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
 //                bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
-//                bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2;
+//                bool DiMu_dZ = mu_[i].dZ_PV < 0.2 && mu_[j].dZ_PV < 0.2;
 //                bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
 //                bool DiMu_dR = deltaR(mu_[i], mu_[j]) > 0.15;
 //
@@ -372,7 +373,7 @@ bool thirdMuonVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
 //                bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
 //                bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
 //                bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
-//                bool DiEl_dZ = electron_[i].dZ_in < 0.2 && electron_[j].dZ_in < 0.2;
+//                bool DiEl_dZ = electron_[i].dZ_PV < 0.2 && electron_[j].dZ_PV < 0.2;
 //                bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
 //                bool DiEl_dR = deltaR(electron_[i], electron_[j]) > 0.15;
 //
@@ -413,7 +414,7 @@ bool thirdMuonVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
 //                    bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
 //                    bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
 //                    bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
-//                    bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2;
+//                    bool DiMu_dZ = mu_[i].dZ_PV < 0.2 && mu_[j].dZ_PV < 0.2;
 //                    bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
 //
 //                    bool ThirdMu_Pt = mu_[k].pt > 10;
@@ -436,7 +437,7 @@ bool thirdMuonVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
 //                    bool DiMu_Eta = fabs(mu_[i].eta) < 2.4 && fabs(mu_[j].eta) < 2.4;
 //                    bool DiMu_Id = mu_[i].isGlobalMuon && mu_[j].isGlobalMuon && mu_[i].isPFMuon && mu_[j].isPFMuon && mu_[i].isTrackerMuon && mu_[j].isTrackerMuon;
 //                    bool DiMu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.3 && Iso_Mu_dBeta(mu_[j]) < 0.3;
-//                    bool DiMu_dZ = mu_[i].dZ_in < 0.2 && mu_[j].dZ_in < 0.2;
+//                    bool DiMu_dZ = mu_[i].dZ_PV < 0.2 && mu_[j].dZ_PV < 0.2;
 //                    bool DiMu_charge = mu_[i].charge * mu_[j].charge < 0;
 //
 //                    bool ThirdEl_Pt = electron_[k].pt > 10;
@@ -460,7 +461,7 @@ bool thirdMuonVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
 //                    bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
 //                    bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
 //                    bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
-//                    bool DiEl_dZ = electron_[i].dZ_in < 0.2 && electron_[j].dZ_in < 0.2;
+//                    bool DiEl_dZ = electron_[i].dZ_PV < 0.2 && electron_[j].dZ_PV < 0.2;
 //                    bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
 //
 //
@@ -485,7 +486,7 @@ bool thirdMuonVetoMuTau(myevent *m, myobject const& a, myobject const& b) {
 //                    bool DiEl_Eta = fabs(electron_[i].eta) < 2.5 && fabs(electron_[j].eta) < 2.5;
 //                    bool DiEl_Id = EleLooseForEtauVeto(electron_[i]) && EleLooseForEtauVeto(electron_[j]);
 //                    bool DiEl_Iso = Iso_Ele_dBeta(electron_[i]) < 0.3 && Iso_Ele_dBeta(electron_[j]) < 0.3;
-//                    bool DiEl_dZ = electron_[i].dZ_in < 0.2 && electron_[j].dZ_in < 0.2;
+//                    bool DiEl_dZ = electron_[i].dZ_PV < 0.2 && electron_[j].dZ_PV < 0.2;
 //                    bool DiEl_charge = electron_[i].charge * electron_[j].charge < 0;
 //
 //

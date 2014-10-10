@@ -19,6 +19,52 @@ using namespace std;
 
 //******************** ETau/MuTau turn-on *****************************
 
+double ratioEfficiencyTest(double m, double m0, double sigma, double alpha, double n, double norm) {
+    const double sqrtPiOver2 = 1.2533141373;
+    const double sqrt2 = 1.4142135624;
+    double sig = fabs((double) sigma);
+    double t = (m - m0) / sig;
+    if (alpha < 0)
+        t = -t;
+    double absAlpha = fabs(alpha / sig);
+    double a = TMath::Power(n / absAlpha, n) * exp(-0.5 * absAlpha * absAlpha);
+    double b = absAlpha - n / absAlpha;
+    double ApproxErf;
+    double arg = absAlpha / sqrt2;
+    if (arg > 5.) ApproxErf = 1;
+    else if (arg < -5.) ApproxErf = -1;
+    else ApproxErf = TMath::Erf(arg);
+    double leftArea = (1 + ApproxErf) * sqrtPiOver2;
+    double rightArea = (a * 1 / TMath::Power(absAlpha - b, n - 1)) / (n - 1);
+    double area = leftArea + rightArea;
+    if (t <= absAlpha) {
+        arg = t / sqrt2;
+        if (arg > 5.) ApproxErf = 1;
+        else if (arg < -5.) ApproxErf = -1;
+        else ApproxErf = TMath::Erf(arg);
+        return norm * (1 + ApproxErf) * sqrtPiOver2 / area;
+    } else {
+        return norm * (leftArea + a * (1 / TMath::Power(t - b, n - 1) -
+                1 / TMath::Power(absAlpha - b, n - 1)) / (1 - n)) / area;
+    }
+    //    //Additional corrections for high pT taus in muTau & eTau (Arun, Mar14)
+    //    TF1 *TriggerWeightBarrel = new TF1("AddTriggerWeightMuTauBarrel", "1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)", 0., 800.);
+    //    TF1 *TriggerWeightEndcaps = new TF1("AddTriggerWeightMuTauEndcaps", "1 - 1.81148e-03*(x - 60) + 5.44335e-07*(x - 60)*(x-60)", 0., 800.);
+    //
+    //    Double_t MCValBarrel_pt = TriggerWeightBarrel->Eval(m);
+    //    Double_t MCValBarrel_800 = TriggerWeightBarrel->Eval(800.);
+    //
+    //    Double_t MCValEndcaps_pt = TriggerWeightEndcaps->Eval(m);
+    //    Double_t MCValEndcaps_400 = TriggerWeightEndcaps->Eval(400.);
+    //
+    //    Double_t DataValBarrel_pt = 0.3 + 0.7 * TriggerWeightBarrel->Eval(m);
+    //    Double_t DataValBarrel_800 = 0.3 + 0.7 * TriggerWeightBarrel->Eval(800.);
+    //
+    //    Double_t DataValEndcaps_pt = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(m);
+    //    Double_t DataValEndcaps_400 = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(400.);
+
+}
+
 double efficiency(double m, double m0, double sigma, double alpha, double n, double norm) {
     const double sqrtPiOver2 = 1.2533141373;
     const double sqrt2 = 1.4142135624;
@@ -86,6 +132,23 @@ float Cor_IDIso_ETau_Ele_2012(myobject const& a) {
     else return 1.0;
 }
 
+float Cor_ID_ETau_Ele_2012(myobject const& a) {
+    if (a.pt >= 24 && a.pt < 30 && fabs(a.eta) < 1.479) return 0.8999;
+    else if (a.pt >= 24 && a.pt < 30 && fabs(a.eta) > 1.479) return 0.7945;
+    else if (a.pt >= 30 && fabs(a.eta) < 1.479) return 0.9486;
+    else if (a.pt >= 30 && fabs(a.eta) > 1.479) return 0.8866;
+    else return 1.0;
+}
+
+float Cor_Iso_ETau_Ele_2012(myobject const& a) {
+    if (a.pt >= 24 && a.pt < 30 && fabs(a.eta) < 1.479) return 0.9417;
+    else if (a.pt >= 24 && a.pt < 30 && fabs(a.eta) > 1.479) return 0.9471;
+    else if (a.pt >= 30 && fabs(a.eta) < 1.479) return 0.9804;
+    else if (a.pt >= 30 && fabs(a.eta) > 1.479) return 0.9900;
+    else return 1.0;
+}
+//   Trigger   *****************************************************
+
 float Eff_ETauTrg_Ele_MC_2012(myobject const& a) {
     if (fabs(a.eta) < 1.479) return efficiency(a.pt, 21.7243, 0.619015, 0.739301, 1.34903, 1.02594);
     else return efficiency(a.pt, 22.1217, 1.34054, 1.8885, 1.01855, 4.7241);
@@ -96,14 +159,26 @@ float Eff_ETauTrg_Ele_Data_2012(myobject const& a) {
     else return efficiency(a.pt, 21.9816, 1.40993, 0.978597, 2.33144, 0.937552);
 }
 
-float Eff_ETauTrg_Tau_MC_2012(myobject const& a) {
-    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 18.525766, 0.275904, 0.126185, 4.957594, 0.915910);
-    else return efficiency(a.pt, 18.552006, 0.632002, 0.426891, 133.934952, 0.866543);
-}
+//float Eff_ETauTrg_Tau_MC_2012(myobject const& a) {
+//    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 18.525766, 0.275904, 0.126185, 4.957594, 0.915910);
+//    else return efficiency(a.pt, 18.552006, 0.632002, 0.426891, 133.934952, 0.866543);
+//}
+//
+//float Eff_ETauTrg_Tau_Data_2012(myobject const& a) {
+//    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 18.538229, 0.651562, 0.324869, 13.099048, 0.902365);
+//    else return efficiency(a.pt, 18.756548, 0.230732, 0.142859, 3.358497, 0.851919);
+//}
+// ABCD
 
 float Eff_ETauTrg_Tau_Data_2012(myobject const& a) {
-    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 18.538229, 0.651562, 0.324869, 13.099048, 0.902365);
-    else return efficiency(a.pt, 18.756548, 0.230732, 0.142859, 3.358497, 0.851919);
+    if (fabs(a.eta) < 1.5) return ratioEfficiencyTest(a.pt, 1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00); //data barrel
+    else return ratioEfficiencyTest(a.pt, 1.80812e+01, 1.39482e+00, 1.14305e+00, 1.08989e+01, 8.97087e-01); //data end cap
+}
+// MC ABCD
+
+float Eff_ETauTrg_Tau_MC_2012(myobject const& a) {
+    if (fabs(a.eta) < 1.5) return ratioEfficiencyTest(a.pt, 1.83709e+01, 1.37806e-01, 1.64478e-01, 1.44798e+00, 9.92673e-01); //MC barrel
+    else return ratioEfficiencyTest(a.pt, 1.83074e+01, 1.43406e+00, 1.40743e+00, 1.41501e+02, 9.19457e-01); //MC end cap
 }
 
 //*****************************************************
@@ -120,6 +195,27 @@ float Cor_IDIso_MuTau_Muon_2012(myobject const& a) {
     return 1.0;
 }
 
+float Cor_ID_MuTau_Muon_2012(myobject const& a) {
+    if (a.pt >= 20 && a.pt < 30 && fabs(a.eta) < 0.8) return 0.9818;
+    if (a.pt >= 20 && a.pt < 30 && fabs(a.eta) < 1.2) return 0.9829;
+    if (a.pt >= 20 && a.pt < 30 && fabs(a.eta) < 2.1) return 0.9869;
+    if (a.pt >= 30 && fabs(a.eta) < 0.8) return 0.9852;
+    if (a.pt >= 30 && fabs(a.eta) < 1.2) return 0.9852;
+    if (a.pt >= 30 && fabs(a.eta) < 2.1) return 0.9884;
+    return 1.0;
+}
+
+float Cor_Iso_MuTau_Muon_2012(myobject const& a) {
+    if (a.pt >= 20 && a.pt < 30 && fabs(a.eta) < 0.8) return 0.9494;
+    if (a.pt >= 20 && a.pt < 30 && fabs(a.eta) < 1.2) return 0.9835;
+    if (a.pt >= 20 && a.pt < 30 && fabs(a.eta) < 2.1) return 0.9923;
+    if (a.pt >= 30 && fabs(a.eta) < 0.8) return 0.9883;
+    if (a.pt >= 30 && fabs(a.eta) < 1.2) return 0.9937;
+    if (a.pt >= 30 && fabs(a.eta) < 2.1) return 0.9996;
+    return 1.0;
+}
+//   Trigger   *****************************************************
+
 float Eff_MuTauTrg_Mu_Data_2012(myobject const& a) {
     if (a.eta < -1.2) return efficiency(a.pt, 15.9977, 0.0000764004, 6.4951e-8, 1.57403, 0.865325);
     else if (a.eta < -0.8) return efficiency(a.pt, 17.3974, 0.804001, 1.47145, 1.24295, 0.928198);
@@ -127,7 +223,7 @@ float Eff_MuTauTrg_Mu_Data_2012(myobject const& a) {
     else if (a.eta < 0.8) return efficiency(a.pt, 17.313, 0.662731, 1.3412, 1.05778, 1.26624);
     else if (a.eta < 1.2) return efficiency(a.pt, 16.9966, 0.550532, 0.807863, 1.55402, 0.885134);
     else if (a.eta > 1.2) return efficiency(a.pt, 15.9962, 0.000106195, 4.95058e-8, 1.9991, 0.851294);
-    else  return 1;
+    else return 1;
 }
 
 float Eff_MuTauTrg_Mu_MC_2012(myobject const& a) {
@@ -137,19 +233,33 @@ float Eff_MuTauTrg_Mu_MC_2012(myobject const& a) {
     else if (a.eta < 0.8) return efficiency(a.pt, 15.9289, 0.0271317, 0.00448573, 1.92101, 0.978625);
     else if (a.eta < 1.2) return efficiency(a.pt, 16.5678, 0.328333, 0.354533, 1.67085, 0.916992);
     else if (a.eta > 1.2) return efficiency(a.pt, 15.997, 7.90069e-5, 4.40039e-8, 1.66272, 0.884502);
-    else  return 1;
+    else return 1;
 }
 
-float Eff_MuTauTrg_Tau_MC_2012(myobject const& a) {
-    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 18.537441, 1.385790, 3.102076, 1.002486, 6.275127);
-    else return efficiency(a.pt, 18.393366, 1.526254, 2.021678, 124.741631, 0.893280);
-}
+//float Eff_MuTauTrg_Tau_MC_2012(myobject const& a) {
+//    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 18.537441, 1.385790, 3.102076, 1.002486, 6.275127);
+//    else return efficiency(a.pt, 18.393366, 1.526254, 2.021678, 124.741631, 0.893280);
+//}
+//
+//float Eff_MuTauTrg_Tau_Data_2012(myobject const& a) {
+//    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 18.604910, 0.276042, 0.137039, 2.698437, 0.94721);
+//    else return efficiency(a.pt, 18.701715, 0.216523, 0.148111, 2.245081, 0.895320);
+//}
+
+
+// ABCD      antiEMed
 
 float Eff_MuTauTrg_Tau_Data_2012(myobject const& a) {
-    if (fabs(a.eta) < 1.5) return efficiency(a.pt, 18.604910, 0.276042, 0.137039, 2.698437, 0.94721);
-    else return efficiency(a.pt, 18.701715, 0.216523, 0.148111, 2.245081, 0.895320);
+    if (fabs(a.eta) < 1.5) return ratioEfficiencyTest(a.pt, 1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00); //data barrel
+    else return ratioEfficiencyTest(a.pt, 1.80812e+01, 1.39482e+00, 1.14305e+00, 1.08989e+01, 8.97087e-01); //data endcap
 }
 
+// MC ABCD   antiEMed
+
+float Eff_MuTauTrg_Tau_MC_2012(myobject const& a) {
+    if (fabs(a.eta) < 1.5) return ratioEfficiencyTest(a.pt, 1.83709e+01, 1.37806e-01, 1.64478e-01, 1.44798e+00, 9.92673e-01); //MC barrel
+    else return ratioEfficiencyTest(a.pt, 1.83074e+01, 1.43406e+00, 1.40743e+00, 1.41501e+02, 9.19457e-01); //MC endcap
+}
 
 //*****************************************************
 //****************** EMu channel **********************
@@ -346,6 +456,8 @@ double eff2012Jet19fb(double pt, double eta) {
 }
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 float getCorrFactor(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c) {
 
@@ -374,7 +486,7 @@ float getCorrFactor(std::string channel, std::string type, myobject const& a, my
 
 float getCorrTriggerLep(std::string channel, std::string type, myobject const& a) {
 
-    if (type == "mc12"|| type == "embedmc12") {
+    if (type == "mc12" || type == "embedmc12") {
 
         if (channel == "eltau") {
             return (Eff_ETauTrg_Ele_Data_2012(a) / Eff_ETauTrg_Ele_MC_2012(a));
@@ -390,28 +502,66 @@ float getCorrTriggerLep(std::string channel, std::string type, myobject const& a
 
 float getCorrTriggerTau(std::string channel, std::string type, myobject const& b) {
 
-    if (type == "mc12"|| type == "embedmc12") {
+    if (type == "mc12" || type == "embedmc12") {
         return ((Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)));
     } else
         return 1;
 }
 
+float getCorrIDIsoLep(std::string channel, std::string type, myobject const& a) {
 
-float getCorrIdIsoLep(std::string channel, std::string type, myobject const& a) {
-
-    if (type == "mc12"|| type == "embedmc12") {
+    if (type == "mc12" || type == "embedmc12") {
 
         if (channel == "eltau") {
             return Cor_IDIso_ETau_Ele_2012(a);
         }
         if (channel == "mutau") {
-            return  Cor_IDIso_MuTau_Muon_2012(a);
+            return Cor_IDIso_MuTau_Muon_2012(a);
         }
     } else if (type == "data11" || type == "data12")
         return 1;
     return 1.0;
 
 }
+
+float getCorrIDLep(std::string channel, std::string type, myobject const& a) {
+
+    if (type == "mc12" || type == "embedmc12") {
+
+        if (channel == "eltau") {
+            return Cor_ID_ETau_Ele_2012(a);
+        }
+        if (channel == "mutau") {
+            return Cor_ID_MuTau_Muon_2012(a);
+        }
+    } else if (type == "data11" || type == "data12")
+        return 1;
+    return 1.0;
+
+}
+
+float getCorrIsoLep(std::string channel, std::string type, myobject const& a) {
+
+    if (type == "mc12" || type == "embedmc12") {
+
+        if (channel == "eltau") {
+            return Cor_Iso_ETau_Ele_2012(a);
+        }
+        if (channel == "mutau") {
+            return Cor_Iso_MuTau_Muon_2012(a);
+        }
+    } else if (type == "data11" || type == "data12")
+        return 1;
+    return 1.0;
+
+}
+
+
+
+
+
+
+
 
 
 

@@ -83,7 +83,7 @@ float l1_CloseJetPhi, l2_CloseJetPhi;
 
 float mt_1;
 float mt_2;
-float idweight_1;
+float idweight_1,isoweight_1;
 float trigweight_1;
 float trigweight_2;
 float rho;
@@ -174,7 +174,8 @@ bool l1_trgMatche_Mu24;
 bool l2_trgMatche_Ele20Tau20;
 bool l2_trgMatche_Mu17Tau20;
 bool l2_trgMatche_Mu18Tau25;
-float gen_Higgs_pt = -10; //changed 23Sep;
+float gen_Higgs_pt = -10;
+float gen_Higgs_Mass = -10;
 
 bool l1_ConversionVeto;
 float l1_dxy_PV;
@@ -208,18 +209,18 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     //*********************************************************************************************
     //****************************    PileUp re weighting    ***************************************
     //*********************************************************************************************
-//    float num_PU = 1;
+    //    float num_PU = 1;
     float PU_Weightold = 1;
 
-//    if (mcdata == 3) {
-//        num_PU = m->PUInfo_true;
-//        PU_Weightold = LumiWeights_12->weight(num_PU);
-//    }
-//    if (mcdata == 1) {
-//        //                num_PU = m->PUInfo; // Last Bug found in 25 Nov
-//        num_PU = m->PUInfo_true;
-//        PU_Weightold = LumiWeights_11->weight(num_PU);
-//    }
+    //    if (mcdata == 3) {
+    //        num_PU = m->PUInfo_true;
+    //        PU_Weightold = LumiWeights_12->weight(num_PU);
+    //    }
+    //    if (mcdata == 1) {
+    //        //                num_PU = m->PUInfo; // Last Bug found in 25 Nov
+    //        num_PU = m->PUInfo_true;
+    //        PU_Weightold = LumiWeights_11->weight(num_PU);
+    //    }
     //*********************************************************************************************
 
 
@@ -258,6 +259,10 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
 
         mt_1 = TMass(obj1, MVAMetRecoil_mutau[pairIndex]);
         mt_2 = TMass(obj2, MVAMetRecoil_mutau[pairIndex]);
+        mvacov00 = m->PairMet_mutau_sigMatrix_00[pairIndex];
+        mvacov01 = m->PairMet_mutau_sigMatrix_01[pairIndex];
+        mvacov10 = m->PairMet_mutau_sigMatrix_10[pairIndex];
+        mvacov11 = m->PairMet_mutau_sigMatrix_11[pairIndex];
     }
     if (FinalState == "eltau") {
         mvamet = MVAMetRecoil_etau[pairIndex].pt;
@@ -266,11 +271,11 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
         mvametphiNoRecoil = MVAMetNORecoil_etau[pairIndex].phi;
         mt_1 = TMass(obj1, MVAMetRecoil_etau[pairIndex]);
         mt_2 = TMass(obj2, MVAMetRecoil_etau[pairIndex]);
+        mvacov00 = m->PairMet_etau_sigMatrix_00[pairIndex];
+        mvacov01 = m->PairMet_etau_sigMatrix_01[pairIndex];
+        mvacov10 = m->PairMet_etau_sigMatrix_10[pairIndex];
+        mvacov11 = m->PairMet_etau_sigMatrix_11[pairIndex];
     }
-    mvacov00 = m->MVAMet_sigMatrix_00;
-    mvacov01 = m->MVAMet_sigMatrix_01;
-    mvacov10 = m->MVAMet_sigMatrix_10;
-    mvacov11 = m->MVAMet_sigMatrix_11;
     //PFMet
     vector<myobject> PFMet = m->RecPFMet;
     met = PFMet.front().pt;
@@ -286,13 +291,13 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     vector<myobject> JETS = GoodJet30(m, obj1, obj2);
     vector<myobject> BJETS = GoodbJet20(m, obj1, obj2, isdata, is2012);
     vector<myobject> BLooseJETS = GoodLoosebJet20(m, obj1, obj2);
-//    vector<myobject> BJETSNoCor = GoodbJet20NoCor(m, obj1, obj2);
+    //    vector<myobject> BJETSNoCor = GoodbJet20NoCor(m, obj1, obj2);
 
     njetpt20 = GoodJet20(m).size();
     njets = JETS.size();
     nbtag = BJETS.size();
     nbtagLoose = BLooseJETS.size();
-//    nbtagNoCor = BJETSNoCor.size();
+    //    nbtagNoCor = BJETSNoCor.size();
 
     jpt_1 = (JETS.size() > 0 ? JETS[0].pt : -1000);
     jeta_1 = (JETS.size() > 0 ? JETS[0].eta : -1000);
@@ -389,7 +394,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2Px = obj2.px;
     l2Py = obj2.py;
     l2E = obj2.E;
-    l2Pt = obj2.pt * 1.01; // Due to tau ES Correction for ALL DM ?????
+    l2Pt = obj2.pt ;
     l2Phi = obj2.phi;
     l2Pz = obj2.pz;
     l2Eta = obj2.eta;
@@ -469,7 +474,8 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     mvis = InvarMass_2(obj1, obj2);
 
 
-    idweight_1 = getCorrIdIsoLep(FinalState, is_data_mc, obj2);
+    idweight_1 = getCorrIDLep(FinalState, is_data_mc, obj2);
+    isoweight_1 = getCorrIsoLep(FinalState, is_data_mc, obj2);
     trigweight_1 = getCorrTriggerLep(FinalState, is_data_mc, obj1);
     trigweight_2 = getCorrTriggerTau(FinalState, is_data_mc, obj2);
     //    zCategory = 0;
@@ -500,6 +506,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
 
         // HIggs Pt
         if (genPar[gg].status == 3 && (fabs(genPar[gg].pdgId) == 25 || fabs(genPar[gg].pdgId) == 35 || fabs(genPar[gg].pdgId) == 36)) gen_Higgs_pt = genPar[gg].pt;
+        if (genPar[gg].status == 3 && (fabs(genPar[gg].pdgId) == 25 || fabs(genPar[gg].pdgId) == 35 || fabs(genPar[gg].pdgId) == 36)) gen_Higgs_Mass = genPar[gg].mass;
 
         // NumGen Jets
         if (fabs(genPar[gg].status) == 3) genParticleStatus3++;

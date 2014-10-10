@@ -146,7 +146,7 @@ bool Id_Mu_Tight(myobject const& a) { // REVISITED
 
     //    bool muTracker = a.isTrackerMuon;
 
-    if (muPF && muGlobal && MuChi2 < 10 && MuValHit > 0 && numMatchStat > 1 && a.dB < 0.2 && dZ_in < 0.5 && intrkLayerpixel_ > 0 && trkLayerMeasure_ > 5)
+    if (muPF && muGlobal && MuChi2 < 10 && MuValHit > 0 && numMatchStat > 1 && a.dB < 0.2 && fabs(dZ_in) < 0.5 && intrkLayerpixel_ > 0 && trkLayerMeasure_ > 5)
         return true;
     else
         return false;
@@ -178,8 +178,8 @@ bool EleMVANonTrigId_Loose(myobject const& a) { //REVISIED based on HTT groiup d
 
     bool numHit = a.numHitEleInner < 1;
     bool ConversionVeto = a.passConversionVeto;
-    bool Ele_d0 = a.dxy_PV < 0.045; //the impact parameter in the transverse plane
-    bool Ele_dZ = a.dz_PV < 0.2; //the impact parameter in the transverse plane
+    bool Ele_d0 = fabs(a.dxy_PV) < 0.045; //the impact parameter in the transverse plane
+    bool Ele_dZ = fabs(a.dz_PV) < 0.2; //the impact parameter in the transverse plane
 
     return passingId && numHit && ConversionVeto && Ele_d0 && Ele_dZ;
 }
@@ -201,8 +201,8 @@ bool EleMVANonTrigId_Tight(myobject const& a) { //REVISIED based on HTT groiup d
 
     bool numHit = a.numHitEleInner < 1;
     bool ConversionVeto = a.passConversionVeto;
-    bool Ele_d0 = a.dxy_PV < 0.045; //the impact parameter in the transverse plane
-    bool Ele_dZ = a.dz_PV < 0.2; //the impact parameter in the transverse plane
+    bool Ele_d0 = fabs(a.dxy_PV) < 0.045; //the impact parameter in the transverse plane
+    bool Ele_dZ = fabs(a.dz_PV) < 0.2; //the impact parameter in the transverse plane
 
     return passingId && numHit && ConversionVeto && Ele_d0 && Ele_dZ;
 }
@@ -218,8 +218,8 @@ bool EleLooseForEtauVeto(myobject const& a) {
     float deta = fabs(a.deltaEtaSuperClusterTrackAtVtx);
     float dphi = fabs(a.deltaPhiSuperClusterTrackAtVtx);
     float sihih = a.sigmaIetaIeta;
-    bool Ele_d0 = a.dxy_PV < 0.045; //the impact parameter in the transverse plane
-    bool Ele_dZ = a.dz_PV < 0.2; //the impact parameter in the transverse plane
+    bool Ele_d0 = fabs(a.dxy_PV) < 0.045; //the impact parameter in the transverse plane
+    bool Ele_dZ = fabs(a.dz_PV) < 0.2; //the impact parameter in the transverse plane
     
     if (Ele_d0 && Ele_dZ && EB && sihih < 0.010 && dphi < 0.80 && deta < 0.007 && hoe < 0.15) return true;
     else if (Ele_d0 && Ele_dZ &&  EE && sihih < 0.030 && dphi < 0.70 && deta < 0.010 ) return true; //  hoe < 0.07 is droped at October 6th

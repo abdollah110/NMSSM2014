@@ -157,8 +157,8 @@ inline double deltaR(myGenobject const& a, myobject const& b) {
 //}
 
 bool checkGenRecodR(myGenobject const& Gen1, myGenobject const& Gen2, myobject const& Reco1, myobject const& Reco2) {
-    bool check_11_22 = dR(Gen1.eta, Gen1.phi, Reco1.eta, Reco1.phi) < 0.3 && dR(Gen2.eta, Gen2.phi, Reco2.eta, Reco2.phi) < 0.3;
-    bool check_12_21 = dR(Gen1.eta, Gen1.phi, Reco2.eta, Reco2.phi) < 0.3 && dR(Gen2.eta, Gen2.phi, Reco1.eta, Reco1.phi) < 0.3;
+    bool check_11_22 = dR(Gen1.eta, Gen1.phi, Reco1.eta, Reco1.phi) < 0.5 && dR(Gen2.eta, Gen2.phi, Reco2.eta, Reco2.phi) < 0.5;
+    bool check_12_21 = dR(Gen1.eta, Gen1.phi, Reco2.eta, Reco2.phi) < 0.5 && dR(Gen2.eta, Gen2.phi, Reco1.eta, Reco1.phi) < 0.5;
     if (check_11_22 || check_12_21)
         return true;
     else return false;
