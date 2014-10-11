@@ -1,8 +1,3 @@
-// REmaining issue
-// Add Top Pt for TopPtReweighting
-// 3) check the trigger eff efficiency correction
-// 4) pu reweighting correction
-
 
 // The code to do teh ZH totautau Analysis
 // to make it excutable run: ./Make.sh nMSSM_Analysis.cc 
@@ -196,11 +191,12 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("mvis", &mvis, "mvis/F");
 
     Run_Tree->Branch("idweight_1", &idweight_1, "idweight_1/F");
+    Run_Tree->Branch("isoweight_1", &isoweight_1, "isoweight_1/F");
     Run_Tree->Branch("trigweight_1", &trigweight_1, "trigweight_1/F");
     Run_Tree->Branch("trigweight_2", &trigweight_2, "trigweight_2/F");
     Run_Tree->Branch("rho", &rho, "rho/F");
     Run_Tree->Branch("npv", &num_PV, "npv/I");
-    Run_Tree->Branch("npu", &npu, "npu/I"); // NNNEW
+    Run_Tree->Branch("npu", &npu, "npu/F"); // NNNEW
     Run_Tree->Branch("effweight", &eff_Correction, "effweight/F");
     Run_Tree->Branch("puweight", &pu_Weight, "puweight/F");
 

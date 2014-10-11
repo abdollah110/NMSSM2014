@@ -183,6 +183,8 @@ int ZCategory(myevent *m, myobject const& obj1, myobject const& obj2) {
             if (genPar[a].status == 3 && fabs(genPar[a].mod_pdgId) == 23 && fabs(genPar[a].pdgId) == 13) genMuFromZ.push_back(genPar[a]);
             if (genPar[a].status == 3 && fabs(genPar[a].mod_pdgId) == 23 && fabs(genPar[a].pdgId) == 11) genEleFromZ.push_back(genPar[a]);
             if (fabs(genPar[a].mod_pdgId) == 15 && (fabs(genPar[a].pdgId) == 11 || fabs(genPar[a].pdgId) == 13)) genLepFromTaus.push_back(genPar[a]);
+
+
         }
     }
     if (genMuFromZ.size() == 2 && checkGenRecodR(genMuFromZ[0], genMuFromZ[1], obj1, obj2)) gen_ditau = 1; // THis is ZLL (ZMuMU)
@@ -282,5 +284,9 @@ double InvarMass(double e1, double e2, double px1, double px2, double py1, doubl
 
 
 #endif	/* _JETVETO_H */
+
+
+
+
 
 

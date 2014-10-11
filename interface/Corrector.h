@@ -485,32 +485,6 @@ double eff2012Jet19fb(double pt, double eta) {
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-float getCorrFactor(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c) {
-
-    if (type == "mc12" || type == "embedmc12") {
-        if (channel == "emu") {
-            return (Cor_IDIso_EMu_Ele_2012(b) * Cor_IDIso_EMu_Mu_2012(a) * Corr_EMuTrg_MuLeg_2012(a) * Corr_EMuTrg_EleLeg_2012(b));
-        }
-        if (channel == "eltau") {
-            return (Eff_ETauTrg_Ele_Data_2012(a) / Eff_ETauTrg_Ele_MC_2012(a))*(Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)) * Cor_IDIso_ETau_Ele_2012(a);
-        }
-        if (channel == "mutau") {
-            return (Eff_MuTauTrg_Mu_Data_2012(a) / Eff_MuTauTrg_Mu_MC_2012(a))*(Eff_MuTauTrg_Tau_Data_2012(b) / Eff_MuTauTrg_Tau_MC_2012(b)) * Cor_IDIso_MuTau_Muon_2012(a);
-        }
-        if (channel == "tautau_ditau") {
-            return (eff2012IsoParkedTau19fb_Simone(a.pt, a.eta) / eff2012IsoParkedTau19fbMC_Simone(a.pt, a.eta))*(eff2012IsoParkedTau19fb_Simone(b.pt, b.eta) / eff2012IsoParkedTau19fbMC_Simone(b.pt, b.eta));
-        }
-        if (channel == "tautau_ditaujet") {
-            return (eff2012IsoTau19fb_Simone(a.pt, a.eta) / eff2012IsoTau19fbMC_Simone(a.pt, a.eta))*(eff2012IsoTau19fb_Simone(b.pt, b.eta) / eff2012IsoTau19fbMC_Simone(b.pt, b.eta))*(eff2012Jet19fb(c.pt, c.eta));
-        }
-    } else if (type == "data11" || type == "data12")
-        return 1;
-    return 1.0;
-
-}
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 float getCorrTriggerLep(std::string channel, std::string type, myobject const& a) {
 
@@ -540,13 +514,9 @@ float getCorrTriggerTau(std::string channel, std::string type, myobject const& b
 
     } else
         return 1;
-        return 1.0;
+    return 1.0;
 }
 
-float getCorrTriggerLepTau(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c) {
-
-    return getCorrTriggerLep(channel, type, a) * getCorrTriggerTau(channel, type, b);
-}
 
 float getCorrIDIsoLep(std::string channel, std::string type, myobject const& a) {
 
@@ -564,6 +534,10 @@ float getCorrIDIsoLep(std::string channel, std::string type, myobject const& a) 
 
 }
 
+float getCorrTriggerLepTau(std::string channel, std::string type, myobject const& a, myobject const& b) {
+
+    return getCorrTriggerLep(channel, type, a) * getCorrTriggerTau(channel, type, b);
+}
 float getCorrIDLep(std::string channel, std::string type, myobject const& a) {
 
     if (type == "mc12" || type == "embedmc12") {
@@ -596,7 +570,34 @@ float getCorrIsoLep(std::string channel, std::string type, myobject const& a) {
 
 }
 
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
+float getCorrFactor(std::string channel, std::string type, myobject const& a, myobject const& b, myobject const& c) {
+
+    if (type == "mc12" || type == "embedmc12") {
+        if (channel == "emu") {
+            return (Cor_IDIso_EMu_Ele_2012(b) * Cor_IDIso_EMu_Mu_2012(a) * Corr_EMuTrg_MuLeg_2012(a) * Corr_EMuTrg_EleLeg_2012(b));
+        }
+        if (channel == "eltau") {
+            //            return (Eff_ETauTrg_Ele_Data_2012(a) / Eff_ETauTrg_Ele_MC_2012(a))*(Eff_ETauTrg_Tau_Data_2012(b) / Eff_ETauTrg_Tau_MC_2012(b)) * Cor_IDIso_ETau_Ele_2012(a);
+            return getCorrTriggerLepTau(channel, type, a, b) * Cor_IDIso_ETau_Ele_2012(a);
+        }
+        if (channel == "mutau") {
+            //            return (Eff_MuTauTrg_Mu_Data_2012(a) / Eff_MuTauTrg_Mu_MC_2012(a))*(Eff_MuTauTrg_Tau_Data_2012(b) / Eff_MuTauTrg_Tau_MC_2012(b)) * Cor_IDIso_MuTau_Muon_2012(a);
+            return getCorrTriggerLepTau(channel, type, a, b) * Cor_IDIso_MuTau_Muon_2012(a);
+        }
+        if (channel == "tautau_ditau") {
+            return (eff2012IsoParkedTau19fb_Simone(a.pt, a.eta) / eff2012IsoParkedTau19fbMC_Simone(a.pt, a.eta))*(eff2012IsoParkedTau19fb_Simone(b.pt, b.eta) / eff2012IsoParkedTau19fbMC_Simone(b.pt, b.eta));
+        }
+        if (channel == "tautau_ditaujet") {
+            return (eff2012IsoTau19fb_Simone(a.pt, a.eta) / eff2012IsoTau19fbMC_Simone(a.pt, a.eta))*(eff2012IsoTau19fb_Simone(b.pt, b.eta) / eff2012IsoTau19fbMC_Simone(b.pt, b.eta))*(eff2012Jet19fb(c.pt, c.eta));
+        }
+    } else if (type == "data11" || type == "data12")
+        return 1;
+    return 1.0;
+
+}
 
 
 
