@@ -400,7 +400,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
         ##################################################################################################
         #   W Estimation
         ##################################################################################################
-            print "\nDoing W BG estimation"
+            print "\nDoing W BG estimation in", channel[chl],   "   and  ", category[categ]
 
             numeratorW=Observable+"_mTLess30_OS"
             denumeratorW=Observable+"_mTHigher70_OS"
