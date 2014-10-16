@@ -188,28 +188,50 @@ float Eff_MuTauTrg_Tau_Data_2012(float l1Pt, float l1Eta) {
 //
 //}
 
-float getCorrFactorEMbed(int mcdata, int channel, float l1Pt, float l1Eta, float l2Pt, float l2Eta, TF1* TriggerWeightBarrel, TF1* TriggerWeightEndcaps) {
+float getCorrFactorEMbed(int mcdata, int channel, float l1Pt, float l1Eta, float l2Pt, float l2Eta) {
 
     if (mcdata == 2 || mcdata == 4 || mcdata == 5) {
         if (channel == 3) {
-            //            return Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l1Pt, l1Eta);
-            return Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l1Pt, l1Eta) * correctionHighPtTail_Data(l1Pt, l1Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+            return Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l1Pt, l1Eta);
+            //            return Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l1Pt, l1Eta) * correctionHighPtTail_Data(l1Pt, l1Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
         }
         if (channel == 1) {
-            //            return Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l1Pt, l1Eta) ;
-            return Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l1Pt, l1Eta) * correctionHighPtTail_Data(l1Pt, l1Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+            return Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l1Pt, l1Eta);
+            //            return Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l1Pt, l1Eta) * correctionHighPtTail_Data(l1Pt, l1Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
         }
     } else if (channel == 3) {
-        //        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) ;
-        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta);
+        //        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
     } else if (channel == 1) {
-        //        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) ;
-        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta);
+        //        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
     } else return 1;
     return 1;
 
 
 }
+//float getCorrFactorEMbed(int mcdata, int channel, float l1Pt, float l1Eta, float l2Pt, float l2Eta, TF1* TriggerWeightBarrel, TF1* TriggerWeightEndcaps) {
+//
+//    if (mcdata == 2 || mcdata == 4 || mcdata == 5) {
+//        if (channel == 3) {
+//            //            return Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l1Pt, l1Eta);
+//            return Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l1Pt, l1Eta) * correctionHighPtTail_Data(l1Pt, l1Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+//        }
+//        if (channel == 1) {
+//            //            return Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l1Pt, l1Eta) ;
+//            return Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l1Pt, l1Eta) * correctionHighPtTail_Data(l1Pt, l1Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+//        }
+//    } else if (channel == 3) {
+//        //        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) ;
+//        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+//    } else if (channel == 1) {
+//        //        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) ;
+//        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+//    } else return 1;
+//    return 1;
+//
+//
+//}
 
 
 
