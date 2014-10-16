@@ -89,7 +89,8 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 
 #Histogram = "VisibleMass_"
 #category = ["_inclusive"]
-category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+#category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+category = ["_inclusive", "_btag", "_btagLoose"]
 channel = ["mutau", "etau"]
 #channel = ["MuTau"]
 lenghtSig = len(signal) * len(mass) +1
