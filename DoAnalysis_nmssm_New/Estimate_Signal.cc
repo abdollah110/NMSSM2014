@@ -233,7 +233,7 @@ int main(int argc, char** argv) {
 
     //###############################################################################################
     //Just each categori should be filled once
-    float CutOntheTauPt = 30;
+    float CutOntheTauPt = 20;
     bool IsInCorrcetMassRange = true;
     bool verbose_ = false;
     int Event_Double[8][9];
@@ -264,13 +264,15 @@ int main(int argc, char** argv) {
         //####################################################
 
         //MSSM Categorization
-        const int size_mssmC = 4;
+        const int size_mssmC = 3;
         bool selection_inclusive = 1;
-        bool selection_nobtag = nbtag < 1;
+//        bool selection_nobtag = nbtag < 1;
         bool selection_btag = nbtag > 0 && njets < 2;
         bool selection_btagLoose = nbtagLoose > 0 && njets < 2;
-        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
-        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
+        bool MSSM_Category[size_mssmC] = {selection_inclusive,  selection_btag, selection_btagLoose};
+        std::string index[size_mssmC] = {"_inclusive", "_btag", "_btagLoose"};
+//        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
+//        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
 
         //Z Categorization
         const int size_ZCat = 4;
@@ -363,7 +365,7 @@ int main(int argc, char** argv) {
             std::string LastPart = "_8TeV.root";
             std::string newOut = out.substr(FirstPart.size());
             newOut = newOut.substr(0, newOut.size() - LastPart.size());
-            HiggsPtReweight = HPtReWeight(gen_Higgs_pt, newOut, inputFile);
+//            HiggsPtReweight = HPtReWeight(gen_Higgs_pt, newOut, inputFile);
         }
         size_t ggHiggsFind = out.find("ggH"); // Check in the name it IS ggH
         size_t bbHiggsFind = out.find("bbH"); // Check in the name it IS ggH
@@ -527,7 +529,7 @@ int main(int argc, char** argv) {
                                                                             //                                                            plotFill("mutau_visibleMass_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat]+ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight);
                                                                             //                                                                            plotFill("mutau_SVMass_QCDshape" + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat]  + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("mutau_QCDshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                            plotFill("mutau_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+//                                                                            plotFill("mutau_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("mutau_TauPt" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
                                                                         }
                                                                         if (QCDNorm && MuTrgMatched && MU_CUTS && TAU_CUTS) {
@@ -559,7 +561,7 @@ int main(int argc, char** argv) {
                                                                             //                                                            plotFill("etau_visibleMass_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat]+ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight);
                                                                             //                                                                            plotFill("etau_SVMass_QCDshape" + q_Cat[qcat] + eta_Cat[etacat]+ iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("etau_QCDshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                            plotFill("etau_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+//                                                                            plotFill("etau_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("etau_TauPt" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
                                                                         }
                                                                         if (QCDNorm && EleTrgMatched && EL_CUTS && TAU_CUTS) {
