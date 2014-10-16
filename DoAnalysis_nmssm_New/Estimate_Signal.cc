@@ -239,7 +239,7 @@ int main(int argc, char** argv) {
     int Event_Double[8][9];
     memset(Event_Double, 0, sizeof (Event_Double[0][0]) * 8 * 9);
     int low_bin = 0;
-    int massBin = 1500;
+    int massBin = 300;
     int ptBin = 300;
     const int hsize = 21;
     std::string arrayMassOfHiggs_String[hsize] = {"80", "90", " 100", "110", " 120", "130", "140", " 160", "180", "200", "250", "300", "350", "400", "450", "500", "600", "700", "800", "900", "1000"};
