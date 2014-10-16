@@ -25,7 +25,7 @@ from ROOT import gSystem
 gROOT.Reset()
 import os
 ROOT.gROOT.SetBatch(True)
-InputFileLocation = '../FileROOT/MSSMROOTFiles/'
+InputFileLocation = '../FileROOT/nmssmROOTFiles/'
 SubRootDir = 'OutFiles/'
 
 def luminosity(CoMEnergy):

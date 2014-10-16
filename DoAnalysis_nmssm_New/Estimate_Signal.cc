@@ -233,6 +233,7 @@ int main(int argc, char** argv) {
 
     //###############################################################################################
     //Just each categori should be filled once
+    float CutOntheTauPt = 30;
     bool IsInCorrcetMassRange = true;
     bool verbose_ = false;
     int Event_Double[8][9];
@@ -342,9 +343,9 @@ int main(int argc, char** argv) {
 
         const int size_tscale = 3;
         float scaleTau[size_tscale] = {-0.03, 0.0, 0.03};
-        bool tauPtCutMinus = l2Pt * (1 + scaleTau[0]) > 30;
-        bool tauPtCutNorm = l2Pt * (1 + scaleTau[1]) > 30;
-        bool tauPtCutPlus = l2Pt * (1 + scaleTau[2]) > 30;
+        bool tauPtCutMinus = l2Pt * (1 + scaleTau[0]) > CutOntheTauPt;
+        bool tauPtCutNorm = l2Pt * (1 + scaleTau[1]) > CutOntheTauPt;
+        bool tauPtCutPlus = l2Pt * (1 + scaleTau[2]) > CutOntheTauPt;
         bool TauScale[size_tscale] = {tauPtCutMinus, tauPtCutNorm, tauPtCutPlus};
         double SVMASS[size_tscale] = {SVMassDown, SVMass, SVMassUp};
         std::string TauScale_cat[size_tscale] = {"Down", "", "Up"};
