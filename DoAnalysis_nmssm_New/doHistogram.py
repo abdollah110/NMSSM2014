@@ -37,6 +37,7 @@ DIR_ROOT = 'outRoot/'
 
 #signal = ['ggh', 'bbh']
 signal = ['bba1GenFil_']
+signalName = ['bba1_']
 mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
 W_BackGround = ['WJetsToLNu', 'W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu']
 Z_BackGround = ['DYJetsToLL', 'DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL']
@@ -307,7 +308,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                     normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization
 #                    Name= str(signal[sig])+"_" +str(mass[m])
                     Name= str(signal[sig])+str(mass[m])
-                    NameOut= str(signal[sig]) +str(mass[m])+str(TauScaleOut[tscale])
+                    NameOut= str(signalName[sig]) +str(mass[m])+str(TauScaleOut[tscale])
                     NewHIST =TH1F(NameOut,str(signal[sig]) +str(mass[m]),len(BinCateg)-1,BinCateg)
 
                     for bb in range(0,len(BinCateg)-1):
