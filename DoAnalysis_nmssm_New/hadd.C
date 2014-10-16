@@ -39,9 +39,9 @@ void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight);
 
 void hadd() {
 
-    hadd_TT();
-    hadd_VV();
-    hadd_Z();
+//    hadd_TT();
+//    hadd_VV();
+//    hadd_Z();
     hadd_W();
 }
 
@@ -127,9 +127,9 @@ void hadd_W() {
     FileList = new TList();
     FileList->Add(TFile::Open("OutFiles/out_WJetsToLNu_8TeV.root"));
     FileList->Add(TFile::Open("OutFiles/out_W1JetsToLNu_8TeV.root"));
+    FileList->Add(TFile::Open("OutFiles/out_W4JetsToLNu_8TeV.root"));
     FileList->Add(TFile::Open("OutFiles/out_W2JetsToLNu_8TeV.root"));
     FileList->Add(TFile::Open("OutFiles/out_W3JetsToLNu_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_W4JetsToLNu_8TeV.root"));
 
     MergeRootfile(Target, FileList, weight);
 }
