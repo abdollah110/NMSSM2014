@@ -125,10 +125,10 @@ void hadd_W() {
     Target = TFile::Open("OutFiles/out_WJetsAll_8TeV_Hadd.root", "RECREATE");
     float weight[5] = {1, 1, 1, 1, 1};
     FileList = new TList();
-    FileList->Add(TFile::Open("OutFiles/out_WJetsToLNu_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_W1JetsToLNu_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_W4JetsToLNu_8TeV.root"));
     FileList->Add(TFile::Open("OutFiles/out_W2JetsToLNu_8TeV.root"));
+    FileList->Add(TFile::Open("OutFiles/out_W1JetsToLNu_8TeV.root"));
+    FileList->Add(TFile::Open("OutFiles/out_WJetsToLNu_8TeV.root"));
+    FileList->Add(TFile::Open("OutFiles/out_W4JetsToLNu_8TeV.root"));
     FileList->Add(TFile::Open("OutFiles/out_W3JetsToLNu_8TeV.root"));
 
     MergeRootfile(Target, FileList, weight);
