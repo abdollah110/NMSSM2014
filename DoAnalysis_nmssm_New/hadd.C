@@ -39,14 +39,14 @@ void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight);
 
 void hadd() {
 
-//    hadd_TT();
-//    hadd_VV();
-//    hadd_Z();
+    hadd_TT();
+    hadd_VV();
+    hadd_Z();
     hadd_W();
 }
 
 void hadd_TT() {
-    cout<<"Start Hadding TT ......."<<"\n";
+    cout << "Start Hadding TT ......." << "\n";
     const int numBG = 3;
     char * Top_BackGround[numBG] = {"TTJets_FullLeptMGDecays", "TTJets_SemiLeptMGDecays", "TTJets_HadronicMGDecays"};
     float XSection[numBG] = {25.809, 107.66, 112.331};
@@ -65,7 +65,7 @@ void hadd_TT() {
 
         TH1F * myHisto = (TH1F*) myFile->Get("TotalEventsNumber");
         weight[i] = XSection[i]*1.0 / myHisto->Integral();
-//        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
+        //        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
         myFile->Close();
     }
 
@@ -74,7 +74,7 @@ void hadd_TT() {
 }
 
 void hadd_VV() {
-    cout<<"Start Hadding VV ......."<<"\n";
+    cout << "Start Hadding VV ......." << "\n";
     const int numBG = 8;
     char * DiBoson_BackGround[numBG] = {"WWJetsTo2L2Nu", "WZJetsTo2L2Q", "WZJetsTo3LNu", "ZZJetsTo2L2Nu", "ZZJetsTo2L2Q", "ZZJetsTo4L", "Tbar_tW", "T_tW"};
     float XSection[numBG] = {5.824, 2.207, 1.058, 0.716, 2.502, 0.181, 11.1, 11.1};
@@ -93,7 +93,7 @@ void hadd_VV() {
 
         TH1F * myHisto = (TH1F*) myFile->Get("TotalEventsNumber");
         weight[i] = XSection[i]*1.0 / myHisto->Integral();
-//        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
+        //        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
         myFile->Close();
     }
 
@@ -106,7 +106,7 @@ void hadd_Z() {
     // root > .L hadd.C
     // root > hadd()
 
-    cout<<"Start Hadding DY ......."<<"\n";
+    cout << "Start Hadding DY ......." << "\n";
     Target = TFile::Open("OutFiles/out_DYJetsAll_8TeV_Hadd.root", "RECREATE");
     float weight[5] = {1, 1, 1, 1, 1};
     FileList = new TList();
@@ -121,10 +121,11 @@ void hadd_Z() {
 }
 
 void hadd_W() {
-    cout<<"Start Hadding W ......."<<"\n";
+    cout << "Start Hadding W ......." << "\n";
     Target = TFile::Open("OutFiles/out_WJetsAll_8TeV_Hadd.root", "RECREATE");
     float weight[5] = {1, 1, 1, 1, 1};
     FileList = new TList();
+    //  Abdollah Mohammadi It is urgent that the first file contain all the needed Histogram
     FileList->Add(TFile::Open("OutFiles/out_W2JetsToLNu_8TeV.root"));
     FileList->Add(TFile::Open("OutFiles/out_W1JetsToLNu_8TeV.root"));
     FileList->Add(TFile::Open("OutFiles/out_WJetsToLNu_8TeV.root"));
@@ -167,7 +168,7 @@ void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight) {
             //      cout << "Merging histogram " << obj->GetName() << endl;
             TH1 *h1 = (TH1*) obj;
             h1->Scale(weight[weightCounter]);
-//            cout << h1->GetName() << "  Here is the integral " << key->GetName() << "   " << h1->Integral() << endl;
+            //            cout << h1->GetName() << "  Here is the integral " << key->GetName() << "   " << h1->Integral() << endl;
             //            std::cout << "weightCounter=" << weightCounter << "  Value=" << weight[weightCounter] << " Integral of H1  " << h1->Integral() << " ";
             // loop over all source files and add the content of the
             // correspondant histogram to the one pointed to by "h1"
@@ -183,7 +184,7 @@ void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight) {
                 if (key2) {
                     TH1 *h2 = (TH1*) key2->ReadObj();
                     h2->Scale(weight[weightCounter]);
-//                    cout << nextsource->GetName() << "  Here is the integral " << key2->GetName() << "   " << h2->Integral() << endl;
+                    //                    cout << nextsource->GetName() << "  Here is the integral " << key2->GetName() << "   " << h2->Integral() << endl;
                     h1->Add(h2);
                     //                    std::cout << "weightCounter=" << weightCounter << "  Value=" << weight[weightCounter] << "  Integral of H1  " << h1->Integral() << "\n";
 

@@ -238,14 +238,14 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
 
         Histo_QCDSSIso =  file_QCD.Get(channel+HistoTauPtLowMTSSIso + category+ "")
 #        print "test existance of a histogram", Histo_VVSSIso.Integral()
-        if Histo_VVSSIso: Histo_TTSSIso.Add(Histo_VVSSIso)
-        if Histo_ZLSSIso: Histo_TTSSIso.Add(Histo_ZLSSIso)
-        if Histo_ZJSSIso: Histo_TTSSIso.Add(Histo_ZJSSIso)
-        if Histo_ZTTSSIso: Histo_TTSSIso.Add(Histo_ZTTSSIso)
-        if Histo_WSSIso: Histo_TTSSIso.Add(Histo_WSSIso)
-        if Histo_TTSSIso:
-            Histo_TTSSIso.Scale(-1)
-            Histo_QCDSSIso.Add(Histo_TTSSIso)
+        if Histo_VVSSIso: Histo_WSSIso.Add(Histo_VVSSIso)
+        if Histo_ZLSSIso: Histo_WSSIso.Add(Histo_ZLSSIso)
+        if Histo_ZJSSIso: Histo_WSSIso.Add(Histo_ZJSSIso)
+        if Histo_ZTTSSIso: Histo_WSSIso.Add(Histo_ZTTSSIso)
+        if Histo_TTSSIso: Histo_WSSIso.Add(Histo_TTSSIso)
+        if Histo_WSSIso:
+            Histo_WSSIso.Scale(-1)
+            Histo_QCDSSIso.Add(Histo_WSSIso)
 
 
         Histo_QCDSSRelax =  file_QCD.Get(channel+HistoTauPtLowMTSSRelax + category+ "")
