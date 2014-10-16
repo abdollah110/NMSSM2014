@@ -240,7 +240,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
 #        print "test existance of a histogram", Histo_VVSSIso.Integral()
         if Histo_VVSSIso: Histo_TTSSIso.Add(Histo_VVSSIso)
         if Histo_ZLSSIso: Histo_TTSSIso.Add(Histo_ZLSSIso)
-        if Histo_ZJSSIso: Histo_TTSSIso.Add(Histo_ZJSSIso)
+        if Histo_ZJSSIso.Integral(): Histo_TTSSIso.Add(Histo_ZJSSIso)
         if Histo_ZTTSSIso: Histo_TTSSIso.Add(Histo_ZTTSSIso)
 #   #FIXME     if Histo_WSSIso: Histo_TTSSIso.Add(Histo_WSSIso)
         if Histo_TTSSIso:
