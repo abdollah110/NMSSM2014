@@ -237,26 +237,26 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
         file_QCD = TFile(SubRootDir + "out_"+ Name +CoMEnergy+ '.root')
 
         Histo_QCDSSIso =  file_QCD.Get(channel+HistoTauPtLowMTSSIso + category+ "")
-#        print "test existance of a histogram", Histo_VVSSIso.Integral()   ##FIXME
-#        if Histo_VVSSIso: Histo_WSSIso.Add(Histo_VVSSIso)
-#        if Histo_ZLSSIso: Histo_WSSIso.Add(Histo_ZLSSIso)
-#        if Histo_ZJSSIso: Histo_WSSIso.Add(Histo_ZJSSIso)
-#        if Histo_ZTTSSIso: Histo_WSSIso.Add(Histo_ZTTSSIso)
-#        if Histo_TTSSIso: Histo_WSSIso.Add(Histo_TTSSIso)
-#        if Histo_WSSIso:
-#            Histo_WSSIso.Scale(-1)
-#            Histo_QCDSSIso.Add(Histo_WSSIso)
+#        print "test existance of a histogram", Histo_VVSSIso.Integral()
+        if Histo_VVSSIso: Histo_TTSSIso.Add(Histo_VVSSIso)
+        if Histo_ZLSSIso: Histo_TTSSIso.Add(Histo_ZLSSIso)
+        if Histo_ZJSSIso: Histo_TTSSIso.Add(Histo_ZJSSIso)
+        if Histo_ZTTSSIso: Histo_TTSSIso.Add(Histo_ZTTSSIso)
+#   #FIXME     if Histo_WSSIso: Histo_TTSSIso.Add(Histo_WSSIso)
+        if Histo_TTSSIso:
+            Histo_TTSSIso.Scale(-1)
+            Histo_QCDSSIso.Add(Histo_TTSSIso)
 
 
         Histo_QCDSSRelax =  file_QCD.Get(channel+HistoTauPtLowMTSSRelax + category+ "")
-#        if Histo_VVSSRelax: Histo_TTSSRelax.Add(Histo_VVSSRelax)       ##FIXME
-#        if Histo_ZLSSRelax: Histo_TTSSRelax.Add(Histo_ZLSSRelax)
-#        if Histo_ZJSSRelax: Histo_TTSSRelax.Add(Histo_ZJSSRelax)
-#        if Histo_ZTTSSRelax: Histo_TTSSRelax.Add(Histo_ZTTSSRelax)
-#        if Histo_WSSRelax: Histo_TTSSRelax.Add(Histo_WSSRelax)
-#        if Histo_TTSSRelax:
-#            if Histo_TTSSRelax: Histo_TTSSRelax.Scale(-1)
-#            Histo_QCDSSRelax.Add(Histo_TTSSRelax)
+        if Histo_VVSSRelax: Histo_TTSSRelax.Add(Histo_VVSSRelax)
+        if Histo_ZLSSRelax: Histo_TTSSRelax.Add(Histo_ZLSSRelax)
+        if Histo_ZJSSRelax: Histo_TTSSRelax.Add(Histo_ZJSSRelax)
+        if Histo_ZTTSSRelax: Histo_TTSSRelax.Add(Histo_ZTTSSRelax)
+#  #FIXME      if Histo_WSSRelax: Histo_TTSSRelax.Add(Histo_WSSRelax)
+        if Histo_TTSSRelax:
+            if Histo_TTSSRelax: Histo_TTSSRelax.Scale(-1)
+            Histo_QCDSSRelax.Add(Histo_TTSSRelax)
 
 
         Histo_QCDOSRelax =  file_QCD.Get(channel+HistoTauPtLowMTOSRelax + category+ "")
@@ -275,7 +275,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
         if Histo_ZLQCDShape2DSSRelax: Histo_TTQCDShape2DSSRelax.Add(Histo_ZLQCDShape2DSSRelax)
         if Histo_ZJQCDShape2DSSRelax: Histo_TTQCDShape2DSSRelax.Add(Histo_ZJQCDShape2DSSRelax)
         if Histo_ZTTQCDShape2DSSRelax: Histo_TTQCDShape2DSSRelax.Add(Histo_ZTTQCDShape2DSSRelax)
-#        if Histo_WQCDShape2DSSRelax: Histo_TTQCDShape2DSSRelax.Add(Histo_WQCDShape2DSSRelax)
+#FIXME        if Histo_WQCDShape2DSSRelax: Histo_TTQCDShape2DSSRelax.Add(Histo_WQCDShape2DSSRelax)
         if Histo_TTQCDShape2DSSRelax:
             Histo_TTQCDShape2DSSRelax.Scale(-1)
             Histo_QCDQCDShape2DSSRelax.Add(Histo_TTQCDShape2DSSRelax)
