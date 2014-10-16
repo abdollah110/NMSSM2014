@@ -48,7 +48,7 @@ Data = ['Data']
 
 #category = ["_inclusive"]
 #category = ["_inclusive", "_nobtag", "_btag"]
-category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+category = ["_inclusive",  "_btag", "_btagLoose"]
 
 #channel = ["mutau"]
 channel = ["mutau", "etau"]
@@ -60,7 +60,7 @@ lenghtZL = len(Z_BackGround) + 1
 lenghtZJ = len(Z_BackGround) + 1
 lenghtZTT = len(Z_BackGround) + 1
 low_bin = 0
-high_bin = 15000
+high_bin = 300
 digit = 1
 verbos_ = True
 QCDScaleFactor = 1.06

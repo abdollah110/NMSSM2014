@@ -55,7 +55,8 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 #lenghtSig = len(signal) * len(mass)
 #Histogram = "VisibleMass_"
 #category = ["_inclusive"]
-category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+category = ["_inclusive",  "_btag", "_btagLoose"]
+#category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
 #category = ["_inclusive", "_nobtag"]
 channelDirectory = ["muTau", "eleTau"]
 #    makeSystematic2DTable("_SVMassTauHighPtRWUp","", "_8TeV")
@@ -77,8 +78,8 @@ verbos_ = True
 QCDScaleFactor = 1.06
 DoFakeRateUsingSSOverOSRatio = False
 
-Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,1000,1500])
-Binning_BTag = array.array("d",[0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,1000,1500])
+Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
+Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
 TauScale = ["Down", "", "Up"]
 #TauScale = [ "Down"]
 
@@ -319,23 +320,23 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 #                    NewHIST.Write()
                     tDirectory.WriteObject(NewHIST,NameOut)
 
-           ################################################
-           #  Systematics on Shape and Norm for Higgs Pt nad High Tau Pt
-           ################################################
-                    if tscale==1:
-                        for syst in range(len(SystematicSignal)):
-                            tDirectory.cd()
-                            Histogram = SystematicSignal[syst]+"_mTLess30_OS"
-                            normal = SysTable[syst].GetBinContent(XLoc,YLoc)    #Get the Noralization
-                            NameOut= str(signal[sig]) +str(mass[m])+str(Signal_Unc_Out[syst])
-                            NewHIST =TH1F(NameOut,str(signal[sig]) +str(mass[m]),len(BinCateg)-1,BinCateg)
-
-                            for bb in range(0,len(BinCateg)-1):
-                                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False,False)[0])
-#                                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False,False)[1])
-
-                            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
-                            tDirectory.WriteObject(NewHIST,NameOut)
+#           ################################################
+#           #  Systematics on Shape and Norm for Higgs Pt nad High Tau Pt
+#           ################################################
+#                    if tscale==1:
+#                        for syst in range(len(SystematicSignal)):
+#                            tDirectory.cd()
+#                            Histogram = SystematicSignal[syst]+"_mTLess30_OS"
+#                            normal = SysTable[syst].GetBinContent(XLoc,YLoc)    #Get the Noralization
+#                            NameOut= str(signal[sig]) +str(mass[m])+str(Signal_Unc_Out[syst])
+#                            NewHIST =TH1F(NameOut,str(signal[sig]) +str(mass[m]),len(BinCateg)-1,BinCateg)
+#
+#                            for bb in range(0,len(BinCateg)-1):
+#                                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False,False)[0])
+##                                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False,False)[1])
+#
+#                            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+#                            tDirectory.WriteObject(NewHIST,NameOut)
 
            ################################################
            #   Filling VV
@@ -359,15 +360,15 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
             tDirectory.WriteObject(NewHIST,NameOut)
 
-            print "Doing VV fine binning, BG estimation"
-            tDirectory.cd()
-            NewHIST =TH1F(NameOut+"_fine_binning","Diboson",300,0,1500)
-            for bb in range(0,300):
-                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
-#                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
-
-            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
-            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
+#            print "Doing VV fine binning, BG estimation"
+#            tDirectory.cd()
+#            NewHIST =TH1F(NameOut+"_fine_binning","Diboson",300,0,1500)
+#            for bb in range(0,300):
+#                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
+##                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
+#
+#            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+#            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
                 ################################################
                 #  Filling TOP
                 ################################################
@@ -388,13 +389,13 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
             tDirectory.WriteObject(NewHIST,NameOut)
 
-            tDirectory.cd()
-            NewHIST =TH1F(NameOut+"_fine_binning","",300,0,1500)
-            for bb in range(0,300):
-                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
-#                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
-            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
-            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
+#            tDirectory.cd()
+#            NewHIST =TH1F(NameOut+"_fine_binning","",300,0,1500)
+#            for bb in range(0,300):
+#                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
+##                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
+#            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+#            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
                 ################################################
             print "Doing ZL, BG estimation"
             tDirectory.cd()
@@ -415,14 +416,14 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
             tDirectory.WriteObject(NewHIST,NameOut)
 
-            print "doing ... ", Name, "  fine binning"
-            tDirectory.cd()
-            NewHIST =TH1F(NameOut+"_fine_binning","",300,0,1500)
-            for bb in range(0,300):
-                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
-#                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
-            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
-            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
+#            print "doing ... ", Name, "  fine binning"
+#            tDirectory.cd()
+#            NewHIST =TH1F(NameOut+"_fine_binning","",300,0,1500)
+#            for bb in range(0,300):
+#                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
+##                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
+#            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+#            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
             #            ############################################################
             if tscale==1:
 #            ############################################################
@@ -464,14 +465,14 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
             tDirectory.WriteObject(NewHIST,NameOut)
 
-            print "doing ... ", Name, "  fine binning"
-            tDirectory.cd()
-            NewHIST =TH1F(NameOut+"_fine_binning","",300,0,1500)
-            for bb in range(0,300):
-                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
-#                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
-            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
-            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
+#            print "doing ... ", Name, "  fine binning"
+#            tDirectory.cd()
+#            NewHIST =TH1F(NameOut+"_fine_binning","",300,0,1500)
+#            for bb in range(0,300):
+#                NewHIST.SetBinContent(bb,_Return_Value_Signal(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
+##                NewHIST.SetBinError(bb,_Return_Value_Signal(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
+#            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+#            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
 
             #        #######################################  Filling Reducible BG ##########
             print "Doing ZTT, BG estimation"
@@ -492,13 +493,13 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 #            if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral()) #No Need to resacale it again
             tDirectory.WriteObject(NewHIST,NameOut)
 
-            tDirectory.cd()
-            print "doing ... ", Name, "  fine binning"
-            NewHIST =TH1F(NameOut+"_fine_binning","",300,0,1500)
-            for bb in range(0,300):
-                NewHIST.SetBinContent(bb,_Return_Value_Embedded(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False,normal,normalTTEmbedded,True)[0])
-#                NewHIST.SetBinError(bb,_Return_Value_Embedded(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False,normal,normalTTEmbedded,False)[1])
-            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
+#            tDirectory.cd()
+#            print "doing ... ", Name, "  fine binning"
+#            NewHIST =TH1F(NameOut+"_fine_binning","",300,0,1500)
+#            for bb in range(0,300):
+#                NewHIST.SetBinContent(bb,_Return_Value_Embedded(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False,normal,normalTTEmbedded,True)[0])
+##                NewHIST.SetBinError(bb,_Return_Value_Embedded(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False,normal,normalTTEmbedded,False)[1])
+#            tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
             #        #######################################  Filling Reducible BG ##########
             print "Doing W, BG estimation"
 #            tDirectory.cd()
@@ -519,10 +520,10 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 NewHIST.SetBinContent(qq+1,vectorH[qq])
 
 
-            NewHistFinBin= NewHIST.Clone("FINBIN"+NameOut)
-            NewHistFinBin.Rebin(5)
-            if NewHistFinBin.Integral(): NewHistFinBin.Scale(normal/NewHistFinBin.Integral())
-            tDirectory.WriteObject(NewHistFinBin,NameOut+"_fine_binning")
+#            NewHistFinBin= NewHIST.Clone("FINBIN"+NameOut)
+#            NewHistFinBin.Rebin(5)
+#            if NewHistFinBin.Integral(): NewHistFinBin.Scale(normal/NewHistFinBin.Integral())
+#            tDirectory.WriteObject(NewHistFinBin,NameOut+"_fine_binning")
 
             NewHistNoFinBin= NewHIST.Clone("NoFINBIN"+NameOut)
             if NameCat=="_nobtag" or NameCat=="_inclusive"  : WShapeNoBin=NewHistNoFinBin.Rebin(len(Binning_NoBTag)-1,"",Binning_NoBTag)
@@ -544,11 +545,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 if NewHistFinBin.Integral(): NewHistFinBin.Scale(normal/NewHistFinBin.Integral())
                 NewHistFinBin.Rebin(5)
 
-                tDirectory.WriteObject(NewHistFinBin,NameUp+"_fine_binning")
-                if NameCat=="_nobtag" or NameCat=="_inclusive"  : WShapeNoBin=NewHIST.Rebin(len(Binning_NoBTag)-1,"",Binning_NoBTag)
-                elif NameCat=="_btag" or   NameCat == "_btagLoose": WShapeNoBin=NewHIST.Rebin(len(Binning_BTag)-1,"",Binning_BTag)
-                if WShapeNoBin.Integral(): WShapeNoBin.Scale(normal/WShapeNoBin.Integral())
-                tDirectory.WriteObject(WShapeNoBin,NameUp)
+#                tDirectory.WriteObject(NewHistFinBin,NameUp+"_fine_binning")
+#                if NameCat=="_nobtag" or NameCat=="_inclusive"  : WShapeNoBin=NewHIST.Rebin(len(Binning_NoBTag)-1,"",Binning_NoBTag)
+#                elif NameCat=="_btag" or   NameCat == "_btagLoose": WShapeNoBin=NewHIST.Rebin(len(Binning_BTag)-1,"",Binning_BTag)
+#                if WShapeNoBin.Integral(): WShapeNoBin.Scale(normal/WShapeNoBin.Integral())
+#                tDirectory.WriteObject(WShapeNoBin,NameUp)
 #            ############################################################
                 vectorHDown = getShapeWDown(channel,NameCat,CoMEnergy,TauScale[tscale])
                 NameDown= "W_CMS_htt_WShape_"+channel+NameCat+CoMEnergy+"Down"
@@ -562,11 +563,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 NewHistFinBin.Rebin(5)
                 if NewHistFinBin.Integral(): NewHistFinBin.Scale(normal/NewHistFinBin.Integral())
 
-                tDirectory.WriteObject(NewHistFinBin,NameDown+"_fine_binning")
-                if NameCat=="_nobtag" or NameCat=="_inclusive"  : WShapeNoBin=NewHIST.Rebin(len(Binning_NoBTag)-1,"",Binning_NoBTag)
-                elif NameCat=="_btag" or   NameCat == "_btagLoose": WShapeNoBin=NewHIST.Rebin(len(Binning_BTag)-1,"",Binning_BTag)
-                if WShapeNoBin.Integral(): WShapeNoBin.Scale(normal/WShapeNoBin.Integral())
-                tDirectory.WriteObject(WShapeNoBin,NameDown)
+#                tDirectory.WriteObject(NewHistFinBin,NameDown+"_fine_binning")
+#                if NameCat=="_nobtag" or NameCat=="_inclusive"  : WShapeNoBin=NewHIST.Rebin(len(Binning_NoBTag)-1,"",Binning_NoBTag)
+#                elif NameCat=="_btag" or   NameCat == "_btagLoose": WShapeNoBin=NewHIST.Rebin(len(Binning_BTag)-1,"",Binning_BTag)
+#                if WShapeNoBin.Integral(): WShapeNoBin.Scale(normal/WShapeNoBin.Integral())
+#                tDirectory.WriteObject(WShapeNoBin,NameDown)
                 
             #        #######################################  Filling Reducible BG QCD ##########
             if tscale ==1:
@@ -587,14 +588,14 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
                 tDirectory.WriteObject(NewHIST,NameOut)
 
-                tDirectory.cd()
-                NewHIST =TH1F("QCD"+"_fine_binning","",300,0,1500)
-#                if NameCat=="_btag": NameCat="_btagLoose"
-                for bb in range(0,300):
-                    NewHIST.SetBinContent(bb,_Return_Value_QCD(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
-    #                NewHIST.SetBinError(bb,_Return_Value_QCD(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
-                if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
-                tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
+#                tDirectory.cd()
+#                NewHIST =TH1F("QCD"+"_fine_binning","",300,0,1500)
+##                if NameCat=="_btag": NameCat="_btagLoose"
+#                for bb in range(0,300):
+#                    NewHIST.SetBinContent(bb,_Return_Value_QCD(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
+#    #                NewHIST.SetBinError(bb,_Return_Value_QCD(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
+#                if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+#                tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
 
                 #        #######################################  Filling Data ##########
             if tscale ==1:
