@@ -48,8 +48,8 @@ Data = ['Data']
 
 #category = ["_inclusive"]
 #category = ["_inclusive", "_nobtag", "_btag"]
-category = ["_inclusive",  "_btag", "_btagLoose"]
-
+#category = ["_inclusive",  "_btag", "_btagLoose"]
+category = ["_inclusive", "_btag", "_btagLoose", "_btagLowdR", "_btagMediumdR", "_btagHighdR"]
 #channel = ["mutau"]
 channel = ["mutau", "etau"]
 lenghtSig = 0

@@ -33,15 +33,17 @@ ROOT.gROOT.SetBatch(True)
 #ROOT.gROOT.ProcessLine('.x rootlogon.C')
 SubRootDir = 'OutFiles/'
 
+massbin=300
+ptbin=300
 n_bin = 50
 low_bin = 0
-high_bin = 300
+high_bin = ptbin
 reb_ = high_bin / n_bin
 DIR_ROOT = 'outRoot/'
 
 #signal = ['ggh', 'bbh']
-signal = ['ggH', 'bbH']
-mass = [80,90, 100, 110,  120, 130, 140,  160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000]
+#signal = ['ggH', 'bbH']
+#mass = [80,90, 100, 110,  120, 130, 140,  160, 180, 200, 250, ptbin, 350, 400, 450, 500, 600, 700, 800, 900, 1000]
 W_BackGround = ['WJetsToLNu', 'W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu']
 Z_BackGround = ['DYJetsToLL', 'DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL']
 Top_BackGround = ['TTJets_FullLeptMGDecays','TTJets_SemiLeptMGDecays',  'TTJets_HadronicMGDecays', 'Tbar_tW', 'T_tW']
@@ -58,14 +60,11 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 
 #lenghtSig = len(signal) * len(mass)
 #Histogram = "VisibleMass_"
-#category_ = ["_inclusive"]
-#category_ = ["_inclusive", "_nobtag", "_btag"]
-#category_ = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-category_ = ["_inclusive",  "_btag", "_btagLoose"]
-#categoryM = ["_inclusive", "_nobtag", "_btag"]
-#categoryM = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-categoryM = ["_inclusive", "_btag", "_btagLoose"]
-#category_ = ["_inclusive", "_nobtag"]
+#Categoryyy = ["_inclusive"]
+#Categoryyy = ["_inclusive", "_nobtag", "_btag"]
+#Categoryyy = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+#Categoryyy = ["_inclusive",  "_btag", "_btagLoose"]
+Categoryyy = ["_inclusive", "_btag", "_btagLoose", "_btagLowdR", "_btagMediumdR", "_btagHighdR"]
 channelDirectory = ["muTau", "eleTau"]
 channel = ["mutau","etau"]
 #lenghtSig = len(signal) * len(mass) +1
@@ -81,9 +80,9 @@ digit = 3
 verbos_ = True
 QCDScaleFactor = 1.06
 
-Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
-Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
-Binning_PT = array.array("d",[0,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300])
+Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,ptbin])
+Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,ptbin])
+Binning_PT = array.array("d",[0,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,ptbin])
 TauScale = ["Down", "", "Up"]
 #TauScale = [ ""]
 
@@ -121,7 +120,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
     
     
     categ=-1
-    for category in category_:
+    for category in Categoryyy:
         categ =categ +1
         print "starting category and channel", category, channel
 #        if category=="_nobtag" or category=="_inclusive"  : BinCateg = Binning_NoBTag
@@ -140,7 +139,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
         HistoQCDNormLowMTSSIso = "_QCDNorm_mTLess30_SS"+ etaRange
 
         DYIndex = ""
-        XLocQCD= categ + len(category_)*chl + 1
+        XLocQCD= categ + len(Categoryyy)*chl + 1
         YLoc= lenghtSig + 2
         file_TT = TFile(SubRootDir + "out_TTAll"+  CoMEnergy+ '.root')
         Histo_TTSSIso =  file_TT.Get(channel+HistoTauPtLowMTSSIso + DYIndex + category+ "")
@@ -155,7 +154,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
 
         
         DYIndex = ""
-        XLocQCD= categ + len(category_)*chl + 1
+        XLocQCD= categ + len(Categoryyy)*chl + 1
         YLoc= lenghtSig +  1
         file_VV = TFile(SubRootDir + "out_VVAll"+ CoMEnergy+ '.root')
         Histo_VVSSIso =  file_VV.Get(channel+HistoTauPtLowMTSSIso + DYIndex + category+ "")
@@ -173,7 +172,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
 
             
         DYIndex = "_ZL"
-        XLocQCD= categ + len(category_)*chl + 1
+        XLocQCD= categ + len(Categoryyy)*chl + 1
         YLoc= lenghtSig + 3
         file_ZL = TFile(SubRootDir + "out_DYJetsAll"+  CoMEnergy+ '.root')
         Histo_ZLSSIso =  file_ZL.Get(channel+HistoTauPtLowMTSSIso + DYIndex + category+ "")
@@ -188,7 +187,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
    
 
         DYIndex = "_ZJ"
-        XLocQCD= categ + len(category_)*chl + 1
+        XLocQCD= categ + len(Categoryyy)*chl + 1
         YLoc= lenghtSig + 4
         file_ZJ = TFile(SubRootDir + "out_DYJetsAll"+  CoMEnergy+ '.root')
         Histo_ZJSSIso =  file_ZJ.Get(channel+HistoTauPtLowMTSSIso + DYIndex + category+ "")
@@ -202,7 +201,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
 #        if verbos_: print NormTableSSIso.GetBinContent(XLocQCD,YLoc), NormTableSSRelax.GetBinContent(XLocQCD,YLoc), NormTableOSRelax.GetBinContent(XLocQCD,YLoc)
     
         DYIndex = "_ZTT"
-        XLocQCD= categ + len(category_)*chl + 1
+        XLocQCD= categ + len(Categoryyy)*chl + 1
         YLoc= lenghtSig + 5
         file_ZTT = TFile(SubRootDir + "out_DYJetsAll"+  CoMEnergy+ '.root')
         Histo_ZTTSSIso =  file_ZTT.Get(channel+HistoTauPtLowMTSSIso + DYIndex + category+ "")
@@ -217,7 +216,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
      
 
         DYIndex = ""
-        XLocQCD= categ + len(category_)*chl + 1
+        XLocQCD= categ + len(Categoryyy)*chl + 1
         YLoc= lenghtSig + 6
         file_W = TFile(SubRootDir + "out_WJetsAll"+  CoMEnergy+ '.root')
         Histo_WSSIso =  file_W.Get(channel+HistoTauPtLowMTSSIso + DYIndex + category+ "")
@@ -240,7 +239,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
 #        print "test existance of a histogram", Histo_VVSSIso.Integral()
         if Histo_VVSSIso: Histo_TTSSIso.Add(Histo_VVSSIso)
         if Histo_ZLSSIso: Histo_TTSSIso.Add(Histo_ZLSSIso)
-        if Histo_ZJSSIso.Integral(): Histo_TTSSIso.Add(Histo_ZJSSIso)
+#        if Histo_ZJSSIso.Integral(): Histo_TTSSIso.Add(Histo_ZJSSIso)
         if Histo_ZTTSSIso: Histo_TTSSIso.Add(Histo_ZTTSSIso)
 #   #FIXME     if Histo_WSSIso: Histo_TTSSIso.Add(Histo_WSSIso)
         if Histo_TTSSIso:
@@ -249,14 +248,14 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
 
 
         Histo_QCDSSRelax =  file_QCD.Get(channel+HistoTauPtLowMTSSRelax + category+ "")
-        if Histo_VVSSRelax: Histo_TTSSRelax.Add(Histo_VVSSRelax)
-        if Histo_ZLSSRelax: Histo_TTSSRelax.Add(Histo_ZLSSRelax)
-        if Histo_ZJSSRelax: Histo_TTSSRelax.Add(Histo_ZJSSRelax)
-        if Histo_ZTTSSRelax: Histo_TTSSRelax.Add(Histo_ZTTSSRelax)
+        if Histo_VVSSRelax: Histo_TTSSRelax.Add(Histo_VVSSRelax) ; print "test1=", Histo_TTSSRelax.Integral()
+        if Histo_ZLSSRelax: Histo_TTSSRelax.Add(Histo_ZLSSRelax) ; print "test2=", Histo_TTSSRelax.Integral()
+        if Histo_ZJSSRelax: Histo_TTSSRelax.Add(Histo_ZJSSRelax) ; print "test3=", Histo_TTSSRelax.Integral()
+        if Histo_ZTTSSRelax: Histo_TTSSRelax.Add(Histo_ZTTSSRelax) ; print "test4=", Histo_TTSSRelax.Integral()
 #  #FIXME      if Histo_WSSRelax: Histo_TTSSRelax.Add(Histo_WSSRelax)
         if Histo_TTSSRelax:
-            if Histo_TTSSRelax: Histo_TTSSRelax.Scale(-1)
-            Histo_QCDSSRelax.Add(Histo_TTSSRelax)
+            if Histo_TTSSRelax: Histo_TTSSRelax.Scale(-1) ; print "test5=", Histo_TTSSRelax.Integral()
+            Histo_QCDSSRelax.Add(Histo_TTSSRelax) ; print "test6_Histo_QCDSSRelax=", Histo_QCDSSRelax.Integral()
 
 
         Histo_QCDOSRelax =  file_QCD.Get(channel+HistoTauPtLowMTOSRelax + category+ "")
@@ -279,39 +278,48 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
         if Histo_TTQCDShape2DSSRelax:
             Histo_TTQCDShape2DSSRelax.Scale(-1)
             Histo_QCDQCDShape2DSSRelax.Add(Histo_TTQCDShape2DSSRelax)
+#            Histo_QCDQCDShape2DSSRelax.Add(Histo_TTQCDShape2DSSRelax)
+#        if not Histo_QCDQCDShape2DSSRelax:
+#            category="_btagMeddR"
+#            Histo_QCDQCDShape2DSSRelax =  file_QCD.Get(channel+HistoQCDShapeLowMTSSRelax + category+ "")
+            
 
         
-        Histo_QCDNumerator= Histo_QCDSSIso.Rebin(len(Binning_PT)-1,"",Binning_PT)
-        Histo_QCDDeNumerator= Histo_QCDSSRelax.Rebin(len(Binning_PT)-1,"",Binning_PT)
-        Histo_QCDControlRegion= Histo_QCDOSRelax.Rebin(len(Binning_PT)-1,"",Binning_PT)
+        if Histo_QCDSSIso: Histo_QCDNumerator= Histo_QCDSSIso.Rebin(len(Binning_PT)-1,"",Binning_PT)
+        if Histo_QCDSSRelax: Histo_QCDDeNumerator= Histo_QCDSSRelax.Rebin(len(Binning_PT)-1,"",Binning_PT)
+        if Histo_QCDOSRelax: Histo_QCDControlRegion= Histo_QCDOSRelax.Rebin(len(Binning_PT)-1,"",Binning_PT)
 
         tDirectory.cd()
         HistoNum =TH1F("QCDNumerator","",len(Binning_PT)-1,Binning_PT)
         HistoDeNum =TH1F("QCDDenumerator","",len(Binning_PT)-1,Binning_PT)
         NewHIST_ControlRegion =TH1F("QCDControlRegion","",len(Binning_PT)-1,Binning_PT)
-        NewHIST_ControlRegionFinBin =TH1F("NewHIST_ControlRegionFinBin","",300,0,300)
-        NewHIST_ControlRegionQCDShape2D =TH2F("NewHIST_ControlRegionQCDShape2D","",1500,0,1500,300,0,300)
+        NewHIST_ControlRegionFinBin =TH1F("NewHIST_ControlRegionFinBin","",ptbin,0,ptbin)
+        NewHIST_ControlRegionQCDShape2D =TH2F("NewHIST_ControlRegionQCDShape2D","",massbin,0,massbin,ptbin,0,ptbin)
 
-        for bb in range(1,len(Binning_PT)):
-            ## CAVEAT   Here I have set th enegative bins in numerator and denumerator to 0
-            binValueNum= Histo_QCDNumerator.GetBinContent(bb)
-            if binValueNum < 0 : binValueNum =0
-            HistoNum.SetBinContent(bb,binValueNum)
+        if Histo_QCDNumerator and Histo_QCDDeNumerator and Histo_QCDControlRegion:
+            for bb in range(1,len(Binning_PT)):
+                ## CAVEAT   Here I have set th enegative bins in numerator and denumerator to 0
+                binValueNum= Histo_QCDNumerator.GetBinContent(bb)
+                if binValueNum < 0 : binValueNum =0
+                HistoNum.SetBinContent(bb,binValueNum)
 
-            binValueDeNum= Histo_QCDDeNumerator.GetBinContent(bb)
-            if binValueDeNum < 0 : binValueDeNum =0
-            HistoDeNum.SetBinContent(bb,binValueDeNum)
-            
-            NewHIST_ControlRegion.SetBinContent(bb,Histo_QCDControlRegion.GetBinContent(bb))
+                binValueDeNum= Histo_QCDDeNumerator.GetBinContent(bb)
+                if binValueDeNum < 0 : binValueDeNum =0
+                HistoDeNum.SetBinContent(bb,binValueDeNum)
+
+                NewHIST_ControlRegion.SetBinContent(bb,Histo_QCDControlRegion.GetBinContent(bb))
             
         for aa in range(1,Histo_QCDOSRelax.GetNbinsX()):
             binValue = Histo_QCDOSRelax.GetBinContent(aa)
             if binValue < 0: binValue=0
             NewHIST_ControlRegionFinBin.SetBinContent(aa,binValue)
 
-        for aa in range(1,Histo_QCDQCDShape2DSSRelax.GetNbinsX()):
-            for bb in range(1,Histo_QCDQCDShape2DSSRelax.GetNbinsY()):
-                binValue = Histo_QCDQCDShape2DSSRelax.GetBinContent(aa,bb)
+        for aa in range(1,300):
+            for bb in range(1,300):
+#        for aa in range(1,Histo_QCDQCDShape2DSSRelax.GetNbinsX()):
+#            for bb in range(1,Histo_QCDQCDShape2DSSRelax.GetNbinsY()):
+                binValue = 0
+                if Histo_QCDQCDShape2DSSRelax: binValue = Histo_QCDQCDShape2DSSRelax.GetBinContent(aa,bb)
                 if binValue < 0: binValue=0
                 NewHIST_ControlRegionQCDShape2D.SetBinContent(aa,bb,binValue)
 
@@ -361,20 +369,20 @@ def ReturnScaledReadyHisto(CoMEnergy,etaRange,categ,chl):
     fitpar2= fitParameters[2]
 
     MainRootFile = TFile("QCDTotalRootForLimit_"+channel[chl] + etaRange + CoMEnergy+".root")
-    HistoCR = MainRootFile.Get(channelDirectory[chl]+categoryM[categ]+"/NewHIST_ControlRegionQCDShape2D")
+    HistoCR = MainRootFile.Get(channelDirectory[chl]+Categoryyy[categ]+"/NewHIST_ControlRegionQCDShape2D")
 
     myOut.cd()
-    templateShape =TH1F("QCDShapeNorm","",1500,0,1500)
+    templateShape =TH1F("QCDShapeNorm","",massbin,0,massbin)
 
-    for bb in range(1500):
+    for bb in range(massbin):
 
         NormInPtBin=0
-        for ss in range(300):
+        for ss in range(ptbin):
             NormInPtBin += Func_Exp3Par(ss+0.5,fitpar0,fitpar1,fitpar2)*HistoCR.GetBinContent(bb+1,ss+1)
         templateShape.SetBinContent(bb,NormInPtBin)
 
 
-    XLoc= categ + len(category_)*chl + 1
+    XLoc= categ + len(Categoryyy)*chl + 1
 
     FileNorm = TFile("Yield"+etaRange+CoMEnergy+".root")
     normHistio=FileNorm.Get("FullResultsSSIsoQCDNorm")
@@ -383,14 +391,14 @@ def ReturnScaledReadyHisto(CoMEnergy,etaRange,categ,chl):
         print "Backgrounds to be subtracted from data", i, normHistio.GetBinContent(XLoc,i+1)
         NormQCDMC +=normHistio.GetBinContent(XLoc,i+1)
     FinalQCDEstimate=(normHistio.GetBinContent(XLoc,7)-NormQCDMC) * QCDScaleFactor
-    templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
+    if templateShape.Integral(): templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
     myOut.Write()
     return myOut
 
 def GetFinalQCDShapeNorm():
     FinalFile = TFile("QCDFinalFile.root", "RECREATE")
 
-    for categ in range(len(categoryM)):
+    for categ in range(len(Categoryyy)):
 #        for chl in range(1):
         for chl in range(len(channel)):
             getFileBar=ReturnScaledReadyHisto("_8TeV","_Bar",categ,chl)
@@ -402,9 +410,15 @@ def GetFinalQCDShapeNorm():
             HistoEnd=getFileEnd.Get("QCDShapeNorm")
 
             FinalFile.cd()
-            QCDShapeTotal =TH1F(channel[chl]+"_QCDShapeNormTotal"+categoryM[categ],"",1500,0,1500)
-            for bb in range(1500):
-                QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
+            QCDShapeTotal =TH1F(channel[chl]+"_QCDShapeNormTotal"+Categoryyy[categ],"",massbin,0,massbin)
+            for bb in range(massbin):
+                valBar=HistoBar.GetBinContent(bb)
+                valCen=HistoCen.GetBinContent(bb)
+                valEnd=HistoEnd.GetBinContent(bb)
+                if valBar < 0 : print channel[chl]+Categoryyy[categ] , valBar ; valBar=0
+                if valCen < 0 : print channel[chl]+Categoryyy[categ] , valCen ; valCen=0
+                if valEnd < 0 : print channel[chl]+Categoryyy[categ] , valEnd ; valEnd=0
+                QCDShapeTotal.SetBinContent(bb, valBar+valCen+valEnd)
 
             FinalFile.Write()
                 

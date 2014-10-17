@@ -56,7 +56,7 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 #lenghtSig = len(signal) * len(mass)
 #Histogram = "VisibleMass_"
 #category = ["_inclusive"]
-category = ["_inclusive",  "_btag", "_btagLoose"]
+category = ["_inclusive", "_btag", "_btagLoose", "_btagLowdR", "_btagMediumdR", "_btagHighdR"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
 #category = ["_inclusive", "_nobtag"]
 channelDirectory = ["muTau", "eleTau"]
@@ -109,8 +109,8 @@ def _Return_Value_Signal(bb,Name, channel,cat,HistoName,PostFix,CoMEnergy,change
         if useFineBinning:
             RebinedHist = Histo.Rebin(5)
         else:
-            if cat=="_nobtag" or cat=="_inclusive"  : RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
-            elif cat=="_btag" or   cat == "_btagLoose": RebinedHist = Histo.Rebin(len(Binning_BTag)-1,"BTag",Binning_BTag)
+            RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
+#            elif cat=="_btag" or   cat == "_btagLoose" or : RebinedHist = Histo.Rebin(len(Binning_BTag)-1,"BTag",Binning_BTag)
 
         binCont = RebinedHist.GetBinContent(bb)
         binErr = RebinedHist.GetBinError(bb)
@@ -136,8 +136,9 @@ def _Return_Value_Embedded(bb,Name, channel,cat,HistoName,PostFix,CoMEnergy,chan
         if useFineBinning:
             RebinedHist = Histo.Rebin(5)
         else:
-            if cat=="_nobtag" or cat=="_inclusive"  : RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
-            elif cat=="_btag" or   cat == "_btagLoose": RebinedHist = Histo.Rebin(len(Binning_BTag)-1,"BTag",Binning_BTag)
+            RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
+#            if cat=="_nobtag" or cat=="_inclusive"  : RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
+#            elif cat=="_btag" or   cat == "_btagLoose": RebinedHist = Histo.Rebin(len(Binning_BTag)-1,"BTag",Binning_BTag)
 
         binCont = RebinedHist.GetBinContent(bb)
         binErr = RebinedHist.GetBinError(bb)
@@ -184,8 +185,9 @@ def _Return_Value_QCD(bb,Name, channel,cat,Histo,PostFix,CoMEnergy,changeHistoNa
         if useFineBinning:
             RebinedHist = Histo.Rebin(5)
         else:
-            if cat=="_nobtag" or cat=="_inclusive"  : RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
-            elif cat=="_btag" or   cat == "_btagLoose": RebinedHist = Histo.Rebin(len(Binning_BTag)-1,"BTag",Binning_BTag)
+            RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
+#            if cat=="_nobtag" or cat=="_inclusive"  : RebinedHist= Histo.Rebin(len(Binning_NoBTag)-1,"NoBTag",Binning_NoBTag)
+#            elif cat=="_btag" or   cat == "_btagLoose": RebinedHist = Histo.Rebin(len(Binning_BTag)-1,"BTag",Binning_BTag)
 
         binCont = RebinedHist.GetBinContent(bb)
         binErr = RebinedHist.GetBinError(bb)
@@ -289,8 +291,9 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
     for NameCat in category:
         icat =icat +1
         print "starting NameCat and channel", NameCat, channel
-        if NameCat=="_nobtag" or NameCat=="_inclusive"  : BinCateg = Binning_NoBTag
-        if NameCat=="_btag" or   NameCat == "_btagLoose": BinCateg = Binning_BTag
+        BinCateg = Binning_BTag
+#        if NameCat=="_nobtag" or NameCat=="_inclusive"  : BinCateg = Binning_NoBTag
+#        if NameCat=="_btag" or   NameCat == "_btagLoose": BinCateg = Binning_BTag
         tDirectory= myOut.mkdir(channelDirectory[chl] + str(NameCat))
 #        myOut.WriteObject(tDirectory,"TestDir")
 #        tDirectory.WriteObject()

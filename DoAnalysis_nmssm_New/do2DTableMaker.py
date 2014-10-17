@@ -101,7 +101,8 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 #Histogram = "VisibleMass_"
 #category = ["_inclusive"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-category = ["_inclusive", "_btag", "_btagLoose"]
+category = ["_inclusive", "_btag", "_btagLoose", "_btagLowdR", "_btagMediumdR", "_btagHighdR"]
+#category = ["_inclusive", "_btag", "_btagLoose"]
 channel = ["mutau", "etau"]
 #channel = ["MuTau"]
 lenghtSig = len(signal) * len(mass) +1
@@ -112,7 +113,7 @@ lenghtZJ = len(Z_BackGround) + 1
 lenghtZTT = len(Z_BackGround) + 1
 low_bin = 0
 high_bin = 300
-digit = 3
+digit = 1
 verbos_ = True
 QCDScaleFactor = 1.06
 
@@ -204,8 +205,8 @@ def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 
 def make2DTable(Observable,PostFix,CoMEnergy):
     myOut = TFile("Yield"+CoMEnergy+PostFix+".root", 'RECREATE')
-    FullResults  = TH2F('FullResults', 'FullResults', 15, 0, 15, 60, 0, 60)
-    FullError  = TH2F('FullError', 'FullError', 15, 0, 15, 60, 0, 60)
+    FullResults  = TH2F('FullResults', 'FullResults', 15, 0, 15, 25, 0, 25)
+    FullError  = TH2F('FullError', 'FullError', 15, 0, 15, 25, 0, 25)
 
     for categ in range(len(category)):
         for chl in range(len(channel)):

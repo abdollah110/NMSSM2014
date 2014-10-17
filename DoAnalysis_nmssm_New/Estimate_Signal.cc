@@ -234,6 +234,7 @@ int main(int argc, char** argv) {
     //###############################################################################################
     //Just each categori should be filled once
     float CutOntheTauPt = 20;
+    float highCutOnPt = 1000;
     bool IsInCorrcetMassRange = true;
     bool verbose_ = false;
     int Event_Double[8][9];
@@ -443,7 +444,7 @@ int main(int argc, char** argv) {
         //        if (TTEmbedFind != string::npos) CorrectionForEmbed = getCorrFactor(mcdata, Channel, l1Pt, l1Eta);
 
         //    Mu Selection    ####################################################
-        bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1 && l1Pt < 40;
+        bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1 && l1Pt < highCutOnPt;
         bool Mu_IdTight = l1_muId_Tight;
         bool Mu_d0 = l1_d0 < 0.045; //the impact parameter in the transverse plane
         bool Mu_dZ = l1_dZ_in < 0.2; //the impact parameter in the transverse plane
@@ -454,7 +455,7 @@ int main(int argc, char** argv) {
 
 
         //    Electron Selection    ####################################################
-        bool El_PtEta = l1Pt > 24 && fabs(l1Eta) < 2.1 && l1Pt < 40;
+        bool El_PtEta = l1Pt > 24 && fabs(l1Eta) < 2.1 && l1Pt < highCutOnPt;
         bool El_IdTight = l1_eleId_Tight;
         bool El_Iso = l1_eleIso < 0.1;
         bool El_Iso_Loose = l1_eleIso > 0.2 && l1_eleIso < 0.5;
@@ -475,7 +476,7 @@ int main(int argc, char** argv) {
         //            bool Tau_antiMu = l2_tauRejMu3L;
         //            bool Tau_antiMu = l2_tauRejMu2T;
         bool TauVtxdZ = Tau_Vertex_dz < 0.2;
-        bool TAU_CUTS = l2Pt < 40 && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
+        bool TAU_CUTS = l2Pt < highCutOnPt && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
 
         //########################################################################################################
@@ -514,7 +515,11 @@ int main(int argc, char** argv) {
                                                                         if (MuTrgMatched && MU_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
                                                                             //                                                            plotFill("mutau_visibleMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat]+ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight);
                                                                             plotFill("mutau_SVMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                            plotFill("mutau_VisMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight);
+                                                                            plotFill("mutau_TMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mT, massBin, 0, massBin, AllWeight);
                                                                             plotFill("mutau_Wshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                            plotFill("mutau_WshapeVis2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                            plotFill("mutau_WshapeTMass2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mT, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                             //                                                                            if (SignalSelection) plotFill("mutau_SVMassHiggPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[2] / HiggsPtReweight[1]);
                                                                             //                                                                            if (SignalSelection) plotFill("mutau_SVMassHiggPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[0] / HiggsPtReweight[1]);
                                                                             //                                                                            if (SignalSelection) plotFill("mutau_SVMassTauHighPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
@@ -523,6 +528,10 @@ int main(int argc, char** argv) {
                                                                             if (SignalSelection) plotFill("mutau_SVMassTopPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
                                                                             if (SignalSelection) plotFill("mutau_SVMassZLScaleUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*1.02, massBin, 0, massBin, AllWeight);
                                                                             if (SignalSelection) plotFill("mutau_SVMassZLScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
+                                                                            if (SignalSelection) plotFill("mutau_VisMassTopPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight * TopPtReweighting);
+                                                                            if (SignalSelection) plotFill("mutau_VisMassTopPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat],mvis, massBin, 0, massBin, AllWeight / TopPtReweighting);
+                                                                            if (SignalSelection) plotFill("mutau_VisMassZLScaleUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis*1.02, massBin, 0, massBin, AllWeight);
+                                                                            if (SignalSelection) plotFill("mutau_VisMassZLScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis*0.98, massBin, 0, massBin, AllWeight);
 
 
                                                                             //                                Event_Double[1][1] = Event;
@@ -534,6 +543,8 @@ int main(int argc, char** argv) {
                                                                             //                                                            plotFill("mutau_visibleMass_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat]+ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight);
                                                                             //                                                                            plotFill("mutau_SVMass_QCDshape" + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat]  + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("mutau_QCDshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                            plotFill("mutau_QCDshapeVis2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                            plotFill("mutau_QCDshapeTMass2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mT, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                             //                                                                            plotFill("mutau_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("mutau_TauPt" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
                                                                         }
@@ -548,7 +559,11 @@ int main(int argc, char** argv) {
                                                                         if (EleTrgMatched && EL_CUTS && TAU_CUTS && (Event != Event_Double[2][2])) {
                                                                             //                                                            plotFill("etau_visibleMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat]+ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight);
                                                                             plotFill("etau_SVMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                            plotFill("etau_VisMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight);
+                                                                            plotFill("etau_TMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mT, massBin, 0, massBin, AllWeight);
                                                                             plotFill("etau_Wshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                            plotFill("etau_WshapeVis2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                            plotFill("etau_WshapeTMass2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mT, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                             //                                                                            if (SignalSelection) plotFill("etau_SVMassHiggPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[2] / HiggsPtReweight[1]);
                                                                             //                                                                            if (SignalSelection) plotFill("etau_SVMassHiggPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[0] / HiggsPtReweight[1]);
                                                                             //                                                                            if (SignalSelection) plotFill("etau_SVMassTauHighPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
@@ -557,6 +572,10 @@ int main(int argc, char** argv) {
                                                                             if (SignalSelection) plotFill("etau_SVMassTopPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
                                                                             if (SignalSelection) plotFill("etau_SVMassZLScaleUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*1.02, massBin, 0, massBin, AllWeight);
                                                                             if (SignalSelection) plotFill("etau_SVMassZLScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
+                                                                            if (SignalSelection) plotFill("etau_VisMassTopPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight * TopPtReweighting);
+                                                                            if (SignalSelection) plotFill("etau_VisMassTopPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight / TopPtReweighting);
+                                                                            if (SignalSelection) plotFill("etau_VisMassZLScaleUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis*1.02, massBin, 0, massBin, AllWeight);
+                                                                            if (SignalSelection) plotFill("etau_VisMassZLScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat],mvis*0.98, massBin, 0, massBin, AllWeight);
                                                                             //                                Event_Double[2][2] = Event;
                                                                         }
                                                                         //####################################################
@@ -566,6 +585,8 @@ int main(int argc, char** argv) {
                                                                             //                                                            plotFill("etau_visibleMass_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat]+ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, massBin, 0, massBin, AllWeight);
                                                                             //                                                                            plotFill("etau_SVMass_QCDshape" + q_Cat[qcat] + eta_Cat[etacat]+ iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("etau_QCDshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                            plotFill("etau_QCDshapeVis2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mvis, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                            plotFill("etau_QCDshapeTMass2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mT, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                             //                                                                            plotFill("etau_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("etau_TauPt" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
                                                                         }
