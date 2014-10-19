@@ -508,7 +508,10 @@ def make2DTable(Observable,PostFix,CoMEnergy,etaRange):
 
 
 if __name__ == "__main__":
-    make2DTable("_SVMass","", "_8TeV", "_Bar")
-    make2DTable("_SVMass","", "_8TeV", "_Cen")
-    make2DTable("_SVMass","", "_8TeV", "_End")
+    make2DTable("_TMass","", "_8TeV", "_Bar")
+    make2DTable("_TMass","", "_8TeV", "_Cen")
+    make2DTable("_TMass","", "_8TeV", "_End")
+#    make2DTable("_SVMass","", "_8TeV", "_Bar")
+#    make2DTable("_SVMass","", "_8TeV", "_Cen")
+#    make2DTable("_SVMass","", "_8TeV", "_End")
 

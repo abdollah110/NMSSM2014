@@ -1,4 +1,7 @@
 //Add the spinor weight   16 October
+//high pT trigger bug
+//aaply correction for embeeded   [check embedded data ad MC]
+
 
 // The code to do teh ZH totautau Analysis
 // to make it excutable run: ./Make.sh nMSSM_Analysis.cc 

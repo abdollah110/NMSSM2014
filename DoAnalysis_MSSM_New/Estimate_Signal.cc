@@ -255,7 +255,7 @@ int main(int argc, char** argv) {
     int y = 0;
     for (Int_t i = 0; i < nentries_wtn; i++) {
         Run_Tree->GetEntry(i);
-        if (i % 10000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
+        if (i % 1000000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
         fflush(stdout);
 
 
@@ -316,14 +316,14 @@ int main(int argc, char** argv) {
         bool RelaxIso = l2_TighttauIsoMVA3oldDMwLT < 0.5 && l2_LoosetauIsoMVA3oldDMwLT > 0.5;
         bool Iso_category[size_isoCat] = {TightIso, RelaxIso};
         std::string iso_Cat[size_isoCat] = {"", "_RelaxIso"};
-//        // Tau Isocategorization
-//        const int size_isoCat = 3;
-//        bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
-//        bool RelaxIso = l2_TighttauIsoMVA3oldDMwLT < 0.5 && l2_LoosetauIsoMVA3oldDMwLT > 0.5;
-//        bool LooseIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
-//        //        bool RelaxIso = l2_TighttauIsoMVA3oldDMwLT < 0.5 &&  byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 10;
-//        bool Iso_category[size_isoCat] = {TightIso, RelaxIso,LooseIso};
-//        std::string iso_Cat[size_isoCat] = {"", "_RelaxIso","_LooseIso"};
+        //        // Tau Isocategorization
+        //        const int size_isoCat = 3;
+        //        bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
+        //        bool RelaxIso = l2_TighttauIsoMVA3oldDMwLT < 0.5 && l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+        //        bool LooseIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+        //        //        bool RelaxIso = l2_TighttauIsoMVA3oldDMwLT < 0.5 &&  byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 10;
+        //        bool Iso_category[size_isoCat] = {TightIso, RelaxIso,LooseIso};
+        //        std::string iso_Cat[size_isoCat] = {"", "_RelaxIso","_LooseIso"};
 
         //Number of GenJet Categorization
         int size_jet = 6;
@@ -405,6 +405,7 @@ int main(int argc, char** argv) {
         float tauESWeight = TauESWeight(mcdata, l2_DecayMode, l2Eta);
         float WeightEmbed = (embedWeight == 0 ? 1 : embedWeight);
         // EleTau fake rate scale factors for etau channel and ZL background
+        // I guess EleTau fake rate should be applied only on Etau events !!!!!!!
         float EleTauFRWeight = 1;
         if (Channel == 3 && sel_ZL && fabs(l2Eta) < 1.479 && l2_DecayMode == 0) EleTauFRWeight = 1.37;
         if (Channel == 3 && sel_ZL && fabs(l2Eta) > 1.479 && l2_DecayMode == 0) EleTauFRWeight = 2.18;
@@ -422,16 +423,16 @@ int main(int argc, char** argv) {
         bool EleTrgMatched = 1;
         size_t EmbedFind = input.find("Embed");
         if (EmbedFind != string::npos)
-            CorrectionForEmbed = getCorrFactorEMbed(mcdata, Channel, l1Pt, l1Eta, l2Pt,l2Eta,TriggerWeightBarrel,TriggerWeightEndcaps);
-//            CorrectionForEmbed=1;
+            CorrectionForEmbed = getCorrFactorEMbed(mcdata, Channel, l1Pt, l1Eta, l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+            //            CorrectionForEmbed=1;
         else {
             MuTrgMatched = (Channel == 1) && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20;
             EleTrgMatched = (Channel == 3) && Trigger_EleTau12 && l1_trgMatche_Ele20Tau20 && l2_trgMatche_Ele20Tau20;
         }
         //        size_t EmbedFind = input.find("Embeddedetau");
-//        if (EmbedFind != string::npos) EleTrgMatched = (Channel == 3);
-//        size_t TTEmbedFind = input.find("TTEmbedded");
-//        if (TTEmbedFind != string::npos) CorrectionForEmbed = getCorrFactor(mcdata, Channel, l1Pt, l1Eta);
+        //        if (EmbedFind != string::npos) EleTrgMatched = (Channel == 3);
+        //        size_t TTEmbedFind = input.find("TTEmbedded");
+        //        if (TTEmbedFind != string::npos) CorrectionForEmbed = getCorrFactor(mcdata, Channel, l1Pt, l1Eta);
 
         //    Mu Selection    ####################################################
         bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
@@ -470,9 +471,14 @@ int main(int argc, char** argv) {
 
 
         //########################################################################################################
+        //test Z Categories
+        //        if (selection_nobtag && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_OS && TightIso && sel_ZJ) {
+        if (l2Pt > 30 && selection_nobtag && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_OS && TightIso && sel_ZJ) {
+            cout << Event << "\n";
+        }
         //####################################################
         float AllWeight = pu_Weight * eff_Correction * tauESWeight * WeightEmbed * HiggsPtReweight[1] * EleTauFRWeight * TopPtReweighting * CorrectionForEmbed;
-//        if (verbose_) cout << "AllWeight= " << CorrectionForEmbed << "\n";
+        //        if (verbose_) cout << "AllWeight= " << CorrectionForEmbed << "\n";
         if (verbose_) cout << "TopPtReweighting= " << TopPtReweighting << "\n";
         //        if (verbose_) cout << "AllWeight= " << AllWeight << "   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight=" << tauESWeight << "   WeightEmbed=" << WeightEmbed << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "\n";
         //########################################################################################################

@@ -53,7 +53,8 @@ Embedded = ['EmbeddedmuTau', 'EmbeddedeleTau']
 Data = ['Data']
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 
-
+#observable= "_QCDshape2D"
+observable= "_QCDshapeTMass2D"
 
 
 
@@ -135,7 +136,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
         HistoTauPtLowMTSSIso = "_TauPt_mTLess30_SS"+etaRange
         HistoTauPtLowMTSSRelax = "_TauPt_mTLess30_SS_RelaxIso"+etaRange
         HistoTauPtLowMTOSRelax = "_TauPt_mTLess30_OS_RelaxIso"+etaRange
-        HistoQCDShapeLowMTSSRelax = "_QCDshape2D_mTLess30_SS_RelaxIso"+ etaRange 
+        HistoQCDShapeLowMTSSRelax = observable+"_mTLess30_SS_RelaxIso"+ etaRange
         HistoQCDNormLowMTSSIso = "_QCDNorm_mTLess30_SS"+ etaRange
 
         DYIndex = ""
