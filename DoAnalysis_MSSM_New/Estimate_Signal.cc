@@ -272,13 +272,13 @@ int main(int argc, char** argv) {
         std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
 
         //Z Categorization
-        const int size_ZCat = 4;
+        int size_ZCat = 4;
         bool sel_No_Z = 1;
         bool sel_ZTT = (zCategory == 3);
         bool sel_ZL = (zCategory == 1 || zCategory == 2 || zCategory == 4);
         bool sel_ZJ = (zCategory == 5 || zCategory == 6);
-        bool Z_Category[size_ZCat] = {sel_No_Z, sel_ZTT, sel_ZL, sel_ZJ};
-        std::string ZCat[size_ZCat] = {"", "_ZTT", "_ZL", "_ZJ"};
+        bool Z_Category[4] = {sel_No_Z, sel_ZTT, sel_ZL, sel_ZJ};
+        std::string ZCat[4] = {"", "_ZTT", "_ZL", "_ZJ"};
         size_t DYsampleS = out.find("out_DY");
         if (!(DYsampleS != string::npos)) size_ZCat = 1;
 
@@ -551,7 +551,7 @@ int main(int argc, char** argv) {
                                                                             plotFill("etau_Wshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                             if (SignalSelection && (ggHiggsFind != string::npos || SMFind == string::npos)) plotFill("etau_SVMassHiggPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[2] / HiggsPtReweight[1]);
                                                                             if (SignalSelection && (ggHiggsFind != string::npos || SMFind == string::npos)) plotFill("etau_SVMassHiggPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[0] / HiggsPtReweight[1]);
-                                                                            if (SignalSelection) plotFill("etau_SVMassTauHighPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
+                                                                            if (Signalsize_ZCatSelection) plotFill("etau_SVMassTauHighPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
                                                                             if (SignalSelection) plotFill("etau_SVMassTauHighPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingDown);
                                                                             if (SignalSelection) plotFill("etau_SVMassTopPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * TopPtReweighting);
                                                                             if (SignalSelection) plotFill("etau_SVMassTopPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
