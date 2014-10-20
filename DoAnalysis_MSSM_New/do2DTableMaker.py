@@ -167,7 +167,7 @@ def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
     myfileSub = TFile(SubRootDir + "out_"+Name+CoMEnergy+ '.root')
 #    if cat=="_btag": cat = "_btagLoose"
     HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
-    HistoDenum = myfileSub.Get(chan+HistogramDenum+ cat+PostFix )
+    HistoDenum = myfileSub.Get(chan+HistogramDenum+ "_inclusive"+PostFix )
 #    if not HistoNum or not HistoDenum:  #FIXME   I should find why WJets do not have statics for btag or no
 #        cat = "_inclusive"
 #        HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
@@ -232,7 +232,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"+DYIndex    # This is for signal selection
-            HistomTHigh70OS = Observable+"_mTHigher70_OS"+DYIndex   # This is for W Normalization
+            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex   # This is for W Normalization
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]
             FullResults.SetBinContent(XLoc,YLoc , value)
@@ -243,7 +243,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             FullError.GetYaxis().SetBinLabel(YLoc, Name)
             if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
-            VV_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistomTHigh70OS)[0]
+            VV_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
             ##################################################################################################
             #   TT Estimation
             ##################################################################################################
@@ -255,7 +255,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"+DYIndex
-            HistomTHigh70OS = Observable+"_mTHigher70_OS"+DYIndex
+            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]
             FullResults.SetBinContent(XLoc,YLoc , value)
@@ -266,7 +266,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             FullError.GetYaxis().SetBinLabel(YLoc, Name)
             if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
-            TT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistomTHigh70OS)[0]
+            TT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
             ##################################################################################################
             #   ZL Estimation
             ##################################################################################################
@@ -279,7 +279,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"+DYIndex
-            HistomTHigh70OS = Observable+"_mTHigher70_OS"+DYIndex
+            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]
             FullResults.SetBinContent(XLoc,YLoc , value)
@@ -290,16 +290,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             FullError.GetYaxis().SetBinLabel(YLoc, "ZL")
             if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
-            ZL_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistomTHigh70OS)[0]
-#            ####  ZL Scale  UP
-#            Value_ZL_MassScaleUp = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistoZLScaleUp)[0]
-#            FullResults.SetBinContent(XLoc,lenghtSig+13 , Value_ZL_MassScaleUp)
-#            FullResults.GetYaxis().SetBinLabel(lenghtSig+13, "ZL_ScaleUp")
-#
-#            ####  ZL Scale  DOWN
-#            Value_ZL_MassScaleDown = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistoZLScaleDown)[0]
-#            FullResults.SetBinContent(XLoc,lenghtSig+13 , Value_ZL_MassScaleDown)
-#            FullResults.GetYaxis().SetBinLabel(lenghtSig+14, "ZL_ScaleDown")
+            ZL_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
             ##################################################################################################
             #   ZJ Estimation
             #################################################################################################
@@ -311,7 +302,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"+DYIndex
-            HistomTHigh70OS = Observable+"_mTHigher70_OS"+DYIndex
+            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]
             FullResults.SetBinContent(XLoc,YLoc , value)
@@ -322,7 +313,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             FullError.GetYaxis().SetBinLabel(YLoc, "ZJ")
             if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
-            ZJ_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistomTHigh70OS)[0]
+            ZJ_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
         ##################################################################################################
         #   ZTT Estimation
         ##################################################################################################
@@ -335,7 +326,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"
-            HistomTHigh70OS = Observable+"_mTHigher70_OS"
+            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex
 
             embedToDYWeight= getEmbedToDYWeight(PostFix,CoMEnergy,channel[chl],Histogram)
 
@@ -348,42 +339,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             FullError.GetYaxis().SetBinLabel(YLoc, "ZTT")
             if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr, "  embedToDYWeight=",embedToDYWeight
 
-            ZTT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistomTHigh70OS)[0]* embedToDYWeight
-#        ##################################################################################################
-#        #   ZTT Estimation
-#        ##################################################################################################
-#            print "\nDoing ZTT, BG estimation"
-##            for BG_ZTT in range(len(Z_BackGround)):
-#
-#            DYIndex = "_ZTT"
-#            Name= "DYJetsAll"
-#            YLoc= lenghtSig + 5
-#            ## Similar To ALL ##
-#            XLoc= categ + len(category)*chl + 1
-#            XLocQCD= categ + 3*(chl+2) + 1
-#            Histogram = Observable+"_mTLess30_OS"+DYIndex
-#            HistomTHigh70OS = Observable+"_mTHigher70_OS"+DYIndex
-#            HistomTHigh70SS = Observable+"_mTHigher70_SS"+DYIndex
-#            HistomTLess30SS = Observable+"_mTLess30_SS"+DYIndex
-#            HistoQCDShapeSS = Observable+"_QCDshape_SS"+DYIndex
-#
-#
-#            EmbedEff = getEmbeddedWeight(PostFix,CoMEnergy, "Embedded",channel[chl],category[categ],Observable+"_mTLess30_OS")
-#            print "categ=", categ   , " and  EmbedEff=", EmbedEff
-#            value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",Histogram)[0]  * EmbedEff
-#            FullResults.SetBinContent(XLoc,YLoc , value)
-#            FullResults.GetYaxis().SetBinLabel(YLoc, Name)
-#
-#            valueEr = getHistoNorm_BG(PostFix,CoMEnergy,Name ,channel[chl],"_inclusive",Histogram)[1]  * EmbedEff
-#            FullError.SetBinContent(XLoc , YLoc, valueEr)
-#            FullError.GetYaxis().SetBinLabel(YLoc, "ZTT")
-#            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr, "  embedEff=",EmbedEff
-#
-#            ZTT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistomTHigh70OS)[0]
-#            ZTT_mTHighSS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistomTHigh70SS)[0]
-#            ZTT_mTLowSS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistomTLess30SS)[0]
-#            ZTT_ShapeQCDSS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],HistoQCDShapeSS)[0]
-##            FullResults.SetBinContent(XLocQCD,YLoc , ZTT_ShapeQCDSS)
+            ZTT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
             
         ##################################################################################################
         #   W Estimation
@@ -391,15 +347,15 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             print "\nDoing W BG estimation"
 
             numeratorW=Observable+"_mTLess30_OS"
-            denumeratorW=Observable+"_mTHigher70_OS"
-            Histogram =  Observable+"_mTHigher70_OS"
+            denumeratorW=Observable+"_mTHigher70_noCharge"
+            HistogramContReg =  Observable+"_mTHigher70_noCharge"
             XLoc= categ + len(category)*chl + 1
             YLoc= lenghtSig + 6
             W_mcName= "WJetsAll"
             Name='Data'
 
             ExtraPolationFactorFinal = getWExtraPol(PostFix,CoMEnergy,W_mcName ,channel[chl],category[categ],numeratorW,denumeratorW)
-            WNormInSideBandData=getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0]
+            WNormInSideBandData=getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],"_inclusive",HistogramContReg)[0]
             value =(WNormInSideBandData - (VV_mTHighOS + TT_mTHighOS +ZL_mTHighOS + ZJ_mTHighOS + ZTT_mTHighOS )) * ExtraPolationFactorFinal
 
             FullResults.SetBinContent(XLoc,YLoc , value)
