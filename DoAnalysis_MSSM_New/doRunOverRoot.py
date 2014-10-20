@@ -21,8 +21,10 @@ for files in Sample.readlines():
 outCommand = outCommand + "root -l -q hadd.C \n"
 outCommand = outCommand + "root -l -q doStitching.cc \n"
 outCommand = outCommand + "python do2DTableMaker.py \n"
-outCommand = outCommand + "python doFakeRateForQCD.py \n"
-outCommand = outCommand + "python doFakeRateForQCD_2.py \n"
+outCommand = outCommand + "python doSystematics2DTable.py \n"
+outCommand = outCommand + "python doMeasureShapeNormQCD.py \n"
+#outCommand = outCommand + "python doFakeRateForQCD.py \n"
+#outCommand = outCommand + "python doFakeRateForQCD_2.py \n"
 outCommand = outCommand + "python doHistogram.py \n"
 
 OutFile.write(outCommand)

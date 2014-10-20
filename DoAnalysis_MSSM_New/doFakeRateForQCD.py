@@ -83,12 +83,13 @@ def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     myfileSub = TFile(SubRootDir + "out_"+Name +CoMEnergy+ '.root')
     HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
-    value = 10E-7
-    valueEr = 10E-7
+#    print "*******  ", SubRootDir + "out_"+Name +CoMEnergy+ '.root'+chan+Histogram+ cat+PostFix
+    value = 10E-2
+    valueEr = 10E-2
     if (HistoSub):
-        value = HistoSub.Integral(low_bin,high_bin) * luminosity(CoMEnergy) 
+        value = HistoSub.Integral() * luminosity(CoMEnergy) 
         value = round(value, digit)
-        valueEr = math.sqrt(HistoSub.Integral(low_bin,high_bin)) * luminosity(CoMEnergy) 
+        valueEr = math.sqrt(HistoSub.Integral()) * luminosity(CoMEnergy) 
         valueEr = round(valueEr, digit)
     return value, valueEr
 
@@ -101,16 +102,17 @@ def getEmbeddedWeight(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 
 def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
     myfileSub = TFile(SubRootDir + "out_"+Name+CoMEnergy+ '.root')
-    if cat=="_btag": cat = "_btagLoose" 
+#    if cat=="_btag": cat = "_btagLoose"
     HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
     HistoDenum = myfileSub.Get(chan+HistogramDenum+ cat+PostFix )
-    if not HistoNum or not HistoDenum:  #FIXME   I should find why WJets do not have statics for btag or no 
-        cat = "_inclusive"
-        HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
-        HistoDenum = myfileSub.Get(chan+HistogramDenum+ cat+PostFix )
+#    if not HistoNum or not HistoDenum:  #FIXME   I should find why WJets do not have statics for btag or no
+#        cat = "_inclusive"
+#        HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
+#        HistoDenum = myfileSub.Get(chan+HistogramDenum+ cat+PostFix )
 
     if HistoNum and HistoDenum:
-        value = HistoNum.Integral(low_bin,high_bin)/ HistoDenum.Integral(low_bin,high_bin)
+#        value = HistoNum.Integral(low_bin,high_bin)/ HistoDenum.Integral(low_bin,high_bin)
+        value = HistoNum.Integral()/ HistoDenum.Integral()
     else:
         value =0
     return value
@@ -427,6 +429,7 @@ def make2DTable(Observable,PostFix,CoMEnergy,etaRange):
             W_NormLowMTOSRelax =(W_NormDataHighMTOSRelax - (VV_NormHighMTOSRelax + TT_NormHighMTOSRelax +ZL_NormHighMTOSRelax + ZJ_NormHighMTOSRelax + ZTT_NormHighMTOSRelax )) * ExtraPolFactorOSRelax
             W_NormLowMTSSRelax =(W_NormDataHighMTSSRelax - (VV_NormHighMTSSRelax + TT_NormHighMTSSRelax +ZL_NormHighMTSSRelax + ZJ_NormHighMTSSRelax + ZTT_NormHighMTSSRelax )) * ExtraPolFactorSSRelax
             W_NormLowMTSSIsoQCDNorm =(W_NormDataHighMTSSIsoQCDNorm - (VV_QCDNormHighMTSSIso + TT_QCDNormHighMTSSIso +ZL_QCDNormHighMTSSIso + ZJ_QCDNormHighMTSSIso + ZTT_QCDNormHighMTSSIso )) * ExtraPolFactorSSIsoQCDNorm
+            print "To check Normalization Factor ",HistogramHighMTWSSIsoQCDNorm, W_NormDataHighMTSSIsoQCDNorm , VV_QCDNormHighMTSSIso , TT_QCDNormHighMTSSIso ,ZL_QCDNormHighMTSSIso , ZJ_QCDNormHighMTSSIso , ZTT_QCDNormHighMTSSIso
 
             FullResultsOSIso.SetBinContent(XLoc,YLoc , W_NormLowMTOSIso)
             FullResultsSSIso.SetBinContent(XLoc,YLoc , W_NormLowMTSSIso)
@@ -509,6 +512,6 @@ def make2DTable(Observable,PostFix,CoMEnergy,etaRange):
 
 if __name__ == "__main__":
     make2DTable("_SVMass","", "_8TeV", "_Bar")
-    make2DTable("_SVMass","", "_8TeV", "_Cen")
-    make2DTable("_SVMass","", "_8TeV", "_End")
+#    make2DTable("_SVMass","", "_8TeV", "_Cen")
+#    make2DTable("_SVMass","", "_8TeV", "_End")
 

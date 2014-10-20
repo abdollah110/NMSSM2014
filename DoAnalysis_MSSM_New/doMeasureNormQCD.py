@@ -136,8 +136,10 @@ def GetNorm_W(PostFix,CoMEnergy,channelName,categoryName,HistoName,etaRange):
     ZJinHighMT=GetNorm_BackGround("ZJ",PostFix,CoMEnergy,channelName,categoryName,HistoForHighMT,etaRange)
     ZTTinHighMT=GetNorm_BackGround("ZTT",PostFix,CoMEnergy,channelName,categoryName,HistoForHighMT,etaRange)
     DatainHighMT=getHistoIntegral(PostFix,CoMEnergy, "Data",channelName,categoryName,HistoForHighMT+etaRange)[0]
+#    print "To check extraPOl Factor ",HistoForHighMT, DatainHighMT
 
     W_Estimate=(DatainHighMT - (VVinHighMT+TTinHighMT+ZLinHighMT+ZJinHighMT+ZTTinHighMT))* ExtraPolFactor
+    print "Before Extrap To check extraPOl Factor ",HistoForHighMT, (DatainHighMT - (VVinHighMT+TTinHighMT+ZLinHighMT+ZJinHighMT+ZTTinHighMT))
     return W_Estimate
 
 def make2DTable(Observable,PostFix,CoMEnergy,etaRange):
@@ -381,6 +383,6 @@ def make2DTable(Observable,PostFix,CoMEnergy,etaRange):
 
 if __name__ == "__main__":
     make2DTable("_SVMass","", "_8TeV", "_Bar")
-    make2DTable("_SVMass","", "_8TeV", "_Cen")
-    make2DTable("_SVMass","", "_8TeV", "_End")
+#    make2DTable("_SVMass","", "_8TeV", "_Cen")
+#    make2DTable("_SVMass","", "_8TeV", "_End")
 

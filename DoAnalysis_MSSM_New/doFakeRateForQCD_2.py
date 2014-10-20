@@ -135,7 +135,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
         HistoTauPtLowMTSSRelax = "_TauPt_mTLess30_SS_RelaxIso"+etaRange
         HistoTauPtLowMTOSRelax = "_TauPt_mTLess30_OS_RelaxIso"+etaRange
         HistoQCDShapeLowMTSSRelax = "_QCDshape2D_mTLess30_SS_RelaxIso"+ etaRange 
-        HistoQCDNormLowMTSSIso = "_QCDNorm_mTLess30_SS"+ etaRange
+#        HistoQCDNormLowMTSSIso = "_QCDNorm_mTLess30_SS"+ etaRange
 
         DYIndex = ""
         XLocQCD= categ + len(category_)*chl + 1
@@ -235,15 +235,12 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl,etaRange):
         file_QCD = TFile(SubRootDir + "out_"+ Name +CoMEnergy+ '.root')
 
         Histo_QCDSSIso =  file_QCD.Get(channel+HistoTauPtLowMTSSIso + category+ "")
-#        print "test existance of a histogram", Histo_VVSSIso.Integral()
-        if Histo_VVSSIso: Histo_TTSSIso.Add(Histo_VVSSIso)
-        if Histo_ZLSSIso: Histo_TTSSIso.Add(Histo_ZLSSIso)
-        if Histo_ZJSSIso: Histo_TTSSIso.Add(Histo_ZJSSIso)
-        if Histo_ZTTSSIso: Histo_TTSSIso.Add(Histo_ZTTSSIso)
-        if Histo_WSSIso: Histo_TTSSIso.Add(Histo_WSSIso)
-        if Histo_TTSSIso:
-            Histo_TTSSIso.Scale(-1)
-            Histo_QCDSSIso.Add(Histo_TTSSIso)
+        if Histo_TTSSIso:  Histo_QCDSSIso.Add(Histo_TTSSIso,-1)
+        if Histo_VVSSIso:  Histo_QCDSSIso.Add(Histo_VVSSIso,-1)
+        if Histo_ZLSSIso:  Histo_QCDSSIso.Add(Histo_ZLSSIso,-1)
+        if Histo_ZJSSIso:  Histo_QCDSSIso.Add(Histo_ZJSSIso,-1)
+        if Histo_ZTTSSIso: Histo_QCDSSIso.Add(Histo_ZTTSSIso,-1)
+        if Histo_WSSIso:   Histo_QCDSSIso.Add(Histo_WSSIso,-1)
 
 
         Histo_QCDSSRelax =  file_QCD.Get(channel+HistoTauPtLowMTSSRelax + category+ "")
