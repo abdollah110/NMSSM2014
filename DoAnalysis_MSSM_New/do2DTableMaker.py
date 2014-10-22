@@ -99,7 +99,7 @@ lenghtZL = len(Z_BackGround) + 1
 lenghtZJ = len(Z_BackGround) + 1
 lenghtZTT = len(Z_BackGround) + 1
 low_bin = 0
-high_bin = 15000
+high_bin = 1500
 digit = 3
 verbos_ = True
 QCDScaleFactor = 1.06
@@ -173,7 +173,7 @@ def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
 #        HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
 #        HistoDenum = myfileSub.Get(chan+HistogramDenum+ cat+PostFix )
 
-    value = HistoNum.Integral(low_bin,high_bin)/ HistoDenum.Integral(low_bin,high_bin)
+    value = HistoNum.Integral()/ HistoDenum.Integral()
     return value
 
 def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
@@ -182,9 +182,9 @@ def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     value = 10E-7
     valueEr = 10E-7
     if (HistoSub):
-        value = HistoSub.Integral(low_bin,high_bin)
+        value = HistoSub.Integral()
         value = round(value, digit)
-        valueEr = math.sqrt(HistoSub.Integral(low_bin,high_bin))
+        valueEr = math.sqrt(HistoSub.Integral())
         valueEr = round(valueEr, digit)
     return value, valueEr
 
