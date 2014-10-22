@@ -292,12 +292,17 @@ int main(int argc, char** argv) {
         std::string eta_Cat[size_eta] = {"_Bar", "_Cen", "_End"};
 
         //Charge Categorization
-        const int size_Q = 3;
+        const int size_Q = 2;
         bool charge_OS = l1Charge * l2Charge < 0;
         bool charge_SS = l1Charge * l2Charge > 0;
-        bool charge_NoReq = 1;
-        bool charge_category[size_Q] = {charge_OS, charge_SS, charge_NoReq};
-        std::string q_Cat[size_Q] = {"_OS", "_SS", "_noCharge"};
+        bool charge_category[size_Q] = {charge_OS, charge_SS};
+        std::string q_Cat[size_Q] = {"_OS", "_SS"};
+        //        const int size_Q = 3;
+        //        bool charge_OS = l1Charge * l2Charge < 0;
+        //        bool charge_SS = l1Charge * l2Charge > 0;
+        //        bool charge_NoReq = 1;
+        //        bool charge_category[size_Q] = {charge_OS, charge_SS, charge_NoReq};
+        //        std::string q_Cat[size_Q] = {"_OS", "_SS", "_noCharge"};
 
 
         // mT categprization
@@ -468,7 +473,7 @@ int main(int argc, char** argv) {
         //            bool Tau_antiMu = l2_tauRejMu3L;
         //            bool Tau_antiMu = l2_tauRejMu2T;
         bool TauVtxdZ = Tau_Vertex_dz < 0.2;
-        bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
+        bool TAU_CUTS = SVMass > 50 && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
 
         //########################################################################################################
