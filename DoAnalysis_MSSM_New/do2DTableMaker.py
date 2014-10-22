@@ -29,7 +29,7 @@ InputFileLocation = '../FileROOT/MSSMROOTFiles/'
 SubRootDir = 'OutFiles/'
 
 def luminosity(CoMEnergy):
-    if CoMEnergy == '_8TeV': return  19712 #19242
+    if CoMEnergy == '_8TeV': return  19710 #19242
     if CoMEnergy == '_7TeV': return  4982
 
 def XSection(mX, CoMEnergy):
@@ -113,9 +113,9 @@ def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     value = 10E-7
     valueEr = 10E-7
     if (HistoSub):
-        value = HistoSub.Integral(low_bin,high_bin) * luminosity(CoMEnergy) / HistoDenum.GetBinContent(1)
+        value = HistoSub.Integral() * luminosity(CoMEnergy) / HistoDenum.GetBinContent(1)
         value = round(value, digit)
-        valueEr = math.sqrt(HistoSub.Integral(low_bin,high_bin)) * luminosity(CoMEnergy)  / HistoDenum.GetBinContent(1)
+        valueEr = math.sqrt(HistoSub.Integral()) * luminosity(CoMEnergy)  / HistoDenum.GetBinContent(1)
         valueEr = round(valueEr, digit)
     return value, valueEr
 
@@ -125,9 +125,9 @@ def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     value = 10E-7
     valueEr = 10E-7
     if (HistoSub):
-        value = HistoSub.Integral(low_bin,high_bin) * luminosity(CoMEnergy) 
+        value = HistoSub.Integral() * luminosity(CoMEnergy)
         value = round(value, digit)
-        valueEr = math.sqrt(HistoSub.Integral(low_bin,high_bin)) * luminosity(CoMEnergy) 
+        valueEr = math.sqrt(HistoSub.Integral()) * luminosity(CoMEnergy)
         valueEr = round(valueEr, digit)
     return value, valueEr
 
@@ -135,7 +135,7 @@ def getEmbeddedWeight(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     myfileSub = TFile(SubRootDir + "out_"+Name+chan +CoMEnergy+ '.root') #need chan due to embedded name include MuTau
     HistoInclusive = myfileSub.Get(chan+Histogram+ "_inclusive"+PostFix )
     HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
-    value = HistoSub.Integral(low_bin,high_bin)/ HistoInclusive.Integral(low_bin,high_bin)
+    value = HistoSub.Integral()/ HistoInclusive.Integral()
     return value
 
 #embedToDYWeight= getEmbedToDYWeight(PostFix,CoMEnergy,channel[chl],Observable+"_mTLess30_OS")
@@ -143,18 +143,15 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,Histogram):
 
     #  Get Normalization from DY Sample in Inclusive
     DY_Files = TFile(SubRootDir + "out_DYJetsAll"+CoMEnergy+".root")
-    DY_Histo=DY_Files.Get(chan+Histogram+ "_ZTT_inclusive")
+    DY_Histo=DY_Files.Get(chan+Histogram+ "_ZTT_inclusive"+PostFix)
     Normalization_DY= DY_Histo.Integral()*luminosity(CoMEnergy)
-    print "Normalization_DY= ", Normalization_DY
-
 
     #  Get Normalization from TTEmbedded Sample in Inclusive
     EmbedTT_Files = TFile(SubRootDir + "out_TTEmbedded"+chan+CoMEnergy+".root")
-    EmbedTT_Histo=EmbedTT_Files.Get(chan+Histogram+ "_inclusive")
+    EmbedTT_Histo=EmbedTT_Files.Get(chan+Histogram+ "_inclusive"+PostFix)
     OriginFile_EmbedTT = TFile(InputFileLocation + "TTEmbedded"+chan+CoMEnergy+".root")
     HistoTotal = OriginFile_EmbedTT.Get("TotalEventsNumber")  # to get Total number of events  "MuTau_Multiplicity" + index[icat]
     Normalization_EmbedTT= (EmbedTT_Histo.Integral()*luminosity(CoMEnergy) * XSection("TTEmbedded", CoMEnergy))/HistoTotal.Integral()
-    print "Normalization_EmbedTT= " , Normalization_EmbedTT
     OriginFile_EmbedTT.Close()
 
     #  Get Normalization from Embedded Data Sample in Inclusive
@@ -165,13 +162,8 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,Histogram):
 
 def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
     myfileSub = TFile(SubRootDir + "out_"+Name+CoMEnergy+ '.root')
-#    if cat=="_btag": cat = "_btagLoose"
     HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
     HistoDenum = myfileSub.Get(chan+HistogramDenum+ "_inclusive"+PostFix )
-#    if not HistoNum or not HistoDenum:  #FIXME   I should find why WJets do not have statics for btag or no
-#        cat = "_inclusive"
-#        HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
-#        HistoDenum = myfileSub.Get(chan+HistogramDenum+ cat+PostFix )
 
     value = HistoNum.Integral()/ HistoDenum.Integral()
     return value
@@ -220,7 +212,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
                     valueEr = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1] * XSection("signal", CoMEnergy)
                     FullError.SetBinContent(XLoc , YLoc, valueEr)
                     FullError.GetYaxis().SetBinLabel(YLoc, Name)
-                    if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
+                    if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
              ##################################################################################################
             #   VV Estimation
             ##################################################################################################
@@ -232,7 +224,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"+DYIndex    # This is for signal selection
-            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex   # This is for W Normalization
+            HistomTHigh70 = Observable+"_mTHigher70_noCharge"+DYIndex   # This is for W Normalization
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]
             FullResults.SetBinContent(XLoc,YLoc , value)
@@ -241,9 +233,9 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             valueEr = getHistoNorm_BG(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1]
             FullError.SetBinContent(XLoc , YLoc, valueEr)
             FullError.GetYaxis().SetBinLabel(YLoc, Name)
-            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
+            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
-            VV_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
+            VV_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70)[0]
             ##################################################################################################
             #   TT Estimation
             ##################################################################################################
@@ -255,7 +247,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"+DYIndex
-            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex
+            HistomTHigh70 = Observable+"_mTHigher70_noCharge"+DYIndex
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]
             FullResults.SetBinContent(XLoc,YLoc , value)
@@ -264,9 +256,9 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             valueEr = getHistoNorm_BG(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1]
             FullError.SetBinContent(XLoc , YLoc, valueEr)
             FullError.GetYaxis().SetBinLabel(YLoc, Name)
-            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
+            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
-            TT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
+            TT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70)[0]
             ##################################################################################################
             #   ZL Estimation
             ##################################################################################################
@@ -279,7 +271,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"+DYIndex
-            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex
+            HistomTHigh70 = Observable+"_mTHigher70_noCharge"+DYIndex
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]
             FullResults.SetBinContent(XLoc,YLoc , value)
@@ -288,9 +280,9 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             valueEr = getHistoNorm_BG(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1]
             FullError.SetBinContent(XLoc , YLoc, valueEr)
             FullError.GetYaxis().SetBinLabel(YLoc, "ZL")
-            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
+            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
-            ZL_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
+            ZL_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70)[0]
             ##################################################################################################
             #   ZJ Estimation
             #################################################################################################
@@ -302,7 +294,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"+DYIndex
-            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex
+            HistomTHigh70 = Observable+"_mTHigher70_noCharge"+DYIndex
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]
             FullResults.SetBinContent(XLoc,YLoc , value)
@@ -311,9 +303,9 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             valueEr = getHistoNorm_BG(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1]
             FullError.SetBinContent(XLoc , YLoc, valueEr)
             FullError.GetYaxis().SetBinLabel(YLoc, "ZJ")
-            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
+            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
-            ZJ_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
+            ZJ_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70)[0]
         ##################################################################################################
         #   ZTT Estimation
         ##################################################################################################
@@ -326,7 +318,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
             Histogram = Observable+"_mTLess30_OS"
-            HistomTHigh70OS = Observable+"_mTHigher70_noCharge"+DYIndex
+            HistomTHigh70 = Observable+"_mTHigher70_noCharge"+DYIndex
 
             embedToDYWeight= getEmbedToDYWeight(PostFix,CoMEnergy,channel[chl],Histogram)
 
@@ -337,9 +329,9 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             valueEr = getHistoNorm_BG(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1]  * embedToDYWeight
             FullError.SetBinContent(XLoc , YLoc, valueEr)
             FullError.GetYaxis().SetBinLabel(YLoc, "ZTT")
-            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr, "  embedToDYWeight=",embedToDYWeight
+            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr, "  embedToDYWeight=",embedToDYWeight
 
-            ZTT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70OS)[0]
+            ZTT_mTHighOS = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],"_inclusive",HistomTHigh70)[0]
             
         ##################################################################################################
         #   W Estimation
@@ -362,7 +354,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             FullResults.GetYaxis().SetBinLabel(YLoc, "W")
             if (verbos_): print "WNormInSideBandData= ", WNormInSideBandData, "   VV_mTHighOS=", VV_mTHighOS, "   TT_mTHighOS=", TT_mTHighOS,  "   ZL_mTHighOS=",ZL_mTHighOS, "   ZJ_mTHighOS=",ZJ_mTHighOS,"   ZTT_mTHighOS=",ZTT_mTHighOS
             if (verbos_): print "Final W Value=", value, "   ExtraPolationFactorFinal=", ExtraPolationFactorFinal
-            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value 
+            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value
             
 #        ##################################################################################################
 #        #   W Estimation for QCD Normalization
@@ -418,7 +410,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
 #            print "FinalQCDNorm =", FinalQCDNorm
 #            FullResults.SetBinContent(XLoc,YLoc , FinalQCDNorm)
 #            FullResults.GetYaxis().SetBinLabel(YLoc, "QCD")
-#            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
+#            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
         ##################################################################################################
         #   TTEmbedded Estimation
@@ -432,7 +424,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             print "TTEmbedded= ", TTEmbedNorm
             FullResults.SetBinContent(XLoc,YLoc , TTEmbedNorm)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
-            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",TTEmbedNorm 
+            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",TTEmbedNorm
         ##################################################################################################
         #   Data Estimation
         ##################################################################################################
@@ -445,7 +437,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             print "Data= ", DataNorm
             FullResults.SetBinContent(XLoc,YLoc , DataNorm)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
-            if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",DataNorm
+            if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",DataNorm
         ##################################################################################################
         #   SM Higgs  Estimation
         ##################################################################################################
@@ -464,7 +456,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
                 valueEr = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1] * XSection(Name, CoMEnergy)
                 FullError.SetBinContent(XLoc , YLoc, valueEr)
                 FullError.GetYaxis().SetBinLabel(YLoc, Name)
-                if (verbos_): print "Same processed was=", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
+                if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
 
 
 #        ########################################################################
