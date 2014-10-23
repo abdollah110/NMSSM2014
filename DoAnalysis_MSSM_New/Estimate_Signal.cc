@@ -255,7 +255,7 @@ int main(int argc, char** argv) {
     int y = 0;
     for (Int_t i = 0; i < nentries_wtn; i++) {
         Run_Tree->GetEntry(i);
-        if (i % 10000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
+        if (i % 100000000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
         fflush(stdout);
 
 
@@ -443,8 +443,8 @@ int main(int argc, char** argv) {
         //    Mu Selection    ####################################################
         bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
         bool Mu_IdTight = l1_muId_Tight;
-        bool Mu_d0 = l1_d0 < 0.045; //the impact parameter in the transverse plane
-        bool Mu_dZ = l1_dZ_in < 0.2; //the impact parameter in the transverse plane
+        bool Mu_d0 = fabs(l1_d0) < 0.045; //the impact parameter in the transverse plane
+        bool Mu_dZ = fabs(l1_dZ_in) < 0.2; //the impact parameter in the transverse plane
         bool Mu_Iso = l1_muIso < 0.10;
         bool Mu_Iso_Loose = l1_muIso > 0.2 && l1_muIso < 0.5;
         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
@@ -472,16 +472,19 @@ int main(int argc, char** argv) {
         //            bool Tau_antiEl = l2_tauRejEleL;
         //            bool Tau_antiMu = l2_tauRejMu3L;
         //            bool Tau_antiMu = l2_tauRejMu2T;
-        bool TauVtxdZ = Tau_Vertex_dz < 0.2;
+        bool TauVtxdZ = fabs(Tau_Vertex_dz) < 0.2;
         bool TAU_CUTS = SVMass > 50 && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
 
         //########################################################################################################
-        //test Z Categories
-        //        if (selection_nobtag && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_OS && TightIso && sel_ZJ) {
-        //        if (l2Pt > 30 && selection_nobtag && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_OS && TightIso && sel_ZTT) {
-        //            cout << Event << "\n";
-        //        }
+        //test Data Categories
+        //                if (selection && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_OS && TightIso && sel_ZJ) {
+        //                if (Event == 524696738 ) {
+        //                cout<< Run <<":"<< Lumi <<":"<<Event << "  Pt is   "<< l2Pt <<"  "<<nbtag<<" "<<njets<<" " << jeta_1 <<" "<< jeta_2 <<" " << selection_btag << MuTrgMatched << MU_CUTS << TAU_CUTS <<( Channel == 1) << mTLess30 << charge_SS << TightIso <<"\n";
+        if (Event==92686979 && l2Pt > 30 && selection_btag && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_SS && TightIso) {
+            cout << Run<<":"<<Lumi<<":"<<Event << "mu PT is "<<l1Pt<<" iso is "<< l1_muIso<< "\n";
+        }
+
         //####################################################
         float AllWeight = pu_Weight * eff_Correction * tauESWeight * WeightEmbed * HiggsPtReweight[1] * EleTauFRWeight * TopPtReweighting * CorrectionForEmbed;
         //        if (verbose_) cout << "AllWeight= " << CorrectionForEmbed << "\n";
@@ -528,7 +531,7 @@ int main(int argc, char** argv) {
                                                                             if (SignalSelection) plotFill("mutau_SVMassZLScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
 
 
-                                                                            //                                Event_Double[1][1] = Event;
+                                                                            Event_Double[1][1] = Event;
                                                                         }
                                                                         //####################################################
                                                                         //Muon QCD Shape & Fake Rate
@@ -540,6 +543,7 @@ int main(int argc, char** argv) {
                                                                             //                                                                            plotFill("mutau_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("mutau_TauPt" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
                                                                         }
+                                                                        //same as _SVMass but in 3 different eta categories
                                                                         if (QCDNorm && MuTrgMatched && MU_CUTS && TAU_CUTS) {
                                                                             plotFill("mutau_QCDNorm" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                         }
@@ -572,6 +576,7 @@ int main(int argc, char** argv) {
                                                                             //                                                                            plotFill("etau_QCDshape" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                             plotFill("etau_TauPt" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
                                                                         }
+                                                                        //same as _SVMass but in 3 different eta categories
                                                                         if (QCDNorm && EleTrgMatched && EL_CUTS && TAU_CUTS) {
                                                                             plotFill("etau_QCDNorm" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                         }

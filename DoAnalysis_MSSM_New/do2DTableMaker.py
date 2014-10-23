@@ -165,9 +165,9 @@ def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
     HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
     HistoDenum = myfileSub.Get(chan+HistogramDenum+ "_inclusive"+PostFix )
     print "----------------------------" , chan+HistogramNum+ cat+PostFix
-#    print "W(from MC, signal region in category i) = ", HistoNum.Integral()
-#    print "W(from MC, control region in inclusive)=  ", HistoDenum.Integral()
-#    print " scaleFactor =  ", HistoNum.Integral()/ HistoDenum.Integral()
+    print "W(from MC, signal region in category i) = ", HistoNum.GetName(), HistoNum.Integral()
+    print "W(from MC, control region in inclusive)=  ", HistoDenum.GetName(), HistoDenum.Integral()
+    print " scaleFactor =  ", HistoNum.Integral()/ HistoDenum.Integral()
     value = HistoNum.Integral()/ HistoDenum.Integral()
     return value
 
@@ -427,6 +427,6 @@ def make2DTable(Observable,PostFix,CoMEnergy):
 if __name__ == "__main__":
 #    make2DTable("_visibleMass","", "_8TeV")
     make2DTable("_SVMass","", "_8TeV")
-#    make2DTable("_SVMass","Up", "_8TeV")
-#    make2DTable("_SVMass","Down", "_8TeV")
+    make2DTable("_SVMass","Up", "_8TeV")
+    make2DTable("_SVMass","Down", "_8TeV")
 

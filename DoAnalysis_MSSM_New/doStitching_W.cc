@@ -8,22 +8,22 @@
 #include <iostream>
 #include <string>
 
-void doStitching() {
+void doStitching_W() {
 
     const int numBG = 5;
     // Do stiching for DY Background
-    TFile * Target_DY = TFile::Open("OutFiles/out_DYJetsAll_8TeV.root", "RECREATE");
-    TList * FileList_DY = new TList();
-    //    FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsAll_8TeV_Hadd.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsToLL_8TeV.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DY1JetsToLL_8TeV.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DY2JetsToLL_8TeV.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DY3JetsToLL_8TeV.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DY4JetsToLL_8TeV.root"));
-    char * Background_DY[numBG] = {"DYJetsToLL", "DY1JetsToLL", "DY2JetsToLL", "DY3JetsToLL", "DY4JetsToLL"};
-    float XSection_DY[numBG] = {2950, 561, 181, 51.1, 23};
-    float LOtoNLO_DY = 1.187694915;
-    MeasureWeight_Submit(Target_DY, FileList_DY, Background_DY, XSection_DY, LOtoNLO_DY);
+//    TFile * Target_DY = TFile::Open("OutFiles/out_DYJetsAll_8TeV.root", "RECREATE");
+//    TList * FileList_DY = new TList();
+//    //    FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsAll_8TeV_Hadd.root"));
+//    FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsToLL_8TeV.root"));
+//    FileList_DY->Add(TFile::Open("OutFiles/out_DY1JetsToLL_8TeV.root"));
+//    FileList_DY->Add(TFile::Open("OutFiles/out_DY2JetsToLL_8TeV.root"));
+//    FileList_DY->Add(TFile::Open("OutFiles/out_DY3JetsToLL_8TeV.root"));
+//    FileList_DY->Add(TFile::Open("OutFiles/out_DY4JetsToLL_8TeV.root"));
+//    char * Background_DY[numBG] = {"DYJetsToLL", "DY1JetsToLL", "DY2JetsToLL", "DY3JetsToLL", "DY4JetsToLL"};
+//    float XSection_DY[numBG] = {2950, 561, 181, 51.1, 23};
+//    float LOtoNLO_DY = 1.187694915;
+//    MeasureWeight_Submit(Target_DY, FileList_DY, Background_DY, XSection_DY, LOtoNLO_DY);
 
     // Do stiching for DY Background
     TFile * Target_W = TFile::Open("OutFiles/out_WJetsAll_8TeV.root", "RECREATE");

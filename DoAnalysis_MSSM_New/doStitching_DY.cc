@@ -8,36 +8,26 @@
 #include <iostream>
 #include <string>
 
-void doStitching() {
+void doStitching_DY() {
 
     const int numBG = 5;
     // Do stiching for DY Background
-    TFile * Target_DY = TFile::Open("OutFiles/out_DYJetsAll_8TeV.root", "RECREATE");
-    TList * FileList_DY = new TList();
-    //    FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsAll_8TeV_Hadd.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsToLL_8TeV.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DY1JetsToLL_8TeV.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DY2JetsToLL_8TeV.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DY3JetsToLL_8TeV.root"));
-    FileList_DY->Add(TFile::Open("OutFiles/out_DY4JetsToLL_8TeV.root"));
+    Target_DY = TFile::Open("OutFiles/out_DYJetsAll_8TeV.root", "RECREATE");
+    FileList_DY = new TList();
+    FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsAll_8TeV_Hadd.root"));
     char * Background_DY[numBG] = {"DYJetsToLL", "DY1JetsToLL", "DY2JetsToLL", "DY3JetsToLL", "DY4JetsToLL"};
     float XSection_DY[numBG] = {2950, 561, 181, 51.1, 23};
     float LOtoNLO_DY = 1.187694915;
     MeasureWeight_Submit(Target_DY, FileList_DY, Background_DY, XSection_DY, LOtoNLO_DY);
 
-    // Do stiching for DY Background
-    TFile * Target_W = TFile::Open("OutFiles/out_WJetsAll_8TeV.root", "RECREATE");
-    TList * FileList_W = new TList();
-    //    FileList_W->Add(TFile::Open("OutFiles/out_WJetsAll_8TeV_Hadd.root"));
-    FileList_W->Add(TFile::Open("OutFiles/out_WJetsToLNu_8TeV.root"));
-    FileList_W->Add(TFile::Open("OutFiles/out_W1JetsToLNu_8TeV.root"));
-    FileList_W->Add(TFile::Open("OutFiles/out_W2JetsToLNu_8TeV.root"));
-    FileList_W->Add(TFile::Open("OutFiles/out_W3JetsToLNu_8TeV.root"));
-    FileList_W->Add(TFile::Open("OutFiles/out_W4JetsToLNu_8TeV.root"));
-    char * Background_W[numBG] = {"WJetsToLNu", "W1JetsToLNu", "W2JetsToLNu", "W3JetsToLNu", "W4JetsToLNu"};
-    float XSection_W[numBG] = {30400, 5400, 1750, 519, 214};
-    float LOtoNLO_W = 1.233848684;
-    MeasureWeight_Submit(Target_W, FileList_W, Background_W, XSection_W, LOtoNLO_W);
+//    // Do stiching for DY Background
+//    Target_W = TFile::Open("OutFiles/out_WJetsAll_8TeV.root", "RECREATE");
+//    FileList_W = new TList();
+//    FileList_W->Add(TFile::Open("OutFiles/out_WJetsAll_8TeV_Hadd.root"));
+//    char * Background_W[numBG] = {"WJetsToLNu", "W1JetsToLNu", "W2JetsToLNu", "W3JetsToLNu", "W4JetsToLNu"};
+//    float XSection_W[numBG] = {30400, 5400, 1750, 519, 214};
+//    float LOtoNLO_W = 1.233848684;
+//    MeasureWeight_Submit(Target_W, FileList_W, Background_W, XSection_W, LOtoNLO_W);
 }
 
 void MeasureWeight_Submit(TDirectory *Target, TList * FileList, char ** Background, float * XSection, float LOtoNLO) {
@@ -45,7 +35,7 @@ void MeasureWeight_Submit(TDirectory *Target, TList * FileList, char ** Backgrou
     float weight[numBG] = {};
 
     for (int i = 0; i < numBG; i++) {
-        cout << "start Stitching " << FileList->GetName() << "\n";
+        cout<<"start Stitching "<<FileList->GetName()<<"\n";
 
         // This is to get Number of events in inclusive DY/W sample
         std::string MMM_inc = "../FileROOT/MSSMROOTFiles/" + string(Background[0]) + "_8TeV.root";
@@ -61,8 +51,7 @@ void MeasureWeight_Submit(TDirectory *Target, TList * FileList, char ** Backgrou
         weight[i] = LOtoNLO / (myHisto->Integral() / XSection[i] + myHisto_inc->Integral() / XSection[0]); // for events with more than 0 jet
         if (i == 0) weight[i] = LOtoNLO / (myHisto->Integral() / XSection[i]); // for 0 jet events
 
-
-        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << "  finalValues= " << weight[i]*19700 << endl;
+//        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
         myFile->Close();
     }
 
@@ -75,7 +64,6 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
     path.Remove(0, 2);
 
     TFile *first_source = (TFile*) sourcelist->First();
-    cout << "______" << first_source->GetName() << endl;
     first_source->cd(path);
     TDirectory *current_sourcedir = gDirectory;
     //gain time, do not add the objects in the list in memory
@@ -110,7 +98,7 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
             //    For Nominal
             //################################################################################
             if (nameEnd != "j") {
-                //                cout << key->GetName() << "   " << BaseHisto->Integral() << endl;
+//                cout << key->GetName() << "   " << BaseHisto->Integral() << endl;
                 BaseHisto->Scale(0.0000000000001);
 
                 TH1 * h0j = (TH1*) first_source->Get((name + "0j").c_str());
@@ -143,69 +131,6 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
                     h4j->Scale(weight[4]);
                     BaseHisto->Add(h4j);
                 }
-
-                delete h0j;
-                delete h1j;
-                delete h2j;
-                delete h3j;
-                delete h4j;
-
-
-                // loop over all source files and add the content of the
-                // correspondant histogram to the one pointed to by "h1"
-                TFile *nextsource = (TFile*) sourcelist->After(first_source);
-                while (nextsource) {
-                    //                    cout << " passed the nextsource 1" << "\n";
-
-                    // make sure we are at the correct directory level by cd'ing to path
-
-
-                    //                    nextsource->cd(path);
-                    //                TKey *key2 = (TKey*) gDirectory->GetListOfKeys()->FindObject(BaseHisto->GetName());
-                    //                    TKey *key2 = (TKey*) gDirectory->GetListOfKeys()->FindObject(nameEnd.c_str());
-                    //                    if (key2) {
-                    //                    cout << " passed the Key2 " << "\n";
-                    //                    TH1 *h2 = (TH1*) key2->ReadObj();
-
-                    TH1 * h0jj = (TH1*) nextsource->Get((name + "0j").c_str());
-                    TH1 * h1jj = (TH1*) nextsource->Get((name + "1j").c_str());
-                    TH1 * h2jj = (TH1*) nextsource->Get((name + "2j").c_str());
-                    TH1 * h3jj = (TH1*) nextsource->Get((name + "3j").c_str());
-                    TH1 * h4jj = (TH1*) nextsource->Get((name + "4j").c_str());
-
-                    if (h0jj) {
-                        h0jj->Scale(weight[0]);
-                        BaseHisto->Add(h0jj);
-                    }
-                    //                    cout << BaseHisto->Integral() << "\n";
-                    if (h1jj) {
-                        h1jj->Scale(weight[1]);
-                        BaseHisto->Add(h1jj);
-                    }
-
-                    if (h2jj) {
-                        h2jj->Scale(weight[2]);
-                        BaseHisto->Add(h2jj);
-                    }
-
-                    if (h3jj) {
-                        h3jj->Scale(weight[3]);
-                        BaseHisto->Add(h3jj);
-                    }
-
-                    if (h4jj) {
-                        h4jj->Scale(weight[4]);
-                        BaseHisto->Add(h4jj);
-                    }
-
-                    delete h0jj;
-                    delete h1jj;
-                    delete h2jj;
-                    delete h3jj;
-                    delete h4jj;
-
-                    nextsource = (TFile*) sourcelist->After(nextsource);
-                }
             }
 
             //################################################################################
@@ -217,10 +142,10 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
             int lenName = strlen(name.c_str());
             std::string DownName = name.erase(lenName - 4);
             std::string nameEnd_d;
-            //            cout << "______" << nameEnd_d << endl;
             for (std::string::iterator it_d = DownName.begin(); it_d != DownName.end(); it_d++)
                 nameEnd_d = *it_d;
             if (nameEnd_d != "j" && nameEnd == "n") {
+//                cout << " ............................ name is=" << BaseHisto_d->GetName() << "       DownName= " << DownName << "   " << BaseHisto_d->Integral() << endl;
                 BaseHisto_d->Scale(0.0000000000001);
 
                 TH1 * h0j = (TH1*) first_source->Get((DownName + "0jDown").c_str());
@@ -253,58 +178,6 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
                     h4j->Scale(weight[4]);
                     BaseHisto_d->Add(h4j);
                 }
-
-                delete h0j;
-                delete h1j;
-                delete h2j;
-                delete h3j;
-                delete h4j;
-
-
-                // loop over all source files and add the content of the
-                // correspondant histogram to the one pointed to by "h1"
-                TFile *nextsource = (TFile*) sourcelist->After(first_source);
-                while (nextsource) {
-
-                    TH1 * h0jj = (TH1*) nextsource->Get((DownName + "0j").c_str());
-                    TH1 * h1jj = (TH1*) nextsource->Get((DownName + "1j").c_str());
-                    TH1 * h2jj = (TH1*) nextsource->Get((DownName + "2j").c_str());
-                    TH1 * h3jj = (TH1*) nextsource->Get((DownName + "3j").c_str());
-                    TH1 * h4jj = (TH1*) nextsource->Get((DownName + "4j").c_str());
-
-                    if (h0jj) {
-                        h0jj->Scale(weight[0]);
-                        BaseHisto_d->Add(h0jj);
-                    }
-                    //                    cout << BaseHisto->Integral() << "\n";
-                    if (h1jj) {
-                        h1jj->Scale(weight[1]);
-                        BaseHisto_d->Add(h1jj);
-                    }
-
-                    if (h2jj) {
-                        h2jj->Scale(weight[2]);
-                        BaseHisto_d->Add(h2jj);
-                    }
-
-                    if (h3jj) {
-                        h3jj->Scale(weight[3]);
-                        BaseHisto_d->Add(h3jj);
-                    }
-
-                    if (h4jj) {
-                        h4jj->Scale(weight[4]);
-                        BaseHisto_d->Add(h4jj);
-                    }
-
-                    delete h0jj;
-                    delete h1jj;
-                    delete h2jj;
-                    delete h3jj;
-                    delete h4jj;
-
-                    nextsource = (TFile*) sourcelist->After(nextsource);
-                }
             }
             //################################################################################
             //    For Up
@@ -315,10 +188,10 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
             int lenNameU = strlen(nameU.c_str());
             std::string UpName = nameU.erase(lenNameU - 2);
             std::string nameEnd_u;
-            //            cout << "______" << nameEnd_u << endl;
             for (std::string::iterator it_u = UpName.begin(); it_u != UpName.end(); it_u++)
                 nameEnd_u = *it_u;
             if (nameEnd_u != "j" && nameEnd == "p") {
+//                cout << " ............................ name is=" << BaseHisto_up->GetName() << "       UpName= " << UpName << "   " << BaseHisto_up->Integral() << endl;
                 BaseHisto_up->Scale(0.0000000000001);
 
                 TH1 * h0j = (TH1*) first_source->Get((UpName + "0jUp").c_str());
@@ -351,58 +224,8 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
                     h4j->Scale(weight[4]);
                     BaseHisto_up->Add(h4j);
                 }
-
-                delete h0j;
-                delete h1j;
-                delete h2j;
-                delete h3j;
-                delete h4j;
-
-                // loop over all source files and add the content of the
-                // correspondant histogram to the one pointed to by "h1"
-                TFile *nextsource = (TFile*) sourcelist->After(first_source);
-                while (nextsource) {
-
-                    TH1 * h0jj = (TH1*) nextsource->Get((UpName + "0j").c_str());
-                    TH1 * h1jj = (TH1*) nextsource->Get((UpName + "1j").c_str());
-                    TH1 * h2jj = (TH1*) nextsource->Get((UpName + "2j").c_str());
-                    TH1 * h3jj = (TH1*) nextsource->Get((UpName + "3j").c_str());
-                    TH1 * h4jj = (TH1*) nextsource->Get((UpName + "4j").c_str());
-
-                    if (h0jj) {
-                        h0jj->Scale(weight[0]);
-                        BaseHisto_up->Add(h0jj);
-                    }
-                    if (h1jj) {
-                        h1jj->Scale(weight[1]);
-                        BaseHisto_up->Add(h1jj);
-                    }
-
-                    if (h2jj) {
-                        h2jj->Scale(weight[2]);
-                        BaseHisto_up->Add(h2jj);
-                    }
-
-                    if (h3jj) {
-                        h3jj->Scale(weight[3]);
-                        BaseHisto_up->Add(h3jj);
-                    }
-
-                    if (h4jj) {
-                        h4jj->Scale(weight[4]);
-                        BaseHisto_up->Add(h4jj);
-                    }
-
-                    delete h0jj;
-                    delete h1jj;
-                    delete h2jj;
-                    delete h3jj;
-                    delete h4jj;
-
-                    nextsource = (TFile*) sourcelist->After(nextsource);
-                }
             }
-            //  ################################################################################
+            //################################################################################
 
 
 

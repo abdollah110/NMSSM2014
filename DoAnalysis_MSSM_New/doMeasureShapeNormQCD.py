@@ -38,9 +38,11 @@ def luminosity(CoMEnergy):
 
 
 Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+#Bcategory = [ "_btag"]
 #channel = ["mutau"]
 channel = ["mutau", "etau"]
 channelDirectory = ["muTau", "eleTau"]
+POSTFIX=["","Up","Down"]
 
 lenghtSig = 0
 low_bin = 0
@@ -150,8 +152,7 @@ def GetNorm_W(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
 
     #Get the extrapolation factor from MC
     HistoForNumerator=HistoName
-    if "_SS" in HistoForNumerator: HistoForDeNumerator=HistoForNumerator.replace("mTLess30_SS", "mTHigher70_OS")
-    if "_OS" in HistoForNumerator: HistoForDeNumerator=HistoForNumerator.replace("mTLess30_OS", "mTHigher70_OS")
+    HistoForDeNumerator=HistoForNumerator.replace("mTLess30_", "mTHigher70_")
     print HistoForNumerator, HistoForDeNumerator
     ExtraPolFactor=getWExtraPol(PostFix,CoMEnergy, "WJetsAll",channelName,catName,HistoForNumerator+etaRange,HistoForDeNumerator+etaRange)
 
@@ -255,15 +256,16 @@ def MakeTheHistogram(PostFix,channel,Observable,CoMEnergy,chl,etaRange):
     #################### Name Of the output file
     myOut = TFile("QCDTotalRootForLimit_"+channel + etaRange+CoMEnergy+".root" , 'RECREATE')
 
-    categ=-1
     for catName in Bcategory:
-        categ =categ +1
 
         print "starting Bcategory and channel", catName, channel
         tDirectory= myOut.mkdir(channelDirectory[chl] + str(catName))
         tDirectory.cd()
 #############################################################################################################
 
+        ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+        if catName=="_btag": catName="_btagLoose"
+        ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
         Shape_QCDSSIso=GetShape_QCD(PostFix,CoMEnergy,channel,catName,"_TauPt_mTLess30_SS",etaRange)
         Histo_QCDSSIso=Shape_QCDSSIso.Get("XXX")
         Histo_QCDNumerator= Histo_QCDSSIso.Rebin(len(Binning_PT)-1,"",Binning_PT)
@@ -360,38 +362,44 @@ def MakeFakeRateHisto(CoMEnergy,etaRange):
     canvas.SaveAs("fitResults_"+"mutau"+CoMEnergy+etaRange+".pdf")
     return  FitParam[0],FitParam[1],FitParam[2]
 
-def ReturnScaledReadyHisto(CoMEnergy,etaRange,categ,chl):
-    myOut = TFile("YieldShapeQCD"+CoMEnergy+".root", 'RECREATE')
+def ReturnScaledReadyHisto(CoMEnergy, etaRange, categ, chl, postFix):
+    myOut = TFile("YieldShapeQCD" + CoMEnergy + ".root", 'RECREATE')
     
-    fitParameters=MakeFakeRateHisto(CoMEnergy,etaRange)  # same for muTau and eTau
-    fitpar0= fitParameters[0]
-    fitpar1= fitParameters[1]
-    fitpar2= fitParameters[2]
+    fitParameters = MakeFakeRateHisto(CoMEnergy, etaRange)  # same for muTau and eTau
+    fitpar0 = fitParameters[0]
+    fitpar1 = fitParameters[1]
+    fitpar2 = fitParameters[2]
 
-    MainRootFile = TFile("QCDTotalRootForLimit_"+channel[chl] + etaRange + CoMEnergy+".root")
-    HistoCR = MainRootFile.Get(channelDirectory[chl]+Bcategory[categ]+"/NewHIST_ControlRegionQCDShape2D")
+    MainRootFile = TFile("QCDTotalRootForLimit_" + channel[chl] + etaRange + CoMEnergy + ".root")
+    HistoCR = MainRootFile.Get(channelDirectory[chl] + Bcategory[categ] + "/NewHIST_ControlRegionQCDShape2D")
 
     myOut.cd()
-    templateShape =TH1F("QCDShapeNorm","",1500,0,1500)
+    templateShape = TH1F("QCDShapeNorm", "", 1500, 0, 1500)
 
     for bb in range(1500):
 
-        NormInPtBin=0
+        NormInPtBin = 0
         for ss in range(300):
-            NormInPtBin += Func_Exp3Par(ss+0.5,fitpar0,fitpar1,fitpar2)*HistoCR.GetBinContent(bb+1,ss+1)
-        templateShape.SetBinContent(bb,NormInPtBin)
+            if postFix == "":   FakeRate = Func_Exp3Par(ss + 0.5, fitpar0, fitpar1, fitpar2)
+            if postFix == "Down":   FakeRate = 1
+            if postFix == "Up":   FakeRate = pow(Func_Exp3Par(ss + 0.5, fitpar0, fitpar1, fitpar2), 2)
+            NormInPtBin += FakeRate * HistoCR.GetBinContent(bb + 1, ss + 1)
+        templateShape.SetBinContent(bb, NormInPtBin)
 
 
-    XLoc= categ + len(Bcategory)*chl + 1
-
-    FileNorm = TFile("Yield"+etaRange+CoMEnergy+".root")
-    normHistio=FileNorm.Get("FullResultsSSIsoQCDNorm")
-    NormQCDMC=0
-    for i in range(6):
-        print "Backgrounds to be subtracted from data", i, normHistio.GetBinContent(XLoc,i+1)
-        NormQCDMC +=normHistio.GetBinContent(XLoc,i+1)
-    FinalQCDEstimate=(normHistio.GetBinContent(XLoc,7)-NormQCDMC) * QCDScaleFactor
+#    # THis pasrt is needed for scaling the QCD to the peoper Normalization. ***Obsolet***
+#    XLoc= categ + len(Bcategory)*chl + 1
+#    FileNorm = TFile("Yield"+etaRange+CoMEnergy+".root")
+#    normHistio=FileNorm.Get("FullResultsSSIsoQCDNorm")
+#    NormQCDMC=0
+#    for i in range(6):
+#        print "Backgrounds to be subtracted from data", i, normHistio.GetBinContent(XLoc,i+1)
+#        NormQCDMC +=normHistio.GetBinContent(XLoc,i+1)
+#    FinalQCDEstimate=(normHistio.GetBinContent(XLoc,7)-NormQCDMC) * QCDScaleFactor
+#    templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
+    FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],"_QCDNorm_mTLess30_SS",etaRange)* QCDScaleFactor
     templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
+
     myOut.Write()
     return myOut
 
@@ -401,20 +409,21 @@ def GetFinalQCDShapeNorm():
     for categ in range(len(Bcategory)):
 #        for chl in range(1):
         for chl in range(len(channel)):
-            getFileBar=ReturnScaledReadyHisto("_8TeV","_Bar",categ,chl)
-            getFileCen=ReturnScaledReadyHisto("_8TeV","_Cen",categ,chl)
-            getFileEnd=ReturnScaledReadyHisto("_8TeV","_End",categ,chl)
+            for postFix in POSTFIX:
+                getFileBar=ReturnScaledReadyHisto("_8TeV","_Bar",categ,chl,postFix)
+                getFileCen=ReturnScaledReadyHisto("_8TeV","_Cen",categ,chl,postFix)
+                getFileEnd=ReturnScaledReadyHisto("_8TeV","_End",categ,chl,postFix)
 
-            HistoBar=getFileBar.Get("QCDShapeNorm")
-            HistoCen=getFileCen.Get("QCDShapeNorm")
-            HistoEnd=getFileEnd.Get("QCDShapeNorm")
+                HistoBar=getFileBar.Get("QCDShapeNorm")
+                HistoCen=getFileCen.Get("QCDShapeNorm")
+                HistoEnd=getFileEnd.Get("QCDShapeNorm")
 
-            FinalFile.cd()
-            QCDShapeTotal =TH1F(channel[chl]+"_QCDShapeNormTotal"+Bcategory[categ],"",1500,0,1500)
-            for bb in range(1500):
-                QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
+                FinalFile.cd()
+                QCDShapeTotal =TH1F(channel[chl]+"_QCDShapeNormTotal"+Bcategory[categ]+postFix,"",1500,0,1500)
+                for bb in range(1500):
+                    QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
 
-            FinalFile.Write()
+                FinalFile.Write()
             
             
  

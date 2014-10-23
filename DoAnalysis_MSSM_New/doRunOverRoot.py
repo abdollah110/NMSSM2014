@@ -19,7 +19,8 @@ outCommand = ""
 for files in Sample.readlines():
     outCommand = outCommand + "./Estimate_Signal.exe  " + OutPutFileLocation + "out_" + files.replace('\n','') + " " + InputFileLocation + files
 outCommand = outCommand + "root -l -q hadd.C \n"
-outCommand = outCommand + "root -l -q doStitching.cc \n"
+outCommand = outCommand + "root -l -q doStitching_DY.cc \n"
+outCommand = outCommand + "root -l -q doStitching_W.cc \n"
 outCommand = outCommand + "python do2DTableMaker.py \n"
 outCommand = outCommand + "python doSystematics2DTable.py \n"
 outCommand = outCommand + "python doMeasureShapeNormQCD.py \n"

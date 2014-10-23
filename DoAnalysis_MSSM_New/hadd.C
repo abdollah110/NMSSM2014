@@ -42,7 +42,7 @@ void hadd() {
     hadd_TT();
     hadd_VV();
     hadd_Z();
-    hadd_W();
+//    hadd_W();
 }
 
 void hadd_TT() {

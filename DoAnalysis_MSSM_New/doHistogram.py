@@ -47,6 +47,12 @@ Embedded = ['EmbeddedmuTau', 'EmbeddedeleTau']
 Data = ['Data']
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 
+POSTFIX=["","Up","Down"]
+
+def QCDUncertaintyName(unc,channel,NameCat,CoMEnergy):
+    if unc=="": return 'QCD'
+    if unc== "Up": return "QCD_CMS_htt_QCDShape_"+channel+NameCat+CoMEnergy+"Up"
+    if unc== "Down": return "QCD_CMS_htt_QCDShape_"+channel+NameCat+CoMEnergy+"Down"
 
 
 
@@ -172,10 +178,10 @@ def _Return_Value_Embedded(bb,Name, channel,cat,HistoName,PostFix,CoMEnergy,chan
 #        binErr = RebinedHist.GetBinError(bb)
 #    myfile.Close()
 #    return binCont , binErr
-def _Return_Value_QCD(bb,Name, channel,cat,Histo,PostFix,CoMEnergy,changeHistoName,useFineBinning ):
+def _Return_Value_QCD(bb,Name, channel,cat,Histo,UncShape,PostFix,CoMEnergy,changeHistoName,useFineBinning ):
     myfile = TFile("QCDFinalFile.root")
 #    if cat=="_btag" and changeHistoName : cat = "_btagLoose" #; print "___________+++++++++++++++++++", str(channel)+str(Histo) + str(cat)
-    Histo =  myfile.Get(channel+Histo + cat+ PostFix)
+    Histo =  myfile.Get(channel+Histo + cat+ UncShape+PostFix)
     binCont = 0
     binErr = 0
     if Histo:
@@ -570,31 +576,31 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 
             #        #######################################  Filling Reducible BG QCD ##########
             if tscale ==1:
-                print "Doing QCD, BG estimation"
-                Histogram = "_QCDShapeNormTotal"
-                normal = retrunQCDNormalization(channel, Histogram,NameCat)
-                print NameCat, "    Here is Normal QCD   ----------  ",normal
-                Name='Data'
-                NameOut='QCD'
-                tDirectory.cd()
-                NewHIST =TH1F("QCD","",len(BinCateg)-1,BinCateg)
+                for unc in POSTFIX:
+                    print "Doing QCD, BG estimation"
+                    Histogram = "_QCDShapeNormTotal"
+                    normal = retrunQCDNormalization(channel, Histogram,NameCat)
+                    print NameCat, "    Here is Normal QCD   ----------  ",normal
+                    Name='Data'
 
-#                if NameCat=="_btag": NameCat="_btagLoose"
-                for bb in range(0,len(BinCateg)-1):
-                    NewHIST.SetBinContent(bb,_Return_Value_QCD(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,False)[0])
-    #                NewHIST.SetBinError(bb,_Return_Value_QCD(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
 
-                if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
-                tDirectory.WriteObject(NewHIST,NameOut)
+                    tDirectory.cd()
+                    NewHIST =TH1F("QCD","",len(BinCateg)-1,BinCateg)
 
-                tDirectory.cd()
-                NewHIST =TH1F("QCD"+"_fine_binning","",300,0,1500)
-#                if NameCat=="_btag": NameCat="_btagLoose"
-                for bb in range(0,300):
-                    NewHIST.SetBinContent(bb,_Return_Value_QCD(bb,Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True,True)[0])
-    #                NewHIST.SetBinError(bb,_Return_Value_QCD(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
-                if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
-                tDirectory.WriteObject(NewHIST,NameOut+"_fine_binning")
+                    for bb in range(0,len(BinCateg)-1):
+                        NewHIST.SetBinContent(bb,_Return_Value_QCD(bb,Name, channel,NameCat, Histogram,unc, TauScale[tscale],CoMEnergy,True,False)[0])
+        #                NewHIST.SetBinError(bb,_Return_Value_QCD(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
+
+                    if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+                    tDirectory.WriteObject(NewHIST,QCDUncertaintyName(unc, channel, NameCat, CoMEnergy))
+
+                    tDirectory.cd()
+                    NewHIST =TH1F("QCD"+"_fine_binning","",300,0,1500)
+                    for bb in range(0,300):
+                        NewHIST.SetBinContent(bb,_Return_Value_QCD(bb,Name, channel,NameCat, Histogram,unc, TauScale[tscale],CoMEnergy,True,True)[0])
+        #                NewHIST.SetBinError(bb,_Return_Value_QCD(bb,Name, channel,NameCat,Histogram, TauScale[tscale],CoMEnergy,True,False)[1])
+                    if NewHIST.Integral(): NewHIST.Scale(normal/NewHIST.Integral())
+                    tDirectory.WriteObject(NewHIST,QCDUncertaintyName(unc, channel, NameCat, CoMEnergy)+"_fine_binning")
 
                 #        #######################################  Filling Data ##########
             if tscale ==1:
@@ -644,8 +650,6 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             
 if __name__ == "__main__":
 
-#    MakeTheHistogram("muTau","_VisibleMass","_8TeV",0)
-#    MakeTheHistogram("eleTau","_VisibleMass","_8TeV",1)
     MakeTheHistogram("mutau","_SVMass","_8TeV",0)
     MakeTheHistogram("etau","_SVMass","_8TeV",1)
 
