@@ -47,7 +47,6 @@ POSTFIX=["","Up","Down"]
 
 lenghtSig = 0
 low_bin = 0
-high_bin = 15000
 digit = 1
 verbos_ = True
 QCDScaleFactor = 1.06

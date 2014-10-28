@@ -207,13 +207,19 @@ int main(int argc, char** argv) {
     //###############################################################################################
     //Initial Requirements
     //###############################################################################################
+    // Specific Cuts to be changed fro MSSM and nMSSM
+    float cutonSVmass= 50;
+    float cutonTaupt= 30;
+    int massBin = 1500;
+//    float cutonSVmass= 0;
+//    float cutonTaupt= 20;
+//    int massBin = 300;
+    //###############################################################################################
+    int ptBin = 300;
     bool IsInCorrcetMassRange = true;
     bool verbose_ = false;
     int Event_Double[8][9];
     memset(Event_Double, 0, sizeof (Event_Double[0][0]) * 8 * 9);
-    int low_bin = 0;
-    int massBin = 1500;
-    int ptBin = 300;
     const int hsize = 21;
     std::string arrayMassOfHiggs_String[hsize] = {"80", "90", " 100", "110", " 120", "130", "140", " 160", "180", "200", "250", "300", "350", "400", "450", "500", "600", "700", "800", "900", "1000"};
     vector<std::string> MassOfHiggs_String;
@@ -232,7 +238,7 @@ int main(int argc, char** argv) {
     int y = 0;
     for (Int_t i = 0; i < nentries_wtn; i++) {
         Run_Tree->GetEntry(i);
-        if (i % 10000000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
+        if (i % 10000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
         fflush(stdout);
 
         //###############################################################################################
@@ -308,9 +314,9 @@ int main(int argc, char** argv) {
         ////###############   tsu energy scale up and down  Categorization
         const int size_tscale = 3;
         float scaleTau[size_tscale] = {-0.03, 0.0, 0.03};
-        bool tauPtCutMinus = l2Pt * (1 + scaleTau[0]) > 30;
-        bool tauPtCutNorm = l2Pt * (1 + scaleTau[1]) > 30;
-        bool tauPtCutPlus = l2Pt * (1 + scaleTau[2]) > 30;
+        bool tauPtCutMinus = l2Pt * (1 + scaleTau[0]) > cutonTaupt;
+        bool tauPtCutNorm = l2Pt * (1 + scaleTau[1]) > cutonTaupt;
+        bool tauPtCutPlus = l2Pt * (1 + scaleTau[2]) > cutonTaupt;
         bool TauScale[size_tscale] = {tauPtCutMinus, tauPtCutNorm, tauPtCutPlus};
         double SVMASS[size_tscale] = {SVMassDown, SVMass, SVMassUp};
         std::string TauScale_cat[size_tscale] = {"Down", "", "Up"};
@@ -442,7 +448,7 @@ int main(int argc, char** argv) {
         //bool Tau_antiMu = l2_tauRejMu3L;
         //bool Tau_antiMu = l2_tauRejMu2T;
         bool TauVtxdZ = fabs(Tau_Vertex_dz) < 0.2;
-        bool TAU_CUTS = SVMass > 50 && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
+        bool TAU_CUTS = SVMass > cutonSVmass && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
 
         //########################################################################################################
