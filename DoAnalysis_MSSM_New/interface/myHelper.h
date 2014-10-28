@@ -65,8 +65,8 @@ std::vector<float> HPtReWeight(float H_Pt, std::string Mass, TFile * inputFile) 
     std::string nominalName = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_central";
     std::string UpName = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_tanBetaHigh";
     std::string DownName = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_tanBetaLow";
-    std::string UpNameScale = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_ScaleUp";
-    std::string DownNameScale = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_ScaleDown";
+    std::string UpNameScale = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_scaleUp";
+    std::string DownNameScale = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_scaleDown";
 
     TDirectory * tDir = (TDirectory *) inputFile->Get(DirName.c_str());
     TH1F *HpT = (TH1F*) tDir->Get(nominalName.c_str());
