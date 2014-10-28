@@ -28,7 +28,7 @@ import array
 gROOT.Reset()
 import os
 ROOT.gROOT.SetBatch(True)
-InputFileLocation = '../FileROOT/MSSMROOTFiles/'
+InputFileLocation = '../FileROOT/nmssmROOTFiles/'
 SubRootDir = 'OutFiles/'
 verbosity_ = False
 

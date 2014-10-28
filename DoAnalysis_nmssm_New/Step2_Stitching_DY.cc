@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-std::string InputFileLocation = '../FileROOT/MSSMROOTFiles/';
+std::string InputFileLocation = '../FileROOT/nmssmROOTFiles/';
 void Step2_Stitching_DY() {
 
     const int numBG = 5;

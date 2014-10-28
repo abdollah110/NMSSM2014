@@ -208,9 +208,9 @@ int main(int argc, char** argv) {
     //Initial Requirements
     //###############################################################################################
     // Specific Cuts to be changed fro MSSM and nMSSM
-    float cutonSVmass= 50;
-    float cutonTaupt= 30;
-    int massBin = 1500;
+    float cutonSVmass= 0;
+    float cutonTaupt= 20;
+    int massBin = 300;
 //    float cutonSVmass= 0;
 //    float cutonTaupt= 20;
 //    int massBin = 300;

@@ -32,25 +32,25 @@ ROOT.gROOT.SetBatch(True)
 #ROOT.gROOT.ProcessLine('.x rootlogon.C')
 SubRootDir = 'OutFiles/'
 
-doFineBinning = True
-MSSMSignalUncertainty = True
+doFineBinning = False
+MSSMSignalUncertainty = False
 TopUncertainty = True
 ZLUncertainty = True
 WShapeUncertainty = True
-verbos_ = True
+verbos_ = False
 
-high_bin = 1500
+high_bin = 300
 FineBinVal=5
 digit = 3
 QCDScaleFactor = 1.06
 
-Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,1000,high_bin])
-Binning_BTag = array.array("d",[0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,1000,high_bin])
+Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
+Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
 TauScale = ["Down", "", "Up"]
 POSTFIX=["","Up","Down"]
 
-signal = ['ggH', 'bbH']
-mass = [80,90,  100, 110,  120, 130, 140,  160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000]
+signal = ['bba1GenFil_']
+mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 lenghtSig = len(signal) * len(mass) +1
 

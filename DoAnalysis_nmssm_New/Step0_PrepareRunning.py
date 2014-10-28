@@ -8,7 +8,7 @@ __date__ = "$Feb 23, 2013 10:39:33 PM$"
 
 import os
 
-InputFileLocation = '../FileROOT/MSSMROOTFiles/'
+InputFileLocation = '../FileROOT/nmssmROOTFiles/'
 OutPutFileLocation = 'OutFiles/'
 Sample = os.popen(("ls " + InputFileLocation + " | sort "))
 OutFile = open("RunFullSamples.txt", 'w')
@@ -25,10 +25,10 @@ outCommand = outCommand + "hadd -f  OutFiles/out_WJetsAll_8TeV_Hadd.root   OutFi
 outCommand = outCommand + "root -l -q Step2_Stitching_DY.cc \n"
 #outCommand = outCommand + "root -l -q Step3_Stitching_W.cc \n"
 outCommand = outCommand + "python Step4_CalcNormalization.py \n"
-outCommand = outCommand + "python Step5_SystematicSignal.py \n"
+#outCommand = outCommand + "python Step5_SystematicSignal.py \n"
 outCommand = outCommand + "python Step6_CalcQCDEstimation.py \n"
 #outCommand = outCommand + "python Step7_MakeRootDataCards.py \n"
-outCommand = outCommand + "python Step8_CopyStep7.py \n"
+outCommand = outCommand + "python Step7_DataCardProducer.py \n"
 
 OutFile.write(outCommand)
     
