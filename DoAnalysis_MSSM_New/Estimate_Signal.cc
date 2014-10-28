@@ -226,8 +226,8 @@ int main(int argc, char** argv) {
     for (int i = 0; i < hsize; i++)
         MassOfHiggs_String.push_back(arrayMassOfHiggs_String[i]);
     int MassOfHiggs_Int[hsize] = {80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000};
-    //    TFile * inputFile = new TFile("interface/mssmHiggsPtReweightGluGlu_mhmod+_POWHEG.root", "r"); // OLD
-    TFile * inputFile = new TFile("interface/mssmHiggsPtReweightGluGlu_mhmod_POWHEG.root", "r"); // New by Christian
+    //    TFile * HiggsUncertaintyFile = new TFile("interface/mssmHiggsPtReweightGluGlu_mhmod+_POWHEG.root", "r"); // OLD
+    TFile * HiggsUncertaintyFile = new TFile("interface/mssmHiggsPtReweightGluGlu_mhmod_POWHEG.root", "r"); // New by Christian
     TF1 *TriggerWeightBarrel = new TF1("AddTriggerWeightMuTauBarrel", "1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)", 0., 800.);
     TF1 *TriggerWeightEndcaps = new TF1("AddTriggerWeightMuTauEndcaps", "1 - 1.81148e-03*(x - 60) + 5.44335e-07*(x - 60)*(x-60)", 0., 800.);
 
@@ -365,7 +365,7 @@ int main(int argc, char** argv) {
             std::string LastPart = "_8TeV.root";
             std::string newOut = out.substr(FirstPart.size());
             newOut = newOut.substr(0, newOut.size() - LastPart.size());
-            HiggsPtReweight = HPtReWeight(gen_Higgs_pt, newOut, inputFile);
+            HiggsPtReweight = HPtReWeight(gen_Higgs_pt, newOut, HiggsUncertaintyFile);
         }
 
         //############ Top Reweighting
