@@ -34,102 +34,17 @@
 
 TList *FileList;
 TFile *Target;
-std::string InputFileLocation = '../FileROOT/MSSMROOTFiles/';
+//std::string InputFileLocation = '../FileROOT/MSSMROOTFiles/';
 void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight);
 
-void Step1_Hadding_TT_VV() {
 
-    hadd_TT();
-    hadd_VV();
-//    hadd_Z();
-//    hadd_W();
-}
-
-void hadd_TT() {
-    cout<<"Start Hadding TT ......."<<"\n";
-    const int numBG = 3;
-    char * Top_BackGround[numBG] = {"TTJets_FullLeptMGDecays", "TTJets_SemiLeptMGDecays", "TTJets_HadronicMGDecays"};
-    float XSection[numBG] = {25.809, 107.66, 112.331};
-    float weight[numBG] = {};
-
-    Target = TFile::Open("OutFiles/out_TTAll_8TeV.root", "RECREATE");
-    FileList = new TList();
-
-    for (int i = 0; i < numBG; i++) {
-
-        std::string NNN = "OutFiles/out_" + string(Top_BackGround[i]) + "_8TeV.root";
-        FileList->Add(TFile::Open(NNN.c_str()));
-
-        std::string MMM = InputFileLocation + string(Top_BackGround[i]) + "_8TeV.root";
-        TFile * myFile = new TFile(MMM.c_str());
-
-        TH1F * myHisto = (TH1F*) myFile->Get("TotalEventsNumber");
-        weight[i] = XSection[i]*1.0 / myHisto->Integral();
-//        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
-        myFile->Close();
-    }
-
-
-    MergeRootfile(Target, FileList, weight);
-}
-
-void hadd_VV() {
-    cout<<"Start Hadding VV ......."<<"\n";
-    const int numBG = 8;
-    char * DiBoson_BackGround[numBG] = {"WZJetsTo3LNu","WWJetsTo2L2Nu", "WZJetsTo2L2Q",  "ZZJetsTo2L2Nu", "ZZJetsTo2L2Q", "ZZJetsTo4L", "Tbar_tW", "T_tW"};
-    float XSection[numBG] = {1.058,5.824, 2.207,  0.716, 2.502, 0.181, 11.1, 11.1};
-    float weight[numBG] = {};
-
-    Target = TFile::Open("OutFiles/out_VVAll_8TeV.root", "RECREATE");
-    FileList = new TList();
-
-    for (int i = 0; i < numBG; i++) {
-
-        std::string NNN = "OutFiles/out_" + string(DiBoson_BackGround[i]) + "_8TeV.root";
-        FileList->Add(TFile::Open(NNN.c_str()));
-
-        std::string MMM = InputFileLocation + string(DiBoson_BackGround[i]) + "_8TeV.root";
-        TFile * myFile = new TFile(MMM.c_str());
-
-        TH1F * myHisto = (TH1F*) myFile->Get("TotalEventsNumber");
-        weight[i] = XSection[i]*1.0 / myHisto->Integral();
-//        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
-        myFile->Close();
-    }
-
-    MergeRootfile(Target, FileList, weight);
-}
-
-void hadd_Z() {
-    // in an interactive ROOT session, edit the file names
-    // Target and FileList, then
-    // root > .L hadd.C
-    // root > hadd()
-
-    cout<<"Start Hadding DY ......."<<"\n";
-    Target = TFile::Open("OutFiles/out_DYJetsAll_8TeV_Hadd.root", "RECREATE");
+void TestScriptName() {
+    cout<<"Start testing differet Histogram ......."<<"\n";
+    Target = TFile::Open("Finaltest.root", "RECREATE");
     float weight[5] = {1, 1, 1, 1, 1};
     FileList = new TList();
-    FileList->Add(TFile::Open("OutFiles/out_DYJetsToLL_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_DY1JetsToLL_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_DY2JetsToLL_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_DY3JetsToLL_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_DY4JetsToLL_8TeV.root"));
-
-    MergeRootfile(Target, FileList, weight);
-
-}
-
-void hadd_W() {
-    cout<<"Start Hadding W ......."<<"\n";
-    Target = TFile::Open("OutFiles/out_WJetsAll_8TeV_Hadd.root", "RECREATE");
-    float weight[5] = {1, 1, 1, 1, 1};
-    FileList = new TList();
-    FileList->Add(TFile::Open("OutFiles/out_WJetsToLNu_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_W1JetsToLNu_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_W2JetsToLNu_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_W3JetsToLNu_8TeV.root"));
-    FileList->Add(TFile::Open("OutFiles/out_W4JetsToLNu_8TeV.root"));
+    FileList->Add(TFile::Open("TotalRootForLimit_mutau_8TeV_New.root"));
+    FileList->Add(TFile::Open("TotalRootForLimit_mutau_8TeV.root"));
 
     MergeRootfile(Target, FileList, weight);
 }
@@ -166,7 +81,8 @@ void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight) {
 
             //      cout << "Merging histogram " << obj->GetName() << endl;
             TH1 *h1 = (TH1*) obj;
-            h1->Scale(weight[weightCounter]);
+//                cout <<" ... " << h1->GetName() << "   " << h1->Integral() << "\t";
+//            h1->Scale(weight[weightCounter]);
 //            cout << h1->GetName() << "  Here is the integral " << key->GetName() << "   " << h1->Integral() << endl;
             //            std::cout << "weightCounter=" << weightCounter << "  Value=" << weight[weightCounter] << " Integral of H1  " << h1->Integral() << " ";
             // loop over all source files and add the content of the
@@ -182,13 +98,15 @@ void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight) {
                 TKey *key2 = (TKey*) gDirectory->GetListOfKeys()->FindObject(h1->GetName());
                 if (key2) {
                     TH1 *h2 = (TH1*) key2->ReadObj();
-                    h2->Scale(weight[weightCounter]);
-//                    cout << nextsource->GetName() << "  Here is the integral " << key2->GetName() << "   " << h2->Integral() << endl;
-                    h1->Add(h2);
+//                    h2->Scale(weight[weightCounter]);
+//                    cout <<" ... " << h2->GetName() << "   " << h2->Integral() << endl;
+//                    h1->Add(h2);
                     //                    std::cout << "weightCounter=" << weightCounter << "  Value=" << weight[weightCounter] << "  Integral of H1  " << h1->Integral() << "\n";
 
-                    delete h2;
+//                    delete h2;
                 }
+                else
+                    cout<< " ########......... This histo does nor exist  "<<h1->GetName() << "\n";
 
                 nextsource = (TFile*) sourcelist->After(nextsource);
             }
