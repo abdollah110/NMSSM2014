@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-void doStitching_DY() {
+void Step2_Stitching_DY() {
 
     const int numBG = 5;
     // Do stiching for DY Background
@@ -20,14 +20,15 @@ void doStitching_DY() {
     float LOtoNLO_DY = 1.187694915;
     MeasureWeight_Submit(Target_DY, FileList_DY, Background_DY, XSection_DY, LOtoNLO_DY);
 
-//    // Do stiching for DY Background
-//    Target_W = TFile::Open("OutFiles/out_WJetsAll_8TeV.root", "RECREATE");
-//    FileList_W = new TList();
-//    FileList_W->Add(TFile::Open("OutFiles/out_WJetsAll_8TeV_Hadd.root"));
-//    char * Background_W[numBG] = {"WJetsToLNu", "W1JetsToLNu", "W2JetsToLNu", "W3JetsToLNu", "W4JetsToLNu"};
-//    float XSection_W[numBG] = {30400, 5400, 1750, 519, 214};
-//    float LOtoNLO_W = 1.233848684;
-//    MeasureWeight_Submit(Target_W, FileList_W, Background_W, XSection_W, LOtoNLO_W);
+    //    // Do stiching for DY Background
+    Target_W = TFile::Open("OutFiles/out_WJetsAll_8TeV.root", "RECREATE");
+    FileList_W = new TList();
+    //    FileList_W->Add(TFile::Open("OutFiles/out_WJetsAll_8TeV_Hadd.root"));
+    FileList_W->Add(TFile::Open("OutFiles/out_WJetsAll_8TeV_Hadd.root"));
+    char * Background_W[numBG] = {"WJetsToLNu", "W1JetsToLNu", "W2JetsToLNu", "W3JetsToLNu", "W4JetsToLNu"};
+    float XSection_W[numBG] = {30400, 5400, 1750, 519, 214};
+    float LOtoNLO_W = 1.233848684;
+    MeasureWeight_Submit(Target_W, FileList_W, Background_W, XSection_W, LOtoNLO_W);
 }
 
 void MeasureWeight_Submit(TDirectory *Target, TList * FileList, char ** Background, float * XSection, float LOtoNLO) {
@@ -35,7 +36,7 @@ void MeasureWeight_Submit(TDirectory *Target, TList * FileList, char ** Backgrou
     float weight[numBG] = {};
 
     for (int i = 0; i < numBG; i++) {
-        cout<<"start Stitching "<<FileList->GetName()<<"\n";
+        cout << "start Stitching " << FileList->GetName() << "\n";
 
         // This is to get Number of events in inclusive DY/W sample
         std::string MMM_inc = "../FileROOT/MSSMROOTFiles/" + string(Background[0]) + "_8TeV.root";
@@ -51,7 +52,7 @@ void MeasureWeight_Submit(TDirectory *Target, TList * FileList, char ** Backgrou
         weight[i] = LOtoNLO / (myHisto->Integral() / XSection[i] + myHisto_inc->Integral() / XSection[0]); // for events with more than 0 jet
         if (i == 0) weight[i] = LOtoNLO / (myHisto->Integral() / XSection[i]); // for 0 jet events
 
-//        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
+        //        cout << "numBG= " << i << " XSection= " << XSection[i] << "   Integral=" << myHisto->Integral() << "   weight=" << weight[i] << endl;
         myFile->Close();
     }
 
@@ -98,7 +99,7 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
             //    For Nominal
             //################################################################################
             if (nameEnd != "j") {
-//                cout << key->GetName() << "   " << BaseHisto->Integral() << endl;
+                //                cout << key->GetName() << "   " << BaseHisto->Integral() << endl;
                 BaseHisto->Scale(0.0000000000001);
 
                 TH1 * h0j = (TH1*) first_source->Get((name + "0j").c_str());
@@ -145,7 +146,7 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
             for (std::string::iterator it_d = DownName.begin(); it_d != DownName.end(); it_d++)
                 nameEnd_d = *it_d;
             if (nameEnd_d != "j" && nameEnd == "n") {
-//                cout << " ............................ name is=" << BaseHisto_d->GetName() << "       DownName= " << DownName << "   " << BaseHisto_d->Integral() << endl;
+                //                cout << " ............................ name is=" << BaseHisto_d->GetName() << "       DownName= " << DownName << "   " << BaseHisto_d->Integral() << endl;
                 BaseHisto_d->Scale(0.0000000000001);
 
                 TH1 * h0j = (TH1*) first_source->Get((DownName + "0jDown").c_str());
@@ -191,7 +192,7 @@ void dostitch(TDirectory *target, TList *sourcelist, float* weight) {
             for (std::string::iterator it_u = UpName.begin(); it_u != UpName.end(); it_u++)
                 nameEnd_u = *it_u;
             if (nameEnd_u != "j" && nameEnd == "p") {
-//                cout << " ............................ name is=" << BaseHisto_up->GetName() << "       UpName= " << UpName << "   " << BaseHisto_up->Integral() << endl;
+                //                cout << " ............................ name is=" << BaseHisto_up->GetName() << "       UpName= " << UpName << "   " << BaseHisto_up->Integral() << endl;
                 BaseHisto_up->Scale(0.0000000000001);
 
                 TH1 * h0j = (TH1*) first_source->Get((UpName + "0jUp").c_str());

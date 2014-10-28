@@ -216,4 +216,6 @@ if __name__ == "__main__":
     makeSystematic2DTable("_SVMassTauHighPtRWDown","", "_8TeV")
     makeSystematic2DTable("_SVMassHiggPtRWUp","", "_8TeV")
     makeSystematic2DTable("_SVMassHiggPtRWDown","", "_8TeV")
+    makeSystematic2DTable("_SVMassHiggPtRWScaleUp","", "_8TeV")
+    makeSystematic2DTable("_SVMassHiggPtRWScaleDown","", "_8TeV")
 

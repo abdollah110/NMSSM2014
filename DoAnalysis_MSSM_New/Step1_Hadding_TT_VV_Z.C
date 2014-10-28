@@ -39,7 +39,7 @@ void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight);
 
 void hadd() {
 
-//    hadd_TT();
+    hadd_TT();
     hadd_VV();
 //    hadd_Z();
 //    hadd_W();

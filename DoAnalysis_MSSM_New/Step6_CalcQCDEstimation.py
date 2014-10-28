@@ -30,7 +30,7 @@ import os
 ROOT.gROOT.SetBatch(True)
 InputFileLocation = '../FileROOT/MSSMROOTFiles/'
 SubRootDir = 'OutFiles/'
-verbosity_ = True
+verbosity_ = False
 
 def luminosity(CoMEnergy):
     if CoMEnergy == '_8TeV': return  19712 #19242
@@ -38,6 +38,7 @@ def luminosity(CoMEnergy):
 
 
 Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+#Bcategory = ["_inclusive","_btag", "_btagLoose"]
 #Bcategory = [ "_btag"]
 #channel = ["mutau"]
 channel = ["mutau", "etau"]
@@ -153,7 +154,7 @@ def GetNorm_W(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     #Get the extrapolation factor from MC
     HistoForNumerator=HistoName
     HistoForDeNumerator=HistoForNumerator.replace("mTLess30_", "mTHigher70_")
-    print HistoForNumerator, HistoForDeNumerator
+    if verbosity_:  print HistoForNumerator, HistoForDeNumerator
     ExtraPolFactor=getWExtraPol(PostFix,CoMEnergy, "WJetsAll",channelName,catName,HistoForNumerator+etaRange,HistoForDeNumerator+etaRange)
 
     VVinHighMT=GetNorm_BackGround("VV",PostFix,CoMEnergy,channelName,"_inclusive",HistoForDeNumerator,etaRange)
@@ -190,6 +191,7 @@ def GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     Data_ForqcdNorm=getHistoIntegral(PostFix,CoMEnergy, "Data",channelName,catName,HistoName+etaRange)[0]
 
     QCD_EstimateNorm=(Data_ForqcdNorm - (W_ForqcdNorm+VV_ForqcdNorm+TT_ForqcdNorm+ZL_ForqcdNorm+ZJ_ForqcdNorm+ZTT_ForqcdNorm))
+    print "###### QCD Estimate in", PostFix,CoMEnergy,channelName,catName,HistoName,etaRange, " ##### ", Data_ForqcdNorm ,"  ", W_ForqcdNorm,"  ",VV_ForqcdNorm,"  ",TT_ForqcdNorm,"  ",ZL_ForqcdNorm,"  ",ZJ_ForqcdNorm,"  ",ZTT_ForqcdNorm
     return QCD_EstimateNorm
 
 
@@ -208,34 +210,34 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     #Shaoe for different background Normalizaed to their corresponding Normalization
     VV_ForqcdShape=GetShape_BackGround("VV",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     VV_ForqcdShapeHisto=VV_ForqcdShape.Get("XXX")
-    if (VV_ForqcdShapeHisto) : print "  &&&&&&&&&&&&&&&&&&&&&&&&&   test for VV_ForqcdShape  estimate", VV_ForqcdShapeHisto.Integral() ; VV_ForqcdShapeHisto.Scale(VV_ForqcdNorm/VV_ForqcdShapeHisto.Integral())
+    if (VV_ForqcdShapeHisto) : print "  -----   VV_ForqcdShape  estimate", VV_ForqcdShapeHisto.Integral() ; VV_ForqcdShapeHisto.Scale(VV_ForqcdNorm/VV_ForqcdShapeHisto.Integral())
 
     TT_ForqcdShape=GetShape_BackGround("TT",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     TT_ForqcdShapeHisto=TT_ForqcdShape.Get("XXX")
-    if (TT_ForqcdShapeHisto) : print "  &&&&&&&&&&&&&&&&&&&&&&&&&   test for TT_ForqcdShape  estimate", TT_ForqcdShapeHisto.Integral(); TT_ForqcdShapeHisto.Scale(TT_ForqcdNorm/TT_ForqcdShapeHisto.Integral())
+    if (TT_ForqcdShapeHisto) : print "  -----   TT_ForqcdShape  estimate", TT_ForqcdShapeHisto.Integral(); TT_ForqcdShapeHisto.Scale(TT_ForqcdNorm/TT_ForqcdShapeHisto.Integral())
 
     ZL_ForqcdShape=GetShape_BackGround("ZL",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     ZL_ForqcdShapeHisto=ZL_ForqcdShape.Get("XXX")
-    if (ZL_ForqcdShapeHisto) : print "  &&&&&&&&&&&&&&&&&&&&&&&&&   test for ZL_ForqcdShape  estimate", ZL_ForqcdShapeHisto.Integral(); ZL_ForqcdShapeHisto.Scale(ZL_ForqcdNorm/ZL_ForqcdShapeHisto.Integral())
+    if (ZL_ForqcdShapeHisto) : print "  -----   ZL_ForqcdShape  estimate", ZL_ForqcdShapeHisto.Integral(); ZL_ForqcdShapeHisto.Scale(ZL_ForqcdNorm/ZL_ForqcdShapeHisto.Integral())
 
     ZJ_ForqcdShape=GetShape_BackGround("ZJ",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     ZJ_ForqcdShapeHisto=ZJ_ForqcdShape.Get("XXX")
-    if (ZJ_ForqcdShapeHisto) : print "  &&&&&&&&&&&&&&&&&&&&&&&&&   test for ZJ_ForqcdShape  estimate", ZJ_ForqcdShapeHisto.Integral(); ZJ_ForqcdShapeHisto.Scale(ZJ_ForqcdNorm/ZJ_ForqcdShapeHisto.Integral())
+    if (ZJ_ForqcdShapeHisto) : print "  -----   ZJ_ForqcdShape  estimate", ZJ_ForqcdShapeHisto.Integral(); ZJ_ForqcdShapeHisto.Scale(ZJ_ForqcdNorm/ZJ_ForqcdShapeHisto.Integral())
 
     ZTT_ForqcdShape=GetShape_BackGround("ZTT",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     ZTT_ForqcdShapeHisto=ZTT_ForqcdShape.Get("XXX")
-    if (ZTT_ForqcdShapeHisto) : print "  &&&&&&&&&&&&&&&&&&&&&&&&&   test for ZTT_ForqcdShape  estimate", ZTT_ForqcdShapeHisto.Integral(); ZTT_ForqcdShapeHisto.Scale(ZTT_ForqcdNorm/ZTT_ForqcdShapeHisto.Integral())
+    if (ZTT_ForqcdShapeHisto) : print "  -----   ZTT_ForqcdShape  estimate", ZTT_ForqcdShapeHisto.Integral(); ZTT_ForqcdShapeHisto.Scale(ZTT_ForqcdNorm/ZTT_ForqcdShapeHisto.Integral())
 
     W_ForqcdShape=GetShape_W(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     W_ForqcdShapeHisto=W_ForqcdShape.Get("XXX")
-    if (W_ForqcdShapeHisto) : print "  &&&&&&&&&&&&&&&&&&&&&&&&&   test for W_ForqcdShape  estimate", W_ForqcdShapeHisto.Integral(); W_ForqcdShapeHisto.Scale(W_ForqcdNorm/W_ForqcdShapeHisto.Integral())
+    if (W_ForqcdShapeHisto) : print "  -----   W_ForqcdShape  estimate", W_ForqcdShapeHisto.Integral(); W_ForqcdShapeHisto.Scale(W_ForqcdNorm/W_ForqcdShapeHisto.Integral())
 
     ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
     NewcatName=catName
     if catName=="_btag": NewcatName="_btagLoose"
     Data_ForqcdShape=getHistoShape_BG(PostFix,CoMEnergy, "Data",channelName,NewcatName,HistoName+etaRange)
     Data_ForqcdShapeHisto=Data_ForqcdShape.Get("XXX")
-    if (Data_ForqcdShapeHisto) : print "  &&&&&&&&&&&&&&&&&&&&&&&&&   test for W_ForqcdShape  estimate", Data_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Scale(Data_ForqcdNorm/Data_ForqcdShapeHisto.Integral())
+    if (Data_ForqcdShapeHisto) : print "  -----   W_ForqcdShape  estimate", Data_ForqcdNorm ,"  ---------------BBBBBBBBBB-----------" ,Data_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Scale(Data_ForqcdNorm/Data_ForqcdShapeHisto.Integral())
 
 
     
@@ -343,7 +345,7 @@ def MakeFakeRateHisto(CoMEnergy,etaRange):
     HistoNum = NewFile.Get("muTau_inclusive/QCDNumerator")
     HistoDeNum = NewFile.Get("muTau_inclusive/QCDDenumerator")
     for i in range(HistoDeNum.GetNbinsX()):
-            print HistoDeNum.GetBinContent(i+1) , HistoNum.GetBinContent(i+1)
+            if verbosity_:  print HistoDeNum.GetBinContent(i+1) , HistoNum.GetBinContent(i+1)
             ## CAVEAT   Here I have set the denum Value equal to Num Value in case it is smaller
             if HistoDeNum.GetBinContent(i+1) < HistoNum.GetBinContent(i+1):
                 HistoDeNum.SetBinContent(i+1, 0)
@@ -398,7 +400,10 @@ def ReturnScaledReadyHisto(CoMEnergy, etaRange, categ, chl, postFix):
 #    FinalQCDEstimate=(normHistio.GetBinContent(XLoc,7)-NormQCDMC) * QCDScaleFactor
 #    templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
     FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],"_QCDNorm_mTLess30_SS",etaRange)* QCDScaleFactor
+#    print "     @@@@@@@@@@@@   FinalQCDEstimate", FinalQCDEstimate
     templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
+#    NewFinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],"_SVMass_mTLess30_SS","")* QCDScaleFactor
+#    print "     YYYYYYYYYYY   NewFinalQCDEstimate", NewFinalQCDEstimate
 
     myOut.Write()
     return myOut
@@ -423,6 +428,8 @@ def GetFinalQCDShapeNorm():
                 for bb in range(1500):
                     QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
 
+                NewFinalQCDEstimate=GetNorm_QCD("","_8TeV",channel[chl],Bcategory[categ],"_SVMass_mTLess30_SS","")* QCDScaleFactor
+                QCDShapeTotal.Scale(NewFinalQCDEstimate/QCDShapeTotal.Integral())
                 FinalFile.Write()
             
             

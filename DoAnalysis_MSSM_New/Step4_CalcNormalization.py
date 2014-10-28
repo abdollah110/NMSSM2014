@@ -90,8 +90,10 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 #Histogram = "VisibleMass_"
 #category = ["_inclusive"]
 category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+#category = ["_inclusive",  "_nobtag","_btag"]
 channel = ["mutau", "etau"]
-#channel = ["MuTau"]
+#channel = ["etau"]
+#channel = ["mutau"]
 lenghtSig = len(signal) * len(mass) +1
 lenghtVV = len(DiBoson_BackGround) +1
 lenghtTop = len(Top_BackGround) +1
@@ -101,7 +103,7 @@ lenghtZTT = len(Z_BackGround) + 1
 low_bin = 0
 high_bin = 1500
 digit = 3
-verbos_ = True
+verbos_ = False
 QCDScaleFactor = 1.06
 
 
@@ -158,6 +160,11 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,Histogram):
     EmbedData_Files = TFile(SubRootDir + "out_Embedded"+chan+CoMEnergy+".root")
     EmbedData_Histo=EmbedData_Files.Get(chan+Histogram+ "_inclusive")
     
+    print "DY MC Incluvive= ", (Normalization_DY)
+    print "TTEmbedded MC Incluvive= ", (Normalization_EmbedTT) 
+    print "TTEmbed Data Incluvive= ", EmbedData_Histo.Integral()
+    print "ExtraPOl Factor= ", (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
+
     return (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
 
 def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
@@ -327,6 +334,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             embedToDYWeight= getEmbedToDYWeight(PostFix,CoMEnergy,channel[chl],Histogram)
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)[0]  * embedToDYWeight
+            print    "@@@@@@@@@@@  Test for ZTT in ele btag NUmber of events in embeeded data=", getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram) , "  embed weight= ", embedToDYWeight,   "  Final ZTT Yield= ", value
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
 
