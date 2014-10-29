@@ -40,6 +40,7 @@ WShapeUncertainty = True
 verbos_ = False
 
 high_bin = 300
+ptBinning = 300
 FineBinVal=5
 digit = 3
 QCDScaleFactor = 1.06
@@ -50,6 +51,7 @@ TauScale = ["Down", "", "Up"]
 POSTFIX=["","Up","Down"]
 
 signal = ['bba1GenFil_']
+signalName = ['bba1_']
 mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 lenghtSig = len(signal) * len(mass) +1
@@ -134,7 +136,7 @@ def _Return_QCD_Shape(channel,cat,Histo,UncShape,PostFix,CoMEnergy):
     myfile.Close()
     return NewFile
 
-def _Return_W_Shape(channel,NameCat,CoMEnergy,PostFix,changeHistoName):
+def _Return_W_Shape(channel,NameCat,Histogram,CoMEnergy,PostFix,changeHistoName):
 #    NewFile=TFile("Extra/XXX2out_W" +CoMEnergy+channel+ NameCat+PostFix+".root","RECREATE")
     NewFile=TFile("Extra/XXX.root","RECREATE")
     NewHIST =TH1F("XXX","",high_bin,0,high_bin)
@@ -142,13 +144,12 @@ def _Return_W_Shape(channel,NameCat,CoMEnergy,PostFix,changeHistoName):
     NewHISTDown =TH1F("XXXDown","",high_bin,0,high_bin)
     WShapeFile = TFile(SubRootDir + "out_WJetsAll"+CoMEnergy+ '.root')
     if NameCat=="_btag" and changeHistoName : NameCat = "_btagLoose"
-    Histo = WShapeFile.Get(channel+"_Wshape2D_mTLess30_OS"+NameCat+PostFix)
-#    Histo = WShapeFile.Get(channel+"_Wshape2D_mTLess30_OS"+NameCat)  # FIXME
+    Histo = WShapeFile.Get(channel+Histogram+NameCat+PostFix)
     for qq in range(high_bin):
         NormInPtBin=0
         NormInPtBinUp=0
         NormInPtBinDown=0
-        for ss in range(300):
+        for ss in range(ptBinning):
             weight= getTauFakeCorrection(ss+0.5)
             NormInPtBin += weight*Histo.GetBinContent(qq+1,ss+1)
             NormInPtBinUp += (weight + 0.5*(1-weight))*Histo.GetBinContent(qq+1,ss+1)
@@ -225,7 +226,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                     YLoc= sig * len(mass) + m + 1
                     normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization
                     Name= str(signal[sig])+str(mass[m])
-                    NameOut= str(signal[sig]) +str(mass[m])+str(TauScaleOut[tscale])
+                    NameOut= str(signalName[sig]) +str(mass[m])+str(TauScaleOut[tscale])
 
                     SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
                     SampleHisto=SampleFile.Get("XXX")
@@ -405,14 +406,14 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             ################################################
             print "Doing W, BG estimation"
             tDirectory.cd()
-            Histogram = Observable+"_mTLess30_OS"
+            Histogram = Observable+Wshape2D_mTLess30_OS
             XLoc= icat + len(category)*chl + 1
             YLoc= lenghtSig + 6
             normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization Also for Uncertainties
             Name='WJetsAll'
             NameOut= "W"+str(TauScaleOut[tscale])
 
-            SampleFile= _Return_W_Shape(channel,NameCat,CoMEnergy,TauScale[tscale],True)
+            SampleFile= _Return_W_Shape(channel,NameCat,Histogram,CoMEnergy,TauScale[tscale],True)
             SampleHisto=SampleFile.Get("XXX")
             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)

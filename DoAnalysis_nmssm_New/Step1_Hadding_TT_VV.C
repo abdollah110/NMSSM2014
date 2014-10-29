@@ -34,7 +34,7 @@
 
 TList *FileList;
 TFile *Target;
-std::string InputFileLocation = '../FileROOT/nmssmROOTFiles/';
+std::string InputFileLocation = "../FileROOT/nmssmROOTFiles/";
 void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight);
 
 void Step1_Hadding_TT_VV() {

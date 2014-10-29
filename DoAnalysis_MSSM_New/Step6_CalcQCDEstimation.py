@@ -71,7 +71,8 @@ def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 def getHistoShape_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     myfileSub = TFile(SubRootDir + "out_"+Name +CoMEnergy+ '.root')
     HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
-    NewFile=TFile("Extra/XXXout_"+Name +CoMEnergy+chan+Histogram+ cat+PostFix+".root","RECREATE")
+#    NewFile=TFile("Extra/XXXout_"+Name +CoMEnergy+chan+Histogram+ cat+PostFix+".root","RECREATE")
+    NewFile=TFile("Extra/XXX.root","RECREATE")
     NewFile.WriteObject(HistoSub,"XXX")
     return NewFile
 

@@ -19,7 +19,7 @@ OutFile.write(firstCommand)
 outCommand = ""
 for files in Sample.readlines():
     outCommand = outCommand + "./Estimate_Signal.exe  " + OutPutFileLocation + "out_" + files.replace('\n','') + " " + InputFileLocation + files
-outCommand = outCommand + "root -l -q Step1_Hadding_TT_VV_Z.C \n"
+outCommand = outCommand + "root -l -q Step1_Hadding_TT_VV.C \n"
 outCommand = outCommand + "hadd -f  OutFiles/out_DYJetsAll_8TeV_Hadd.root   OutFiles/out_DYJetsToLL_8TeV.root   OutFiles/out_DY1JetsToLL_8TeV.root   OutFiles/out_DY2JetsToLL_8TeV.root   OutFiles/out_DY3JetsToLL_8TeV.root   OutFiles/out_DY4JetsToLL_8TeV.root    \n"
 outCommand = outCommand + "hadd -f  OutFiles/out_WJetsAll_8TeV_Hadd.root   OutFiles/out_WJetsToLNu_8TeV.root   OutFiles/out_W1JetsToLNu_8TeV.root   OutFiles/out_W2JetsToLNu_8TeV.root   OutFiles/out_W3JetsToLNu_8TeV.root   OutFiles/out_W4JetsToLNu_8TeV.root    \n"
 outCommand = outCommand + "root -l -q Step2_Stitching_DY.cc \n"
@@ -28,7 +28,7 @@ outCommand = outCommand + "python Step4_CalcNormalization.py \n"
 outCommand = outCommand + "python Step5_SystematicSignal.py \n"
 outCommand = outCommand + "python Step6_CalcQCDEstimation.py \n"
 #outCommand = outCommand + "python Step7_MakeRootDataCards.py \n"
-outCommand = outCommand + "python Step8_CopyStep7.py \n"
+outCommand = outCommand + "python Step7_DataCardProducer.py \n"
 
 OutFile.write(outCommand)
     

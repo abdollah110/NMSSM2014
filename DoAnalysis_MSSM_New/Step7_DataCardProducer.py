@@ -56,8 +56,8 @@ lenghtSig = len(signal) * len(mass) +1
 
 category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
 channelDirectory = ["muTau", "eleTau"]
-SystematicSignal = ["_SVMassTauHighPtRWUp","_SVMassTauHighPtRWDown","_SVMassHiggPtRWUp","_SVMassHiggPtRWDown"]
-SystematicSignalScale = ["_SVMassHiggPtRWUp","_SVMassHiggPtRWDown"]
+SystematicGluGluHiggs = ["_SVMassHiggPtRWUp","_SVMassHiggPtRWDown","_SVMassHiggPtRWScaleUp","_SVMassHiggPtRWScaleDown"]
+SystematicHighPtTau = ["_SVMassTauHighPtRWUp","_SVMassTauHighPtRWDown"]
 
 ####################################################
 ##   Functions
@@ -182,22 +182,29 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 #    NormTable=[NormTable_]
 
 
-    Table_HighPtRWUp = TFile("Yield_SVMassTauHighPtRWUp"+CoMEnergy+""+".root")
-    Histo_HighPtRWUp = Table_HighPtRWUp.Get('FullResults')
-    Table_HighPtRWDown = TFile("Yield_SVMassTauHighPtRWDown"+CoMEnergy+""+".root")
-    Histo_HighPtRWDown = Table_HighPtRWDown.Get('FullResults')
+    # glugluHiggs 
     Table_HiggsPtRWUp = TFile("Yield_SVMassHiggPtRWUp"+CoMEnergy+""+".root")
     Histo_HiggsPtRWUp = Table_HiggsPtRWUp.Get('FullResults')
     Table_HiggsPtRWDown = TFile("Yield_SVMassHiggPtRWDown"+CoMEnergy+""+".root")
     Histo_HiggsPtRWDown = Table_HiggsPtRWDown.Get('FullResults')
+    Table_HiggsPtRWScaleUp = TFile("Yield_SVMassHiggPtRWScaleUp"+CoMEnergy+""+".root")
+    Histo_HiggsPtRWScaleUp = Table_HiggsPtRWScaleUp.Get('FullResults')
+    Table_HiggsPtRWScaleDown = TFile("Yield_SVMassHiggPtRWScaleDown"+CoMEnergy+""+".root")
+    Histo_HiggsPtRWScaleDown = Table_HiggsPtRWScaleDown.Get('FullResults')
+    SysTableggH= [Histo_HiggsPtRWUp,Histo_HiggsPtRWDown,Histo_HiggsPtRWScaleUp,Histo_HiggsPtRWScaleDown]
+    # tau High PT
+    Table_HighPtRWUp = TFile("Yield_SVMassTauHighPtRWUp"+CoMEnergy+""+".root")
+    Histo_HighPtRWUp = Table_HighPtRWUp.Get('FullResults')
+    Table_HighPtRWDown = TFile("Yield_SVMassTauHighPtRWDown"+CoMEnergy+""+".root")
+    Histo_HighPtRWDown = Table_HighPtRWDown.Get('FullResults')
+    SysTableHighpt= [Histo_HighPtRWUp,Histo_HighPtRWDown]
 
-    SysTable= [Histo_HighPtRWUp,Histo_HighPtRWDown,Histo_HiggsPtRWUp,Histo_HiggsPtRWDown]
 
 
     
     TauScaleOut = ["_CMS_scale_t_"+channel+CoMEnergy+"Down", "", "_CMS_scale_t_"+channel+CoMEnergy+"Up"]
-    Signal_Unc_Out = ["_CMS_eff_t_mssmHigh_"+channel+CoMEnergy+"Up","_CMS_eff_t_mssmHigh_"+channel+CoMEnergy+"Down", "_CMS_htt_higgsPtReweight"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight"+CoMEnergy+"Down"]
-    Signal_Unc_OutScale = ["_CMS_htt_higgsPtReweight_scale"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight_scale"+CoMEnergy+"Down","_CMS_htt_higgsPtReweight_scaletest"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight_scaletest"+CoMEnergy+"Down"]
+    Signal_Unc_glugluHiggs = ["_CMS_eff_t_mssmHigh_"+channel+CoMEnergy+"Up","_CMS_eff_t_mssmHigh_"+channel+CoMEnergy+"Down", "_CMS_htt_higgsPtReweight_scale"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight_scale"+CoMEnergy+"Down"]
+    Signal_Unc_HighPtTau = ["_CMS_htt_higgsPtReweight"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight"+CoMEnergy+"Down"]
 
 #    TH1.AddDirectory(0)
     myOut = TFile("TotalRootForLimit_"+channel + CoMEnergy+".root" , 'RECREATE') # Name Of the output file
@@ -233,21 +240,33 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                     RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
                     tDirectory.WriteObject(RebinedHist,NameOut)
                     
-                   ###############  Systematics on Shape and Norm for Higgs Pt nad High Tau Pt   ####
+                   ###############  Systematics on Shape and Norm for Higgs Pt Jusy GluGluHiggs   ####
                     if MSSMSignalUncertainty and tscale==1 and str(signal[sig]) == 'ggH':
-                        for syst in range(len(SystematicSignal)):
+                        for systggH in range(len(SystematicGluGluHiggs)):
                             tDirectory.cd()
-                            Histogram = SystematicSignal[syst]+"_mTLess30_OS"
-                            normal = SysTable[syst].GetBinContent(XLoc,YLoc)    #Get the Noralization
-                            NameOut= str(signal[sig]) +str(mass[m])+str(Signal_Unc_Out[syst])
-                            NameOutScale= str(signal[sig]) +str(mass[m])+str(Signal_Unc_OutScale[syst])
+                            Histogram = SystematicGluGluHiggs[systggH]+"_mTLess30_OS"
+                            normal = SysTableggH[systggH].GetBinContent(XLoc,YLoc)    #Get the Noralization
+                            NameOut= str(signal[sig]) +str(mass[m])+str(Signal_Unc_glugluHiggs[systggH])
 
                             SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
                             SampleHisto=SampleFile.Get("XXX")
                             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
                             tDirectory.WriteObject(RebinedHist,NameOut)
-                            tDirectory.WriteObject(RebinedHist,NameOutScale) # This part need to get updated  FIXME
+
+                   ###############  Systematics on Shape and Norm for  High Tau Pt  for ggH and bbH ####
+                    if MSSMSignalUncertainty and tscale==1 and str(signal[sig]) == 'ggH':
+                        for systHighpt in range(len(SystematicHighPtTau)):
+                            tDirectory.cd()
+                            Histogram = SystematicHighPtTau[systHighpt]+"_mTLess30_OS"
+                            normal = SysTableHighpt[systHighpt].GetBinContent(XLoc,YLoc)    #Get the Noralization
+                            NameOut= str(signal[sig]) +str(mass[m])+str(Signal_Unc_HighPtTau[systHighpt])
+
+                            SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
+                            SampleHisto=SampleFile.Get("XXX")
+                            if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
+                            RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                            tDirectory.WriteObject(RebinedHist,NameOut)
 
            ################################################
            #   Filling VV

@@ -45,6 +45,7 @@ channel = ["mutau", "etau"]
 channelDirectory = ["muTau", "eleTau"]
 POSTFIX=["","Up","Down"]
 
+high_bin = 300
 digit = 3
 verbos_ = True
 QCDScaleFactor = 1.06
@@ -71,7 +72,8 @@ def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 def getHistoShape_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     myfileSub = TFile(SubRootDir + "out_"+Name +CoMEnergy+ '.root')
     HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
-    NewFile=TFile("Extra/XXXout_"+Name +CoMEnergy+chan+Histogram+ cat+PostFix+".root","RECREATE")
+#    NewFile=TFile("Extra/XXXout_"+Name +CoMEnergy+chan+Histogram+ cat+PostFix+".root","RECREATE")
+    NewFile=TFile("Extra/XXX.root","RECREATE")
     NewFile.WriteObject(HistoSub,"XXX")
     return NewFile
 
@@ -263,7 +265,7 @@ def MakeTheHistogram(PostFix,channel,Observable,CoMEnergy,chl,etaRange):
         Histo_QCDOSRelax=Shape_QCDOSRelax.Get("XXX")
         Histo_QCDControlRegion= Histo_QCDOSRelax.Rebin(len(Binning_PT)-1,"",Binning_PT)
 
-        Shape_QCDQCDShape2DSSRelax=GetShape_QCD(PostFix,CoMEnergy,channel,catName,"_QCDshape2D_mTLess30_SS_RelaxIso", etaRange)
+        Shape_QCDQCDShape2DSSRelax=GetShape_QCD(PostFix,CoMEnergy,channel,catName,Observable+"QCDshape2D_mTLess30_SS_RelaxIso", etaRange)
         Histo_QCDQCDShape2DSSRelax=Shape_QCDQCDShape2DSSRelax.Get("XXX")
 
 
@@ -271,8 +273,8 @@ def MakeTheHistogram(PostFix,channel,Observable,CoMEnergy,chl,etaRange):
         HistoNum =TH1F("QCDNumerator","",len(Binning_PT)-1,Binning_PT)
         HistoDeNum =TH1F("QCDDenumerator","",len(Binning_PT)-1,Binning_PT)
         NewHIST_ControlRegion =TH1F("QCDControlRegion","",len(Binning_PT)-1,Binning_PT)
-        NewHIST_ControlRegionFinBin =TH1F("NewHIST_ControlRegionFinBin","",300,0,300)
-        NewHIST_ControlRegionQCDShape2D =TH2F("NewHIST_ControlRegionQCDShape2D","",1500,0,1500,300,0,300)
+        NewHIST_ControlRegionFinBin =TH1F("NewHIST_ControlRegionFinBin","",high_bin,0,high_bin)
+        NewHIST_ControlRegionQCDShape2D =TH2F("NewHIST_ControlRegionQCDShape2D","",high_bin,0,high_bin,high_bin,0,high_bin)
 
         for bb in range(1,len(Binning_PT)):
             ## CAVEAT   Here I have set th enegative bins in numerator and denumerator to 0
@@ -345,7 +347,7 @@ def MakeFakeRateHisto(CoMEnergy,etaRange):
     canvas.SaveAs("fitResults_"+"mutau"+CoMEnergy+etaRange+".pdf")
     return  FitParam[0],FitParam[1],FitParam[2]
 
-def ReturnScaledReadyHisto(CoMEnergy, etaRange, categ, chl, postFix):
+def ReturnScaledReadyHisto(Observable,CoMEnergy, etaRange, categ, chl, postFix):
     myOut = TFile("YieldShapeQCD" + CoMEnergy + ".root", 'RECREATE')
     
     fitParameters = MakeFakeRateHisto(CoMEnergy, etaRange)  # same for muTau and eTau
@@ -357,12 +359,12 @@ def ReturnScaledReadyHisto(CoMEnergy, etaRange, categ, chl, postFix):
     HistoCR = MainRootFile.Get(channelDirectory[chl] + Bcategory[categ] + "/NewHIST_ControlRegionQCDShape2D")
 
     myOut.cd()
-    templateShape = TH1F("QCDShapeNorm", "", 1500, 0, 1500)
+    templateShape = TH1F("QCDShapeNorm", "", high_bin, 0, high_bin)
 
-    for bb in range(1500):
+    for bb in range(high_bin):
 
         NormInPtBin = 0
-        for ss in range(300):
+        for ss in range(high_bin):
             if postFix == "":   FakeRate = Func_Exp3Par(ss + 0.5, fitpar0, fitpar1, fitpar2)
             if postFix == "Down":   FakeRate = 1
             if postFix == "Up":   FakeRate = pow(Func_Exp3Par(ss + 0.5, fitpar0, fitpar1, fitpar2), 2)
@@ -380,36 +382,34 @@ def ReturnScaledReadyHisto(CoMEnergy, etaRange, categ, chl, postFix):
 #        NormQCDMC +=normHistio.GetBinContent(XLoc,i+1)
 #    FinalQCDEstimate=(normHistio.GetBinContent(XLoc,7)-NormQCDMC) * QCDScaleFactor
 #    templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
-    FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],"_QCDNorm_mTLess30_SS",etaRange)* QCDScaleFactor
+    FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],Observable+"QCDNorm_mTLess30_SS",etaRange)* QCDScaleFactor
 #    print "     @@@@@@@@@@@@   FinalQCDEstimate", FinalQCDEstimate
     templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
-#    NewFinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],"_SVMass_mTLess30_SS","")* QCDScaleFactor
-#    print "     YYYYYYYYYYY   NewFinalQCDEstimate", NewFinalQCDEstimate
 
     myOut.Write()
     return myOut
 
-def GetFinalQCDShapeNorm():
+def GetFinalQCDShapeNorm(Observable,CoMEnergy):
     FinalFile = TFile("QCDFinalFile.root", "RECREATE")
 
     for categ in range(len(Bcategory)):
 #        for chl in range(1):
         for chl in range(len(channel)):
             for postFix in POSTFIX:
-                getFileBar=ReturnScaledReadyHisto("_8TeV","_Bar",categ,chl,postFix)
-                getFileCen=ReturnScaledReadyHisto("_8TeV","_Cen",categ,chl,postFix)
-                getFileEnd=ReturnScaledReadyHisto("_8TeV","_End",categ,chl,postFix)
+                getFileBar=ReturnScaledReadyHisto(Observable,"_8TeV","_Bar",categ,chl,postFix)
+                getFileCen=ReturnScaledReadyHisto(Observable,"_8TeV","_Cen",categ,chl,postFix)
+                getFileEnd=ReturnScaledReadyHisto(Observable,"_8TeV","_End",categ,chl,postFix)
 
                 HistoBar=getFileBar.Get("QCDShapeNorm")
                 HistoCen=getFileCen.Get("QCDShapeNorm")
                 HistoEnd=getFileEnd.Get("QCDShapeNorm")
 
                 FinalFile.cd()
-                QCDShapeTotal =TH1F(channel[chl]+"_QCDShapeNormTotal"+Bcategory[categ]+postFix,"",1500,0,1500)
-                for bb in range(1500):
+                QCDShapeTotal =TH1F(channel[chl]+"_QCDShapeNormTotal"+Bcategory[categ]+postFix,"",high_bin,0,high_bin)
+                for bb in range(high_bin):
                     QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
 
-                NewFinalQCDEstimate=GetNorm_QCD("","_8TeV",channel[chl],Bcategory[categ],"_SVMass_mTLess30_SS","")* QCDScaleFactor
+                NewFinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],Observable+"_mTLess30_SS","")* QCDScaleFactor
                 QCDShapeTotal.Scale(NewFinalQCDEstimate/QCDShapeTotal.Integral())
                 FinalFile.Write()
             
@@ -421,6 +421,6 @@ if __name__ == "__main__":
     MakeTheHistogram("","etau","_SVMass","_8TeV",1,"_Bar")
     MakeTheHistogram("","etau","_SVMass","_8TeV",1,"_Cen")
     MakeTheHistogram("","etau","_SVMass","_8TeV",1,"_End")
-    GetFinalQCDShapeNorm()
+    GetFinalQCDShapeNorm("_SVMass","_8TeV")
 
 

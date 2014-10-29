@@ -34,7 +34,20 @@ def luminosity(CoMEnergy):
 
 def XSection(mX, CoMEnergy):
     if CoMEnergy == '_8TeV':
-        if mX == 'signal':      return 1.
+        if mX == '25':      return  0.0216
+        if mX == '30':      return  0.0315
+        if mX == '35':      return  0.0428
+        if mX == '40':      return  0.0607
+        if mX == '45':      return  0.0771
+        if mX == '50':      return  0.1014
+        if mX == '55':      return  0.1100
+        if mX == '60':      return  0.1439
+        if mX == '65':      return  0.1636
+        if mX == '70':      return  0.1819
+        if mX == '75':      return  0.2019
+        if mX == '80':      return  0.2178
+
+#        if mX == 'signal':      return 1.
 
         if mX == 'WWJetsTo2L2Nu': return 5.824
         if mX == 'WZJetsTo2L2Q':      return 2.207 
@@ -81,7 +94,7 @@ channel = ["mutau", "etau"]
 #channel = ["mutau"]
 lenghtSig = len(signal) * len(mass) +1
 
-digit = 3
+digit = 2
 verbos_ = False
 
 
@@ -171,8 +184,8 @@ def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 
 def make2DTable(Observable,PostFix,CoMEnergy):
     myOut = TFile("Yield"+CoMEnergy+PostFix+".root", 'RECREATE')
-    FullResults  = TH2F('FullResults', 'FullResults', 15, 0, 15, 60, 0, 60)
-    FullError  = TH2F('FullError', 'FullError', 15, 0, 15, 60, 0, 60)
+    FullResults  = TH2F('FullResults', 'FullResults', 10, 0, 10, 30, 0, 30)
+    FullError  = TH2F('FullError', 'FullError', 10, 0, 10, 30, 0, 30)
 
     for categ in range(len(category)):
         for chl in range(len(channel)):
@@ -192,11 +205,11 @@ def make2DTable(Observable,PostFix,CoMEnergy):
                     Name= str(signal[sig]) +str(mass[m])
 #                    Name= str(signal[sig]) + "_"+str(mass[m])
 
-                    value = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0] * XSection("signal", CoMEnergy)
+                    value = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0] * XSection(str(mass[m]), CoMEnergy)
                     FullResults.SetBinContent(XLoc,YLoc , value)
                     FullResults.GetYaxis().SetBinLabel(YLoc, Name)
 
-                    valueEr = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1] * XSection("signal", CoMEnergy)
+                    valueEr = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1] * XSection(str(mass[m]), CoMEnergy)
                     FullError.SetBinContent(XLoc , YLoc, valueEr)
                     FullError.GetYaxis().SetBinLabel(YLoc, Name)
                     if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr

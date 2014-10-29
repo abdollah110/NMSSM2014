@@ -62,9 +62,9 @@ def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     value = 10E-7
     valueEr = 10E-7
     if (HistoSub):
-        value = HistoSub.Integral(low_bin,high_bin) * luminosity(CoMEnergy) / HistoDenum.GetBinContent(1)
+        value = HistoSub.Integral() * luminosity(CoMEnergy) / HistoDenum.GetBinContent(1)
         value = round(value, digit)
-        valueEr = math.sqrt(HistoSub.Integral(low_bin,high_bin)) * luminosity(CoMEnergy)  / HistoDenum.GetBinContent(1)
+        valueEr = math.sqrt(HistoSub.Integral()) * luminosity(CoMEnergy)  / HistoDenum.GetBinContent(1)
         valueEr = round(valueEr, digit)
     return value, valueEr
 
