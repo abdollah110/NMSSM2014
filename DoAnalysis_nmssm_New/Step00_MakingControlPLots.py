@@ -24,11 +24,11 @@ outCommand = outCommand + "hadd -f  OutFiles/out_DYJetsAll_8TeV_Hadd.root   OutF
 outCommand = outCommand + "hadd -f  OutFiles/out_WJetsAll_8TeV_Hadd.root   OutFiles/out_WJetsToLNu_8TeV.root   OutFiles/out_W1JetsToLNu_8TeV.root   OutFiles/out_W2JetsToLNu_8TeV.root   OutFiles/out_W3JetsToLNu_8TeV.root   OutFiles/out_W4JetsToLNu_8TeV.root    \n"
 outCommand = outCommand + "root -l -q Step2_Stitching_DY.cc \n"
 #outCommand = outCommand + "root -l -q Step3_Stitching_W.cc \n"
-outCommand = outCommand + "python Step4_CalcNormalization.py \n"
+#outCommand = outCommand + "python Step4_CalcNormalization.py \n"
 #outCommand = outCommand + "python Step5_SystematicSignal.py \n"
-outCommand = outCommand + "python Step6_CalcQCDEstimation.py \n"
+#outCommand = outCommand + "python Step6_CalcQCDEstimation.py \n"
 #outCommand = outCommand + "python Step7_MakeRootDataCards.py \n"
-outCommand = outCommand + "python Step7_DataCardProducer.py \n"
+#outCommand = outCommand + "python Step7_DataCardProducer.py \n"
 
 OutFile.write(outCommand)
     
