@@ -112,7 +112,8 @@ def _Return_Embed_Shape(Name, channel,cat,HistoName,PostFix,CoMEnergy,normal,nor
     if HistoTTEmbedded:
         HistoTTEmbedded.Scale(normalTT/HistoTTEmbedded.Integral())
         print "MC embed= ", HistoTTEmbedded.Integral()
-        Histo.Add(HistoTTEmbedded,-1)
+#        Histo.Add(HistoTTEmbedded,-1)
+        Histo.Add(HistoTTEmbedded,-0.333)  # FIXME   (Temp Soluction we need to consider 12 M TTEmbedded with no PU reweighting)
 
 #    NewFile=TFile("Extra/XXX2out_"+Name +CoMEnergy+channel+HistoName+ cat+PostFix+".root","RECREATE")
     NewFile=TFile("Extra/XXX.root","RECREATE")
