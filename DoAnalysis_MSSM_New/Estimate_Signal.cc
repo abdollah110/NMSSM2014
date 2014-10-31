@@ -208,12 +208,12 @@ int main(int argc, char** argv) {
     //Initial Requirements
     //###############################################################################################
     // Specific Cuts to be changed fro MSSM and nMSSM
-    float cutonSVmass= 50;
-    float cutonTaupt= 30;
+    float cutonSVmass = 50;
+    float cutonTaupt = 30;
     int massBin = 1500;
-//    float cutonSVmass= 0;
-//    float cutonTaupt= 20;
-//    int massBin = 300;
+    //    float cutonSVmass= 0;
+    //    float cutonTaupt= 20;
+    //    int massBin = 300;
     //###############################################################################################
     int ptBin = 300;
     bool IsInCorrcetMassRange = true;
@@ -448,7 +448,8 @@ int main(int argc, char** argv) {
         //bool Tau_antiMu = l2_tauRejMu3L;
         //bool Tau_antiMu = l2_tauRejMu2T;
         bool TauVtxdZ = fabs(Tau_Vertex_dz) < 0.2;
-        bool TAU_CUTS = SVMass > cutonSVmass && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
+//        bool TAU_CUTS = SVMass > cutonSVmass && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
+        bool TAU_CUTS =  IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
 
         //########################################################################################################
@@ -457,17 +458,20 @@ int main(int argc, char** argv) {
         //        int evenrList[40] = {103973225, 104420828, 106034910, 105660180, 106974476, 107092579, 108055243, 108396438, 108412892, 150562091, 152046510, 152847565, 152909050, 153063537, 153791799, 153918798, 39336845, 41209032, 41846823, 41850867, 43308698, 43246086, 56053990, 56782039, 58949867, 58715990, 58991357, 61799085, 61729268, 76680099, 79031407, 79231016, 78988784, 78601443, 79378433, 81225657, 84970796, 98546954, 100282678, 101178061};
         //        for (int ii = 0; ii < 40; ii++) {
         //            if (Event == evenrList[ii]) {
-        //                cout << Event << "  " << El_PtEta << El_IdTight << (SVMass > 50) << IsInCorrcetMassRange << TauVtxdZ << Tau_DMF << Tau_antiEl << Tau_antiMu << (l2Pt > 30) << (fabs(l2Eta) < 2.3) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) << "  pt of tau " << l2Pt << "  tau Isol MVA is " << l2_tauIsoMVAraw3oldDMwLTraw << "  tau Isol Comb is " << byCombinedIsolationDeltaBetaCorrRaw3Hits_2 << " eta is" << l2Eta << " decayMode is " << l2_DecayMode << "\n";
+        //                        cout << Event << "  " << El_PtEta << El_IdTight   << TauVtxdZ << Tau_DMF << Tau_antiEl << Tau_antiMu << (l2Pt > 30) << (fabs(l2Eta) < 2.3) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) << "  pt of tau " << l2Pt << "  tau Isol MVA is " << l2_tauIsoMVAraw3oldDMwLTraw << "  tau Isol Comb is " << byCombinedIsolationDeltaBetaCorrRaw3Hits_2 << " eta is" << l2Eta << " decayMode is " << l2_DecayMode << "\n";
+//        if (MU_CUTS && TAU_CUTS && Tau_DMF && (l2Pt > 30) && (fabs(l2Eta) < 2.3) && (l2_TighttauIsoMVA3oldDMwLT > 0.5)  && TMa) {
+        if ( MU_CUTS && TAU_CUTS && Channel == 1 &&  TightIso ) {
+            cout << Event << "  " << Mu_PtEta << Mu_IdTight << Mu_d0 << Mu_dZ << Mu_Iso << IsInCorrcetMassRange << TauVtxdZ<< (l2Pt > 30) << (fabs(l2Eta) < 2.3) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) <<"  taupt is "<<l2Pt <<"  tau Isol MVA is " << l2_tauIsoMVAraw3oldDMwLTraw << "  tau Isol Comb is " << byCombinedIsolationDeltaBetaCorrRaw3Hits_2  << "\n";
+        }
         //            }
         //        }
         //        if (selection_btag && EL_CUTS && TAU_CUTS && Channel == 3 && mTLess30 && charge_OS && TightIso && l2Pt > 30 && fabs(l2Eta) < 2.3) {
         //            cout << Run << ":" << Lumi << ":" << Event << "\n";
         //        }
-        //if (selection && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_OS && TightIso && sel_ZJ) {
         //    if (Event == 524696738 ) {
         //    cout<< Run <<":"<< Lumi <<":"<<Event << "  Pt is   "<< l2Pt <<"  "<<nbtag<<" "<<njets<<" " << jeta_1 <<" "<< jeta_2 <<" " << selection_btag << MuTrgMatched << MU_CUTS << TAU_CUTS <<( Channel == 1) << mTLess30 << charge_SS << TightIso <<"\n";
         //        if (Event == 92686979 && l2Pt > 30 && selection_btag && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_SS && TightIso) {
-        //cout << Run << ":" << Lumi << ":" << Event << "mu PT is " << l1Pt << " iso is " << l1_muIso << "\n";
+        //        cout << Run << ":" << Lumi << ":" << Event << "mu PT is " << l1Pt << " iso is " << l1_muIso << "\n";
         //        }
 
         //########################################################################################################
