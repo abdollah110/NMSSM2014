@@ -245,14 +245,23 @@ int main(int argc, char** argv) {
         //  CATEGORIZATION
         //###############################################################################################
 
-        ////###############   MSSM Categorization
-        const int size_mssmC = 4;
+        ////###############   New NMSSM Categorization
+        const int size_mssmC = 5;
         bool selection_inclusive = 1;
-        bool selection_nobtag = nbtag < 1;
-        bool selection_btag = nbtag > 0 && njets < 2;
+        bool selection_nobtag = nbtag < 1 && njets < 1;
+        bool selection_btag = nbtag > 0 && njets < 2 && nbtag < 2;
         bool selection_btagLoose = nbtagLoose > 0 && njets < 2;
-        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
-        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
+        bool selection_DoublebtagLoose = nbtag > 1 && njets < 3 && mvamet < 40;
+        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_DoublebtagLoose};
+        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"};
+//        ////###############   MSSM Categorization
+//        const int size_mssmC = 4;
+//        bool selection_inclusive = 1;
+//        bool selection_nobtag = nbtag < 1;
+//        bool selection_btag = nbtag > 0 && njets < 2;
+//        bool selection_btagLoose = nbtagLoose > 0 && njets < 2;
+//        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
+//        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
 
         ////###############   Z Categorization
         int size_ZCat = 4;
