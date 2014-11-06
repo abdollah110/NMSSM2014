@@ -187,6 +187,7 @@ int l1_Index, l2_Index;
 float GenTopPt = -10;
 float GenAntiTopPt = -10;
 float Tau_Vertex_dz = -10;
+float spinnerWeight_ = -10;
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -494,7 +495,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     Trigger_SingleMu12 = Trigger_SingleMu_12(m);
     Trigger_SingleEle12 = Trigger_SingleEle_12(m);
     Trigger_SingleJet12 = Trigger_SingleJet_12(m);
-
+    spinnerWeight_ = m->spinnerWeight;
 
     //  ########## ########## ########## ########## ########## ##########
     //  GEN Info

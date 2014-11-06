@@ -29,8 +29,9 @@ def make_submit_form():
         print "sampleName=", sampleName
 
         NumberToBedevided= 10
-        if FileSize > 900 : NumberToBedevided=20
-        if FileSize > 2000 : NumberToBedevided=30
+        if FileSize > 500 : NumberToBedevided=20
+        if FileSize > 1200 : NumberToBedevided=30
+        if FileSize > 2000 : NumberToBedevided=40
         for numMod in xrange(0,NumberToBedevided):
             f = os.popen("ls " + pnfn + "/" + " | sort ")
             dir = "dcap://maite.iihe.ac.be" + pnfn + "/"

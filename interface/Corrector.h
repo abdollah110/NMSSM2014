@@ -30,11 +30,12 @@ double correctionHighPtTail_Data(myobject const& a) {
     //
     //    Double_t DataValEndcaps_pt = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt);
     //    Double_t DataValEndcaps_400 = 0.3 + 0.7 * TriggerWeightEndcaps->Eval(400.);
-
-    if (a.pt > 140 && a.pt < 800 && fabs(a.eta) < 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(a.pt));
-    else if (a.pt >= 800 && fabs(a.eta) <= 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(800.));
-    else if (a.pt > 60 && a.pt < 400 && fabs(a.eta) > 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt));
-    else if (a.pt >= 400 && fabs(a.eta) >= 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(400.));
+    float ratioABCD= 0.62457;
+    float OneMinratioABCD= 1- ratioABCD;
+    if (a.pt > 140 && a.pt < 800 && fabs(a.eta) < 1.5) return (OneMinratioABCD + ratioABCD * TriggerWeightBarrel->Eval(a.pt));
+    else if (a.pt >= 800 && fabs(a.eta) <= 1.5) return (OneMinratioABCD + ratioABCD * TriggerWeightBarrel->Eval(800.));
+    else if (a.pt > 60 && a.pt < 400 && fabs(a.eta) > 1.5) return (OneMinratioABCD + ratioABCD * TriggerWeightEndcaps->Eval(a.pt));
+    else if (a.pt >= 400 && fabs(a.eta) >= 1.5) return (OneMinratioABCD + ratioABCD * TriggerWeightEndcaps->Eval(400.));
         //    if (a.pt < 800 && fabs(a.eta) < 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(a.pt));
         //    else if (a.pt >= 800 && fabs(a.eta) <= 1.5) return (0.3 + 0.7 * TriggerWeightBarrel->Eval(800.));
         //    else if (a.pt < 400 && fabs(a.eta) > 1.5) return (0.3 + 0.7 * TriggerWeightEndcaps->Eval(a.pt));
@@ -488,6 +489,7 @@ double eff2012Jet19fb(double pt, double eta) {
 
 float getCorrTriggerLep(std::string channel, std::string type, myobject const& a) {
 
+//    if (type == "mc12" || type == "embedmc12") {
     if (type == "mc12" || type == "embedmc12") {
 
         if (channel == "eltau") {
@@ -520,7 +522,7 @@ float getCorrTriggerTau(std::string channel, std::string type, myobject const& b
 
 float getCorrIDIsoLep(std::string channel, std::string type, myobject const& a) {
 
-    if (type == "mc12" || type == "embedmc12") {
+    if (type == "mc12" || type == "embedmc12"|| type == "embeddata12") {
 
         if (channel == "eltau") {
             return Cor_IDIso_ETau_Ele_2012(a);
@@ -540,7 +542,7 @@ float getCorrTriggerLepTau(std::string channel, std::string type, myobject const
 }
 float getCorrIDLep(std::string channel, std::string type, myobject const& a) {
 
-    if (type == "mc12" || type == "embedmc12") {
+    if (type == "mc12" || type == "embedmc12"|| type == "embeddata12") {
 
         if (channel == "eltau") {
             return Cor_ID_ETau_Ele_2012(a);
@@ -556,7 +558,7 @@ float getCorrIDLep(std::string channel, std::string type, myobject const& a) {
 
 float getCorrIsoLep(std::string channel, std::string type, myobject const& a) {
 
-    if (type == "mc12" || type == "embedmc12") {
+    if (type == "mc12" || type == "embedmc12" || type == "embeddata12") {
 
         if (channel == "eltau") {
             return Cor_Iso_ETau_Ele_2012(a);
