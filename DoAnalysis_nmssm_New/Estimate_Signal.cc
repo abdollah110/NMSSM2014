@@ -305,6 +305,20 @@ int main(int argc, char** argv) {
         bool RelaxIso = l2_TighttauIsoMVA3oldDMwLT < 0.5 && l2_LoosetauIsoMVA3oldDMwLT > 0.5;
         bool Iso_category[size_isoCat] = {TightIso, RelaxIso};
         std::string iso_Cat[size_isoCat] = {"", "_RelaxIso"};
+        ////###############   Lepton Isolation  Categorization
+
+        const int size_LepisoCat = 2;
+        bool LepTightIso, LepRelaxIso;
+        if (Channel == 1) {
+            LepTightIso = l1_muIso < 0.10;
+            LepRelaxIso = l1_muIso > 0.2 && l1_muIso < 0.5;
+        }
+        if (Channel == 3) {
+            LepTightIso = l1_eleIso < 0.1;
+            LepRelaxIso = l1_eleIso > 0.2 && l1_eleIso < 0.5;
+        }
+        bool LepIso_category[size_isoCat] = {LepTightIso, LepRelaxIso};
+        std::string Lepiso_Cat[size_LepisoCat] = {"", "_LepAntiIso"};
 
         ////###############   Number of GenJet  Categorization
         int size_jet = 6;
@@ -426,10 +440,9 @@ int main(int argc, char** argv) {
         bool Mu_IdTight = l1_muId_Tight;
         bool Mu_d0 = fabs(l1_d0) < 0.045; //the impact parameter in the transverse plane
         bool Mu_dZ = fabs(l1_dZ_in) < 0.2; //the impact parameter in the transverse plane
-        bool Mu_Iso = l1_muIso < 0.10;
-        bool Mu_Iso_Loose = l1_muIso > 0.2 && l1_muIso < 0.5;
-        bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
-        bool MU_CUTS_Loose = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso_Loose;
+        //        bool Mu_Iso = l1_muIso < 0.10;
+        //        bool Mu_Iso_Loose = l1_muIso > 0.2 && l1_muIso < 0.5;
+        bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ;
 
 
         //####################################################
@@ -437,10 +450,9 @@ int main(int argc, char** argv) {
         //####################################################
         bool El_PtEta = l1Pt > 24 && fabs(l1Eta) < 2.1;
         bool El_IdTight = l1_eleId_Tight;
-        bool El_Iso = l1_eleIso < 0.1;
-        bool El_Iso_Loose = l1_eleIso > 0.2 && l1_eleIso < 0.5;
-        bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
-        bool EL_CUTS_Loose = El_PtEta && El_IdTight && El_Iso_Loose;
+        //        bool El_Iso = l1_eleIso < 0.1;
+        //        bool El_Iso_Loose = l1_eleIso > 0.2 && l1_eleIso < 0.5;
+        bool EL_CUTS = El_PtEta && El_IdTight;
 
         //####################################################
         // Tau Selection
@@ -512,67 +524,49 @@ int main(int argc, char** argv) {
                                                                 memset(Event_Double, 0, sizeof (Event_Double[0][0]) * 8 * 9);
                                                                 for (int mTcat = 0; mTcat < size_MT; mTcat++) {
                                                                     if (mT_category[mTcat]) {
-                                                                        //###################################################
-                                                                        bool SignalSelection = (tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && zcat == 0 && Jetcat == 0 && etacat == 0);
-                                                                        bool ZLSelection = (tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && etacat == 0);
-                                                                        bool QCDShape = (tScalecat == 1);
-                                                                        //###################################################
-                                                                        // Muon  Signal Selection   mT < 30 GeV
-                                                                        //###################################################
-                                                                        if (MuTrgMatched && MU_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
-                                                                            plotFill("mutau_SVMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
-                                                                            plotFill("mutau_SVMassWshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                            plotFill("mutau_TauPtIsoLep" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
-//                                                                            if (SignalSelection && isGluGluH) plotFill("mutau_SVMassHiggPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[2] / HiggsPtReweight[1]);
-//                                                                            if (SignalSelection && isGluGluH) plotFill("mutau_SVMassHiggPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[0] / HiggsPtReweight[1]);
-//                                                                            if (SignalSelection && isGluGluH) plotFill("mutau_SVMassHiggPtRWScaleUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[4] / HiggsPtReweight[1]);
-//                                                                            if (SignalSelection && isGluGluH) plotFill("mutau_SVMassHiggPtRWScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[3] / HiggsPtReweight[1]);
-                                                                            if (SignalSelection && isTTJets) plotFill("mutau_SVMassTopPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * TopPtReweighting);
-                                                                            if (SignalSelection && isTTJets) plotFill("mutau_SVMassTopPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
-                                                                            if (SignalSelection) plotFill("mutau_SVMassTauHighPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
-                                                                            if (SignalSelection) plotFill("mutau_SVMassTauHighPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingDown);
-                                                                            if (ZLSelection) plotFill("mutau_SVMassZLScaleUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*1.02, massBin, 0, massBin, AllWeight);
-                                                                            if (ZLSelection) plotFill("mutau_SVMassZLScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
+                                                                        for (int lepiso = 0; lepiso < size_LepisoCat; lepiso++) {
+                                                                            if (LepIso_category[lepiso]) {
+                                                                                //###################################################
+                                                                                bool SignalSelection = (lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && zcat == 0 && Jetcat == 0 && etacat == 0);
+                                                                                bool ZLSelection = (lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && etacat == 0);
+                                                                                bool QCDShape = (tScalecat == 1);
+                                                                                bool WShape = (lepiso == 0 && qcat == 0 && mTcat == 0 && etacat == 0);
+                                                                                //###################################################
+                                                                                // Muon  Signal Selection   mT < 30 GeV
+                                                                                //###################################################
+                                                                                if (MuTrgMatched && MU_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
+                                                                                    if (lepiso == 0) plotFill("mutau_SVMass" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                                    if (WShape) plotFill("mutau_Wshape2DSVMassPt" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                                    if (QCDShape) plotFill("mutau_QCDshape2DSVMassPt" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                                    if (QCDShape) plotFill("mutau_TauPt" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
+                                                                                    if (SignalSelection && isTTJets) plotFill("mutau_SVMassTopPtRWUp" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * TopPtReweighting);
+                                                                                    if (SignalSelection && isTTJets) plotFill("mutau_SVMassTopPtRWDown" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
+                                                                                    if (SignalSelection) plotFill("mutau_SVMassTauHighPtRWUp" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
+                                                                                    if (SignalSelection) plotFill("mutau_SVMassTauHighPtRWDown" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingDown);
+                                                                                    if (ZLSelection) plotFill("mutau_SVMassZLScaleUp" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*1.02, massBin, 0, massBin, AllWeight);
+                                                                                    if (ZLSelection) plotFill("mutau_SVMassZLScaleDown" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
 
-                                                                        }
-                                                                        //####################################################
-                                                                        //Muon QCD Shape & Fake Rate
-                                                                        //####################################################
-                                                                        if (QCDShape && MuTrgMatched && MU_CUTS_Loose && TAU_CUTS) {
-                                                                            plotFill("mutau_SVMassQCDshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                            plotFill("mutau_TauPt" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
-                                                                        }
-                                                                        //####################################################
+                                                                                }
+                                                                                //####################################################
 
-                                                                        //###################################################
-                                                                        // Electron Signal Selection   mT < 30 GeV
-                                                                        //###################################################
-                                                                        if (EleTrgMatched && EL_CUTS && TAU_CUTS && (Event != Event_Double[2][2])) {
-                                                                            plotFill("etau_SVMass" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
-                                                                            plotFill("etau_SVMassWshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                            plotFill("etau_TauPtIsoLep" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
-//                                                                            if (SignalSelection && isGluGluH) plotFill("etau_SVMassHiggPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[2] / HiggsPtReweight[1]);
-//                                                                            if (SignalSelection && isGluGluH) plotFill("etau_SVMassHiggPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[0] / HiggsPtReweight[1]);
-//                                                                            if (SignalSelection && isGluGluH) plotFill("etau_SVMassHiggPtRWScaleUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[4] / HiggsPtReweight[1]);
-//                                                                            if (SignalSelection && isGluGluH) plotFill("etau_SVMassHiggPtRWScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[3] / HiggsPtReweight[1]);
-                                                                            if (SignalSelection && isTTJets) plotFill("etau_SVMassTopPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * TopPtReweighting);
-                                                                            if (SignalSelection && isTTJets) plotFill("etau_SVMassTopPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
-                                                                            if (SignalSelection) plotFill("etau_SVMassTauHighPtRWUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
-                                                                            if (SignalSelection) plotFill("etau_SVMassTauHighPtRWDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingDown);
-                                                                            if (ZLSelection) plotFill("etau_SVMassZLScaleUp" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*1.02, massBin, 0, massBin, AllWeight);
-                                                                            if (ZLSelection) plotFill("etau_SVMassZLScaleDown" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
-                                                                            //        Event_Double[2][2] = Event;
+                                                                                //###################################################
+                                                                                // Electron Signal Selection   mT < 30 GeV
+                                                                                //###################################################
+                                                                                if (EleTrgMatched && EL_CUTS && TAU_CUTS && (Event != Event_Double[2][2])) {
+                                                                                    if (lepiso == 0) plotFill("etau_SVMass" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                                    if (WShape) plotFill("etau_Wshape2DSVMassPt" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                                    if (QCDShape) plotFill("etau_QCDshape2DSVMassPt" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                                    if (QCDShape) plotFill("etau_TauPt" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
+                                                                                    if (SignalSelection && isTTJets) plotFill("etau_SVMassTopPtRWUp" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * TopPtReweighting);
+                                                                                    if (SignalSelection && isTTJets) plotFill("etau_SVMassTopPtRWDown" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
+                                                                                    if (SignalSelection) plotFill("etau_SVMassTauHighPtRWUp" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
+                                                                                    if (SignalSelection) plotFill("etau_SVMassTauHighPtRWDown" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingDown);
+                                                                                    if (ZLSelection) plotFill("etau_SVMassZLScaleUp" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*1.02, massBin, 0, massBin, AllWeight);
+                                                                                    if (ZLSelection) plotFill("etau_SVMassZLScaleDown" + Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
+                                                                                }
+                                                                                //####################################################
+                                                                            }
                                                                         }
-                                                                        //####################################################
-                                                                        // Electron QCD Shape & Fake Rate
-                                                                        //####################################################
-                                                                        if (QCDShape && EleTrgMatched && EL_CUTS_Loose && TAU_CUTS) {
-                                                                            plotFill("etau_SVMassQCDshape2D" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                            plotFill("etau_TauPt" + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], l2Pt, ptBin, 0, ptBin, AllWeight);
-                                                                        }
-                                                                        //####################################################
-
-
                                                                     }
                                                                 }
                                                             } //charge category
