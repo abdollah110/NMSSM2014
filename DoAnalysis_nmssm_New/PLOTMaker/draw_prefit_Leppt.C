@@ -50,7 +50,7 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
     TCanvas *canv = MakeCanvas("canv", "histograms", 600, 600);
     float SIGNAL_SCALE = 10;
     bool scaled = true;
-    bool log = false;
+    bool log = true;
 
     TFile* input = new TFile(inputF.c_str());
     //cout<<"1";
@@ -68,6 +68,7 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
     TH1F* QCD = (TH1F*) input->Get((channel + "QCD").c_str());
     InitHist(QCD, "", "", TColor::GetColor(250, 202, 255), 1001);
     hs.Add(QCD);
+
 
 
 
@@ -119,14 +120,14 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
     zero->Draw();
 
     hs.Draw("hsame");
-    data->SetBinContent(1,0);
-    data->SetBinContent(2,0);
-    data->SetBinContent(3,0);
-    data->SetBinContent(4,0);
-    data->SetBinContent(5,0);
-    data->SetBinContent(6,0);
-    data->SetBinContent(7,0);
-    data->SetBinContent(8,0);
+//    data->SetBinContent(1,0);
+//    data->SetBinContent(2,0);
+//    data->SetBinContent(3,0);
+//    data->SetBinContent(4,0);
+//    data->SetBinContent(5,0);
+//    data->SetBinContent(6,0);
+//    data->SetBinContent(7,0);
+//    data->SetBinContent(8,0);
     data->Draw("PEsame");
 
 
@@ -151,15 +152,22 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
 
     //  canv ->Print(TString::Format("%s_%sscaled_%i_%s_%s.png"       , label, scaled ? "re" : "un", period, log ? "LOG" : "",  chargeSign.c_str()));
     canv->Print(TString::Format( (nameHisto+".pdf").c_str()));
-    canv->Print(TString::Format( (nameHisto+".root").c_str()));
     //  canv ->Print(TString::Format("%s_%sscaled_%i_%s_%s.eps"       , label, scaled ? "re" : "un", period, log ? "LOG" : "",  chargeSign.c_str()));
 }
 
-void draw_prefit() {
-    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_inclusive/", 18000, "m_{#tau#tau}[GeV]","PLOT_eleTau_inclusive_m");
-    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_inclusive/", 40000, "m_{#tau#tau}[GeV]","PLOT_muTau_inclusive_m" );
-    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_btag/", 250, "m_{#tau#tau}[GeV]","PLOT_eleTau_btag_m");
-    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_btag/", 450, "m_{#tau#tau}[GeV]","PLOT_muTau_btag_m" );
+void draw_prefit_Leppt() {
+    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_PtLep.root", "eleTau_inclusive/", 20000, "pT_{e}[GeV]","PLOT_eleTau_inclusive_PtLep");
+    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_PtLep.root", "muTau_inclusive/", 60000, "pT_{#mu}[GeV]","PLOT_muTau_inclusive_PtLep" );
+    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_PtLep.root", "eleTau_btag/", 300, "pT_{e}[GeV]","PLOT_eleTau_btag_PtLep");
+    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_PtLep.root", "muTau_btag/", 700, "pT_{#mu}[GeV]","PLOT_muTau_btag_PtLep" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_PtTau.root", "eleTau_inclusive/", 20000, "pT_{#tau}[GeV]","PLOT_eleTau_inclusive_pt");
+//    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_PtTau.root", "muTau_inclusive/", 40000, "pT_{#tau}[GeV]","PLOT_muTau_inclusive_pt" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_PtTau.root", "eleTau_btag/", 300, "pT_{#tau}[GeV]","PLOT_eleTau_btag_pt");
+//    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_PtTau.root", "muTau_btag/", 700, "pT_{#tau}[GeV]","PLOT_muTau_btag_pt" );
+//    draw_prefit_Sample("TotalRootForLimit__TauPteleTau_8TeV.root", "eleTau_inclusive/", 200000, "pT_{#tau}[GeV]","PLOT_eleTau_inclusive_pt");
+//    draw_prefit_Sample("TotalRootForLimit__TauPtmuTau_8TeV.root", "muTau_inclusive/", 200000, "pT_{#tau}[GeV]","PLOT_muTau_inclusive_pt" );
+//    draw_prefit_Sample("TotalRootForLimit__TauPteleTau_8TeV.root", "eleTau_btag/", 10000, "pT_{#tau}[GeV]","PLOT_eleTau_btag_pt");
+//    draw_prefit_Sample("TotalRootForLimit__TauPtmuTau_8TeV.root", "muTau_btag/", 10000, "pT_{#tau}[GeV]","PLOT_muTau_btag_pt" );
 };
 
 

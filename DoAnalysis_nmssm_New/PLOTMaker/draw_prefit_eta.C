@@ -71,29 +71,32 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
 
 
 
+
+
     TH1F* W = (TH1F*) input->Get((channel + "W").c_str());
-    InitHist(W, "", "", TColor::GetColor(100, 182, 232), 1001);
-    hs.Add(W);
+    InitHist(W, "", "", 46, 1001);
 
     TH1F* ZJ = (TH1F*) input->Get((channel + "ZJ").c_str());
-    InitHist(ZJ, "", "", TColor::GetColor(100, 182, 232), 1001);
-    hs.Add(ZJ);
+//    InitHist(ZJ, "", "", TColor::GetColor(100, 182, 232), 1001);
+    W->Add(ZJ);
 
     TH1F* ZL = (TH1F*) input->Get((channel + "ZL").c_str());
-    InitHist(ZL, "", "", TColor::GetColor(100, 182, 232), 1001);
-    hs.Add(ZL);
+//    InitHist(ZL, "", "", TColor::GetColor(100, 182, 232), 1001);
+    W->Add(ZL);
 
 
     TH1F* VV = (TH1F*) input->Get((channel + "VV").c_str());
-    InitHist(VV, "", "", TColor::GetColor(100, 182, 232), 1001);
-    hs.Add(VV);
+//    InitHist(VV, "", "", TColor::GetColor(100, 182, 232), 1001);
+    W->Add(VV);
 
+    hs.Add(W);
     ////    TH1F* ZLL = (TH1F*) input->Get((channel +"ZLL");
     //    InitHist(ttbar, "", "", TColor::GetColor(155, 152, 204), 1001);
 
     TH1F* TT = (TH1F*) input->Get((channel + "TT").c_str());
-    InitHist(TT, "", "", TColor::GetColor(155, 152, 104), 1001);
+    InitHist(TT, "", "", 9, 1001);
     hs.Add(TT);
+
 
     TH1F* ZTT = (TH1F*) input->Get((channel + "ZTT").c_str());
     InitHist(ZTT, "", "", TColor::GetColor(248, 206, 104), 1001);
@@ -127,7 +130,7 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
 //    data->SetBinContent(6,0);
 //    data->SetBinContent(7,0);
 //    data->SetBinContent(8,0);
-    data->Draw("same");
+    data->Draw("EPsame");
 
 
     const char* dataset;
@@ -155,10 +158,18 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
 }
 
 void draw_prefit_eta() {
-    draw_prefit_Sample("TotalRootForLimit__TauEtaeleTau_8TeV.root", "eleTau_inclusive/", 200000, "#eta_{#tau}[GeV]","PLOT_eleTau_inclusive_eta");
-    draw_prefit_Sample("TotalRootForLimit__TauEtamuTau_8TeV.root", "muTau_inclusive/", 500000, "#eta_{#tau}[GeV]","PLOT_muTau_inclusive_eta" );
-    draw_prefit_Sample("TotalRootForLimit__TauEtaeleTau_8TeV.root", "eleTau_btag/", 10000, "#eta_{#tau}[GeV]","PLOT_eleTau_btag_eta");
-    draw_prefit_Sample("TotalRootForLimit__TauEtamuTau_8TeV.root", "muTau_btag/", 10000, "#eta_{#tau}[GeV]","PLOT_muTau_btag_eta" );
+    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_EtaTau.root", "eleTau_inclusive/", 10000, "#eta_{#tau}[GeV]","PLOT_eleTau_inclusive_EtaTau");
+    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_EtaTau.root", "muTau_inclusive/", 25000, "#eta_{#tau}[GeV]","PLOT_muTau_inclusive_EtaTau" );
+    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_EtaTau.root", "eleTau_btag/", 300, "#eta_{#tau}[GeV]","PLOT_eleTau_btag_EtaTau");
+    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_EtaTau.root", "muTau_btag/", 400, "#eta_{#tau}[GeV]","PLOT_muTau_btag_EtaTau" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_EtaLep.root", "eleTau_inclusive/", 10000, "#eta_{e}[GeV]","PLOT_eleTau_inclusive_EtaLep");
+//    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_EtaLep.root", "muTau_inclusive/", 25000, "#eta_{#mu}[GeV]","PLOT_muTau_inclusive_EtaLep" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_EtaLep.root", "eleTau_btag/", 300, "#eta_{e}[GeV]","PLOT_eleTau_btag_EtaLep");
+//    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_EtaLep.root", "muTau_btag/", 400, "#eta_{#mu}[GeV]","PLOT_muTau_btag_EtaLep" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_EtaLep.root", "eleTau_inclusive/", 200000, "#eta_{#tau}[GeV]","PLOT_eleTau_inclusive_eta");
+//    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_EtaLep.root", "muTau_inclusive/", 500000, "#eta_{#tau}[GeV]","PLOT_muTau_inclusive_eta" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV_EtaLep.root", "eleTau_btag/", 10000, "#eta_{#tau}[GeV]","PLOT_eleTau_btag_eta");
+//    draw_prefit_Sample("TotalRootForLimit_mutau_8TeV_EtaLep.root", "muTau_btag/", 10000, "#eta_{#tau}[GeV]","PLOT_muTau_btag_eta" );
 };
 
 
