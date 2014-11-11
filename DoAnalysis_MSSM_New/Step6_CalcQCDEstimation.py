@@ -23,35 +23,71 @@ from ROOT import gROOT
 from ROOT import gRandom
 from ROOT import gStyle
 from ROOT import gSystem
+from ROOT import TPaveText
 import array
 
 gROOT.Reset()
 import os
 ROOT.gROOT.SetBatch(True)
-InputFileLocation = '../FileROOT/MSSMROOTFiles/'
+InputFileLocation = '../FileROOT/nmssmROOTFiles/'
 SubRootDir = 'OutFiles/'
 verbosity_ = False
+applyTauFR_Correction= True
+applyOS_SS_Correction= False
+apply106asScaleFactor = True
+applyOSSSForQCDNorm= False
+
+def MakeCanvas(name, title,  dX,  dY):
+
+      canvas = TCanvas(name, title, 0, 0, dX, dY)
+      canvas.SetFillColor      (0)
+      canvas.SetBorderMode     (0)
+      canvas.SetBorderSize     (10)
+      canvas.SetLeftMargin     (0.18)
+      canvas.SetRightMargin    (0.05)
+      canvas.SetTopMargin      (0.08)
+      canvas.SetBottomMargin   (0.15)
+      canvas.SetFrameFillStyle (0)
+      canvas.SetFrameLineStyle (0)
+      canvas.SetFrameBorderMode(0)
+      canvas.SetFrameBorderSize(10)
+      canvas.SetFrameFillStyle (0)
+      canvas.SetFrameLineStyle (0)
+      canvas.SetFrameBorderMode(0)
+      canvas.SetFrameBorderSize(10)
+      canvas.SetLogy(0)
+
+      return canvas
+
 
 def luminosity(CoMEnergy):
     if CoMEnergy == '_8TeV': return  19712 #19242
     if CoMEnergy == '_7TeV': return  4982
 
 
+#Bcategory = ["_inclusive","_btag"]
+#Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"]
 Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-#Bcategory = ["_inclusive","_btag", "_btagLoose"]
+#Bcategory = ["_inclusive"]
 #Bcategory = [ "_btag"]
+#channel = ["mutau"]
 #channel = ["mutau"]
 channel = ["mutau", "etau"]
 channelDirectory = ["muTau", "eleTau"]
+#POSTFIX=[""]
 POSTFIX=["","Up","Down"]
 
+high_bin = 300
 digit = 3
 verbos_ = True
 QCDScaleFactor = 1.06
-Binning_PT = array.array("d",[0,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300])
+#Binning_PT = array.array("d",[0,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300])
+#Binning_PT = array.array("d",[0,20,25,30,35,40,45,50,60,70,80,90,100,120,140,160,180,200,250,300])
+Binning_PT = array.array("d",[0,20,25,30,35,40,50,70,100,150,300])
 
 def doRatio2D(num, denum, marColor):
     ratio = ROOT.TGraphAsymmErrors(num, denum, "")
+#    ratio = num.Divide(denum)
     ratio.SetLineColor(marColor)
     ratio.SetLineWidth(2)
     return ratio
@@ -155,7 +191,7 @@ def GetShape_W(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     Name= "WJetsAll"
     Name_Histo=HistoName+etaRange+DYIndex
     ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
-    if catName=="_btag": catName="_btagLoose"
+#    if catName=="_btag": catName="_btagLoose"
     W_EstimateShape= getHistoShape_BG(PostFix,CoMEnergy,Name, channelName,catName,Name_Histo)
     return W_EstimateShape
 
@@ -173,12 +209,17 @@ def GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     Data_ForqcdNorm=getHistoIntegral(PostFix,CoMEnergy, "Data",channelName,catName,HistoName+etaRange)[0]
 
     QCD_EstimateNorm=(Data_ForqcdNorm - (W_ForqcdNorm+VV_ForqcdNorm+TT_ForqcdNorm+ZL_ForqcdNorm+ZJ_ForqcdNorm+ZTT_ForqcdNorm))
-    print "###### QCD Estimate in", PostFix,CoMEnergy,channelName,catName,HistoName,etaRange, " ##### ", Data_ForqcdNorm ,"  ", W_ForqcdNorm,"  ",VV_ForqcdNorm,"  ",TT_ForqcdNorm,"  ",ZL_ForqcdNorm,"  ",ZJ_ForqcdNorm,"  ",ZTT_ForqcdNorm
+    if verbosity_:  print "###### QCD Estimate in", PostFix,CoMEnergy,channelName,catName,HistoName,etaRange, " ##### QCD_EstimateNorm= ", QCD_EstimateNorm,  "  = data - other BG", Data_ForqcdNorm ,"  W_ForqcdNorm=", W_ForqcdNorm,"  VV_ForqcdNorm=",VV_ForqcdNorm,"  TT_ForqcdNorm,",TT_ForqcdNorm,"  ZL_ForqcdNorm=",ZL_ForqcdNorm,"  ZJ_ForqcdNorm=",ZJ_ForqcdNorm,"  ZTT_ForqcdNorm=",ZTT_ForqcdNorm
     return QCD_EstimateNorm
 
 
 def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
-    
+
+    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    catLooseName=catName
+    if catName=="_btag": catLooseName="_btagLoose"
+    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+
     #Normalization for different background
     VV_ForqcdNorm=GetNorm_BackGround("VV",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     TT_ForqcdNorm=GetNorm_BackGround("TT",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
@@ -186,242 +227,262 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     ZJ_ForqcdNorm=GetNorm_BackGround("ZJ",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     ZTT_ForqcdNorm=GetNorm_BackGround("ZTT",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
     W_ForqcdNorm=GetNorm_W(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
-    Data_ForqcdNorm=GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
 
-    
-    #Shaoe for different background Normalizaed to their corresponding Normalization
-    VV_ForqcdShape=GetShape_BackGround("VV",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+
+    #Shape for different background Normalizaed to their corresponding Normalization
+    VV_ForqcdShape=GetShape_BackGround("VV",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
     VV_ForqcdShapeHisto=VV_ForqcdShape.Get("XXX")
-    if (VV_ForqcdShapeHisto) : print "  -----   VV_ForqcdShape  estimate", VV_ForqcdShapeHisto.Integral() ; VV_ForqcdShapeHisto.Scale(VV_ForqcdNorm/VV_ForqcdShapeHisto.Integral())
-
-    TT_ForqcdShape=GetShape_BackGround("TT",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    if (VV_ForqcdShapeHisto) :
+     VV_ForqcdShapeHisto.Scale(VV_ForqcdNorm/VV_ForqcdShapeHisto.Integral())
+    TT_ForqcdShape=GetShape_BackGround("TT",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
     TT_ForqcdShapeHisto=TT_ForqcdShape.Get("XXX")
-    if (TT_ForqcdShapeHisto) : print "  -----   TT_ForqcdShape  estimate", TT_ForqcdShapeHisto.Integral(); TT_ForqcdShapeHisto.Scale(TT_ForqcdNorm/TT_ForqcdShapeHisto.Integral())
-
-    ZL_ForqcdShape=GetShape_BackGround("ZL",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    if (TT_ForqcdShapeHisto) :
+        TT_ForqcdShapeHisto.Scale(TT_ForqcdNorm/TT_ForqcdShapeHisto.Integral())
+    ZL_ForqcdShape=GetShape_BackGround("ZL",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
     ZL_ForqcdShapeHisto=ZL_ForqcdShape.Get("XXX")
-    if (ZL_ForqcdShapeHisto) : print "  -----   ZL_ForqcdShape  estimate", ZL_ForqcdShapeHisto.Integral(); ZL_ForqcdShapeHisto.Scale(ZL_ForqcdNorm/ZL_ForqcdShapeHisto.Integral())
-
-    ZJ_ForqcdShape=GetShape_BackGround("ZJ",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    if (ZL_ForqcdShapeHisto) :
+        ZL_ForqcdShapeHisto.Scale(ZL_ForqcdNorm/ZL_ForqcdShapeHisto.Integral())
+    ZJ_ForqcdShape=GetShape_BackGround("ZJ",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
     ZJ_ForqcdShapeHisto=ZJ_ForqcdShape.Get("XXX")
-    if (ZJ_ForqcdShapeHisto) : print "  -----   ZJ_ForqcdShape  estimate", ZJ_ForqcdShapeHisto.Integral(); ZJ_ForqcdShapeHisto.Scale(ZJ_ForqcdNorm/ZJ_ForqcdShapeHisto.Integral())
-
-    ZTT_ForqcdShape=GetShape_BackGround("ZTT",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    if (ZJ_ForqcdShapeHisto) :
+        ZJ_ForqcdShapeHisto.Scale(ZJ_ForqcdNorm/ZJ_ForqcdShapeHisto.Integral())
+    ZTT_ForqcdShape=GetShape_BackGround("ZTT",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
     ZTT_ForqcdShapeHisto=ZTT_ForqcdShape.Get("XXX")
-    if (ZTT_ForqcdShapeHisto) : print "  -----   ZTT_ForqcdShape  estimate", ZTT_ForqcdShapeHisto.Integral(); ZTT_ForqcdShapeHisto.Scale(ZTT_ForqcdNorm/ZTT_ForqcdShapeHisto.Integral())
-
-    W_ForqcdShape=GetShape_W(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    if (ZTT_ForqcdShapeHisto) :
+        ZTT_ForqcdShapeHisto.Scale(ZTT_ForqcdNorm/ZTT_ForqcdShapeHisto.Integral())
+    W_ForqcdShape=GetShape_W(PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
     W_ForqcdShapeHisto=W_ForqcdShape.Get("XXX")
-    if (W_ForqcdShapeHisto) : print "  -----   W_ForqcdShape  estimate", W_ForqcdShapeHisto.Integral(); W_ForqcdShapeHisto.Scale(W_ForqcdNorm/W_ForqcdShapeHisto.Integral())
+    if (W_ForqcdShapeHisto) :
+        W_ForqcdShapeHisto.Scale(W_ForqcdNorm/W_ForqcdShapeHisto.Integral())
 
-    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
-    NewcatName=catName
-    if catName=="_btag": NewcatName="_btagLoose"
-    Data_ForqcdShape=getHistoShape_BG(PostFix,CoMEnergy, "Data",channelName,NewcatName,HistoName+etaRange)
+    #################### Get QCD Shape from Data
+    Data_ForqcdShape=getHistoShape_BG(PostFix,CoMEnergy, "Data",channelName,catLooseName,HistoName+etaRange)
     Data_ForqcdShapeHisto=Data_ForqcdShape.Get("XXX")
-    if (Data_ForqcdShapeHisto) : print "  -----   W_ForqcdShape  estimate", Data_ForqcdNorm ,"  ---------------BBBBBBBBBB-----------" ,Data_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Scale(Data_ForqcdNorm/Data_ForqcdShapeHisto.Integral())
 
+    #################### Subtract All BG from QCD
+    if  VV_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(VV_ForqcdShapeHisto,-1)
+    if  TT_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(TT_ForqcdShapeHisto,-1)
+    if  ZL_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(ZL_ForqcdShapeHisto,-1)
+    if  ZJ_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(ZJ_ForqcdShapeHisto,-1)
+    if  ZTT_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(ZTT_ForqcdShapeHisto,-1)
+    if  W_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(W_ForqcdShapeHisto,-1)
 
-    
-    if  Data_ForqcdShapeHisto: print "Data_ForqcdShape Integral -----Before Subtraction----- is= " , Data_ForqcdShapeHisto.Integral()
-    if  VV_ForqcdShapeHisto: print "VV_ForqcdShape Integral is= ", VV_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Add(VV_ForqcdShapeHisto,-1)
-    if  TT_ForqcdShapeHisto: print  "TT_ForqcdShape Integral is= ",TT_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Add(TT_ForqcdShapeHisto,-1)
-    if  ZL_ForqcdShapeHisto: print  "ZL_ForqcdShape Integral is= ",ZL_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Add(ZL_ForqcdShapeHisto,-1)
-    if  ZJ_ForqcdShapeHisto: print   "ZJ_ForqcdShape Integral is= ",ZJ_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Add(ZJ_ForqcdShapeHisto,-1)
-    if  ZTT_ForqcdShapeHisto: print "ZTT_ForqcdShape Integral is= ",ZTT_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Add(ZTT_ForqcdShapeHisto,-1)
-    if  W_ForqcdShapeHisto: print "W_ForqcdShape Integral is= ", W_ForqcdShapeHisto.Integral(); Data_ForqcdShapeHisto.Add(W_ForqcdShapeHisto,-1)
-    if  Data_ForqcdShapeHisto: print "Data_ForqcdShape Integral -----After subtraction----- is= " , Data_ForqcdShapeHisto.Integral()
-    
-    NewShapeForQCD=TFile("Extra/XXX"+PostFix+CoMEnergy+channelName+catName+HistoName+etaRange+".root","RECREATE")
+    #################### Return QCD Shape with Proper Normalization
+    NewShapeForQCD=TFile("Extra/XXX.root","RECREATE")
     NewShapeForQCD.WriteObject(Data_ForqcdShapeHisto,"XXX")
     return NewShapeForQCD
-    
-def MakeTheHistogram(PostFix,channel,Observable,CoMEnergy,chl,etaRange):
-    #################### Name Of the output file
-    myOut = TFile("QCDTotalRootForLimit_"+channel + etaRange+CoMEnergy+".root" , 'RECREATE')
-
-    for catName in Bcategory:
-
-        print "starting Bcategory and channel", catName, channel
-        tDirectory= myOut.mkdir(channelDirectory[chl] + str(catName))
-        tDirectory.cd()
-#############################################################################################################
-
-        ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
-        if catName=="_btag": catName="_btagLoose"
-        ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
-        Shape_QCDSSIso=GetShape_QCD(PostFix,CoMEnergy,channel,catName,"_TauPt_mTLess30_SS",etaRange)
-        Histo_QCDSSIso=Shape_QCDSSIso.Get("XXX")
-        Histo_QCDNumerator= Histo_QCDSSIso.Rebin(len(Binning_PT)-1,"",Binning_PT)
-
-
-        Shape_QCDSSRelax=GetShape_QCD(PostFix,CoMEnergy,channel,catName,"_TauPt_mTLess30_SS_RelaxIso",etaRange)
-        Histo_QCDSSRelax=Shape_QCDSSRelax.Get("XXX")
-        Histo_QCDDeNumerator= Histo_QCDSSRelax.Rebin(len(Binning_PT)-1,"",Binning_PT)
-
-
-        Shape_QCDOSRelax=GetShape_QCD(PostFix,CoMEnergy,channel,catName,"_TauPt_mTLess30_OS_RelaxIso",etaRange)
-        Histo_QCDOSRelax=Shape_QCDOSRelax.Get("XXX")
-        Histo_QCDControlRegion= Histo_QCDOSRelax.Rebin(len(Binning_PT)-1,"",Binning_PT)
-
-        Shape_QCDQCDShape2DSSRelax=GetShape_QCD(PostFix,CoMEnergy,channel,catName,"_QCDshape2D_mTLess30_SS_RelaxIso", etaRange)
-        Histo_QCDQCDShape2DSSRelax=Shape_QCDQCDShape2DSSRelax.Get("XXX")
-
-
-#        tDirectory.cd()
-        HistoNum =TH1F("QCDNumerator","",len(Binning_PT)-1,Binning_PT)
-        HistoDeNum =TH1F("QCDDenumerator","",len(Binning_PT)-1,Binning_PT)
-        NewHIST_ControlRegion =TH1F("QCDControlRegion","",len(Binning_PT)-1,Binning_PT)
-        NewHIST_ControlRegionFinBin =TH1F("NewHIST_ControlRegionFinBin","",300,0,300)
-        NewHIST_ControlRegionQCDShape2D =TH2F("NewHIST_ControlRegionQCDShape2D","",1500,0,1500,300,0,300)
-
-        for bb in range(1,len(Binning_PT)):
-            ## CAVEAT   Here I have set th enegative bins in numerator and denumerator to 0
-            binValueNum= Histo_QCDNumerator.GetBinContent(bb)
-            if binValueNum < 0 : binValueNum =0
-            HistoNum.SetBinContent(bb,binValueNum)
-
-            binValueDeNum= Histo_QCDDeNumerator.GetBinContent(bb)
-            if binValueDeNum < 0 : binValueDeNum =0
-            HistoDeNum.SetBinContent(bb,binValueDeNum)
-
-            NewHIST_ControlRegion.SetBinContent(bb,Histo_QCDControlRegion.GetBinContent(bb))
-
-        tDirectory.WriteObject(HistoNum,"QCDNumerator")
-        tDirectory.WriteObject(HistoDeNum,"QCDDenumerator")
-        tDirectory.WriteObject(NewHIST_ControlRegion,"QCDControlRegion")
-        
-        for aa in range(1,Histo_QCDOSRelax.GetNbinsX()):
-            binValue = Histo_QCDOSRelax.GetBinContent(aa)
-            if binValue < 0: binValue=0
-            NewHIST_ControlRegionFinBin.SetBinContent(aa,binValue)
-
-        tDirectory.WriteObject(NewHIST_ControlRegionFinBin,"NewHIST_ControlRegionFinBin")
-        
-        for aa in range(1,Histo_QCDQCDShape2DSSRelax.GetNbinsX()):
-            for bb in range(1,Histo_QCDQCDShape2DSSRelax.GetNbinsY()):
-                binValue = Histo_QCDQCDShape2DSSRelax.GetBinContent(aa,bb)
-                if binValue < 0: binValue=0
-                NewHIST_ControlRegionQCDShape2D.SetBinContent(aa,bb,binValue)
-
-        tDirectory.WriteObject(NewHIST_ControlRegionQCDShape2D,"NewHIST_ControlRegionQCDShape2D")
-
-
-    myOut.Close()
-
-       
-
 
 #############################################################################################################
-##   Calculating the Fake Rate and applying Fake Rate
+##   Calculating the Fake Rate and OS Over SS Fake Rate and applying Fake Rate
 #############################################################################################################
 
 def fitFunc_Exp3Par(x,par):
-    return par[0] + par[1] + ((par[2] * x[0]))
-def Func_Exp3Par(x,par0,par1,par2):
-    return par0 + par1 + ((par2 * x))
+    return par[0] + (par[1] * x[0])
+def Func_Exp3Par(x,par0,par1):
+    return par0 +  (par1 * x)
 
 # This fake rate is used for all Categories and channels but different for different eta range
-def MakeFakeRateHisto(CoMEnergy,etaRange):
-    NewFile = TFile("QCDTotalRootForLimit_"+ "mutau"+ etaRange+CoMEnergy+".root")
-    HistoNum = NewFile.Get("muTau_inclusive/QCDNumerator")
-    HistoDeNum = NewFile.Get("muTau_inclusive/QCDDenumerator")
-    for i in range(HistoDeNum.GetNbinsX()):
-            if verbosity_:  print HistoDeNum.GetBinContent(i+1) , HistoNum.GetBinContent(i+1)
-            ## CAVEAT   Here I have set the denum Value equal to Num Value in case it is smaller
-            if HistoDeNum.GetBinContent(i+1) < HistoNum.GetBinContent(i+1):
-                HistoDeNum.SetBinContent(i+1, 0)
-                HistoNum.SetBinContent(i+1, 0)
-#                HistoDeNum.SetBinContent(i+1, HistoNum.GetBinContent(i+1))
-    FRHisto=doRatio2D(HistoNum, HistoDeNum, 3)
-    canvas =TCanvas("canvas", "", 700, 500)
-    theFit=TF1("theFit", fitFunc_Exp3Par, 20, 200, 3)
+def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
+
+    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    catName= "_inclusive"
+    channelName="mutau"
+    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+
+    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_SS",etaRange)
+    HistoNum=ShapeNum.Get("XXX")
+    HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
+    HistoNum.Scale(1000/HistoNum.Integral())
+
+    ShapeDeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_SS_RelaxIso",etaRange)
+    HistoDeNum=ShapeDeNum.Get("XXX")
+    HistoDeNum= HistoDeNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
+    HistoDeNum.Scale(1000/HistoDeNum.Integral())
+
+    HistoNum.Divide(HistoDeNum)
+
+    canv = MakeCanvas("canv", "histograms", 600, 600)
+    HistoNum.SetMinimum(0.5)
+    HistoNum.GetXaxis().SetRangeUser(0,150)
+    HistoNum.GetYaxis().SetRangeUser(0,2)
+    HistoNum.SetMarkerStyle(20)
+    theFit=TF1("theFit", fitFunc_Exp3Par, 20, 150, 2)
     theFit.SetParameter(0, 0.6)
     theFit.SetParameter(1, 0.18)
-    theFit.SetParameter(2, -0.2)
-    FRHisto.Fit(theFit, "R0","")
-    FRHisto.Draw("PAE")
+    HistoNum.Fit(theFit, "R0","")
+    HistoNum.Draw("E1")
+    theFit.SetLineWidth(3)
+    theFit.SetLineColor(2)
     FitParam=theFit.GetParameters()
     theFit.Draw("SAME")
-    canvas.SaveAs("fitResults_"+"mutau"+CoMEnergy+etaRange+".pdf")
-    return  FitParam[0],FitParam[1],FitParam[2]
+    fitInfo  =TPaveText(.20,0.7,.60,0.9, "NDC");
+    fitInfo.SetBorderSize(   0 );
+    fitInfo.SetFillStyle(    0 );
+    fitInfo.SetTextAlign(   12 );
+    fitInfo.SetTextSize ( 0.03 );
+    fitInfo.SetTextColor(    1 );
+    fitInfo.SetTextFont (   62 );
+    fitInfo.AddText("Linear Fit=  " + str(round(FitParam[0],3))+" + "+str(round(FitParam[1],9))+"x")
+    fitInfo.Draw()
+    canv.SaveAs("fitResults_TauFR"+catName+channelName+etaRange+".pdf")
 
-def ReturnScaledReadyHisto(CoMEnergy, etaRange, categ, chl, postFix):
-    myOut = TFile("YieldShapeQCD" + CoMEnergy + ".root", 'RECREATE')
-    
-    fitParameters = MakeFakeRateHisto(CoMEnergy, etaRange)  # same for muTau and eTau
-    fitpar0 = fitParameters[0]
-    fitpar1 = fitParameters[1]
-    fitpar2 = fitParameters[2]
+    return  FitParam[0],FitParam[1]
 
-    MainRootFile = TFile("QCDTotalRootForLimit_" + channel[chl] + etaRange + CoMEnergy + ".root")
-    HistoCR = MainRootFile.Get(channelDirectory[chl] + Bcategory[categ] + "/NewHIST_ControlRegionQCDShape2D")
 
-    myOut.cd()
-    templateShape = TH1F("QCDShapeNorm", "", 1500, 0, 1500)
+# This fake rate is used for all Categories and channels but different for different eta range
+def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 
-    for bb in range(1500):
+    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    if catName=="_btag": catName="_btagLoose"
+    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
 
+    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
+    HistoNum=ShapeNum.Get("XXX")
+    HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
+
+    ShapeDeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_SS_RelaxIso","")
+    HistoDeNum=ShapeDeNum.Get("XXX")
+    HistoDeNum= HistoDeNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
+
+    HistoNum.Divide(HistoDeNum)
+
+    canv = MakeCanvas("canv", "histograms", 600, 600)
+    HistoNum.SetMinimum(0.5)
+    HistoNum.GetXaxis().SetRangeUser(0,150)
+    HistoNum.GetYaxis().SetRangeUser(0,2)
+    HistoNum.SetMarkerStyle(20)
+    theFit=TF1("theFit", fitFunc_Exp3Par, 20, 150, 2)
+    theFit.SetParameter(0, 0.6)
+    theFit.SetParameter(1, 0.18)
+    HistoNum.Fit(theFit, "R0","")
+    HistoNum.Draw("E1")
+    theFit.SetLineWidth(3)
+    theFit.SetLineColor(3)
+    FitParam=theFit.GetParameters()
+    theFit.Draw("SAME")
+    fitInfo  =TPaveText(.20,0.7,.60,0.9, "NDC");
+    fitInfo.SetBorderSize(   0 );
+    fitInfo.SetFillStyle(    0 );
+    fitInfo.SetTextAlign(   12 );
+    fitInfo.SetTextSize ( 0.03 );
+    fitInfo.SetTextColor(    1 );
+    fitInfo.SetTextFont (   62 );
+    fitInfo.AddText("Linear Fit=  " + str(round(FitParam[0],3))+" + "+str(round(FitParam[1],9))+"x")
+    fitInfo.Draw()
+    canv.SaveAs("fitResults_OSSS"+catName+channelName+".pdf")
+
+    return  FitParam[0],FitParam[1]
+
+
+#############################################################################################################
+##   Calculating the Fake Rate and applying Fake Rate  On Shape and Normalization
+#############################################################################################################
+def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelName, PostFix):
+
+    fitParametersOSSS = Make_OS_over_SS_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+    fitparOSSS0 = fitParametersOSSS[0]
+    fitparOSSS1 = fitParametersOSSS[1]
+
+    fitParameterstauFR = Make_Tau_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+    fitpartauFR0 = fitParameterstauFR[0]
+    fitpartauFR1 = fitParameterstauFR[1]
+
+
+    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,"_2DSVMassPt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
+    QCDShape_Hist=QCDShape_File.Get("XXX")
+
+    myOut = TFile("Extra/XXX.root","RECREATE")
+    templateShape = TH1F("XXX", "", high_bin, 0, high_bin)
+
+    for bb in range(high_bin):
         NormInPtBin = 0
-        for ss in range(300):
-            if postFix == "":   FakeRate = Func_Exp3Par(ss + 0.5, fitpar0, fitpar1, fitpar2)
-            if postFix == "Down":   FakeRate = 1
-            if postFix == "Up":   FakeRate = pow(Func_Exp3Par(ss + 0.5, fitpar0, fitpar1, fitpar2), 2)
-            NormInPtBin += FakeRate * HistoCR.GetBinContent(bb + 1, ss + 1)
+        for ss in range(high_bin):
+            fakeCorrection= 1
+            if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
+            if applyOS_SS_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
+            if PostFix == "":   FakeRate = fakeCorrection
+            if PostFix == "Down":   FakeRate = 1
+            if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
+            NormInPtBin += FakeRate * QCDShape_Hist.GetBinContent(bb + 1, ss + 1)
+            if NormInPtBin < 0 : NormInPtBin=0
         templateShape.SetBinContent(bb, NormInPtBin)
 
 
-#    # THis pasrt is needed for scaling the QCD to the peoper Normalization. ***Obsolet***
-#    XLoc= categ + len(Bcategory)*chl + 1
-#    FileNorm = TFile("Yield"+etaRange+CoMEnergy+".root")
-#    normHistio=FileNorm.Get("FullResultsSSIsoQCDNorm")
-#    NormQCDMC=0
-#    for i in range(6):
-#        print "Backgrounds to be subtracted from data", i, normHistio.GetBinContent(XLoc,i+1)
-#        NormQCDMC +=normHistio.GetBinContent(XLoc,i+1)
-#    FinalQCDEstimate=(normHistio.GetBinContent(XLoc,7)-NormQCDMC) * QCDScaleFactor
-#    templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
-    FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],"_QCDNorm_mTLess30_SS",etaRange)* QCDScaleFactor
-#    print "     @@@@@@@@@@@@   FinalQCDEstimate", FinalQCDEstimate
+    FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channelName,catName,"_SVMass_mTLess30_SS",etaRange)
     templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
-#    NewFinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channel[chl],Bcategory[categ],"_SVMass_mTLess30_SS","")* QCDScaleFactor
-#    print "     YYYYYYYYYYY   NewFinalQCDEstimate", NewFinalQCDEstimate
 
-    myOut.Write()
+    myOut.WriteObject(templateShape,"XXX")
     return myOut
 
-def GetFinalQCDShapeNorm():
+def ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, etaRange, catName, channelName, PostFix):
+
+    fitParametersOSSS = Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+    fitparOSSS0 = fitParametersOSSS[0]
+    fitparOSSS1 = fitParametersOSSS[1]
+
+
+    QCDNorm_File=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_2DSVMassPt_mTLess30_SS", "")
+    QCDNorm_Hist=QCDNorm_File.Get("XXX")
+
+
+    NormInPtBin = 0
+    for bb in range(high_bin):
+        for ss in range(high_bin):
+            fakeCorrection=  Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
+            if PostFix == "":   FakeRate = fakeCorrection
+            if PostFix == "Down":   FakeRate = 1
+            if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
+            NormInPtBin += FakeRate * QCDNorm_Hist.GetBinContent(bb + 1, ss + 1)
+
+    return NormInPtBin
+
+
+#############################################################################################################
+##   Finalizaoing and Creating the ROOT File inclusing QCD shape and norm
+#############################################################################################################
+
+def GetFinalQCDShapeNorm(Observable,CoMEnergy):
+
     FinalFile = TFile("QCDFinalFile.root", "RECREATE")
 
-    for categ in range(len(Bcategory)):
-#        for chl in range(1):
-        for chl in range(len(channel)):
-            for postFix in POSTFIX:
-                getFileBar=ReturnScaledReadyHisto("_8TeV","_Bar",categ,chl,postFix)
-                getFileCen=ReturnScaledReadyHisto("_8TeV","_Cen",categ,chl,postFix)
-                getFileEnd=ReturnScaledReadyHisto("_8TeV","_End",categ,chl,postFix)
+    for catName in Bcategory:
+        for channelName in channel:
+            for PostFix in POSTFIX:
 
-                HistoBar=getFileBar.Get("QCDShapeNorm")
-                HistoCen=getFileCen.Get("QCDShapeNorm")
-                HistoEnd=getFileEnd.Get("QCDShapeNorm")
+                getFileBar=ApplyCorrectionOnQCDShape(Observable,"_8TeV","_Bar",catName,channelName,PostFix)
+                getFileCen=ApplyCorrectionOnQCDShape(Observable,"_8TeV","_Cen",catName,channelName,PostFix)
+                getFileEnd=ApplyCorrectionOnQCDShape(Observable,"_8TeV","_End",catName,channelName,PostFix)
+
+                HistoBar=getFileBar.Get("XXX")
+                HistoCen=getFileCen.Get("XXX")
+                HistoEnd=getFileEnd.Get("XXX")
 
                 FinalFile.cd()
-                QCDShapeTotal =TH1F(channel[chl]+"_QCDShapeNormTotal"+Bcategory[categ]+postFix,"",1500,0,1500)
-                for bb in range(1500):
+                QCDShapeTotal =TH1F(channelName+"_QCDShapeNormTotal"+catName+PostFix,"",high_bin,0,high_bin)
+                for bb in range(high_bin):
                     QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
 
-                NewFinalQCDEstimate=GetNorm_QCD("","_8TeV",channel[chl],Bcategory[categ],"_SVMass_mTLess30_SS","")* QCDScaleFactor
+
+
+                if applyOSSSForQCDNorm: NewFinalQCDEstimate=ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, "", catName, channelName, "")
+                if apply106asScaleFactor: NewFinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channelName,catName,Observable+"_mTLess30_SS","")* QCDScaleFactor
+
                 QCDShapeTotal.Scale(NewFinalQCDEstimate/QCDShapeTotal.Integral())
+
                 FinalFile.Write()
-            
-            
+
+
+#############################################################################################################
+##   Run the Jobs
+#############################################################################################################
 if __name__ == "__main__":
-    MakeTheHistogram("","mutau","_SVMass","_8TeV",0,"_Bar")
-    MakeTheHistogram("","mutau","_SVMass","_8TeV",0,"_Cen")
-    MakeTheHistogram("","mutau","_SVMass","_8TeV",0,"_End")
-    MakeTheHistogram("","etau","_SVMass","_8TeV",1,"_Bar")
-    MakeTheHistogram("","etau","_SVMass","_8TeV",1,"_Cen")
-    MakeTheHistogram("","etau","_SVMass","_8TeV",1,"_End")
-    GetFinalQCDShapeNorm()
+    GetFinalQCDShapeNorm("_SVMass","_8TeV")
+
 
 
