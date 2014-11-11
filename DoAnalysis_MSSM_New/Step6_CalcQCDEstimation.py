@@ -258,6 +258,7 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     #################### Get QCD Shape from Data
     Data_ForqcdShape=getHistoShape_BG(PostFix,CoMEnergy, "Data",channelName,catLooseName,HistoName+etaRange)
     Data_ForqcdShapeHisto=Data_ForqcdShape.Get("XXX")
+    print "...........Data_ForqcdShapeHisto.Integral()....... ",  Data_ForqcdShapeHisto.Integral()
 
     #################### Subtract All BG from QCD
     if  VV_ForqcdShapeHisto:
@@ -394,7 +395,7 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
     fitpartauFR1 = fitParameterstauFR[1]
 
 
-    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,"_2DSVMassPt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
+    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,"_2DSVMassPt_LepAntiIso_mTLess30_OS_RelaxIso", etaRange)
     QCDShape_Hist=QCDShape_File.Get("XXX")
 
     myOut = TFile("Extra/XXX.root","RECREATE")
@@ -414,8 +415,8 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
         templateShape.SetBinContent(bb, NormInPtBin)
 
 
-    FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channelName,catName,"_SVMass_mTLess30_SS",etaRange)
-    templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
+#    FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channelName,catName,"_SVMass_mTLess30_SS",etaRange)
+#    templateShape.Scale(FinalQCDEstimate/templateShape.Integral())
 
     myOut.WriteObject(templateShape,"XXX")
     return myOut

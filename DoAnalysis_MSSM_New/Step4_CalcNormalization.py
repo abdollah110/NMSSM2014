@@ -53,7 +53,8 @@ def XSection(mX, CoMEnergy):
         if mX == 'ggH_SM125':      return 1.23
         if mX == 'qqH_SM125':      return 0.100
         if mX == 'VH_SM125':      return 0.077
-        if mX == 'TTEmbedded':      return 5.887
+        if mX == 'TTEmbeddedmutau':      return (5.887  * 771693/ 12011428)  # FIXME   This hsould be fixed
+        if mX == 'TTEmbeddedetau':      return (5.887  * 718441/ 12011428)  # FIXME   This hsould be fixed
 
 #        if mX == 'DYJetsToLL':  return 0.242 * 0.001
 #        if mX == 'DY1JetsToLL':  return  0.128* 0.001
@@ -111,12 +112,12 @@ def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
         valueEr = round(valueEr, digit)
     return value, valueEr
 
-def getEmbeddedWeight(PostFix,CoMEnergy,Name,chan,cat,Histogram):
-    myfileSub = TFile(SubRootDir + "out_"+Name+chan +CoMEnergy+ '.root') #need chan due to embedded name include MuTau
-    HistoInclusive = myfileSub.Get(chan+Histogram+ "_inclusive"+PostFix )
-    HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
-    value = HistoSub.Integral()/ HistoInclusive.Integral()
-    return value
+#def getEmbeddedWeight(PostFix,CoMEnergy,Name,chan,cat,Histogram):
+#    myfileSub = TFile(SubRootDir + "out_"+Name+chan +CoMEnergy+ '.root') #need chan due to embedded name include MuTau
+#    HistoInclusive = myfileSub.Get(chan+Histogram+ "_inclusive"+PostFix )
+#    HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
+#    value = HistoSub.Integral()/ HistoInclusive.Integral()
+#    return value
 
 def getEmbedToDYWeight(PostFix,CoMEnergy,chan,Histogram):
 
@@ -130,7 +131,7 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,Histogram):
     EmbedTT_Histo=EmbedTT_Files.Get(chan+Histogram+ "_inclusive"+PostFix)
     OriginFile_EmbedTT = TFile(InputFileLocation + "TTEmbedded"+chan+CoMEnergy+".root")
     HistoTotal = OriginFile_EmbedTT.Get("TotalEventsNumber")  # to get Total number of events  "MuTau_Multiplicity" + index[icat]
-    Normalization_EmbedTT= (EmbedTT_Histo.Integral()*luminosity(CoMEnergy) * XSection("TTEmbedded", CoMEnergy))/HistoTotal.Integral()
+    Normalization_EmbedTT= (EmbedTT_Histo.Integral()*luminosity(CoMEnergy) * XSection("TTEmbedded"+chan, CoMEnergy))/HistoTotal.Integral()
     OriginFile_EmbedTT.Close()
 
     #  Get Normalization from Embedded Data Sample in Inclusive
@@ -354,7 +355,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             Name="TTEmbedded"+channel[chl]
             Histogram = Observable+"_mTLess30_OS"
 
-            value=getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0] * XSection("TTEmbedded", CoMEnergy)
+            value=getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0] * XSection("TTEmbedded"+channel[chl], CoMEnergy)
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
 

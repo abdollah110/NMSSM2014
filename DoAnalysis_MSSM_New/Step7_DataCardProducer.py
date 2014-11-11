@@ -143,7 +143,7 @@ def _Return_W_Shape(channel,NameCat,CoMEnergy,PostFix,changeHistoName):
     NewHISTDown =TH1F("XXXDown","",high_bin,0,high_bin)
     WShapeFile = TFile(SubRootDir + "out_WJetsAll"+CoMEnergy+ '.root')
     if NameCat=="_btag" and changeHistoName : NameCat = "_btagLoose"
-    Histo = WShapeFile.Get(channel+"_Wshape2D_mTLess30_OS"+NameCat+PostFix)
+    Histo = WShapeFile.Get(channel+"_2DSVMassPt_W_mTLess30_OS_RelaxIso"+NameCat+PostFix)
 #    Histo = WShapeFile.Get(channel+"_Wshape2D_mTLess30_OS"+NameCat)  # FIXME
     for qq in range(high_bin):
         NormInPtBin=0
@@ -475,7 +475,8 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
                     SampleFile= _Return_QCD_Shape(channel,NameCat, Histogram,unc, TauScale[tscale],CoMEnergy)
                     SampleHisto=SampleFile.Get("XXX")
-                    RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                    RebinedHist= SampleHisto.Clone()
+                    RebinedHist.Rebin(len(BinCateg)-1,"",BinCateg)
                     tDirectory.WriteObject(RebinedHist,QCDUncertaintyNameFR(unc, channel, NameCat, CoMEnergy))
                     tDirectory.WriteObject(RebinedHist,QCDUncertaintyName(unc, channel, NameCat, CoMEnergy))
                     if doFineBinning:
