@@ -395,7 +395,7 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
     fitpartauFR1 = fitParameterstauFR[1]
 
 
-    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,"_2DSVMassPt_LepAntiIso_mTLess30_OS_RelaxIso", etaRange)
+    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,"_2DSVMassPt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
     QCDShape_Hist=QCDShape_File.Get("XXX")
 
     myOut = TFile("Extra/XXX.root","RECREATE")
