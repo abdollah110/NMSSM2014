@@ -52,12 +52,14 @@ TH2F* nplot2(string name) {
 void plotFill(string name, float x, int nx, float nxmin, float nxmax, double weight=1) {
     if (myMap1->find(name) == myMap1->end())
         (*myMap1)[name] = new TH1F(name.c_str(), name.c_str(), nx, nxmin, nxmax);
+    (*myMap1)[name]->SetDefaultSumw2();
     (*myMap1)[name]->Fill(x,weight);
 }
 
 void plotFill(string name, float x, float y, int nx, float nxmin, float nxmax, int ny, float nymin, float nymax, double weight=1) {
     if (myMap2->find(name) == myMap2->end())
         (*myMap2)[name] = new TH2F(name.c_str(), name.c_str(), nx, nxmin, nxmax, ny, nymin, nymax);
+    (*myMap2)[name]->SetDefaultSumw2();
     (*myMap2)[name]->Fill(x, y,weight);
 }
 //****************************************************
