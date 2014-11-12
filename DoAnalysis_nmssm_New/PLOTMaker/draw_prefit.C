@@ -114,6 +114,7 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
     //    const char * MMM = xTitle.c_str();
     //    hs.GetXaxis()->SetLabelSize(9);
     zero->Scale(0);
+//    zero->GetXaxis()->SetRangeUser(0,60);
     zero->GetXaxis()->SetTitle(xTitle.c_str());
     zero->SetMaximum(MaxY);
     zero->Draw();
@@ -156,6 +157,10 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
 }
 
 void draw_prefit() {
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_inclusive/", 1800, "m_{#tau#tau}[GeV]","PLOT_eleTau_inclusive_m");
+//    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_inclusive/", 4000, "m_{#tau#tau}[GeV]","PLOT_muTau_inclusive_m" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_btag/", 25, "m_{#tau#tau}[GeV]","PLOT_eleTau_btag_m");
+//    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_btag/", 45, "m_{#tau#tau}[GeV]","PLOT_muTau_btag_m" );
     draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_inclusive/", 18000, "m_{#tau#tau}[GeV]","PLOT_eleTau_inclusive_m");
     draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_inclusive/", 40000, "m_{#tau#tau}[GeV]","PLOT_muTau_inclusive_m" );
     draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_btag/", 250, "m_{#tau#tau}[GeV]","PLOT_eleTau_btag_m");

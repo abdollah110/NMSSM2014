@@ -77,7 +77,8 @@ channelDirectory = ["muTau", "eleTau"]
 #POSTFIX=[""]
 POSTFIX=["","Up","Down"]
 
-high_bin = 300
+MASS_BIN = 1500
+PT_BIN = 300
 digit = 3
 verbos_ = True
 QCDScaleFactor = 1.06
@@ -221,12 +222,12 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
 
     #Normalization for different background
-    VV_ForqcdNorm=GetNorm_BackGround("VV",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
-    TT_ForqcdNorm=GetNorm_BackGround("TT",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
-    ZL_ForqcdNorm=GetNorm_BackGround("ZL",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
-    ZJ_ForqcdNorm=GetNorm_BackGround("ZJ",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
-    ZTT_ForqcdNorm=GetNorm_BackGround("ZTT",PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
-    W_ForqcdNorm=GetNorm_W(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    VV_ForqcdNorm=GetNorm_BackGround("VV",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
+    TT_ForqcdNorm=GetNorm_BackGround("TT",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
+    ZL_ForqcdNorm=GetNorm_BackGround("ZL",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
+    ZJ_ForqcdNorm=GetNorm_BackGround("ZJ",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
+    ZTT_ForqcdNorm=GetNorm_BackGround("ZTT",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
+    W_ForqcdNorm=GetNorm_W(PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
 
 
     #Shape for different background Normalizaed to their corresponding Normalization
@@ -258,7 +259,6 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     #################### Get QCD Shape from Data
     Data_ForqcdShape=getHistoShape_BG(PostFix,CoMEnergy, "Data",channelName,catLooseName,HistoName+etaRange)
     Data_ForqcdShapeHisto=Data_ForqcdShape.Get("XXX")
-    print "...........Data_ForqcdShapeHisto.Integral()....... ",  Data_ForqcdShapeHisto.Integral()
 
     #################### Subtract All BG from QCD
     if  VV_ForqcdShapeHisto:
@@ -275,6 +275,9 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
         Data_ForqcdShapeHisto.Add(W_ForqcdShapeHisto,-1)
 
     #################### Return QCD Shape with Proper Normalization
+    QCDNorm= GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    Data_ForqcdShapeHisto.Scale(QCDNorm/Data_ForqcdShapeHisto.Integral())
+
     NewShapeForQCD=TFile("Extra/XXX.root","RECREATE")
     NewShapeForQCD.WriteObject(Data_ForqcdShapeHisto,"XXX")
     return NewShapeForQCD
@@ -399,11 +402,11 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
     QCDShape_Hist=QCDShape_File.Get("XXX")
 
     myOut = TFile("Extra/XXX.root","RECREATE")
-    templateShape = TH1F("XXX", "", high_bin, 0, high_bin)
+    templateShape = TH1F("XXX", "", MASS_BIN, 0, MASS_BIN)
 
-    for bb in range(high_bin):
+    for bb in range(MASS_BIN):
         NormInPtBin = 0
-        for ss in range(high_bin):
+        for ss in range(PT_BIN):
             fakeCorrection= 1
             if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
             if applyOS_SS_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
@@ -433,8 +436,8 @@ def ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, etaRange, catName, c
 
 
     NormInPtBin = 0
-    for bb in range(high_bin):
-        for ss in range(high_bin):
+    for bb in range(MASS_BIN):
+        for ss in range(PT_BIN):
             fakeCorrection=  Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
             if PostFix == "":   FakeRate = fakeCorrection
             if PostFix == "Down":   FakeRate = 1
@@ -465,8 +468,8 @@ def GetFinalQCDShapeNorm(Observable,CoMEnergy):
                 HistoEnd=getFileEnd.Get("XXX")
 
                 FinalFile.cd()
-                QCDShapeTotal =TH1F(channelName+"_QCDShapeNormTotal"+catName+PostFix,"",high_bin,0,high_bin)
-                for bb in range(high_bin):
+                QCDShapeTotal =TH1F(channelName+"_QCDShapeNormTotal"+catName+PostFix,"",MASS_BIN,0,MASS_BIN)
+                for bb in range(MASS_BIN):
                     QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
 
 

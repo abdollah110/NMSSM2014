@@ -95,7 +95,6 @@ def _Return_SigBGData_Shape(Name, channel,cat,HistoName,PostFix,CoMEnergy,change
     myfile = TFile(SubRootDir + "out_"+ Name +CoMEnergy+ '.root')
     if cat=="_btag" and changeHistoName : cat = "_btagLoose" 
     Histo =  myfile.Get(channel+HistoName + cat+ PostFix)
-#    NewFile=TFile("Extra/XXX2out_"+Name +CoMEnergy+channel+HistoName+ cat+PostFix+".root","RECREATE")
     NewFile=TFile("Extra/XXX.root","RECREATE")
     NewFile.WriteObject(Histo,"XXX")
     myfile.Close()
@@ -112,10 +111,8 @@ def _Return_Embed_Shape(Name, channel,cat,HistoName,PostFix,CoMEnergy,normal,nor
     if HistoTTEmbedded:
         HistoTTEmbedded.Scale(normalTT/HistoTTEmbedded.Integral())
         print "MC embed= ", HistoTTEmbedded.Integral()
-#        Histo.Add(HistoTTEmbedded,-1)
-        Histo.Add(HistoTTEmbedded,-0.333)  # FIXME   (Temp Soluction we need to consider 12 M TTEmbedded with no PU reweighting)
+        Histo.Add(HistoTTEmbedded,-1)
 
-#    NewFile=TFile("Extra/XXX2out_"+Name +CoMEnergy+channel+HistoName+ cat+PostFix+".root","RECREATE")
     NewFile=TFile("Extra/XXX.root","RECREATE")
     print "Final test embed= ", Histo.Integral()
     NewFile.WriteObject(Histo,"XXX")
@@ -129,14 +126,12 @@ def _Return_QCD_Shape(channel,cat,Histo,UncShape,PostFix,CoMEnergy):
     if cat=="_btag" : cat = "_btagLoose" 
     HistoShape =  myfile.Get(channel+Histo + cat+ UncShape+PostFix)
     HistoShape.Scale(HistoNorm.Integral()/HistoShape.Integral())
-#    NewFile=TFile("Extra/XXX2out_QCD" +CoMEnergy+channel+ cat+PostFix+".root","RECREATE")
     NewFile=TFile("Extra/XXX.root","RECREATE")
     NewFile.WriteObject(HistoShape,"XXX")
     myfile.Close()
     return NewFile
 
 def _Return_W_Shape(channel,NameCat,CoMEnergy,PostFix,changeHistoName):
-#    NewFile=TFile("Extra/XXX2out_W" +CoMEnergy+channel+ NameCat+PostFix+".root","RECREATE")
     NewFile=TFile("Extra/XXX.root","RECREATE")
     NewHIST =TH1F("XXX","",high_bin,0,high_bin)
     NewHISTUp =TH1F("XXXUp","",high_bin,0,high_bin)
@@ -144,7 +139,6 @@ def _Return_W_Shape(channel,NameCat,CoMEnergy,PostFix,changeHistoName):
     WShapeFile = TFile(SubRootDir + "out_WJetsAll"+CoMEnergy+ '.root')
     if NameCat=="_btag" and changeHistoName : NameCat = "_btagLoose"
     Histo = WShapeFile.Get(channel+"_2DSVMassPt_W_mTLess30_OS_RelaxIso"+NameCat+PostFix)
-#    Histo = WShapeFile.Get(channel+"_Wshape2D_mTLess30_OS"+NameCat)  # FIXME
     for qq in range(high_bin):
         NormInPtBin=0
         NormInPtBinUp=0
@@ -475,8 +469,8 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
                     SampleFile= _Return_QCD_Shape(channel,NameCat, Histogram,unc, TauScale[tscale],CoMEnergy)
                     SampleHisto=SampleFile.Get("XXX")
-                    RebinedHist= SampleHisto.Clone()
-                    RebinedHist.Rebin(len(BinCateg)-1,"",BinCateg)
+                    RebinedHist_= SampleHisto.Clone()
+                    RebinedHist=RebinedHist_.Rebin(len(BinCateg)-1,"",BinCateg)
                     tDirectory.WriteObject(RebinedHist,QCDUncertaintyNameFR(unc, channel, NameCat, CoMEnergy))
                     tDirectory.WriteObject(RebinedHist,QCDUncertaintyName(unc, channel, NameCat, CoMEnergy))
                     if doFineBinning:

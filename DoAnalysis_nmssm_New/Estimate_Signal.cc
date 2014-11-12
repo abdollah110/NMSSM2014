@@ -529,7 +529,7 @@ int main(int argc, char** argv) {
                                                                                 bool SignalSelection = (lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && zcat == 0 && Jetcat == 0 && etacat == 0);
                                                                                 bool ZLSelection = ((DYsample != string::npos) && lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && etacat == 0);
                                                                                 bool QCDShape = (tScalecat == 1);
-                                                                                bool PtForFR = (tScalecat == 1);
+                                                                                bool PtForFR = (tScalecat == 1 && SVMass < 100);  // FIXME   Just a test
                                                                                 bool WShape = ((Wsample != string::npos) && lepiso == 0 && qcat == 0 && mTcat == 0 && zcat == 0 && isocat == 1);
                                                                                 bool HiggsSelection = SignalSelection && (ggHiggsFind != string::npos || SMFind == string::npos);
                                                                                 //###################################################

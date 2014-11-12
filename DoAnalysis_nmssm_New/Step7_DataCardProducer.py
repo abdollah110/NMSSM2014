@@ -145,7 +145,7 @@ def _Return_W_Shape(channel,NameCat,Histogram,CoMEnergy,PostFix,changeHistoName)
     WShapeFile = TFile(SubRootDir + "out_WJetsAll"+CoMEnergy+ '.root')
     if NameCat=="_btag" and changeHistoName : NameCat = "_btagLoose"
     ############  FIXME   here I hava set PostFic to ""
-    PostFix=""
+#    PostFix=""
     ############  FIXME   here I hava set PostFic to ""
     Histo = WShapeFile.Get(channel+Histogram+NameCat+PostFix)
     for qq in range(high_bin):
@@ -410,7 +410,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             print "Doing W, BG estimation"
             tDirectory.cd()
 #            Histogram = Observable+"Wshape2D_mTLess30_OS"
-            Histogram = "_2DSVMassPt_mTLess30_OS_RelaxIso"
+            Histogram = "_2DSVMassPt_W_mTLess30_OS_RelaxIso"
             XLoc= icat + len(category)*chl + 1
             YLoc= lenghtSig + 6
             normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization Also for Uncertainties
