@@ -302,7 +302,8 @@ int main(int argc, char** argv) {
         ////###############   Tau Isolation  Categorization
         const int size_isoCat = 2;
         bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
-        bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+        bool RelaxIso = 1;
+//        bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5; // events are already passed the VLoose Selection
         bool Iso_category[size_isoCat] = {TightIso, RelaxIso};
         std::string iso_Cat[size_isoCat] = {"", "_RelaxIso"};
         ////###############   Lepton Isolation  Categorization

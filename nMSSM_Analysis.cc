@@ -1,7 +1,8 @@
 //    =======> Done  Add the spinor weight   16 October
-//   =====> Done high pT trigger bug  AddTriggerWeightMuTauBarrel"  ,"1 - 9.01280e-04*(x - 140)  October 17 Olivier
 //aaply correction for embeeded   [check embedded data ad MC]
-//   Run new sdamples   new TT samples,  HWW  ,   New lowMassDY1Jet     New tauPolar Off , new signal, full WJets_Inclusive
+//   Run new sdamples    HWW  ,   New lowMassDY1Jet     New tauPolar Off , new signal
+//   Add new VLooose WP
+
 
 
 
