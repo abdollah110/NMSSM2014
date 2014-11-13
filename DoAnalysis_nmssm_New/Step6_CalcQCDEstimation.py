@@ -350,7 +350,8 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     if catName=="_btag": catName="_btagLoose"
     ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
 
-    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
+#    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
+    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_SVMass_mTLess30_OS_RelaxIso","")
     HistoNum=ShapeNum.Get("XXX")
     HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
 

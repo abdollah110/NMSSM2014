@@ -1,3 +1,9 @@
+// Vhanges after the 13 Nov Meeting
+//Remov the Lepiso from SVMass
+//Lower muon ot to 18 GeV
+// Lower binning to 200 GeV
+// Adding noBtagNew and BTag new
+
 #include "interface/mssm_Tree.h"
 #include "interface/TTEmbedCor.h"
 //#include "../interface/zh_Tree.h"
@@ -210,12 +216,12 @@ int main(int argc, char** argv) {
     // Specific Cuts to be changed fro MSSM and nMSSM
     float cutonSVmass = 0;
     float cutonTaupt = 20;
-    int massBin = 300;
+    int massBin = 200;
     //    float cutonSVmass= 0;
     //    float cutonTaupt= 20;
     //    int massBin = 300;
     //###############################################################################################
-    int ptBin = 300;
+    int ptBin = 200;
     bool IsInCorrcetMassRange = true;
     bool verbose_ = false;
     int Event_Double[8][9];
@@ -255,13 +261,15 @@ int main(int argc, char** argv) {
         //        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_DoublebtagLoose};
         //        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_doublebtag"};
         //        ////###############   MSSM Categorization
-        const int size_mssmC = 4;
+        const int size_mssmC = 6;
         bool selection_inclusive = 1;
         bool selection_nobtag = nbtag < 1;
         bool selection_btag = nbtag > 0 && njets < 2;
         bool selection_btagLoose = nbtagLoose > 0 && njets < 2;
-        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
-        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
+        bool selection_nobtagNew = nbtag < 1 && l1Pt + l2Pt < 70;
+        bool selection_btagNew = nbtag > 0 && njets < 2 && l1Pt + l2Pt < 70;
+        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_nobtagNew, selection_btagNew};
+        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_nobtagNew", "_btagNew"};
 
         ////###############   Z Categorization
         int size_ZCat = 4;
@@ -303,7 +311,7 @@ int main(int argc, char** argv) {
         const int size_isoCat = 2;
         bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
         bool RelaxIso = 1;
-//        bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5; // events are already passed the VLoose Selection
+        //        bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5; // events are already passed the VLoose Selection
         bool Iso_category[size_isoCat] = {TightIso, RelaxIso};
         std::string iso_Cat[size_isoCat] = {"", "_RelaxIso"};
         ////###############   Lepton Isolation  Categorization
@@ -431,11 +439,11 @@ int main(int argc, char** argv) {
 
         //############ Full Reweighting
         float AllWeight = GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * EleTauFRWeight * TopPtReweighting;
-        if (verbose_) cout << GeneralReweighting <<" "<< tauESWeight <<" "<< embedWeight <<" "<< HiggsPtReweight[1] <<" "<< EleTauFRWeight <<" "<< TopPtReweighting<<"\n";
+        if (verbose_) cout << GeneralReweighting << " " << tauESWeight << " " << embedWeight << " " << HiggsPtReweight[1] << " " << EleTauFRWeight << " " << TopPtReweighting << "\n";
         //####################################################
         // Muon Selection
         //####################################################
-        bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
+        bool Mu_PtEta = l1Pt > 18 && fabs(l1Eta) < 2.1;
         bool Mu_IdTight = l1_muId_Tight;
         bool Mu_d0 = fabs(l1_d0) < 0.045; //the impact parameter in the transverse plane
         bool Mu_dZ = fabs(l1_dZ_in) < 0.2; //the impact parameter in the transverse plane
@@ -529,8 +537,8 @@ int main(int argc, char** argv) {
                                                                                 bool SignalSelection = (lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && zcat == 0 && Jetcat == 0 && etacat == 0);
                                                                                 bool ZLSelection = ((DYsample != string::npos) && lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && etacat == 0);
                                                                                 bool QCDShape = (tScalecat == 1);
-                                                                                bool PtForFR = (tScalecat == 1 && SVMass < 100);  // FIXME   Just a test
-//                                                                                bool PtForFR = (tScalecat == 1 );  // FIXME   Just a test
+                                                                                bool PtForFR = (tScalecat == 1 && SVMass < 100); // FIXME   Just a test
+                                                                                //                                                                                bool PtForFR = (tScalecat == 1 );  // FIXME   Just a test
                                                                                 bool WShape = ((Wsample != string::npos) && lepiso == 0 && qcat == 0 && mTcat == 0 && zcat == 0 && isocat == 1);
                                                                                 bool HiggsSelection = SignalSelection && (ggHiggsFind != string::npos || SMFind == string::npos);
                                                                                 //###################################################
@@ -539,7 +547,7 @@ int main(int argc, char** argv) {
                                                                                 //###################################################
                                                                                 //###################################################
                                                                                 if (MuTrgMatched && MU_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
-                                                                                    if (lepiso == 0 && etacat == 0) plotFill("mutau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                                    if (etacat == 0) plotFill("mutau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                                     if (QCDShape && qcat == 1) plotFill("mutau_2DSVMassPt" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                     if (WShape) plotFill("mutau_2DSVMassPt_W" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                     if (PtForFR) plotFill("mutau_TauPt" + FullStringName, l2Pt, ptBin, 0, ptBin, AllWeight);
@@ -559,7 +567,7 @@ int main(int argc, char** argv) {
                                                                                 //###################################################
                                                                                 //###################################################
                                                                                 if (EleTrgMatched && EL_CUTS && TAU_CUTS && (Event != Event_Double[2][2])) {
-                                                                                    if (lepiso == 0 && etacat == 0) plotFill("etau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                                    if (etacat == 0) plotFill("etau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                                     if (QCDShape && qcat == 1) plotFill("etau_2DSVMassPt" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                     if (WShape) plotFill("etau_2DSVMassPt_W" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                     if (PtForFR) plotFill("etau_TauPt" + FullStringName, l2Pt, ptBin, 0, ptBin, AllWeight);
