@@ -156,7 +156,8 @@ def MakePlost(HistoName):
     SetStyle()
     canv = MakeCanvas("canv", "histograms", 600, 600)
 
-    File_W_Cor=TFile("QCDFinalFile_WithOSSSCorrection.root")
+#    File_W_Cor=TFile("QCDFinalFile_WithOSSSCorrection.root")
+    File_W_Cor=TFile("QCDFinalFile_XXX.root")
     inclusive_mt_W_Cor=File_W_Cor.Get(HistoName)
     inclusive_mt_W_Cor_=inclusive_mt_W_Cor.Rebin(len(BinCateg)-1,"",BinCateg)
     inclusive_mt_W_Cor_.GetXaxis().SetRangeUser(0,200)
@@ -165,19 +166,19 @@ def MakePlost(HistoName):
     inclusive_mt_W_Cor_.SetMarkerColor(2)
     inclusive_mt_W_Cor_.SetLineColor(2)
 #    inclusive_mt_W_Cor_.Draw("PE")
-    inclusive_mt_W_Cor_.DrawNormalized("PE")
     print inclusive_mt_W_Cor_.Integral()
+    inclusive_mt_W_Cor_.DrawNormalized("PE")
 
-#    File_No_Cor=TFile("QCDFinalFile_NoOSSSCorrection.root")
-    File_No_Cor=TFile("QCDFinalFile_XXX.root")
+    File_No_Cor=TFile("QCDFinalFile_NoOSSSCorrection.root")
+#    File_No_Cor=TFile("QCDFinalFile_XXX.root")
     inclusive_mt_No_Cor=File_No_Cor.Get(HistoName)
     inclusive_mt_No_Cor_=inclusive_mt_No_Cor.Rebin(len(BinCateg)-1,"",BinCateg)
     inclusive_mt_No_Cor_.SetMarkerStyle(24)
     inclusive_mt_No_Cor_.SetMarkerColor(4)
     inclusive_mt_No_Cor_.SetLineColor(4)
 #    inclusive_mt_No_Cor_.Draw("SAMEPE")
-    inclusive_mt_No_Cor_.DrawNormalized("SAMEPE")
     print inclusive_mt_No_Cor_.Integral()
+    inclusive_mt_No_Cor_.DrawNormalized("SAMEPE")
 
 
     Leg=TLegend(0.62, 0.58, 0.92, 0.79)

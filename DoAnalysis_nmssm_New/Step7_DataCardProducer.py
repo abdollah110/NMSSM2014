@@ -44,16 +44,20 @@ ptBinning = 300
 FineBinVal=5
 digit = 3
 QCDScaleFactor = 1.06
+UpperRange = 200
 
-Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
-Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
+Binning_NoBTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,190,200,225,250,275,300])
+Binning_BTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,190,200,225,250,275,300])
+#Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
+#Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
 TauScale = ["Down", "", "Up"]
 POSTFIX=["","Up","Down"]
 
 signal = ['bba1GenFil_']
-signalName = ['bba1_']
+signalName = ['bba1']
 mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
+Other_BackGround = ['ZTT_lowMass']
 lenghtSig = len(signal) * len(mass) +1
 
 category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
@@ -235,6 +239,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                     SampleHisto=SampleFile.Get("XXX")
                     if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                     RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                    RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                     tDirectory.WriteObject(RebinedHist,NameOut)
                     
                    ###############  Systematics on Shape and Norm for Higgs Pt nad High Tau Pt   ####
@@ -250,6 +255,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                             SampleHisto=SampleFile.Get("XXX")
                             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                            RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                             tDirectory.WriteObject(RebinedHist,NameOut)
                             tDirectory.WriteObject(RebinedHist,NameOutScale) # This part need to get updated  FIXME
 
@@ -270,9 +276,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             SampleHisto=SampleFile.Get("XXX")
             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+            RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
             tDirectory.WriteObject(RebinedHist,NameOut)
             if doFineBinning:
                 RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                RebinedHistFinBin.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHistFinBin,NameOut+"_fine_binning")
                 
 
@@ -293,9 +301,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             SampleHisto=SampleFile.Get("XXX")
             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+            RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
             tDirectory.WriteObject(RebinedHist,NameOut)
             if doFineBinning:
                 RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                RebinedHistFinBin.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHistFinBin,NameOut+"_fine_binning")
 
 
@@ -311,12 +321,14 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(luminosity(CoMEnergy))
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHist,NamettbarUp)
 
                 SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, HistogramttbarDown, TauScale[tscale],CoMEnergy,False)
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(luminosity(CoMEnergy))
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHist,NamettbarDown)
 
             ################################################
@@ -336,9 +348,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             SampleHisto=SampleFile.Get("XXX")
             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+            RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
             tDirectory.WriteObject(RebinedHist,NameOut)
             if doFineBinning:
                 RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                RebinedHistFinBin.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHistFinBin,NameOut+"_fine_binning")
 
             #######   ZL Uncertainty   just for eleTau channel Basically ######################################################
@@ -353,12 +367,14 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())  # Same Normalization as ZL
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHist,NameOutZLUp)
 
                 SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, HistoZLScaleDown, TauScale[tscale],CoMEnergy,False)
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())  # Same Normalization as ZL
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHist,NameOutZLDown)
 
             ################################################
@@ -377,9 +393,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             SampleHisto=SampleFile.Get("XXX")
             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+            RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
             tDirectory.WriteObject(RebinedHist,NameOut)
             if doFineBinning:
                 RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                RebinedHistFinBin.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHistFinBin,NameOut+"_fine_binning")
 
             ################################################
@@ -399,9 +417,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             SampleFile= _Return_Embed_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,normal,normalTTEmbedded,False)
             SampleHisto=SampleFile.Get("XXX")
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+            RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
             tDirectory.WriteObject(RebinedHist,NameOut)
             if doFineBinning:
                 RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                RebinedHistFinBin.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHistFinBin,NameOut+"_fine_binning")
 
             ################################################
@@ -421,9 +441,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             SampleHisto=SampleFile.Get("XXX")
             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+            RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
             tDirectory.WriteObject(RebinedHist,NameOut)
             if doFineBinning:
                 RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                RebinedHistFinBin.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHistFinBin,NameOut+"_fine_binning")
 
             #######   W Shape Uncertainty  ######################################################
@@ -434,17 +456,21 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 SampleHisto=SampleFile.Get("XXXUp")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHist,NameOutUp)
                 if doFineBinning:
                     RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                    RebinedHistFinBin.GetXaxis().SetRangeUser(0,UpperRange)
                     tDirectory.WriteObject(RebinedHistFinBin,NameOutUp+"_fine_binning")
 
                 SampleHisto=SampleFile.Get("XXXDown")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHist,NameOutDown)
                 if doFineBinning:
                     RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                    RebinedHistFinBin.GetXaxis().SetRangeUser(0,UpperRange)
                     tDirectory.WriteObject(RebinedHistFinBin,NameOutDown+"_fine_binning")
 
             ################################################
@@ -461,10 +487,12 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                     SampleFile= _Return_QCD_Shape(channel,NameCat, Histogram,unc, TauScale[tscale],CoMEnergy)
                     SampleHisto=SampleFile.Get("XXX")
                     RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                    RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                     tDirectory.WriteObject(RebinedHist,QCDUncertaintyNameFR(unc, channel, NameCat, CoMEnergy))
                     tDirectory.WriteObject(RebinedHist,QCDUncertaintyName(unc, channel, NameCat, CoMEnergy))
                     if doFineBinning:
                         RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
+                        RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                         tDirectory.WriteObject(RebinedHistFinBin,QCDUncertaintyNameFR(unc, channel, NameCat, CoMEnergy)+"_fine_binning")
                         tDirectory.WriteObject(RebinedHistFinBin,QCDUncertaintyName(unc, channel, NameCat, CoMEnergy)+"_fine_binning")
 
@@ -483,8 +511,9 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
                 SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
                 SampleHisto=SampleFile.Get("XXX")
-                if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
+#                if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHist,NameOut)
 
             ################################################
@@ -505,11 +534,34 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
                 tDirectory.WriteObject(RebinedHist,NameOut)
                 tDirectory.WriteObject(RebinedHist,Name+"_CMS_eff_t_mssmHigh_mutau_8TeVUp")
                 tDirectory.WriteObject(RebinedHist,Name+"_CMS_eff_t_mssmHigh_mutau_8TeVDown")
                 tDirectory.WriteObject(RebinedHist,Name+"_CMS_htt_higgsPtReweightSM_8TeVUp")
                 tDirectory.WriteObject(RebinedHist,Name+"_CMS_htt_higgsPtReweightSM_8TeVDown")
+            ################################################
+            #  Filling SM Higgs 125 GeV
+            ################################################
+            print "Doing SM HIggs Background"
+            for OtherBG in range(len(Other_BackGround)):
+
+                tDirectory.cd()
+                Histogram = Observable+"_mTLess30_OS"
+                XLoc= icat + len(category)*chl + 1
+                YLoc= lenghtSig + 12 + OtherBG
+                normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization
+                Name= str(Other_BackGround[OtherBG])
+                NameOut= Name+str(TauScaleOut[tscale])
+
+                #FIXME   Due to the lack of statitics I get the shaoe from inclusive
+                NameCat= "_inclusive"
+                SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
+                SampleHisto=SampleFile.Get("XXX")
+                if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
+                RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                RebinedHist.GetXaxis().SetRangeUser(0,UpperRange)
+                tDirectory.WriteObject(RebinedHist,NameOut)
 
 
     myOut.Close()

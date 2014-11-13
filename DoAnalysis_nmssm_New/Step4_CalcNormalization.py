@@ -86,7 +86,8 @@ def XSection(mX, CoMEnergy):
 
 signal = ['bba1GenFil_']
 mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
-SMHiggs_BackGround = ['ZTT_lowMass','ggH_SM125', 'qqH_SM125', 'VH_SM125']
+SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
+Other_BackGround = ['ZTT_lowMass']
 
 #category = ["_inclusive"]
 category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
@@ -400,6 +401,27 @@ def make2DTable(Observable,PostFix,CoMEnergy):
                 XLoc= categ + len(category)*chl + 1
                 YLoc= lenghtSig + 9 + HiggsBG
                 Name= str(SMHiggs_BackGround[HiggsBG])
+
+                value = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0] * XSection(Name, CoMEnergy)
+                FullResults.SetBinContent(XLoc,YLoc , value)
+                FullResults.GetYaxis().SetBinLabel(YLoc, Name)
+
+                valueEr = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[1] * XSection(Name, CoMEnergy)
+                FullError.SetBinContent(XLoc , YLoc, valueEr)
+                FullError.GetYaxis().SetBinLabel(YLoc, Name)
+
+                print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr, "  Her is again", getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0]
+                if (verbos_): print "Processing ...   =", Name, " coordinate was=",XLoc,YLoc, "  and the value is=",value ,"+/-", valueEr
+        ##################################################################################################
+        #   Other Background  Estimation
+        ##################################################################################################
+            print "\nDoing Signal estimation in ", category[categ], channel[chl]
+            for OtherBG in range(len(Other_BackGround)):
+
+                Histogram = Observable+"_mTLess30_OS"
+                XLoc= categ + len(category)*chl + 1
+                YLoc= lenghtSig + 12 + OtherBG
+                Name= str(Other_BackGround[OtherBG])
 
                 value = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)[0] * XSection(Name, CoMEnergy)
                 FullResults.SetBinContent(XLoc,YLoc , value)

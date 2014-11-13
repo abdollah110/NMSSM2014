@@ -260,19 +260,19 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     Data_ForqcdShape=getHistoShape_BG(PostFix,CoMEnergy, "Data",channelName,catLooseName,HistoName+etaRange)
     Data_ForqcdShapeHisto=Data_ForqcdShape.Get("XXX")
 
-    #################### Subtract All BG from QCD
-#    if  VV_ForqcdShapeHisto:
-#        Data_ForqcdShapeHisto.Add(VV_ForqcdShapeHisto,-1)
-#    if  TT_ForqcdShapeHisto:
-#        Data_ForqcdShapeHisto.Add(TT_ForqcdShapeHisto,-1)
-#    if  ZL_ForqcdShapeHisto:
-#        Data_ForqcdShapeHisto.Add(ZL_ForqcdShapeHisto,-1)
-#    if  ZJ_ForqcdShapeHisto:
-#        Data_ForqcdShapeHisto.Add(ZJ_ForqcdShapeHisto,-1)
-#    if  ZTT_ForqcdShapeHisto:
-#        Data_ForqcdShapeHisto.Add(ZTT_ForqcdShapeHisto,-1)
-#    if  W_ForqcdShapeHisto:
-#        Data_ForqcdShapeHisto.Add(W_ForqcdShapeHisto,-1)
+    ################### Subtract All BG from QCD
+    if  VV_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(VV_ForqcdShapeHisto,-1)
+    if  TT_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(TT_ForqcdShapeHisto,-1)
+    if  ZL_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(ZL_ForqcdShapeHisto,-1)
+    if  ZJ_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(ZJ_ForqcdShapeHisto,-1)
+    if  ZTT_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(ZTT_ForqcdShapeHisto,-1)
+    if  W_ForqcdShapeHisto:
+        Data_ForqcdShapeHisto.Add(W_ForqcdShapeHisto,-1)
 
     #################### Return QCD Shape with Proper Normalization
     QCDNorm= GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
@@ -338,7 +338,7 @@ def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     fitInfo.SetTextColor(    2 );
     fitInfo.AddText("Chis quare=  " + str(round(theFit.GetChisquare(),2)))
     fitInfo.Draw()
-    canv.SaveAs("fitResults_TauFR"+catName+channelName+etaRange+".pdf")
+    canv.SaveAs("fitResults_Mass100_TauFR"+catName+channelName+etaRange+".pdf")
 
     return  FitParam[0],FitParam[1]
 
@@ -387,7 +387,7 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     fitInfo.SetTextColor(    2 );
     fitInfo.AddText("Chis quare=  " + str(round(theFit.GetChisquare(),2)))
     fitInfo.Draw()
-    canv.SaveAs("fitResults_OSSS"+catName+channelName+".pdf")
+    canv.SaveAs("fitResults_Mass100_OSSS"+catName+channelName+".pdf")
 
     return  FitParam[0],FitParam[1]
 
