@@ -430,7 +430,9 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             print "Doing W, BG estimation"
             tDirectory.cd()
 #            Histogram = Observable+"Wshape2D_mTLess30_OS"
-            Histogram = "_2DSVMassPt_W_mTLess30_OS_RelaxIso"
+            # FIXME replace the observable to SDOBservable
+            nowObs= Observable.replace("_","_2D")
+            Histogram = nowObs+"Pt_W_mTLess30_OS_RelaxIso"
             XLoc= icat + len(category)*chl + 1
             YLoc= lenghtSig + 6
             normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization Also for Uncertainties
@@ -555,8 +557,8 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 NameOut= Name+str(TauScaleOut[tscale])
 
                 #FIXME   Due to the lack of statitics I get the shaoe from inclusive
-                NameCat= "_inclusive"
-                SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
+#                NameCat= "_inclusive"
+                SampleFile= _Return_SigBGData_Shape(Name, channel,"_inclusive", Histogram, TauScale[tscale],CoMEnergy,False)
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)

@@ -208,9 +208,9 @@ int main(int argc, char** argv) {
     //Initial Requirements
     //###############################################################################################
     // Specific Cuts to be changed fro MSSM and nMSSM
-    float cutonSVmass = 50;
-    float cutonTaupt = 30;
-    int massBin = 1500;
+    float cutonSVmass = 0;
+    float cutonTaupt = 20;
+    int massBin = 300;
     //    float cutonSVmass= 0;
     //    float cutonTaupt= 20;
     //    int massBin = 300;
@@ -255,18 +255,13 @@ int main(int argc, char** argv) {
         //        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_DoublebtagLoose};
         //        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_doublebtag"};
         //        ////###############   MSSM Categorization
-        const int size_mssmC = 8;
+        const int size_mssmC = 4;
         bool selection_inclusive = 1;
-        bool selection_nobtag_low = nbtag < 1 && l2Pt > 30 && l2Pt < 45;
-        bool selection_nobtag_medium = nbtag < 1 && l2Pt > 45 && l2Pt < 60;
-        bool selection_nobtag_high = nbtag < 1 && l2Pt > 60;
-        bool selection_btag_low = nbtag > 0 && njets < 2 && l2Pt > 30 && l2Pt < 45;
-        bool selection_btag_high = nbtag > 0 && njets <2 && l2Pt > 45;
-        bool selection_btagLoose_low = nbtagLoose > 0 && njets < 2 && l2Pt > 30 && l2Pt < 45;
-        bool selection_btagLoose_high = nbtagLoose > 0 && njets < 2 && l2Pt > 45;
-
-        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag_low, selection_nobtag_medium, selection_nobtag_high, selection_btag_low, selection_btag_high, selection_btagLoose_low, selection_btagLoose_high};
-        std::string index[size_mssmC] = {"_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"};
+        bool selection_nobtag = nbtag < 1;
+        bool selection_btag = nbtag > 0 && njets < 2;
+        bool selection_btagLoose = nbtagLoose > 0 && njets < 2;
+        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose};
+        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose"};
 
         ////###############   Z Categorization
         int size_ZCat = 4;
@@ -307,7 +302,8 @@ int main(int argc, char** argv) {
         ////###############   Tau Isolation  Categorization
         const int size_isoCat = 2;
         bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
-        bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+        bool RelaxIso = 1;
+//        bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5; // events are already passed the VLoose Selection
         bool Iso_category[size_isoCat] = {TightIso, RelaxIso};
         std::string iso_Cat[size_isoCat] = {"", "_RelaxIso"};
         ////###############   Lepton Isolation  Categorization
@@ -342,11 +338,11 @@ int main(int argc, char** argv) {
 
         ////###############   tsu energy scale up and down  Categorization
         const int size_tscale = 3;
-        float scaleTau[size_tscale] = {-0.03, 0.0, 0.03}; //XXX change on 13 Nov due to pt Categorization
-        //        bool tauPtCutMinus = l2Pt * (1 + scaleTau[0]) > cutonTaupt;
-        //        bool tauPtCutNorm = l2Pt * (1 + scaleTau[1]) > cutonTaupt;
-        //        bool tauPtCutPlus = l2Pt * (1 + scaleTau[2]) > cutonTaupt;
-        bool TauScale[size_tscale] = {1, 1, 1};
+        float scaleTau[size_tscale] = {-0.03, 0.0, 0.03};
+        bool tauPtCutMinus = l2Pt * (1 + scaleTau[0]) > cutonTaupt;
+        bool tauPtCutNorm = l2Pt * (1 + scaleTau[1]) > cutonTaupt;
+        bool tauPtCutPlus = l2Pt * (1 + scaleTau[2]) > cutonTaupt;
+        bool TauScale[size_tscale] = {tauPtCutMinus, tauPtCutNorm, tauPtCutPlus};
         double SVMASS[size_tscale] = {SVMassDown, SVMass, SVMassUp};
         std::string TauScale_cat[size_tscale] = {"Down", "", "Up"};
 
@@ -435,7 +431,7 @@ int main(int argc, char** argv) {
 
         //############ Full Reweighting
         float AllWeight = GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * EleTauFRWeight * TopPtReweighting;
-        if (verbose_) cout << "AllWeight= " << AllWeight << "   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight=" << tauESWeight << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "\n";
+        if (verbose_) cout << GeneralReweighting <<" "<< tauESWeight <<" "<< embedWeight <<" "<< HiggsPtReweight[1] <<" "<< EleTauFRWeight <<" "<< TopPtReweighting<<"\n";
         //####################################################
         // Muon Selection
         //####################################################
@@ -533,7 +529,8 @@ int main(int argc, char** argv) {
                                                                                 bool SignalSelection = (lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && zcat == 0 && Jetcat == 0 && etacat == 0);
                                                                                 bool ZLSelection = ((DYsample != string::npos) && lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && etacat == 0);
                                                                                 bool QCDShape = (tScalecat == 1);
-                                                                                bool PtForFR = (tScalecat == 1);
+                                                                                bool PtForFR = (tScalecat == 1 && SVMass < 100);  // FIXME   Just a test
+//                                                                                bool PtForFR = (tScalecat == 1 );  // FIXME   Just a test
                                                                                 bool WShape = ((Wsample != string::npos) && lepiso == 0 && qcat == 0 && mTcat == 0 && zcat == 0 && isocat == 1);
                                                                                 bool HiggsSelection = SignalSelection && (ggHiggsFind != string::npos || SMFind == string::npos);
                                                                                 //###################################################

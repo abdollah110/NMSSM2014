@@ -406,7 +406,9 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
     fitpartauFR1 = fitParameterstauFR[1]
 
 
-    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,"_2DSVMassPt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
+    # FIXME replace the observable to SDOBservable
+    nowObs= Observable.replace("_","_2D")
+    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,nowObs+"Pt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
     QCDShape_Hist=QCDShape_File.Get("XXX")
 
     myOut = TFile("Extra/XXX.root","RECREATE")
@@ -439,7 +441,9 @@ def ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, etaRange, catName, c
     fitparOSSS1 = fitParametersOSSS[1]
 
 
-    QCDNorm_File=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_2DSVMassPt_mTLess30_SS", "")
+    # FIXME replace the observable to SDOBservable
+    nowObs= Observable.replace("_","_2D")
+    QCDNorm_File=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,nowObs+"Pt_mTLess30_SS", "")
     QCDNorm_Hist=QCDNorm_File.Get("XXX")
 
 

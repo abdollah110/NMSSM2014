@@ -97,11 +97,18 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
 
     TH1F* ZTT = (TH1F*) input->Get((channel + "ZTT").c_str());
     InitHist(ZTT, "", "", TColor::GetColor(248, 206, 104), 1001);
+
+    TH1F* ZTTLow = (TH1F*) input->Get((channel + "ZTT_lowMass").c_str());
+    InitHist(ZTTLow, "", "", TColor::GetColor(248, 206, 104), 1001);
+
+    ZTT->Add(ZTTLow);
+
     hs.Add(ZTT);
+    
 
     InitData(data);
 
-    TH1F* signal = (TH1F*) input->Get((channel + "bba1_50").c_str());
+    TH1F* signal = (TH1F*) input->Get((channel + "bba150").c_str());
     signal->Scale(10);
     InitSignal(signal);
     //    signal->SetFillColor(kGreen);
@@ -114,7 +121,7 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
     //    const char * MMM = xTitle.c_str();
     //    hs.GetXaxis()->SetLabelSize(9);
     zero->Scale(0);
-//    zero->GetXaxis()->SetRangeUser(0,60);
+    zero->GetXaxis()->SetRangeUser(0,60);
     zero->GetXaxis()->SetTitle(xTitle.c_str());
     zero->SetMaximum(MaxY);
     zero->Draw();
@@ -128,6 +135,11 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
     data->SetBinContent(6,0);
     data->SetBinContent(7,0);
     data->SetBinContent(8,0);
+    data->SetBinContent(9,0);
+    data->SetBinContent(10,0);
+    data->SetBinContent(11,0);
+    data->SetBinContent(12,0);
+    data->SetBinContent(13,0);
     data->Draw("PEsame");
 
 
@@ -137,7 +149,7 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
 
 
 
-    TLegend* leg = new TLegend(0.52, 0.58, 0.92, 0.89);
+    TLegend* leg = new TLegend(0.62, 0.58, 0.92, 0.89);
     SetLegendStyle(leg);
     leg->AddEntry(signal, TString::Format("a1(50 GeV)#rightarrow#tau#tau [XS= 10 bp]", SIGNAL_SCALE), "L");
 
@@ -150,21 +162,21 @@ void draw_prefit_Sample(std::string inputF, std::string channel, int MaxY, std::
     leg->AddEntry(QCD, "QCD", "F");
     leg->Draw();
 
-    //  canv ->Print(TString::Format("%s_%sscaled_%i_%s_%s.png"       , label, scaled ? "re" : "un", period, log ? "LOG" : "",  chargeSign.c_str()));
-    canv->Print(TString::Format( (nameHisto+".pdf").c_str()));
-    canv->Print(TString::Format( (nameHisto+".root").c_str()));
-    //  canv ->Print(TString::Format("%s_%sscaled_%i_%s_%s.eps"       , label, scaled ? "re" : "un", period, log ? "LOG" : "",  chargeSign.c_str()));
+//    canv->Print(TString::Format( (nameHisto+".pdf").c_str()));
+//    canv->Print(TString::Format( (nameHisto+".root").c_str()));
+    canv->Print(TString::Format( (nameHisto+"_Low_.pdf").c_str()));
+    canv->Print(TString::Format( (nameHisto+"_Low_.root").c_str()));
 }
 
 void draw_prefit() {
-//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_inclusive/", 1800, "m_{#tau#tau}[GeV]","PLOT_eleTau_inclusive_m");
-//    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_inclusive/", 4000, "m_{#tau#tau}[GeV]","PLOT_muTau_inclusive_m" );
-//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_btag/", 25, "m_{#tau#tau}[GeV]","PLOT_eleTau_btag_m");
-//    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_btag/", 45, "m_{#tau#tau}[GeV]","PLOT_muTau_btag_m" );
-    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_inclusive/", 18000, "m_{#tau#tau}[GeV]","PLOT_eleTau_inclusive_m");
-    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_inclusive/", 40000, "m_{#tau#tau}[GeV]","PLOT_muTau_inclusive_m" );
-    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_btag/", 250, "m_{#tau#tau}[GeV]","PLOT_eleTau_btag_m");
-    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_btag/", 450, "m_{#tau#tau}[GeV]","PLOT_muTau_btag_m" );
+    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_nobtag/", 1000, "m_{#tau#tau}[GeV]","PLOT_eleTau_nobtag_m");
+    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_nobtag/", 4000, "m_{#tau#tau}[GeV]","PLOT_muTau_nobtag_m" );
+    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_btag/", 25, "m_{#tau#tau}[GeV]","PLOT_eleTau_btag_m");
+    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_btag/", 45, "m_{#tau#tau}[GeV]","PLOT_muTau_btag_m" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_nobtag/", 18000, "m_{#tau#tau}[GeV]","PLOT_eleTau_nobtag_m");
+//    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_nobtag/", 40000, "m_{#tau#tau}[GeV]","PLOT_muTau_nobtag_m" );
+//    draw_prefit_Sample("TotalRootForLimit_etau_8TeV.root", "eleTau_btag/", 250, "m_{#tau#tau}[GeV]","PLOT_eleTau_btag_m");
+//    draw_prefit_Sample("TotalRootForLimit_muTau_8TeV.root", "muTau_btag/", 450, "m_{#tau#tau}[GeV]","PLOT_muTau_btag_m" );
 };
 
 
