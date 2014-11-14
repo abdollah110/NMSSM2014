@@ -76,6 +76,7 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 
 #category = ["_inclusive"]
 category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+#category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
 #category = ["_inclusive",  "_nobtag","_btag"]
 channel = ["mutau", "etau"]
 #channel = ["etau"]
@@ -172,8 +173,8 @@ def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 
 def make2DTable(Observable,PostFix,CoMEnergy):
     myOut = TFile("Yield"+CoMEnergy+PostFix+".root", 'RECREATE')
-    FullResults  = TH2F('FullResults', 'FullResults', 15, 0, 15, 60, 0, 60)
-    FullError  = TH2F('FullError', 'FullError', 15, 0, 15, 60, 0, 60)
+    FullResults  = TH2F('FullResults', 'FullResults', 16, 0, 16, 55, 0, 55)
+    FullError  = TH2F('FullError', 'FullError', 16, 0, 16, 55, 0, 55)
 
     for categ in range(len(category)):
         for chl in range(len(channel)):

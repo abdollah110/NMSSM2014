@@ -65,17 +65,18 @@ def luminosity(CoMEnergy):
     if CoMEnergy == '_7TeV': return  4982
 
 
-#Bcategory = ["_inclusive","_btag"]
-#Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"]
-Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-#Bcategory = ["_inclusive"]
-#Bcategory = [ "_btag"]
+#category = ["_inclusive","_btag"]
+#category = ["_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"]
+#category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+#category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
+category = ["_inclusive"]
+#category = [ "_btag"]
 #channel = ["mutau"]
-#channel = ["mutau"]
-channel = ["mutau", "etau"]
+channel = ["mutau"]
+#channel = ["mutau", "etau"]
 channelDirectory = ["muTau", "eleTau"]
-#POSTFIX=[""]
-POSTFIX=["","Up","Down"]
+POSTFIX=[""]
+#POSTFIX=["","Up","Down"]
 
 MASS_BIN = 1500
 PT_BIN = 300
@@ -191,7 +192,7 @@ def GetShape_W(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     DYIndex= ""
     Name= "WJetsAll"
     Name_Histo=HistoName+etaRange+DYIndex
-    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
 #    if catName=="_btag": catName="_btagLoose"
     W_EstimateShape= getHistoShape_BG(PostFix,CoMEnergy,Name, channelName,catName,Name_Histo)
     return W_EstimateShape
@@ -216,10 +217,10 @@ def GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
 
 def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
 
-    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
     catLooseName=catName
     if catName=="_btag": catLooseName="_btagLoose"
-    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
 
     #Normalization for different background
     VV_ForqcdNorm=GetNorm_BackGround("VV",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
@@ -294,10 +295,10 @@ def Func_Exp3Par(x,par0,par1):
 # This fake rate is used for all Categories and channels but different for different eta range
 def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 
-    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
     catName= "_inclusive"
     channelName="mutau"
-    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
 
     ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_SS",etaRange)
     HistoNum=ShapeNum.Get("XXX")
@@ -342,9 +343,9 @@ def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 # This fake rate is used for all Categories and channels but different for different eta range
 def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 
-    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
     if catName=="_btag": catName="_btagLoose"
-    ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
+    ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
 
     ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
     HistoNum=ShapeNum.Get("XXX")
@@ -455,7 +456,7 @@ def GetFinalQCDShapeNorm(Observable,CoMEnergy):
 
     FinalFile = TFile("QCDFinalFile.root", "RECREATE")
 
-    for catName in Bcategory:
+    for catName in category:
         for channelName in channel:
             for PostFix in POSTFIX:
 
@@ -489,4 +490,14 @@ if __name__ == "__main__":
     GetFinalQCDShapeNorm("_SVMass","_8TeV")
 
 
-
+#    for bb in range(MASS_BIN):
+#        for ss in range(PT_BIN):
+#            fakeCorrection= 1
+#            if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
+#            if applyOS_SS_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
+#            if PostFix == "":   FakeRate = fakeCorrection
+#            if PostFix == "Down":   FakeRate = 1
+#            if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
+#            NormInPtBin = FakeRate * QCDShape_Hist.GetBinContent(bb + 1, ss + 1)
+#            if NormInPtBin < 0 : NormInPtBin=0
+#            if NormInPtBin :templateShape.Fill(bb+1,NormInPtBin)

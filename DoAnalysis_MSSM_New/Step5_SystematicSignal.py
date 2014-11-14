@@ -46,7 +46,8 @@ mass = [80,90,  100, 110,  120, 130, 140,  160, 180, 200, 250, 300, 350, 400, 45
 
 
 
-category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+#category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
 channel = ["mutau", "etau"]
 
 high_bin = 1500

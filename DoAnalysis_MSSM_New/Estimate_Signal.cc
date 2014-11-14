@@ -256,7 +256,7 @@ int main(int argc, char** argv) {
         //        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_doublebtag"};
         //        ////###############   MSSM Categorization
         const int size_mssmC = 8;
-        bool selection_inclusive = 1;
+        bool selection_inclusive = l2Pt > 30;
         bool selection_nobtag_low = nbtag < 1 && l2Pt > 30 && l2Pt < 45;
         bool selection_nobtag_medium = nbtag < 1 && l2Pt > 45 && l2Pt < 60;
         bool selection_nobtag_high = nbtag < 1 && l2Pt > 60;
