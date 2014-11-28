@@ -68,15 +68,13 @@ def luminosity(CoMEnergy):
 #category = ["_inclusive","_btag"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-#category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
-category = ["_inclusive"]
+#category = ["_inclusive"]
 #category = [ "_btag"]
+category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
 #channel = ["mutau"]
-channel = ["mutau"]
-#channel = ["mutau", "etau"]
-channelDirectory = ["muTau", "eleTau"]
-POSTFIX=[""]
-#POSTFIX=["","Up","Down"]
+channel = ["mutau", "etau"]
+#POSTFIX=[""]
+POSTFIX=["","Up","Down"]
 
 MASS_BIN = 1500
 PT_BIN = 300
@@ -219,7 +217,8 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
 
     ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
     catLooseName=catName
-    if catName=="_btag": catLooseName="_btagLoose"
+    if catName=="_btag_low": catLooseName="_btagLoose_low"
+    if catName=="_btag_high": catLooseName="_btagLoose_high"
     ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
 
     #Normalization for different background
@@ -344,7 +343,9 @@ def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 
     ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
-    if catName=="_btag": catName="_btagLoose"
+#    if catName=="_btag": catName="_btagLoose"
+    if catName=="_btag_low": catLooseName="_btagLoose_low"
+    if catName=="_btag_high": catLooseName="_btagLoose_high"
     ##  ooooooooooooooooooooooooooo   category change name  ooooooooooooooooooooooooooo
 
     ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
@@ -390,13 +391,15 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 #############################################################################################################
 def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelName, PostFix):
 
-    fitParametersOSSS = Make_OS_over_SS_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
-    fitparOSSS0 = fitParametersOSSS[0]
-    fitparOSSS1 = fitParametersOSSS[1]
+    if applyOS_SS_Correction:
+        fitParametersOSSS = Make_OS_over_SS_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+        fitparOSSS0 = fitParametersOSSS[0]
+        fitparOSSS1 = fitParametersOSSS[1]
 
-    fitParameterstauFR = Make_Tau_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
-    fitpartauFR0 = fitParameterstauFR[0]
-    fitpartauFR1 = fitParameterstauFR[1]
+    if applyTauFR_Correction:
+        fitParameterstauFR = Make_Tau_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+        fitpartauFR0 = fitParameterstauFR[0]
+        fitpartauFR1 = fitParameterstauFR[1]
 
 
     QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,"_2DSVMassPt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
@@ -405,8 +408,22 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
     myOut = TFile("Extra/XXX.root","RECREATE")
     templateShape = TH1F("XXX", "", MASS_BIN, 0, MASS_BIN)
 
+#    for bb in range(MASS_BIN):
+#        NormInPtBin = 0
+#        for ss in range(PT_BIN):
+#            fakeCorrection= 1
+#            if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
+#            if applyOS_SS_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
+#            if PostFix == "":   FakeRate = fakeCorrection
+#            if PostFix == "Down":   FakeRate = 1
+#            if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
+#            NormInPtBin += FakeRate * QCDShape_Hist.GetBinContent(bb + 1, ss + 1)
+#            if NormInPtBin < 0 : NormInPtBin=0
+#        templateShape.SetBinContent(bb, NormInPtBin)
+
+
+
     for bb in range(MASS_BIN):
-        NormInPtBin = 0
         for ss in range(PT_BIN):
             fakeCorrection= 1
             if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
@@ -414,9 +431,10 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
             if PostFix == "":   FakeRate = fakeCorrection
             if PostFix == "Down":   FakeRate = 1
             if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
-            NormInPtBin += FakeRate * QCDShape_Hist.GetBinContent(bb + 1, ss + 1)
+            NormInPtBin = FakeRate * QCDShape_Hist.GetBinContent(bb + 1, ss + 1)
             if NormInPtBin < 0 : NormInPtBin=0
-        templateShape.SetBinContent(bb, NormInPtBin)
+            templateShape.SetDefaultSumw2()
+            if NormInPtBin: templateShape.Fill(bb,NormInPtBin)
 
 
 #    FinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channelName,catName,"_SVMass_mTLess30_SS",etaRange)
@@ -468,10 +486,13 @@ def GetFinalQCDShapeNorm(Observable,CoMEnergy):
                 HistoCen=getFileCen.Get("XXX")
                 HistoEnd=getFileEnd.Get("XXX")
 
-                FinalFile.cd()
-                QCDShapeTotal =TH1F(channelName+"_QCDShapeNormTotal"+catName+PostFix,"",MASS_BIN,0,MASS_BIN)
-                for bb in range(MASS_BIN):
-                    QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
+                QCDShapeTotal= HistoBar.Clone()
+                QCDShapeTotal.Add(HistoCen)
+                QCDShapeTotal.Add(HistoEnd)
+#                FinalFile.cd()
+#                QCDShapeTotal =TH1F(channelName+"_QCDShapeNormTotal"+catName+PostFix,"",MASS_BIN,0,MASS_BIN)
+#                for bb in range(MASS_BIN):
+#                    QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
 
 
 
@@ -480,7 +501,8 @@ def GetFinalQCDShapeNorm(Observable,CoMEnergy):
 
                 QCDShapeTotal.Scale(NewFinalQCDEstimate/QCDShapeTotal.Integral())
 
-                FinalFile.Write()
+                FinalFile.WriteObject(QCDShapeTotal,channelName+"_QCDShapeNormTotal"+catName+PostFix)
+#                FinalFile.Write()
 
 
 #############################################################################################################
@@ -490,14 +512,4 @@ if __name__ == "__main__":
     GetFinalQCDShapeNorm("_SVMass","_8TeV")
 
 
-#    for bb in range(MASS_BIN):
-#        for ss in range(PT_BIN):
-#            fakeCorrection= 1
-#            if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
-#            if applyOS_SS_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
-#            if PostFix == "":   FakeRate = fakeCorrection
-#            if PostFix == "Down":   FakeRate = 1
-#            if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
-#            NormInPtBin = FakeRate * QCDShape_Hist.GetBinContent(bb + 1, ss + 1)
-#            if NormInPtBin < 0 : NormInPtBin=0
-#            if NormInPtBin :templateShape.Fill(bb+1,NormInPtBin)
+

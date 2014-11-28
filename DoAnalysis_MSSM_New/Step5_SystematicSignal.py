@@ -72,7 +72,7 @@ def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 
 def makeSystematic2DTable(Observable,PostFix,CoMEnergy):
     myOut = TFile("Yield"+Observable+CoMEnergy+PostFix+".root", 'RECREATE')
-    FullResults  = TH2F('FullResults', 'FullResults', 15, 0, 15, 60, 0, 60)
+    FullResults  = TH2F('FullResults', 'FullResults', 16, 0, 16, 60, 0, 60)
 
     for categ in range(len(category)):
         for chl in range(len(channel)):

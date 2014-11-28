@@ -34,18 +34,18 @@ def luminosity(CoMEnergy):
 
 def XSection(mX, CoMEnergy):
     if CoMEnergy == '_8TeV':
-        if mX == '25':      return  0.0216
-        if mX == '30':      return  0.0315
-        if mX == '35':      return  0.0428
-        if mX == '40':      return  0.0607
-        if mX == '45':      return  0.0771
-        if mX == '50':      return  0.1014
-        if mX == '55':      return  0.1100
-        if mX == '60':      return  0.1439
-        if mX == '65':      return  0.1636
-        if mX == '70':      return  0.1819
-        if mX == '75':      return  0.2019
-        if mX == '80':      return  0.2178
+        if mX == '25':      return  0.02179
+        if mX == '30':      return  0.03182
+        if mX == '35':      return  0.04325
+        if mX == '40':      return  0.05952
+        if mX == '45':      return  0.07875
+        if mX == '50':      return  0.10080
+        if mX == '55':      return  0.11808
+        if mX == '60':      return  0.14300
+        if mX == '65':      return  0.16048
+        if mX == '70':      return  0.18227
+        if mX == '75':      return  0.20248
+        if mX == '80':      return  0.21765
 
 #        if mX == 'signal':      return 1.
 
@@ -90,7 +90,7 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 Other_BackGround = ['ZTT_lowMass']
 
 #category = ["_inclusive"]
-category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+category = ["_inclusive", "_nobtag", "_btag", "_btagLoose", "_nobtagNew", "_btagNew"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"]
 #category = ["_inclusive",  "_nobtag","_btag"]
 channel = ["mutau", "etau"]
@@ -188,8 +188,8 @@ def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 
 def make2DTable(Observable,PostFix,CoMEnergy):
     myOut = TFile("Yield"+CoMEnergy+PostFix+".root", 'RECREATE')
-    FullResults  = TH2F('FullResults', 'FullResults', 10, 0, 10, 30, 0, 30)
-    FullError  = TH2F('FullError', 'FullError', 10, 0, 10, 30, 0, 30)
+    FullResults  = TH2F('FullResults', 'FullResults', 14, 0, 14, 30, 0, 30)
+    FullError  = TH2F('FullError', 'FullError', 14, 0, 14, 30, 0, 30)
 
     for categ in range(len(category)):
         for chl in range(len(channel)):

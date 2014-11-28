@@ -46,14 +46,8 @@ digit = 3
 QCDScaleFactor = 1.06
 UpperRange = 200
 
-#Binning_NoBTag = array.array("d",[0,7,14,21, 28, 35, 42, 49, 60,70,80,90,100,110,120,130,140,160,180,200])
-#Binning_BTag = array.array("d",[0,7,14,21, 28, 35, 42, 49, 60,70,80,90,100,110,120,130,140,160,180,200])
-#Binning_NoBTag = array.array("d",[0,6,12,18,24,30,36,42,48,54,60,70,80,90,100,110,120,130,140,160,180,200])
-#Binning_BTag = array.array("d",[0,6,12,18,24,30,36,42,48,54,60,70,80,90,100,110,120,130,140,160,180,200])
-#Binning_NoBTag = array.array("d",[0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,54,60,70,80,90,100,110,120,130,140,160,180,190,200])
-#Binning_BTag = array.array("d",[0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,54,60,70,80,90,100,110,120,130,140,160,180,190,200])
-Binning_NoBTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,200])
-Binning_BTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,200])
+Binning_NoBTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,190,200])
+Binning_BTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,190,200])
 #Binning_NoBTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
 #Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
 TauScale = ["Down", "", "Up"]
@@ -216,15 +210,23 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
     Signal_Unc_OutScale = ["_CMS_htt_higgsPtReweight_scale"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight_scale"+CoMEnergy+"Down","_CMS_htt_higgsPtReweight_scaletest"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight_scaletest"+CoMEnergy+"Down"]
 
 #    TH1.AddDirectory(0)
-    myOut = TFile("TotalRootForLimit_"+channel + CoMEnergy+".root" , 'RECREATE') # Name Of the output file
+    myOut = TFile("NewTotalRootForLimit_"+channel + CoMEnergy+".root" , 'RECREATE') # Name Of the output file
 
+    
     icat=-1
     for NameCat in category:
+        #######   This part is to change the directory to let measuring the limit very easily
+        if NameCat=="_nobtag" : NameCatChanged="_nobtagNotBeUsed"
+        elif NameCat=="_btag" : NameCatChanged="_btagNotBeUsed"
+        elif NameCat=="_nobtagNew" : NameCatChanged="_nobtag"
+        elif NameCat=="_btagNew" : NameCatChanged="_btag"
+        else : NameCatChanged = NameCat
+        
         icat =icat +1
         print "starting NameCat and channel", NameCat, channel
         if NameCat=="_nobtag" or NameCat=="_inclusive"  : BinCateg = Binning_NoBTag
         if NameCat=="_btag" or   NameCat == "_btagLoose": BinCateg = Binning_BTag
-        tDirectory= myOut.mkdir(channelDirectory[chl] + str(NameCat))
+        tDirectory= myOut.mkdir(channelDirectory[chl] + str(NameCatChanged))
         tDirectory.cd()
         for tscale in range(len(TauScale)):
 

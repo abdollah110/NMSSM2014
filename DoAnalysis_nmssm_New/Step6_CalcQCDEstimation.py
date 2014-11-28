@@ -66,8 +66,8 @@ def luminosity(CoMEnergy):
 
 
 #Bcategory = ["_inclusive","_btag"]
-#Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"]
-Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
+Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose", "_nobtagNew", "_btagNew"]
+#Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
 #Bcategory = ["_inclusive"]
 #Bcategory = [ "_btag"]
 #channel = ["mutau"]
@@ -77,14 +77,14 @@ channelDirectory = ["muTau", "eleTau"]
 #POSTFIX=[""]
 POSTFIX=["","Up","Down"]
 
-MASS_BIN = 300
-PT_BIN = 300
+MASS_BIN = 200
+PT_BIN = 200
 digit = 3
 verbos_ = True
 QCDScaleFactor = 1.06
 #Binning_PT = array.array("d",[0,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300])
 #Binning_PT = array.array("d",[0,20,25,30,35,40,45,50,60,70,80,90,100,120,140,160,180,200,250,300])
-Binning_PT = array.array("d",[0,20,25,30,35,40,50,70,100,150,300])
+Binning_PT = array.array("d",[0,20,25,30,35,40,50,70,100,150,200])
 
 def doRatio2D(num, denum, marColor):
     ratio = ROOT.TGraphAsymmErrors(num, denum, "")
@@ -241,8 +241,8 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
         TT_ForqcdShapeHisto.Scale(TT_ForqcdNorm/TT_ForqcdShapeHisto.Integral())
     ZL_ForqcdShape=GetShape_BackGround("ZL",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
     ZL_ForqcdShapeHisto=ZL_ForqcdShape.Get("XXX")
-    if (ZL_ForqcdShapeHisto) :
-        ZL_ForqcdShapeHisto.Scale(ZL_ForqcdNorm/ZL_ForqcdShapeHisto.Integral())
+    #if (ZL_ForqcdShapeHisto) :  FIXME
+    #    ZL_ForqcdShapeHisto.Scale(ZL_ForqcdNorm/ZL_ForqcdShapeHisto.Integral())
     ZJ_ForqcdShape=GetShape_BackGround("ZJ",PostFix,CoMEnergy,channelName,catLooseName,HistoName,etaRange)
     ZJ_ForqcdShapeHisto=ZJ_ForqcdShape.Get("XXX")
     if (ZJ_ForqcdShapeHisto) :
@@ -350,8 +350,8 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     if catName=="_btag": catName="_btagLoose"
     ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
 
-#    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
-    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_SVMass_mTLess30_OS_RelaxIso","")
+    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
+#    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_SVMass_mTLess30_OS_RelaxIso","")
     HistoNum=ShapeNum.Get("XXX")
     HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
 

@@ -209,6 +209,10 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("l2_tauIsoMVAraw3newDMwoLTraw", &l2_tauIsoMVAraw3newDMwoLTraw);
     Run_Tree->SetBranchAddress("l2_tauIsoMVAraw3oldDMwLTraw", &l2_tauIsoMVAraw3oldDMwLTraw);
     Run_Tree->SetBranchAddress("l2_tauIsoMVAraw3oldDMwoLTraw", &l2_tauIsoMVAraw3oldDMwoLTraw);
+    
+    Run_Tree->SetBranchAddress("njetsCen", &njetsCen);
+Run_Tree->SetBranchAddress("njetsFwd", &njetsFwd);
+Run_Tree->SetBranchAddress("nbtag30", &nbtag30);
 
     //###############################################################################################
     //Initial Requirements
@@ -251,15 +255,20 @@ int main(int argc, char** argv) {
         //  CATEGORIZATION
         //###############################################################################################
 
-        ////###############   New NMSSM Categorization
-        //        const int size_mssmC = 5;
-        //        bool selection_inclusive = 1;
-        //        bool selection_nobtag = nbtag < 1;
-        //        bool selection_btag = nbtag > 0 && njets < 2 && nbtag < 2;
-        //        bool selection_btagLoose = nbtagLoose > 0 && njets < 2;
-        //        bool selection_DoublebtagLoose = nbtag > 1 && njets < 3;
-        //        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_DoublebtagLoose};
-        //        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_doublebtag"};
+        ////###############   New NMSSM Categorization Sasha
+                const int size_mssmC = 4;
+//                bool selection_inclusive = 1;
+//                bool selection_nobtag = nbtag < 1;
+                bool selection_btag = nbtag30 > 0 ;
+//                cout<<"njectCen "<<njetsCen<<"\n";
+                bool selection_btagNoCenJet = nbtag30 > 0  && njetsCen< 2;
+                bool selection_btagNoCenJetWithFwdJet = nbtag30 > 0  && njetsCen< 2 && njetsFwd > 0;
+                bool selection_btagNoCenJetNoFwdJet = nbtag30 > 0  && njetsCen< 2 && njetsFwd < 1;
+//                bool selection_DoublebtagLoose = nbtag > 1 && njets < 3;
+                bool MSSM_Category[size_mssmC] = { selection_btag,selection_btagNoCenJet,selection_btagNoCenJetWithFwdJet,selection_btagNoCenJetNoFwdJet};
+                std::string index[size_mssmC] = { "_btag","_btagNoCenJet", "_btagNoCenJetWithFwdJet","_btagNoCenJetNoFwdJet"};
+//                bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_DoublebtagLoose};
+//                std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_doublebtag"};
         //        ////###############   MSSM Categorization
       //  const int size_mssmC = 6;
       //  bool selection_inclusive = 1;
@@ -270,17 +279,17 @@ int main(int argc, char** argv) {
       //  bool selection_btagNew = nbtag > 0 && njets < 2 && l1Pt + l2Pt < 70;
       //  bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_nobtagNew, selection_btagNew};
       //  std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_nobtagNew", "_btagNew"};
-	float LT = l1Pt + l2Pt +met;
-//	if (Channel==3) LT = l1Pt + l2Pt + met -10;
-        const int size_mssmC = 6;
-        bool selection_inclusive = 1;
-        bool selection_nobtag = nbtag < 1;
-        bool selection_btag = nbtag > 0 ;
-        bool selection_btagLoose = nbtagLoose > 0 ;
-        bool selection_nobtagNew = nbtag < 1 && LT < 100;
-        bool selection_btagNew = nbtag > 0 &&  LT < 100;
-        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_nobtagNew, selection_btagNew};
-        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_nobtagNew", "_btagNew"};
+//	float LT = l1Pt + l2Pt;
+//	if (Channel==3) LT = l1Pt + l2Pt -10;
+//        const int size_mssmC = 6;
+//        bool selection_inclusive = 1;
+//        bool selection_nobtag = nbtag < 1;
+//        bool selection_btag = nbtag > 0 ;
+//        bool selection_btagLoose = nbtagLoose > 0 ;
+//        bool selection_nobtagNew = nbtag < 1 && l1Pt + l2Pt < 70;
+//        bool selection_btagNew = nbtag > 0 &&  l1Pt + l2Pt < 70;
+//        bool MSSM_Category[size_mssmC] = {selection_inclusive, selection_nobtag, selection_btag, selection_btagLoose, selection_nobtagNew, selection_btagNew};
+//        std::string index[size_mssmC] = {"_inclusive", "_nobtag", "_btag", "_btagLoose", "_nobtagNew", "_btagNew"};
 
         ////###############   Z Categorization
         int size_ZCat = 4;
@@ -482,40 +491,16 @@ int main(int argc, char** argv) {
         //bool Tau_Isolation = byCombinedIsolationDeltaBetaCorrRaw3Hits_2 < 1.5;
         //        bool Tau_Isolation = l2_TighttauIsoMVA3oldDMwLT > 0.5;
         //bool Tau_Isolation = l2_tauIsoMVA2T > 0.5;
-//        bool Tau_antiEl = 1; //applied at the level of tree Making
+        bool Tau_antiEl = 1; //applied at the level of tree Making
         bool Tau_antiMu = 1; //applied at the level of tree Making
         //bool Tau_antiEl = l2_tauRejEleL;
-        bool Tau_antiEl = (Channel ==3 ? 1 : l2_tauRejEleMVA3L);
+        //bool Tau_antiMu = l2_tauRejMu3L;
         //bool Tau_antiMu = l2_tauRejMu2T;
         bool TauVtxdZ = fabs(Tau_Vertex_dz) < 0.2;
-        bool TAU_CUTS =Tau_antiMu &&  SVMass > cutonSVmass && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
+        bool TAU_CUTS = SVMass > cutonSVmass && IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
 
         //########################################################################################################
-        // Here we measure the pzeta cut to kill ttbar and WJet
-        float Px_1_Unity= l1Px/l1Pt;
-        float py_1_Unity= l1Py/l1Pt;
-        float Px_2_Unity= l2Px/l2Pt;
-        float py_2_Unity= l2Py/l2Pt;
-        float zeta_dir_x = Px_1_Unity + Px_2_Unity;
-        float zeta_dir_y = py_1_Unity + py_2_Unity;
-        float zetaTotal = sqrt(pow(zeta_dir_x,2)+pow(zeta_dir_y,2));
-        float angle_zeta_x = zeta_dir_x/zetaTotal;
-        float angle_zeta_y =zeta_dir_y / zetaTotal;
-        //cout<<"angle_zeta_x="<< angle_zeta_x <<  "     angle_zeta_y="<<angle_zeta_y<<   "   &&& Final zeta=" <<  pow(angle_zeta_x,2) + pow(angle_zeta_y,2) <<"\n";
-        
-        float PZeta_X = (l1Px + l2Px + met* cos(metphi) ) *angle_zeta_x;
-        float PZeta_Y = (l1Py + l2Py + met* sin(metphi) ) *angle_zeta_y;
-        float PZeta_Total = PZeta_X +PZeta_Y;
-        
-        float PZeta_X_Vis = (l1Px + l2Px ) *angle_zeta_x;
-        float PZeta_Y_Vis = (l1Py + l2Py  ) *angle_zeta_y;
-        float PZeta_Vis_Total = PZeta_X_Vis + PZeta_Y_Vis;
-        
-        float alpha= 1.85;
-        float P_ZETA_Var =  PZeta_Total - alpha * PZeta_Vis_Total;
-        
-                //########################################################################################################
         //test Data Categories
 
         //        int evenrList[40] = {103973225, 104420828, 106034910, 105660180, 106974476, 107092579, 108055243, 108396438, 108412892, 150562091, 152046510, 152847565, 152909050, 153063537, 153791799, 153918798, 39336845, 41209032, 41846823, 41850867, 43308698, 43246086, 56053990, 56782039, 58949867, 58715990, 58991357, 61799085, 61729268, 76680099, 79031407, 79231016, 78988784, 78601443, 79378433, 81225657, 84970796, 98546954, 100282678, 101178061};
@@ -583,8 +568,6 @@ int main(int argc, char** argv) {
                                                                                 //###################################################
                                                                                 if (MuTrgMatched && MU_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
                                                                                     if (etacat == 0) plotFill("mutau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
-                                                                                  //  if (etacat == 0) plotFill("mutau_PZeta" + FullStringName, P_ZETA_Var, 400, -200, 200, AllWeight);
-                                                                                  //  if (etacat == 0) plotFill("mutau_TMass" + Lepiso_Cat[lepiso]  + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat], mT, 300, 0, 300, AllWeight);
                                                                                     if (QCDShape && qcat == 1) plotFill("mutau_2DSVMassPt" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                     if (WShape) plotFill("mutau_2DSVMassPt_W" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                     if (PtForFR) plotFill("mutau_TauPt" + FullStringName, l2Pt, ptBin, 0, ptBin, AllWeight);
