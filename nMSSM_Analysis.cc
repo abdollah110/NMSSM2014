@@ -341,7 +341,7 @@ int main(int argc, char** argv) {
         // running over the root files
         for (int i = 0; i < nev; i++) {
             rootTree->GetEvent(i);
-            if (i % 100 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
+            if (i % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
             fflush(stdout);
 
             //*********************************************************************************************
@@ -352,10 +352,10 @@ int main(int argc, char** argv) {
             vector<myobject> tau_ = GoodTau20GeV(m);
 
             //#################################################################################################
-            bool doMuTauAnalysis = 1;
-            bool doElTauAnalysis = 0;
-//            bool doMuTauAnalysis = true;
-//            bool doElTauAnalysis = true;
+//            bool doMuTauAnalysis = 1;
+//            bool doElTauAnalysis = 0;
+            bool doMuTauAnalysis = true;
+            bool doElTauAnalysis = true;
             //#################################################################################################
             size_t eleTauEmbed = fileNames[k].find("PFembedded_ETau");
             if (eleTauEmbed != string::npos) doMuTauAnalysis = false;
