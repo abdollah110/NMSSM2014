@@ -76,8 +76,8 @@ int main(int argc, char** argv) {
 
     //    string CHANNEL = *(argv + 2);
 
-    bool isMu = 1;
-    bool isEle = 0;
+    bool isMu = 0;
+    bool isEle = 1;
     bool isTot = 0;
 
     string out = *(argv + 2);
@@ -338,8 +338,10 @@ int main(int argc, char** argv) {
                 fprintf(stdout, "\n");
             }
             fflush(stdout);
-
-
+            if (m->eventNumber == 64981240){
+//            if (1){
+            cout<<"\n-----------------------\n";
+            cout << "Lumi is    " << m->lumiNumber << "    and Event is " << m->eventNumber << "\n";
             //*********************************************************************************************
             //****************************    Object definitions    ***************************************
             //*********************************************************************************************
@@ -377,7 +379,7 @@ int main(int argc, char** argv) {
                 plotFill("TotalEventsNumber", 0, 1, 0, 1);
                 plotFill("mutau", ++mutau, 20, 0., 20.);
 
-                
+
                 for (int i = 0; i < mu_.size(); i++) {
                     for (int k = 0; k < tau_.size(); k++) {
 
@@ -437,7 +439,7 @@ int main(int argc, char** argv) {
                             //                            cout << "   PU_Weight _OLD= " << PU_Weight << "   PU_Weight _New=" << m->PU_Weight << "   npu=" << npu << "\n";
                             //                            cout << "   erightLepton_id_iso= " << idweight_1 << "   lepton_trg_Weight=" << trigweight_1 << "   tau_Trg_Weight=" << trigweight_2 << "\n\n\n\n";
 
-                            break;
+//                            break;
                         }
                     }
                 }
@@ -446,8 +448,15 @@ int main(int argc, char** argv) {
             //#################################################################################################
             //#######################  EleTau Selection #######################
             //#################################################################################################
-            //#################################################################################################
-            if (isEle || isTot) {
+            //            #################################################################################################
+            if ((isEle || isTot)) {
+                //            if ((isEle || isTot) && m->eventNumber==27460205) {
+                //            if ((isEle || isTot) && m->eventNumber==55417347) {
+                //            if ((isEle || isTot) && m->eventNumber==40127711) {
+                //                cout<<"number of tau  "<<tau_.size()<<"\n";
+                //                cout<<"number of tau  "<<tau_[0].pt<<"\n";
+                //                cout<<"number of tau  "<<tau_[1].pt<<"\n";
+                //                cout<<"number of tau  "<<tau_[2].pt<<"\n";
                 //##############################################################################
                 // eltau
                 //##############################################################################
@@ -461,8 +470,8 @@ int main(int argc, char** argv) {
                         bool El_IdTight = EleMVANonTrigId_Tight(electron_[i]);
                         bool El_Iso = Iso_Ele_dBeta(electron_[i]) < 0.1;
                         bool EL_CUTS = El_PtEta && El_IdTight && El_Iso;
-
-                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
+                        // FIXME  it is in btag higs category with pt > 45 GeV for tau
+                        bool Tau_PtEta = tau_[k].pt > 45 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronMVA5Medium;
@@ -495,11 +504,19 @@ int main(int argc, char** argv) {
                         //                        float trigweight_2 = getCorrTriggerTau("eltau", "mc12", tau_[k]);
 
                         //  ########## ########## ########## ########## ########## ##########
-
-
-
+                        int zCat = ZCategory(m, electron_[i], tau_[k]);
+                            cout << "leg1 pT/eta/phi = " << electron_[i].pt << "/" << electron_[i].eta << "/" << electron_[i].phi << "\n";
+                            cout << "leg2 pT/eta/phi = " << tau_[k].pt << "/" << tau_[k].eta << "/" << tau_[k].phi << "\n";
+                            cout << "-----> flag = " << zCat << "\n";
+                            cout<<hasMatchedTrigger << Trigger_EleTau_12(m) << EL_CUTS << Tau_Vertex_dz << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu << ElTau_Charge << ElTau_dR << secondEleVeto << thirdEleVeto << thirdMuVeto<<"\n";
+                            
+                            
                         if (hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && secondEleVeto && thirdEleVeto && thirdMuVeto) {
                             plotFill("eltau", ++eltau, 20, 0., 20.);
+                            
+                            //                                26.4328/-0.38307/-0.823336tau_[k].pt  << "  " <<Tau_Vertex_dz << "  " << Tau_PtEta << "  " << Tau_DMF << "  " << Tau_Isolation << "  " << Tau_antiEl << "  " << Tau_antiMu<< "  \n";
+                            //                            if (zCat == 1 || zCat == 2 || zCat == 4) cout << m->lumiNumber << ":" << m->eventNumber << "\n";
+                            //                            if (zCat == 5) cout << m->lumiNumber << ":" << m->eventNumber << "\n";
                             fillTree(3, Run_Tree, m, is_data_mc.c_str(), FinalState, electron_[i], tau_[k]);
                             //                            counter++;
                             //                            cout << "\n" << counter << "   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "\n";
@@ -512,7 +529,7 @@ int main(int argc, char** argv) {
                             //                            cout << "   PU_Weight _OLD= " << PU_Weight << "   PU_Weight _New=" << m->PU_Weight << "   npu=" << npu << "\n";
                             //                            cout << "   erightLepton_id_iso= " << idweight_1 << "   lepton_trg_Weight=" << trigweight_1 << "   tau_Trg_Weight=" << trigweight_2 << "\n\n\n\n";
 
-                            break;
+                            //                            break;
 
                         }
 
@@ -521,6 +538,7 @@ int main(int argc, char** argv) {
                 }
             }//end of Only Electron
         }//loop over events
+    }
 
 
         delete rootTree;

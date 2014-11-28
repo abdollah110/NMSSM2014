@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
     bool embeddata12 = (is_data_mc.compare("embeddata12") == 0 ? true : false);
     bool embedmc12 = (is_data_mc.compare("embedmc12") == 0 ? true : false);
     if (!(mc12 || mc11 || data12 || data11 || embeddata12 || embedmc12))
-        cout << "xxxxxxxxxxxxxxx Error, please slecet between: mc12 || mc11 || data12 || data11 " << endl;
+        cout << "xxxxxxxxxxxxxxx Error, please slecet between: mc12 || mc11 || data12 || data11 ||  embeddata12 || embedmc12" << endl;
 
     //#################################################################################################
     //############## Second anad Third Argument,   OutPut Name/ Input Files                         ########################
@@ -315,7 +315,9 @@ int main(int argc, char** argv) {
     Run_Tree->Branch("gen_Higgs_Mass;", &gen_Higgs_Mass, "gen_Higgs_Mass/F");
     Run_Tree->Branch("spinnerWeight_;", &spinnerWeight_, "spinnerWeight_/F");
 
-
+//Run_Tree->Branch("njetsCen", &njetsCen, "njetsCen/I");
+//Run_Tree->Branch("njetsFwd", &njetsFwd, "njetsFwd/I");
+//Run_Tree->Branch("nbtag30", &nbtag30, "nbtag30/I");
 
 
 
@@ -339,7 +341,7 @@ int main(int argc, char** argv) {
         // running over the root files
         for (int i = 0; i < nev; i++) {
             rootTree->GetEvent(i);
-            if (i % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
+            if (i % 100 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nev);
             fflush(stdout);
 
             //*********************************************************************************************
@@ -350,8 +352,10 @@ int main(int argc, char** argv) {
             vector<myobject> tau_ = GoodTau20GeV(m);
 
             //#################################################################################################
-            bool doMuTauAnalysis = true;
-            bool doElTauAnalysis = true;
+            bool doMuTauAnalysis = 1;
+            bool doElTauAnalysis = 0;
+//            bool doMuTauAnalysis = true;
+//            bool doElTauAnalysis = true;
             //#################################################################################################
             size_t eleTauEmbed = fileNames[k].find("PFembedded_ETau");
             if (eleTauEmbed != string::npos) doMuTauAnalysis = false;

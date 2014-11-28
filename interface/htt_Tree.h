@@ -189,6 +189,10 @@ float GenAntiTopPt = -10;
 float Tau_Vertex_dz = -10;
 float spinnerWeight_ = -10;
 
+int njetsCen;
+int njetsFwd;
+int  nbtag30;
+
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
 
