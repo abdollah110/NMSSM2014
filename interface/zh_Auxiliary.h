@@ -180,16 +180,18 @@ int ZCategory(myevent *m, myobject const& obj1, myobject const& obj2) {
     genLepFromTaus.clear();
     vector<myGenobject> genPar = m->RecGenParticle;
     int gen_ditau = 6;
+    bool TherIsZGamma= 0;
     if (genPar.size() != 0) {
         for (int a = 0; a < genPar.size(); ++a) {
             if ((fabs(genPar[a].mod_pdgId) == 23 || fabs(genPar[a].mod_pdgId) == 22) && fabs(genPar[a].pdgId) == 15) genTausFromZ.push_back(genPar[a]);
             if (genPar[a].pt > 8.0 && (fabs(genPar[a].mod_pdgId) == 23 || fabs(genPar[a].mod_pdgId) == 22) && fabs(genPar[a].pdgId) == 13) genMuFromZ.push_back(genPar[a]);
             if (genPar[a].pt > 8.0 && (fabs(genPar[a].mod_pdgId) == 23 || fabs(genPar[a].mod_pdgId) == 22) && fabs(genPar[a].pdgId) == 11) genEleFromZ.push_back(genPar[a]);
             if (genPar[a].pt > 8.0 && fabs(genPar[a].mod_pdgId) == 15 && (fabs(genPar[a].pdgId) == 11 || fabs(genPar[a].pdgId) == 13)) genLepFromTaus.push_back(genPar[a]);
-            if (fabs(genPar[a].mod_pdgId) == 23 || fabs(genPar[a].mod_pdgId) == 22)  cout<< "Her is either Z or photon "<< genPar[a].mod_pdgId<<"\n";
+            if (fabs(genPar[a].mod_pdgId) == 23 || fabs(genPar[a].mod_pdgId) == 22)  TherIsZGamma=1;
 
         }
     }
+    if (! TherIsZGamma) cout<< "TherIsZGamma "<< TherIsZGamma<<"\n";
 //        if (genTausFromZ.size() == 2) {
 //            cout <<  " genTausFromZ.size()=" << genTausFromZ.size() << "\n";
 //            cout << "status= " << genTausFromZ[0].status<< " pdgId= " << genTausFromZ[0].pdgId <<  " MotherpdgId= " << genTausFromZ[0].mod_pdgId << " genTausFromZ[0].eta= " << genTausFromZ[0].eta << " genTausFromZ[0].phi= " << genTausFromZ[0].phi << " genTausFromZ[0].pt= " << genTausFromZ[0].pt << "\n";
