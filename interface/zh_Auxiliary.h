@@ -191,7 +191,7 @@ int ZCategory(myevent *m, myobject const& obj1, myobject const& obj2) {
 
         }
     }
-    if ( TherIsZGamma) cout<< "TherIsZGamma "<< TherIsZGamma<<"\n";
+    if (! TherIsZGamma) cout<< "TherIsZGamma "<< TherIsZGamma<<"\n";
 //        if (genTausFromZ.size() == 2) {
 //            cout <<  " genTausFromZ.size()=" << genTausFromZ.size() << "\n";
 //            cout << "status= " << genTausFromZ[0].status<< " pdgId= " << genTausFromZ[0].pdgId <<  " MotherpdgId= " << genTausFromZ[0].mod_pdgId << " genTausFromZ[0].eta= " << genTausFromZ[0].eta << " genTausFromZ[0].phi= " << genTausFromZ[0].phi << " genTausFromZ[0].pt= " << genTausFromZ[0].pt << "\n";
