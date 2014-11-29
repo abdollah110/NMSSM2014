@@ -29,6 +29,7 @@ def make_submit_form():
         print "sampleName=", sampleName
 
         NumberToBedevided= 10
+        if FileSize < 120 : NumberToBedevided=5
         if FileSize > 500 : NumberToBedevided=20
         if FileSize > 1200 : NumberToBedevided=30
         if FileSize > 2000 : NumberToBedevided=40

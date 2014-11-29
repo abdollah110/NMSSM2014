@@ -338,8 +338,8 @@ int main(int argc, char** argv) {
                 fprintf(stdout, "\n");
             }
             fflush(stdout);
-            if (m->eventNumber == 64981240){
-//            if (1){
+//            if (m->eventNumber == 64981240){
+            if (1){
             cout<<"\n-----------------------\n";
             cout << "Lumi is    " << m->lumiNumber << "    and Event is " << m->eventNumber << "\n";
             //*********************************************************************************************
@@ -511,7 +511,8 @@ int main(int argc, char** argv) {
                             cout<<hasMatchedTrigger << Trigger_EleTau_12(m) << EL_CUTS << Tau_Vertex_dz << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu << ElTau_Charge << ElTau_dR << secondEleVeto << thirdEleVeto << thirdMuVeto<<"\n";
                             
                             
-                        if (hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && secondEleVeto && thirdEleVeto && thirdMuVeto) {
+                        if ( EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && secondEleVeto && thirdEleVeto && thirdMuVeto) {
+//                        if (hasMatchedTrigger && Trigger_EleTau_12(m) && EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && secondEleVeto && thirdEleVeto && thirdMuVeto) {
                             plotFill("eltau", ++eltau, 20, 0., 20.);
                             
                             //                                26.4328/-0.38307/-0.823336tau_[k].pt  << "  " <<Tau_Vertex_dz << "  " << Tau_PtEta << "  " << Tau_DMF << "  " << Tau_Isolation << "  " << Tau_antiEl << "  " << Tau_antiMu<< "  \n";
