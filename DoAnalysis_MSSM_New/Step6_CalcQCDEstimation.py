@@ -32,6 +32,7 @@ ROOT.gROOT.SetBatch(True)
 InputFileLocation = '../FileROOT/nmssmROOTFiles/'
 SubRootDir = 'OutFiles/'
 verbosity_ = False
+UseLLRFakeRate = True
 applyTauFR_Correction= True
 applyOS_SS_Correction= False
 apply106asScaleFactor = True
@@ -397,9 +398,14 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
         fitparOSSS1 = fitParametersOSSS[1]
 
     if applyTauFR_Correction:
-        fitParameterstauFR = Make_Tau_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
-        fitpartauFR0 = fitParameterstauFR[0]
-        fitpartauFR1 = fitParameterstauFR[1]
+        if UseLLRFakeRate:
+            if etaRange=="_Bar": fitpartauFR0 = 1.15E+00 ; fitpartauFR1 = -3.83E-03
+            if etaRange=="_Cen": fitpartauFR0 = 1.25E+00 ; fitpartauFR1 = -6.75E-03
+            if etaRange=="_End": fitpartauFR0 = 1.16E+00 ; fitpartauFR1 = -4.12E-03
+        else:
+            fitParameterstauFR = Make_Tau_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+            fitpartauFR0 = fitParameterstauFR[0]
+            fitpartauFR1 = fitParameterstauFR[1]
 
 
     QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,"_2DSVMassPt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
@@ -478,6 +484,7 @@ def GetFinalQCDShapeNorm(Observable,CoMEnergy):
         for channelName in channel:
             for PostFix in POSTFIX:
 
+                print "Now is doing ", catName, channelName, PostFix
                 getFileBar=ApplyCorrectionOnQCDShape(Observable,"_8TeV","_Bar",catName,channelName,PostFix)
                 getFileCen=ApplyCorrectionOnQCDShape(Observable,"_8TeV","_Cen",catName,channelName,PostFix)
                 getFileEnd=ApplyCorrectionOnQCDShape(Observable,"_8TeV","_End",catName,channelName,PostFix)

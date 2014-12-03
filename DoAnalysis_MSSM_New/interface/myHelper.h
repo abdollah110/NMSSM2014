@@ -88,11 +88,35 @@ std::vector<float> HPtReWeight(float H_Pt, std::string Mass, TFile * inputFile) 
 
     return HiggsPtRW;
 
+}
+
+std::vector<float> SMHiggs125PtReWeight(float H_Pt,  TFile * inputFile) {
+    std::vector<float> HiggsPtRW;
+    HiggsPtRW.clear();
 
 
+    std::string nominalName = "Nominal";
+    std::string UpName = "Up";
+    std::string DownName = "Down";
+    
 
+    TH1F *HpT = (TH1F*) inputFile->Get(nominalName.c_str());
+    TH1F *HpT_Up = (TH1F*) inputFile->Get(UpName.c_str());
+    TH1F *HpT_Down = (TH1F*) inputFile->Get(DownName.c_str());
+
+
+    int whichBin = 1 + int(H_Pt);
+    if (whichBin > 500) whichBin = 500;
+    if (!HpT_Down->GetBinContent(whichBin) || !HpT->GetBinContent(whichBin) || !HpT_Up->GetBinContent(whichBin) ) cout << "No Historam exsit\n";
+
+    HiggsPtRW.push_back(HpT_Down->GetBinContent(whichBin) / HpT->GetBinContent(whichBin));
+    HiggsPtRW.push_back(HpT->GetBinContent(whichBin));
+    HiggsPtRW.push_back(HpT_Up->GetBinContent(whichBin) / HpT->GetBinContent(whichBin));
+
+    return HiggsPtRW;
 
 }
+
 
 float TauESWeight(int mcdata, int DM, float eta) {
     if (mcdata == 2 || mcdata == 4)

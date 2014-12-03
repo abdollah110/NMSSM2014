@@ -1,7 +1,7 @@
 // fahim:
 #include "TStyle.h"
 rootlogon(){
-//	gSystem->Load("libFWCoreFWLite.so");
+	gSystem->Load("libFWCoreFWLite.so");
 //	AutoLibraryLoader::enable();      
 //	setTDRStyle();
 	gStyle->SetOptStat(1111111);

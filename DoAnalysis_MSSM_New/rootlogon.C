@@ -4,7 +4,8 @@ rootlogon(){
 //	gSystem->Load("libFWCoreFWLite.so");
 //	AutoLibraryLoader::enable();      
 //	setTDRStyle();
-	gStyle->SetOptStat(1111111);
+//"TFile.Recover: 0;	
+    gStyle->SetOptStat(1111111);
 /*
 	TFile*  _file0 = new TFile("new.root");
 	_file0->cd("AllEvents");

@@ -66,7 +66,7 @@ def luminosity(CoMEnergy):
 
 
 #Bcategory = ["_inclusive","_btag"]
-Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose", "_nobtagNew", "_btagNew"]
+Bcategory = ["_inclusive",  "_btag", "_btagLoose"]
 #Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
 #Bcategory = ["_inclusive"]
 #Bcategory = [ "_btag"]
@@ -84,6 +84,7 @@ verbos_ = True
 QCDScaleFactor = 1.06
 #Binning_PT = array.array("d",[0,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300])
 #Binning_PT = array.array("d",[0,20,25,30,35,40,45,50,60,70,80,90,100,120,140,160,180,200,250,300])
+Binning_OSSS = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,160,180,200])
 Binning_PT = array.array("d",[0,20,25,30,35,40,50,70,100,150,200])
 
 def doRatio2D(num, denum, marColor):
@@ -286,10 +287,17 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
 ##   Calculating the Fake Rate and OS Over SS Fake Rate and applying Fake Rate
 #############################################################################################################
 
-def fitFunc_Exp3Par(x,par):
+def fitFunc_Linear2Par(x,par):
     return par[0] + (par[1] * x[0])
-def Func_Exp3Par(x,par0,par1):
+def Func_Linear2Par(x,par0,par1):
     return par0 +  (par1 * x)
+
+def fitFunc_Exp3Par( x,  par0,  par1,  par2) :
+    return par0 + par1 * Exp(par2 * x)
+def Func_Exp3Par( x,  par) :
+    return par[0] + par[1]*Exp(par[2] * x[0])
+
+
 
 # This fake rate is used for all Categories and channels but different for different eta range
 def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
@@ -316,7 +324,7 @@ def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     HistoNum.GetXaxis().SetRangeUser(0,150)
     HistoNum.GetYaxis().SetRangeUser(0,2)
     HistoNum.SetMarkerStyle(20)
-    theFit=TF1("theFit", fitFunc_Exp3Par, 20, 150, 2)
+    theFit=TF1("theFit", fitFunc_Linear2Par, 20, 150, 2)
     theFit.SetParameter(0, 0.6)
     theFit.SetParameter(1, 0.18)
     HistoNum.Fit(theFit, "R0","")
@@ -350,14 +358,15 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     if catName=="_btag": catName="_btagLoose"
     ##  ooooooooooooooooooooooooooo   Bcategory change name  ooooooooooooooooooooooooooo
 
-    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
-#    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_SVMass_mTLess30_OS_RelaxIso","")
+#    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_OS_RelaxIso","")
+    ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_SVMass_LepAntiIso_mTLess30_OS_RelaxIso","")
     HistoNum=ShapeNum.Get("XXX")
-    HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
+    HistoNum= HistoNum.Rebin(len(Binning_OSSS)-1,"",Binning_OSSS)
 
-    ShapeDeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_SS_RelaxIso","")
+#    ShapeDeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_SS_RelaxIso","")
+    ShapeDeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_SVMass_LepAntiIso_mTLess30_SS_RelaxIso","")
     HistoDeNum=ShapeDeNum.Get("XXX")
-    HistoDeNum= HistoDeNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
+    HistoDeNum= HistoDeNum.Rebin(len(Binning_OSSS)-1,"",Binning_OSSS)
 
     HistoNum.Divide(HistoDeNum)
 
@@ -366,9 +375,11 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     HistoNum.GetXaxis().SetRangeUser(0,150)
     HistoNum.GetYaxis().SetRangeUser(0,2)
     HistoNum.SetMarkerStyle(20)
-    theFit=TF1("theFit", fitFunc_Exp3Par, 20, 150, 2)
+#    theFit=TF1("theFit", fitFunc_Linear2Par, 20, 150, 2)
+    theFit=TF1("theFit", fitFunc_Linear2Par, 0, 150, 2)
     theFit.SetParameter(0, 0.6)
     theFit.SetParameter(1, 0.18)
+    theFit.SetParameter(2, 0.18)
     HistoNum.Fit(theFit, "R0","")
     HistoNum.Draw("E1")
     theFit.SetLineWidth(3)
@@ -398,13 +409,15 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 #############################################################################################################
 def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelName, PostFix):
 
-    fitParametersOSSS = Make_OS_over_SS_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
-    fitparOSSS0 = fitParametersOSSS[0]
-    fitparOSSS1 = fitParametersOSSS[1]
+    if applyOS_SS_Correction:
+        fitParametersOSSS = Make_OS_over_SS_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+        fitparOSSS0 = fitParametersOSSS[0]
+        fitparOSSS1 = fitParametersOSSS[1]
 
-    fitParameterstauFR = Make_Tau_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
-    fitpartauFR0 = fitParameterstauFR[0]
-    fitpartauFR1 = fitParameterstauFR[1]
+    if applyTauFR_Correction:
+        fitParameterstauFR = Make_Tau_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+        fitpartauFR0 = fitParameterstauFR[0]
+        fitpartauFR1 = fitParameterstauFR[1]
 
 
     # FIXME replace the observable to SDOBservable
@@ -419,8 +432,8 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
         NormInPtBin = 0
         for ss in range(PT_BIN):
             fakeCorrection= 1
-            if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
-            if applyOS_SS_Correction: fakeCorrection= fakeCorrection * Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
+            if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Linear2Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
+            if applyOS_SS_Correction: fakeCorrection= fakeCorrection * Func_Linear2Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
             if PostFix == "":   FakeRate = fakeCorrection
             if PostFix == "Down":   FakeRate = 1
             if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
@@ -451,7 +464,7 @@ def ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, etaRange, catName, c
     NormInPtBin = 0
     for bb in range(MASS_BIN):
         for ss in range(PT_BIN):
-            fakeCorrection=  Func_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
+            fakeCorrection=  Func_Linear2Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
             if PostFix == "":   FakeRate = fakeCorrection
             if PostFix == "Down":   FakeRate = 1
             if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)

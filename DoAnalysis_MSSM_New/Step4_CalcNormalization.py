@@ -28,6 +28,8 @@ ROOT.gROOT.SetBatch(True)
 InputFileLocation = '../FileROOT/MSSMROOTFiles/'
 SubRootDir = 'OutFiles/'
 
+UseTauPolarOff = True
+
 def luminosity(CoMEnergy):
     if CoMEnergy == '_8TeV': return  19710 #19242
     if CoMEnergy == '_7TeV': return  4982
@@ -53,8 +55,11 @@ def XSection(mX, CoMEnergy):
         if mX == 'ggH_SM125':      return 1.23
         if mX == 'qqH_SM125':      return 0.100
         if mX == 'VH_SM125':      return 0.077
-        if mX == 'TTEmbeddedmutau':      return (5.887  * 771693/ 12011428)  # FIXME   This hsould be fixed
-        if mX == 'TTEmbeddedetau':      return (5.887  * 718441/ 12011428)  # FIXME   This hsould be fixed
+        if mX == 'TTEmbeddedmutau':      return (26.197  * 771693/ 12011428)  # FIXME   This hsould be fixed
+        if mX == 'TTEmbeddedetau':      return (26.197  * 718441/ 12011428)  # FIXME   This hsould be fixed
+#        if mX == 'TTEmbeddedmutau':      return (5.887  * 771693/ 12011428)  # FIXME   This hsould be fixed
+#        if mX == 'TTEmbeddedetau':      return (5.887  * 718441/ 12011428)  # FIXME   This hsould be fixed
+        if mX == 'tauPolarOff': return 2950 *1.187694915
 
 #        if mX == 'DYJetsToLL':  return 0.242 * 0.001
 #        if mX == 'DY1JetsToLL':  return  0.128* 0.001
@@ -114,31 +119,43 @@ def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 #    value = HistoSub.Integral()/ HistoInclusive.Integral()
 #    return value
 
-def getEmbedToDYWeight(PostFix,CoMEnergy,chan,Histogram):
-
+def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
+    # Here we have used ZTT for all DY and Embedded data and Embed MC     
+    
     #  Get Normalization from DY Sample in Inclusive
-    DY_Files = TFile(SubRootDir + "out_DYJetsAll"+CoMEnergy+".root")
-    DY_Histo=DY_Files.Get(chan+Histogram+ "_ZTT_inclusive"+PostFix)
-    Normalization_DY= DY_Histo.Integral()*luminosity(CoMEnergy)
+    if not UseTauPolarOff: 
+        DY_Files = TFile(SubRootDir + "out_DYJetsAll"+CoMEnergy+".root")
+        DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
+        Normalization_DY= DY_Histo.Integral()*luminosity(CoMEnergy)
+    else:
+        DY_Files = TFile(SubRootDir + "out_DYJetsToLL_PolarOff"+CoMEnergy+".root")
+        DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
+        OriginFile_Polar = TFile(InputFileLocation + "DYJetsToLL_PolarOff"+CoMEnergy+".root")
+        Histo_Polar = OriginFile_Polar.Get("TotalEventsNumber")  # to get Total number of events  "MuTau_Multiplicity" + index[icat]
+        Normalization_DY= DY_Histo.Integral()*luminosity(CoMEnergy) * XSection ('tauPolarOff',CoMEnergy) / Histo_Polar.Integral()
+    
 
+    #  Get Normalization from Embedded Data Sample in Inclusive
+    EmbedData_Files = TFile(SubRootDir + "out_Embedded"+chan+CoMEnergy+".root")
+    EmbedData_Histo=EmbedData_Files.Get(chan+HistogramNoMT+ "_inclusive")
+    Normalization_EmbedData= EmbedData_Histo.Integral()
+
+    HistogramNoMT=HistogramNoMT.replace("_ZTT","") # There is no _ZTT for TTEmbedded
     #  Get Normalization from TTEmbedded Sample in Inclusive
     EmbedTT_Files = TFile(SubRootDir + "out_TTEmbedded"+chan+CoMEnergy+".root")
-    EmbedTT_Histo=EmbedTT_Files.Get(chan+Histogram+ "_inclusive"+PostFix)
+    EmbedTT_Histo=EmbedTT_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
     OriginFile_EmbedTT = TFile(InputFileLocation + "TTEmbedded"+chan+CoMEnergy+".root")
     HistoTotal = OriginFile_EmbedTT.Get("TotalEventsNumber")  # to get Total number of events  "MuTau_Multiplicity" + index[icat]
     Normalization_EmbedTT= (EmbedTT_Histo.Integral()*luminosity(CoMEnergy) * XSection("TTEmbedded"+chan, CoMEnergy))/HistoTotal.Integral()
     OriginFile_EmbedTT.Close()
 
-    #  Get Normalization from Embedded Data Sample in Inclusive
-    EmbedData_Files = TFile(SubRootDir + "out_Embedded"+chan+CoMEnergy+".root")
-    EmbedData_Histo=EmbedData_Files.Get(chan+Histogram+ "_inclusive")
     
-    print "DY MC Incluvive= ", (Normalization_DY)
-    print "TTEmbedded MC Incluvive= ", (Normalization_EmbedTT) 
-    print "TTEmbed Data Incluvive= ", EmbedData_Histo.Integral()
-    print "ExtraPOl Factor= ", (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
+#    print "DY MC Incluvive= ", (Normalization_DY)
+#    print "TTEmbedded MC Incluvive= ", (Normalization_EmbedTT) 
+#    print "TTEmbed Data Incluvive= ", EmbedData_Histo.Integral()
+#    print "ExtraPOl Factor= ", (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
 
-    return (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
+    return (Normalization_DY)/(Normalization_EmbedData- Normalization_EmbedTT)
 
 def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
     myfileSub = TFile(SubRootDir + "out_"+Name+CoMEnergy+ '.root')
@@ -282,12 +299,14 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             YLoc= lenghtSig + 5
             ## Similar To ALL ##
             XLoc= categ + len(category)*chl + 1
-            Histogram = Observable+"_mTLess30_OS"
+#            Histogram = Observable+"_mTLess30_OS"  changing the embedding technique FIXME FIXED
+            HistogramNoMT = Observable+"_OS"+DYIndex
+            Histogram = Observable+"_mTLess30_OS"+DYIndex
             HistomTHigh70 = Observable+"_mTHigher70_OS"+DYIndex
 
-            embedToDYWeight= getEmbedToDYWeight(PostFix,CoMEnergy,channel[chl],Histogram)
+            embedToDYWeight= getEmbedToDYWeight(PostFix,CoMEnergy,channel[chl],HistogramNoMT)
 
-            value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)  * embedToDYWeight
+            value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)  * embedToDYWeight * (1./ luminosity(CoMEnergy))
             print    "@@@@@@@@@@@  Test for ZTT in "+Name+channel[chl]+category[categ]+Histogram +" ==> NUmber of events in embeeded data=", getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram) , "  embed weight= ", embedToDYWeight,   "  Final ZTT Yield= ", value
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
