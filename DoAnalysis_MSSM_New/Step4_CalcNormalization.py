@@ -305,6 +305,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             HistomTHigh70 = Observable+"_mTHigher70_OS"+DYIndex
 
             embedToDYWeight= getEmbedToDYWeight(PostFix,CoMEnergy,channel[chl],HistogramNoMT)
+            print "       ------------   extraPol Embeede w8=======", embedToDYWeight    
 
             value = getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)  * embedToDYWeight * (1./ luminosity(CoMEnergy))
             print    "@@@@@@@@@@@  Test for ZTT in "+Name+channel[chl]+category[categ]+Histogram +" ==> NUmber of events in embeeded data=", getHistoNorm_BG(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram) , "  embed weight= ", embedToDYWeight,   "  Final ZTT Yield= ", value
@@ -346,8 +347,8 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             YLoc= lenghtSig + 7
             Name="TTEmbedded"+channel[chl]
             Histogram = Observable+"_mTLess30_OS"
-
-            value=getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram) * XSection("TTEmbedded"+channel[chl], CoMEnergy)
+# FIXME added december 3   resolve the issue
+            value=embedToDYWeight * getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram) * XSection("TTEmbedded"+channel[chl], CoMEnergy)
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
 

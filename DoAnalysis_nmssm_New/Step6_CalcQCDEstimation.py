@@ -36,6 +36,7 @@ applyTauFR_Correction= True
 applyOS_SS_Correction= True
 apply106asScaleFactor = False
 applyOSSSForQCDNorm= True
+GetThePreValues = True
 
 def MakeCanvas(name, title,  dX,  dY):
 
@@ -65,7 +66,7 @@ def luminosity(CoMEnergy):
     if CoMEnergy == '_7TeV': return  4982
 
 
-#Bcategory = ["_inclusive","_btag"]
+#Bcategory = ["_inclusive"]
 Bcategory = ["_inclusive",  "_btag", "_btagLoose"]
 #Bcategory = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
 #Bcategory = ["_inclusive"]
@@ -276,7 +277,8 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
         Data_ForqcdShapeHisto.Add(W_ForqcdShapeHisto,-1)
 
     #################### Return QCD Shape with Proper Normalization
-    QCDNorm= GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    QCDNorm= GetNorm_QCD("",CoMEnergy,channelName,catName,HistoName,etaRange)
+#    QCDNorm= GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange) FIXME I just saif postFox == ""
     Data_ForqcdShapeHisto.Scale(QCDNorm/Data_ForqcdShapeHisto.Integral())
 
     NewShapeForQCD=TFile("Extra/XXX.root","RECREATE")
@@ -293,9 +295,9 @@ def Func_Linear2Par(x,par0,par1):
     return par0 +  (par1 * x)
 
 def fitFunc_Exp3Par( x,  par0,  par1,  par2) :
-    return par0 + par1 * Exp(par2 * x)
+    return par0 + par1 * math.exp(par2 * x)
 def Func_Exp3Par( x,  par) :
-    return par[0] + par[1]*Exp(par[2] * x[0])
+    return par[0] + par[1]*math.exp(par[2] * x[0])
 
 
 
@@ -372,15 +374,21 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 
     canv = MakeCanvas("canv", "histograms", 600, 600)
     HistoNum.SetMinimum(0.5)
+    HistoNum.SetTitle("")
     HistoNum.GetXaxis().SetRangeUser(0,150)
-    HistoNum.GetYaxis().SetRangeUser(0,2)
+    HistoNum.GetYaxis().SetRangeUser(0.5,2)
+    HistoNum.GetYaxis().SetTitle("OS/SS ratio")
+    HistoNum.GetXaxis().SetTitle("M_{#tau#tau} [GeV]")
     HistoNum.SetMarkerStyle(20)
-#    theFit=TF1("theFit", fitFunc_Linear2Par, 20, 150, 2)
-    theFit=TF1("theFit", fitFunc_Linear2Par, 0, 150, 2)
-    theFit.SetParameter(0, 0.6)
-    theFit.SetParameter(1, 0.18)
-    theFit.SetParameter(2, 0.18)
-    HistoNum.Fit(theFit, "R0","")
+#    theFit=TF1("theFit", fitFunc_Linear2Par, 0, 60, 2)
+    nPar = 3 # number of parameters in the fit
+    theFit=TF1("theFit", Func_Exp3Par, 10, 150,nPar)
+    theFit.SetParameter(0, .2)
+    theFit.SetParameter(1, 50)
+    theFit.SetParLimits(1, 1, 50)
+    theFit.SetParameter(2, -2)
+    HistoNum.Fit("theFit", "R0")
+#    HistoNum.Fit(theFit, "R0","")
     HistoNum.Draw("E1")
     theFit.SetLineWidth(3)
     theFit.SetLineColor(3)
@@ -394,14 +402,14 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     fitInfo.SetTextSize ( 0.03 );
     fitInfo.SetTextColor(    1 );
     fitInfo.SetTextFont (   62 );
-    fitInfo.AddText("Linear Fit=  " + str(round(FitParam[0],3))+" + "+str(round(FitParam[1],9))+"x")
-    fitInfo.AddText("Par0=" + str(round(FitParam[0],3)) + " #pm " + str(round(FitParamEre[0],3)) + " ,  Par1=" + str(round(FitParam[1],7)) + " #pm " + str(round(FitParamEre[1],7)))
-    fitInfo.SetTextColor(    2 );
-    fitInfo.AddText("Chis quare=  " + str(round(theFit.GetChisquare(),2)))
+    fitInfo.AddText("" + str(round(FitParam[0],2))+" + "+str(round(FitParam[1],3))+"*Exp(" +str(round(FitParam[2],3))+"* X)")
+#    fitInfo.AddText("Par0=" + str(round(FitParam[0],3)) + " #pm " + str(round(FitParamEre[0],3)) + " ,  Par1=" + str(round(FitParam[1],7)) + " #pm " + str(round(FitParamEre[1],7)))
+#    fitInfo.SetTextColor(    2 );
+#    fitInfo.AddText("Chis quare=  " + str(round(theFit.GetChisquare(),2)))
     fitInfo.Draw()
     canv.SaveAs("fitResults_Mass100_OSSS"+catName+channelName+".pdf")
 
-    return  FitParam[0],FitParam[1]
+    return  FitParam[0],FitParam[1], FitParam[2] 
 
 
 #############################################################################################################
@@ -410,9 +418,22 @@ def Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelName, PostFix):
 
     if applyOS_SS_Correction:
-        fitParametersOSSS = Make_OS_over_SS_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
-        fitparOSSS0 = fitParametersOSSS[0]
-        fitparOSSS1 = fitParametersOSSS[1]
+        if GetThePreValues:   
+            if catName== "_inclusive":
+                fitparOSSS0 = 1.13
+                fitparOSSS1 = 1.00
+                fitparOSSS2 = -0.087
+            elif  catName== "_btag" or catName== "_btagLoose":
+                fitparOSSS0 = 1.10
+                fitparOSSS1 = 1.418
+                fitparOSSS2 = -0.11
+            else:
+                print "No Category to be used"
+        else:
+            fitParametersOSSS = Make_OS_over_SS_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+            fitparOSSS0 = fitParametersOSSS[0]
+            fitparOSSS1 = fitParametersOSSS[1]
+            fitparOSSS2 = fitParametersOSSS[2]
 
     if applyTauFR_Correction:
         fitParameterstauFR = Make_Tau_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
@@ -433,10 +454,12 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
         for ss in range(PT_BIN):
             fakeCorrection= 1
             if applyTauFR_Correction: fakeCorrection= fakeCorrection * Func_Linear2Par(ss + 0.5, fitpartauFR0, fitpartauFR1)
-            if applyOS_SS_Correction: fakeCorrection= fakeCorrection * Func_Linear2Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
+            if applyOS_SS_Correction: fakeCorrection= fakeCorrection * fitFunc_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1,fitparOSSS2)
+           
             if PostFix == "":   FakeRate = fakeCorrection
             if PostFix == "Down":   FakeRate = 1
             if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
+            
             NormInPtBin += FakeRate * QCDShape_Hist.GetBinContent(bb + 1, ss + 1)
             if NormInPtBin < 0 : NormInPtBin=0
         templateShape.SetBinContent(bb, NormInPtBin)
@@ -450,21 +473,35 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
 
 def ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, etaRange, catName, channelName, PostFix):
 
-    fitParametersOSSS = Make_OS_over_SS_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
-    fitparOSSS0 = fitParametersOSSS[0]
-    fitparOSSS1 = fitParametersOSSS[1]
+    if applyOS_SS_Correction:
+        if GetThePreValues:   
+            if catName== "_inclusive":
+                fitparOSSS0 = 1.13
+                fitparOSSS1 = 1.00
+                fitparOSSS2 = -0.087
+            elif  catName== "_btag" or catName== "_btagLoose":
+                fitparOSSS0 = 1.10
+                fitparOSSS1 = 1.418
+                fitparOSSS2 = -0.11
+            else:
+                print "No Category to be used"
+        else:
+            fitParametersOSSS = Make_OS_over_SS_FakeRate("",CoMEnergy,catName,channelName,etaRange)  # same for muTau and eTau
+            fitparOSSS0 = fitParametersOSSS[0]
+            fitparOSSS1 = fitParametersOSSS[1]
+            fitparOSSS2 = fitParametersOSSS[2]
 
 
     # FIXME replace the observable to SDOBservable
     nowObs= Observable.replace("_","_2D")
-    QCDNorm_File=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,nowObs+"Pt_mTLess30_SS", "")
+    QCDNorm_File=GetShape_QCD("",CoMEnergy,channelName,catName,nowObs+"Pt_mTLess30_SS", "")
     QCDNorm_Hist=QCDNorm_File.Get("XXX")
 
 
     NormInPtBin = 0
     for bb in range(MASS_BIN):
         for ss in range(PT_BIN):
-            fakeCorrection=  Func_Linear2Par(ss + 0.5, fitparOSSS0, fitparOSSS1)
+            fakeCorrection=  fitFunc_Exp3Par(ss + 0.5, fitparOSSS0, fitparOSSS1,fitparOSSS2)
             if PostFix == "":   FakeRate = fakeCorrection
             if PostFix == "Down":   FakeRate = 1
             if PostFix == "Up":   FakeRate = pow(fakeCorrection, 2)
@@ -493,19 +530,23 @@ def GetFinalQCDShapeNorm(Observable,CoMEnergy):
                 HistoCen=getFileCen.Get("XXX")
                 HistoEnd=getFileEnd.Get("XXX")
 
-                FinalFile.cd()
-                QCDShapeTotal =TH1F(channelName+"_QCDShapeNormTotal"+catName+PostFix,"",MASS_BIN,0,MASS_BIN)
-                for bb in range(MASS_BIN):
-                    QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
+                QCDShapeTotal= HistoBar.Clone()
+                QCDShapeTotal.Add(HistoCen)
+                QCDShapeTotal.Add(HistoEnd)
+#                FinalFile.cd()
+#                QCDShapeTotal =TH1F(channelName+"_QCDShapeNormTotal"+catName+PostFix,"",MASS_BIN,0,MASS_BIN)
+#                for bb in range(MASS_BIN):
+#                    QCDShapeTotal.SetBinContent(bb, HistoBar.GetBinContent(bb)+HistoCen.GetBinContent(bb)+HistoEnd.GetBinContent(bb))
 
 
 
-                if applyOSSSForQCDNorm: NewFinalQCDEstimate=ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, "", catName, channelName, "")
+                if applyOSSSForQCDNorm: NewFinalQCDEstimate=ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, "", catName, channelName, PostFix)
                 if apply106asScaleFactor: NewFinalQCDEstimate=GetNorm_QCD("",CoMEnergy,channelName,catName,Observable+"_mTLess30_SS","")* QCDScaleFactor
 
                 QCDShapeTotal.Scale(NewFinalQCDEstimate/QCDShapeTotal.Integral())
-
-                FinalFile.Write()
+                
+                FinalFile.WriteObject(QCDShapeTotal,channelName+"_QCDShapeNormTotal"+catName+PostFix)
+#                FinalFile.Write()
 
 
 #############################################################################################################

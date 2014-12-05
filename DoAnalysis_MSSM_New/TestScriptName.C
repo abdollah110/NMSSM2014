@@ -43,7 +43,7 @@ void TestScriptName() {
     Target = TFile::Open("Finaltest.root", "RECREATE");
     float weight[5] = {1, 1, 1, 1, 1};
     FileList = new TList();
-    FileList->Add(TFile::Open("TotalRootForLimit_mutau_8TeV_New.root"));
+    FileList->Add(TFile::Open("Comparison/Datacards_031214/htt_mt.inputs-mssm-8TeV-0.root"));
     FileList->Add(TFile::Open("TotalRootForLimit_mutau_8TeV.root"));
 
     MergeRootfile(Target, FileList, weight);
@@ -106,7 +106,7 @@ void MergeRootfile(TDirectory *target, TList *sourcelist, float * weight) {
 //                    delete h2;
                 }
                 else
-                    cout<< " ########......... This histo does nor exist  "<<h1->GetName() << "\n";
+                    cout<< " ########......... This histo does not exist  "<<h1->GetName() << "\n";
 
                 nextsource = (TFile*) sourcelist->After(nextsource);
             }

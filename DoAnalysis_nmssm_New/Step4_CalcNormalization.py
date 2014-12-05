@@ -92,7 +92,7 @@ def XSection(mX, CoMEnergy):
 signal = ['bba1GenFil_']
 mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
-Other_BackGround = ['ZTT_lowMass']
+Other_BackGround = ['DYJetsAllMassLow']
 
 #category = ["_inclusive"]
 category = ["_inclusive",  "_btag", "_btagLoose"]
@@ -360,8 +360,8 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             YLoc= lenghtSig + 7
             Name="TTEmbedded"+channel[chl]
             Histogram = Observable+"_mTLess30_OS"
-
-            value=getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram) * XSection("TTEmbedded"+channel[chl], CoMEnergy)
+            #Multiplying embed weight to the ttbar as well
+            value=embedToDYWeight * getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram) * XSection("TTEmbedded"+channel[chl], CoMEnergy)
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
 
@@ -410,7 +410,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
                 YLoc= lenghtSig + 12 + OtherBG
                 Name= str(Other_BackGround[OtherBG])
 
-                value = getHistoNorm(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram) * XSection(Name, CoMEnergy)
+                value = getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram) * luminosity(CoMEnergy)
                 FullResults.SetBinContent(XLoc,YLoc , value)
                 FullResults.GetYaxis().SetBinLabel(YLoc, Name)
 

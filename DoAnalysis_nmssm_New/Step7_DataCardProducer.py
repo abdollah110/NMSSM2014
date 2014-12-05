@@ -65,7 +65,7 @@ signal = ['bba1GenFil_']
 signalName = ['bba1']
 mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
-Other_BackGround = ['ZTT_lowMass']
+Other_BackGround = ['DYJetsAllMassLow']
 lenghtSig = len(signal) * len(mass) +1
 
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
@@ -365,8 +365,8 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
             #######   Top Jet-->tau FR  Shape Uncertainty  ######################################################
             if TopShapeUncertainty and tscale==1: 
-                NameOutUp= "TT_CMS_htt_ttbarJetFake_"+channel+CoMEnergy+"Up"
-                NameOutDown= "TT_CMS_htt_ttbarJetFake_"+channel+CoMEnergy+"Down"
+                NameOutUp= "TT_CMS_htt_ttbarJetFake"+CoMEnergy+"Up"
+                NameOutDown= "TT_CMS_htt_ttbarJetFake"+CoMEnergy+"Down"
 
                 SampleHisto=SampleFile.Get("XXXUp")
 #                if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
@@ -396,13 +396,13 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 
                 SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, HistogramttbarUp, TauScale[tscale],CoMEnergy,False)
                 SampleHisto=SampleFile.Get("XXX")
-                if SampleHisto.Integral(): SampleHisto.Scale(luminosity(CoMEnergy))
+                if SampleHisto.Integral(): SampleHisto.Scale(luminosity(CoMEnergy) *1.05)
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
                 tDirectory.WriteObject(RebinedHist,NamettbarUp)
 
                 SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, HistogramttbarDown, TauScale[tscale],CoMEnergy,False)
                 SampleHisto=SampleFile.Get("XXX")
-                if SampleHisto.Integral(): SampleHisto.Scale(luminosity(CoMEnergy))
+                if SampleHisto.Integral(): SampleHisto.Scale(luminosity(CoMEnergy)*1.05)
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
                 tDirectory.WriteObject(RebinedHist,NamettbarDown)
 
@@ -612,11 +612,11 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 YLoc= lenghtSig + 12 + OtherBG
                 normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization
                 Name= str(Other_BackGround[OtherBG])
-                NameOut= Name+str(TauScaleOut[tscale])
+                NameOut= "ZTT_lowMass"+str(TauScaleOut[tscale])
 
                 #FIXME   Due to the lack of statitics I get the shaoe from inclusive
 #                NameCat= "_inclusive"
-                SampleFile= _Return_SigBGData_Shape(Name, channel,"_inclusive", Histogram, TauScale[tscale],CoMEnergy,False)
+                SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True)
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)

@@ -388,8 +388,8 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
             #######   Top Jet-->tau FR  Shape Uncertainty  ######################################################
             if TopShapeUncertainty and tscale==1: 
-                NameOutUp= "TT_CMS_htt_ttbarJetFake_"+channel+CoMEnergy+"Up"
-                NameOutDown= "TT_CMS_htt_ttbarJetFake_"+channel+CoMEnergy+"Down"
+                NameOutUp= "TT_CMS_htt_ttbarJetFake"+CoMEnergy+"Up"
+                NameOutDown= "TT_CMS_htt_ttbarJetFake"+CoMEnergy+"Down"
 
                 SampleHisto=SampleFile.Get("XXXUp")
 #                if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
