@@ -160,6 +160,9 @@ inline double deltaR(myGenobject const& a, myobject const& b) {
 //bool findThegenVisibleTauH()
 
 bool checkGenRecodR(myGenobject const& Gen1, myGenobject const& Gen2, myobject const& Reco1, myobject const& Reco2) {
+//    cout<<"------------dR11_22="<<Gen1.eta<< " " <<Gen1.phi<< " " << Reco1.eta<< " " << Reco1.phi <<"  " <<Gen2.eta<< " " << Gen2.phi<< " " << Reco2.eta<< " " << Reco2.phi<< " "  <<"\n";
+//    cout<<"------------dR11_22="<<dR(Gen1.eta, Gen1.phi, Reco1.eta, Reco1.phi) <<"  " <<dR(Gen2.eta, Gen2.phi, Reco2.eta, Reco2.phi) <<"\n";
+//    cout<<"------------dR12_12="<<dR(Gen1.eta, Gen1.phi, Reco2.eta, Reco2.phi) <<"  " <<dR(Gen2.eta, Gen2.phi, Reco1.eta, Reco1.phi) <<"\n";
     bool check_11_22 = dR(Gen1.eta, Gen1.phi, Reco1.eta, Reco1.phi) < 0.5 && dR(Gen2.eta, Gen2.phi, Reco2.eta, Reco2.phi) < 0.5;
     bool check_12_21 = dR(Gen1.eta, Gen1.phi, Reco2.eta, Reco2.phi) < 0.5 && dR(Gen2.eta, Gen2.phi, Reco1.eta, Reco1.phi) < 0.5;
     if (check_11_22 || check_12_21)
@@ -199,18 +202,19 @@ int ZCategory(myevent *m, myobject const& obj1, myobject const& obj2) {
 //            cout << "Electron---> recoObj1.eta= " << obj1.eta << " recoObj1.phi= " << obj1.phi << " recoObj1.pt= " << obj1.pt << "\n";
 //            cout << "Tau ---> recoObj2.eta= " << obj2.eta << " recoObj2.phi= " << obj2.phi << " recoObj2.pt= " << obj2.pt << "\n";
 //        }
-    //    if (genLepFromTaus.size() > 0) {
-    //        cout << "genLepFromTaus.size()=" << genLepFromTaus.size() << "\n";
-    //        cout << "status= " << genLepFromTaus[0].status<<" pdgId= " << genLepFromTaus[0].pdgId <<  " MotherpdgId= " << genLepFromTaus[0].mod_pdgId << " genLepFromTaus[0].eta= " << genLepFromTaus[0].eta << " genLepFromTaus[0].phi= " << genLepFromTaus[0].phi << " genLepFromTaus[0].pt= " << genLepFromTaus[0].pt << "\n";
-    //        cout << "status= " << genLepFromTaus[1].status<<" pdgId= " << genLepFromTaus[1].pdgId <<  " MotherpdgId= " << genLepFromTaus[1].mod_pdgId << " genLepFromTaus[0].eta= " << genLepFromTaus[1].eta << " genLepFromTaus[0].phi= " << genLepFromTaus[1].phi << " genLepFromTaus[0].pt= " << genLepFromTaus[1].pt << "\n";
-    //        cout << "status= " << genLepFromTaus[2].status<<" pdgId= " << genLepFromTaus[2].pdgId <<  " MotherpdgId= " << genLepFromTaus[2].mod_pdgId << " genLepFromTaus[0].eta= " << genLepFromTaus[2].eta << " genLepFromTaus[0].phi= " << genLepFromTaus[2].phi << " genLepFromTaus[0].pt= " << genLepFromTaus[2].pt << "\n";
-    //        cout << "status= " << genLepFromTaus[3].status<<" pdgId= " << genLepFromTaus[3].pdgId <<  " MotherpdgId= " << genLepFromTaus[3].mod_pdgId << " genLepFromTaus[0].eta= " << genLepFromTaus[3].eta << " genLepFromTaus[0].phi= " << genLepFromTaus[3].phi << " genLepFromTaus[0].pt= " << genLepFromTaus[3].pt << "\n";
-    //    }
-    //    cout << "genMuFromZ.size() = "<<genMuFromZ.size() << "   genEleFromZ.size()=" << genEleFromZ.size() << "    genTausFromZ.size() ="<<genTausFromZ.size() << "   genLepFromTaus.size()= "<<genLepFromTaus.size() <<"\n";
+//        if (genLepFromTaus.size() > 0) {
+//            cout << "genLepFromTaus.size()=" << genLepFromTaus.size() << "\n";
+//            cout << "status= " << genLepFromTaus[0].status<<" pdgId= " << genLepFromTaus[0].pdgId <<  " MotherpdgId= " << genLepFromTaus[0].mod_pdgId << " genLepFromTaus[0].eta= " << genLepFromTaus[0].eta << " genLepFromTaus[0].phi= " << genLepFromTaus[0].phi << " genLepFromTaus[0].pt= " << genLepFromTaus[0].pt << "\n";
+//            cout << "status= " << genLepFromTaus[1].status<<" pdgId= " << genLepFromTaus[1].pdgId <<  " MotherpdgId= " << genLepFromTaus[1].mod_pdgId << " genLepFromTaus[0].eta= " << genLepFromTaus[1].eta << " genLepFromTaus[0].phi= " << genLepFromTaus[1].phi << " genLepFromTaus[0].pt= " << genLepFromTaus[1].pt << "\n";
+//            cout << "status= " << genLepFromTaus[2].status<<" pdgId= " << genLepFromTaus[2].pdgId <<  " MotherpdgId= " << genLepFromTaus[2].mod_pdgId << " genLepFromTaus[0].eta= " << genLepFromTaus[2].eta << " genLepFromTaus[0].phi= " << genLepFromTaus[2].phi << " genLepFromTaus[0].pt= " << genLepFromTaus[2].pt << "\n";
+//            cout << "status= " << genLepFromTaus[3].status<<" pdgId= " << genLepFromTaus[3].pdgId <<  " MotherpdgId= " << genLepFromTaus[3].mod_pdgId << " genLepFromTaus[0].eta= " << genLepFromTaus[3].eta << " genLepFromTaus[0].phi= " << genLepFromTaus[3].phi << " genLepFromTaus[0].pt= " << genLepFromTaus[3].pt << "\n";
+//        }
+//        cout << "genMuFromZ.size() = "<<genMuFromZ.size() << "   genEleFromZ.size()=" << genEleFromZ.size() << "    genTausFromZ.size() ="<<genTausFromZ.size() << "   genLepFromTaus.size()= "<<genLepFromTaus.size() <<"\n";
     if (genMuFromZ.size() == 2 && checkGenRecodR(genMuFromZ[0], genMuFromZ[1], obj1, obj2)) gen_ditau = 1; // THis is ZLL (ZMuMU)
     else if (genEleFromZ.size() == 2 && checkGenRecodR(genEleFromZ[0], genEleFromZ[1], obj1, obj2)) gen_ditau = 2; // THis is ZLL (ZEE)
     else if (genTausFromZ.size() == 2 && genLepFromTaus.size() == 1 && checkGenRecodR(genTausFromZ[0], genTausFromZ[1], obj1, obj2)) gen_ditau = 3; //This is ZTT (ZLepTau)
-    else if (genTausFromZ.size() == 2 && genLepFromTaus.size() == 2 && checkGenRecodR(genTausFromZ[0], genTausFromZ[1], obj1, obj2)) gen_ditau = 4; //This is ZL (ZTauTau_LepLep)
+    else if (genTausFromZ.size() == 2 && genLepFromTaus.size() == 2 && checkGenRecodR(genLepFromTaus[0], genLepFromTaus[1], obj1, obj2)) gen_ditau = 4; //This is ZL (ZTauTau_LepLep)
+//    else if (genTausFromZ.size() == 2 && genLepFromTaus.size() == 2 && checkGenRecodR(genTausFromZ[0], genTausFromZ[1], obj1, obj2)) gen_ditau = 4; //This is ZL (ZTauTau_LepLep) BUG Found December 5th
     else gen_ditau = 5; //This is ZJ (ZTauTau_LepLep)
     return gen_ditau;
     // 1 or 2 will be  ZLL

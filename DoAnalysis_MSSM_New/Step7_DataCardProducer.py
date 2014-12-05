@@ -442,7 +442,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             Name= "DYJetsAll"
             NameOut= "ZL"+str(TauScaleOut[tscale])
 
-            SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
+            SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True)
             SampleHisto=SampleFile.Get("XXX")
             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
@@ -459,13 +459,13 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                 NameOutZLUp= "ZL_CMS_htt_ZLScale_"+channel+CoMEnergy+"Up"
                 NameOutZLDown= "ZL_CMS_htt_ZLScale_"+channel+CoMEnergy+"Down"
 
-                SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, HistoZLScaleUp, TauScale[tscale],CoMEnergy,False)
+                SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, HistoZLScaleUp, TauScale[tscale],CoMEnergy,True)
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())  # Same Normalization as ZL
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
                 tDirectory.WriteObject(RebinedHist,NameOutZLUp)
 
-                SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, HistoZLScaleDown, TauScale[tscale],CoMEnergy,False)
+                SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, HistoZLScaleDown, TauScale[tscale],CoMEnergy,True)
                 SampleHisto=SampleFile.Get("XXX")
                 if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())  # Same Normalization as ZL
                 RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
@@ -483,7 +483,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             Name= "DYJetsAll"
             NameOut= "ZJ"+str(TauScaleOut[tscale])
 
-            SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
+            SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True)
             SampleHisto=SampleFile.Get("XXX")
             if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
