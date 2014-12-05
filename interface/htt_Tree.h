@@ -192,6 +192,9 @@ float spinnerWeight_ = -10;
 int njetsCen;
 int njetsFwd;
 int  nbtag30;
+float ZimpactTau =-1000;
+bool l2_VLoosetauIsoMVA3oldDMwLT;
+float VtxZ = -100;
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -424,6 +427,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     l2_MediumtauIsoMVA3newDMwLT = obj2.byMediumIsolationMVA3newDMwLT;
     l2_TighttauIsoMVA3newDMwLT = obj2.byTightIsolationMVA3newDMwLT;
     l2_LoosetauIsoMVA3oldDMwLT = obj2.byLooseIsolationMVA3oldDMwLT;
+    l2_VLoosetauIsoMVA3oldDMwLT = obj2.byVLooseIsolationMVA3oldDMwLT;//New
     l2_MediumtauIsoMVA3oldDMwLT = obj2.byMediumIsolationMVA3oldDMwLT;
     l2_TighttauIsoMVA3oldDMwLT = obj2.byTightIsolationMVA3oldDMwLT;
     l2_LoosetauIsoMVA3newDMwoLT = obj2.byLooseIsolationMVA3newDMwoLT;
@@ -500,7 +504,25 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     Trigger_SingleEle12 = Trigger_SingleEle_12(m);
     Trigger_SingleJet12 = Trigger_SingleJet_12(m);
     spinnerWeight_ = m->spinnerWeight;
-
+    
+    
+    
+        l2M = obj2.mass;
+    l2Px = obj2.px;
+    l2Py = obj2.py;
+    l2E = obj2.E;
+    l2Pt = obj2.pt ;
+    l2Phi = obj2.phi;
+    l2Pz = obj2.pz;
+    l2Eta = obj2.eta;
+    
+    TLorentzVector Leg1Vec, Leg2Vec, TotVec;
+    Leg1Vec.SetPtEtaPhiE(l1Pt,l1Eta,l1Phi,l1E);
+    Leg2Vec.SetPtEtaPhiE(l2Pt,l2Eta,l2Phi,l2E);
+    TotVec = Leg1Vec + Leg2Vec;
+    float tanBTau = TMath::Tan(Leg2Vec.Theta());
+    VtxZ = Vertex[0].pz;
+    ZimpactTau = VtxZ + 130./tanBTau;
     //  ########## ########## ########## ########## ########## ##########
     //  GEN Info
     //  ########## ########## ########## ########## ########## ##########

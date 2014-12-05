@@ -321,7 +321,9 @@ int main(int argc, char** argv) {
 
 
 
-
+Run_Tree->Branch("l2_VLoosetauIsoMVA3oldDMwLT", &l2_VLoosetauIsoMVA3oldDMwLT, "l2_VLoosetauIsoMVA3oldDMwLT/O");
+Run_Tree->Branch("ZimpactTau", &ZimpactTau, "ZimpactTau/F");
+Run_Tree->Branch("VtxZ", &VtxZ, "VtxZ/F");
 
 
     //#################################################################################################
