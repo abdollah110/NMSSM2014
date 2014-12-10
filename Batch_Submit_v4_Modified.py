@@ -22,6 +22,7 @@ def make_submit_form():
         pnfn= files[0:-1].split(",")[0]
         data_year= files[0:-1].split(",")[1]
         timing= files[0:-1].split(",")[2]
+        FileSize= int(files[0:-1].split(",")[3])
 
         sampleName2= files[0:-1].split("/")[10]
         sampleName= sampleName2.split(",")[0]
