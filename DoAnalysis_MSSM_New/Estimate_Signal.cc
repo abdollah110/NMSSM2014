@@ -205,6 +205,7 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("l2_tauIsoMVAraw3oldDMwLTraw", &l2_tauIsoMVAraw3oldDMwLTraw);
     Run_Tree->SetBranchAddress("l2_tauIsoMVAraw3oldDMwoLTraw", &l2_tauIsoMVAraw3oldDMwoLTraw);
     Run_Tree->SetBranchAddress("spinnerWeight_;", &spinnerWeight_);
+    Run_Tree->SetBranchAddress("ZimpactTau", &ZimpactTau);
 
     //###############################################################################################
     //Initial Requirements
@@ -491,7 +492,7 @@ int main(int argc, char** argv) {
             GeneralReweighting = 1 * getCorrFactorEMbed(mcdata, Channel, l1Pt, l1Eta, l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
         else {
             MuTrgMatched = (Channel == 1) && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20;
-            EleTrgMatched = (Channel == 3) && Trigger_EleTau12 && l1_trgMatche_Ele20Tau20 && l2_trgMatche_Ele20Tau20;
+            EleTrgMatched = (Channel == 3) && Trigger_EleTau12 && l1_trgMatche_Ele20Tau20 && l2_trgMatche_Ele20Tau20 && (ZimpactTau < -1.5 || ZimpactTau > 0.5);
         }
 
         //############ Full Reweighting

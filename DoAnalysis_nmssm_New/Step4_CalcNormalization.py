@@ -427,7 +427,8 @@ def make2DTable(Observable,PostFix,CoMEnergy):
 
 if __name__ == "__main__":
 #    make2DTable("_visibleMass","", "_8TeV")
-    make2DTable("_SVMass","", "_8TeV")
-    make2DTable("_SVMass","Up", "_8TeV")
-    make2DTable("_SVMass","Down", "_8TeV")
+    make2DTable("_TauPt","", "_8TeV")
+#    make2DTable("_SVMass","", "_8TeV")
+#    make2DTable("_SVMass","Up", "_8TeV")
+#    make2DTable("_SVMass","Down", "_8TeV")
 

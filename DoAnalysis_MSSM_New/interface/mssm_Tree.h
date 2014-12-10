@@ -201,6 +201,7 @@ float GenAntiTopPt = -10;
 float Tau_Vertex_dz = -10;
 float gen_Higgs_Mass;
 float spinnerWeight_= -10;
+float ZimpactTau = -1000;
 
 //void fillTreeN(TTree* BG_Tree, int Channel, int subChannel, float HMass, double SVMass, int trRun, int trLumi, int trEvent, float l3Pt, float l3Eta, float l3_CloseJetPt, float l3_CloseJetEta, float l4Pt, float l4Eta, float l4_CloseJetPt, float l4_CloseJetEta, float met, float metPhi, float covMet11, float covMet12, float covMet21, float covMet22, float l3M, float l3Px, float l3Py, float l3Pz, float l4M, float l4Px, float l4Py, float l4Pz, float eff_Correction, float pu_Weight) {
 //
