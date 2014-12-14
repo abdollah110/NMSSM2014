@@ -219,6 +219,9 @@ int main(int argc, char** argv) {
     float cutonSVmass = 0;
     float cutonTaupt = 20;
     int massBin = 200;
+    int otherBin  = 200;
+    float Binlow = 0;
+    float BinHigh= 200;
     //    float cutonSVmass= 0;
     //    float cutonTaupt= 20;
     //    int massBin = 300;
@@ -592,24 +595,25 @@ int main(int argc, char** argv) {
                                                                                 bool SMHiggs125Selection = SignalSelection && (ggHiggsFind != string::npos || SMFind != string::npos);
                                                                                 //###################################################
                                                                                 std::string FullStringName = Lepiso_Cat[lepiso] + mT_Cat[mTcat] + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat];
+                                                                                std::string FullStringNameMT = Lepiso_Cat[lepiso]  + q_Cat[qcat] + iso_Cat[isocat] + eta_Cat[etacat] + ZCat[zcat] + index[icat] + Gjet_Cat[Jetcat] + TauScale_cat[tScalecat];
                                                                                 //###################################################
                                                                                 //###################################################
                                                                                 //###################################################
                                                                                 if (MuTrgMatched && MU_CUTS && TAU_CUTS && (Event != Event_Double[1][1])) {
-                                                                                    if ( etacat == 0) plotFill("mutau_TauPt" + FullStringName, l2Pt, massBin, 0, massBin, AllWeight);
-                                                                                    if (QCDShape && qcat == 1) plotFill("mutau_2DTauPtPt" + FullStringName, l2Pt, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                                    if ( etacat == 0) plotFill("mutau_LepPt" + FullStringName, l1Pt, massBin, 0, massBin, AllWeight);
-                                                                                    if (QCDShape && qcat == 1) plotFill("mutau_2DLepPtPt" + FullStringName, l1Pt, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                                    if ( etacat == 0) plotFill("mutau_nBjets" + FullStringName, nbtag, 5,0,5, AllWeight);
+                                                                                    if (QCDShape && qcat == 1) plotFill("mutau_2DnBjetsPt" + FullStringName, nbtag, l2Pt, 5,0,5, ptBin, 0, ptBin, AllWeight);
+                                                                                    if ( etacat == 0) plotFill("mutau_TMass" + FullStringNameMT, mT, otherBin,Binlow,BinHigh, AllWeight);
+                                                                                    if (QCDShape && qcat == 1) plotFill("mutau_2DTMassPt" + FullStringNameMT, mT, l2Pt, otherBin,Binlow,BinHigh, ptBin, 0, ptBin, AllWeight);
 
                                                                                 }
                                                                                 //####################################################
                                                                                 //###################################################
                                                                                 //###################################################
                                                                                 if (EleTrgMatched && EL_CUTS && TAU_CUTS && (Event != Event_Double[2][2])) {
-                                                                                    if ( etacat == 0) plotFill("etau_TauPt" + FullStringName, l2Pt, massBin, 0, massBin, AllWeight);
-                                                                                    if (QCDShape && qcat == 1) plotFill("etau_2DTauPtPt" + FullStringName, l2Pt, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                                    if ( etacat == 0) plotFill("etau_LepPt" + FullStringName, l1Pt, massBin, 0, massBin, AllWeight);
-                                                                                    if (QCDShape && qcat == 1) plotFill("etau_2DLepPtPt" + FullStringName, l1Pt, l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
+                                                                                    if ( etacat == 0) plotFill("etau_nBjets" + FullStringName, nbtag, 5,0,5, AllWeight);
+                                                                                    if (QCDShape && qcat == 1) plotFill("etau_2DnBjetsPt" + FullStringName, nbtag, l2Pt, 5,0,5, ptBin, 0, ptBin, AllWeight);
+                                                                                    if ( etacat == 0) plotFill("etau_TMass" + FullStringNameMT, mT, otherBin,Binlow,BinHigh, AllWeight);
+                                                                                    if (QCDShape && qcat == 1) plotFill("etau_2DTMassPt" + FullStringNameMT, mT, l2Pt, otherBin,Binlow,BinHigh, ptBin, 0, ptBin, AllWeight);
                                                                                 }
                                                                                 //####################################################
                                                                             }
