@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
     //#################################################################################################
     //############## defining Tree Branches Filled via fillTree function                ###############
     //#################################################################################################
-    TTree *Run_Tree = new TTree("TauCheck", "TauCheck");
+ TTree *Run_Tree = new TTree("InfoTree", "InfoTree");
     //    To force a memory-resident Tree
     Run_Tree->SetDirectory(0);
 
