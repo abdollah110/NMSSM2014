@@ -76,8 +76,8 @@ int main(int argc, char** argv) {
 
     //    string CHANNEL = *(argv + 2);
 
-    bool isMu = 0;
-    bool isEle = 1;
+    bool isMu = 1;
+    bool isEle = 0;
     bool isTot = 0;
 
     string out = *(argv + 2);
@@ -340,8 +340,7 @@ int main(int argc, char** argv) {
             fflush(stdout);
 //            if (m->eventNumber == 64981240){
             if (1){
-            cout<<"\n-----------------------\n";
-            cout << "Lumi is    " << m->lumiNumber << "    and Event is " << m->eventNumber << "\n";
+            
             //*********************************************************************************************
             //****************************    Object definitions    ***************************************
             //*********************************************************************************************
@@ -367,6 +366,15 @@ int main(int argc, char** argv) {
             //            bool doMuTauAnalysis = true;
             //            bool doElTauAnalysis = false;
             //#################################################################################################
+                
+                
+                //  ########## ########## ########## ########## ########## ##########
+                //  Jet Information
+                //  ########## ########## ########## ########## ########## ##########
+                
+                cout<<"\n##################################################################################################################################\n";
+                cout << "Run is "<< m->runNumber  << "  Lumi is    " << m->lumiNumber << "    and Event is " << m->eventNumber  <<"\n";
+
             //########################## MuTau Selection         ##############################################
             //#################################################################################################
             //#################################################################################################
@@ -390,7 +398,7 @@ int main(int argc, char** argv) {
                         bool Mu_Iso = Iso_Mu_dBeta(mu_[i]) < 0.1;
                         bool MU_CUTS = Mu_PtEta && Mu_IdTight && Mu_d0 && Mu_dZ && Mu_Iso;
 
-                        bool Tau_PtEta = tau_[k].pt > 20 && fabs(tau_[k].eta) < 2.3;
+                        bool Tau_PtEta = tau_[k].pt > 30 && tau_[k].pt < 45 && fabs(tau_[k].eta) < 2.3;
                         bool Tau_DMF = tau_[k].discriminationByDecayModeFindingOldDMs;
                         bool Tau_Isolation = tau_[k].byTightIsolationMVA3oldDMwLT;
                         bool Tau_antiEl = tau_[k].discriminationByElectronLoose;
@@ -410,8 +418,9 @@ int main(int argc, char** argv) {
                         //  ########## ########## ########## ########## ########## ##########
                         //  Other Information
                         //  ########## ########## ########## ########## ########## ##########
-                        //                        vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
-                        //                        vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
+                                                vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
+                                                vector<myobject> JETS20New = GoodJet20New(m, mu_[i], tau_[k]);
+                                                vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
                         //
                         //                        int pairIndex = mu_[i].gen_index * 10 + tau_[k].gen_index;
                         //                        float MetPair_MT = MVAMetRecoil_mutau[mu_[i].gen_index * 10 + tau_[k].gen_index].pt;
@@ -424,12 +433,23 @@ int main(int argc, char** argv) {
                         //                        float trigweight_2 = getCorrTriggerTau("mutau", "mc12", tau_[k]);
 
                         //  ########## ########## ########## ########## ########## ##########
+             
+                       // cout<<hasMatchedTrigger << Trigger_MuTau_12(m) << Mu_PtEta << Mu_IdTight << Mu_d0 << Mu_dZ << Mu_Iso<<Tau_Vertex_dz << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu << MuTau_Charge << MuTau_dR << secondMuVeto << thirdEleVeto << thirdMuVeto<<"\n";
 
                         if (hasMatchedTrigger && Trigger_MuTau_12(m) && MU_CUTS && TAU_CUTS && MuTau_Charge && MuTau_dR && secondMuVeto && thirdEleVeto && thirdMuVeto) {
+                      
                             plotFill("mutau", ++mutau, 20, 0., 20.);
                             fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
+                            
+                            for (int nj=0;nj<JETS20New.size();nj++){
+                                cout<< "jet number_" <<nj+1 << "  pt=" << JETS20New[nj].pt << " eta=" << JETS20New[nj].eta <<  " pt_Mu=" << mu_[i].pt << "  eta_Mu=" << mu_[i].eta <<  "  pt_Tau=" << tau_[k].pt << "  eta_Tau=" << tau_[k].eta <<        "\n";
+                            }
+                            cout << "-----------------"<<"\n";
+                            for (int nj=0;nj<BJETS.size();nj++){
+                                cout<< "Bjet number_" <<nj+1 << "              pt=" << BJETS[nj].pt << "  eta=" << BJETS[nj].eta <<"\n";
+                            }
                             //                            counter++;
-                            //                            cout << "\n" << counter << "   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "\n";
+                                                        cout << "-------------> passed   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "\n";
                             //                            cout << "for leptons: - lepton pt/eta/phi = " << mu_[i].pt << "/" << mu_[i].eta << " /" << mu_[i].phi << "\n";
                             //                            cout << "            - tau    E/pt/eta/phi =" << tau_[k].E << "/" << tau_[k].pt << "/" << tau_[k].eta << "/" << tau_[k].phi << "\n";
                             //                            cout << "   MVAMetwithRecoil=" << MetPair_MT << "   MVAMet No Recoil= " << MetPair_MTNoRecoil << "   RAWPFMet= " << RAWPFMet.front().pt << "\n";
@@ -439,8 +459,9 @@ int main(int argc, char** argv) {
                             //                            cout << "   PU_Weight _OLD= " << PU_Weight << "   PU_Weight _New=" << m->PU_Weight << "   npu=" << npu << "\n";
                             //                            cout << "   erightLepton_id_iso= " << idweight_1 << "   lepton_trg_Weight=" << trigweight_1 << "   tau_Trg_Weight=" << trigweight_2 << "\n\n\n\n";
 
-//                            break;
+                            break;
                         }
+                       
                     }
                 }
             }//end of only Muon
@@ -505,10 +526,10 @@ int main(int argc, char** argv) {
 
                         //  ########## ########## ########## ########## ########## ##########
                         int zCat = ZCategory(m, electron_[i], tau_[k]);
-                            cout << "leg1 pT/eta/phi = " << electron_[i].pt << "/" << electron_[i].eta << "/" << electron_[i].phi << "\n";
-                            cout << "leg2 pT/eta/phi = " << tau_[k].pt << "/" << tau_[k].eta << "/" << tau_[k].phi << "\n";
-                            cout << "-----> flag = " << zCat << "\n";
-                            cout<<hasMatchedTrigger << Trigger_EleTau_12(m) << EL_CUTS << Tau_Vertex_dz << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu << ElTau_Charge << ElTau_dR << secondEleVeto << thirdEleVeto << thirdMuVeto<<"\n";
+                           // cout << "leg1 pT/eta/phi = " << electron_[i].pt << "/" << electron_[i].eta << "/" << electron_[i].phi << "\n";
+                           // cout << "leg2 pT/eta/phi = " << tau_[k].pt << "/" << tau_[k].eta << "/" << tau_[k].phi << "\n";
+                           // cout << "-----> flag = " << zCat << "\n";
+                           // cout<<hasMatchedTrigger << Trigger_EleTau_12(m) << EL_CUTS << Tau_Vertex_dz << Tau_PtEta << Tau_DMF << Tau_Isolation << Tau_antiEl << Tau_antiMu << ElTau_Charge << ElTau_dR << secondEleVeto << thirdEleVeto << thirdMuVeto<<"\n";
                             
                             
                         if ( EL_CUTS && TAU_CUTS && ElTau_Charge && ElTau_dR && secondEleVeto && thirdEleVeto && thirdMuVeto) {

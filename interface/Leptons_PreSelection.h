@@ -153,6 +153,20 @@ vector<myobject> GoodJet30(myevent *m, myobject const& a, myobject const& b) {
     sort(goodJet.begin(), goodJet.end(), myobject_grt());
     return goodJet;
 }
+vector<myobject> GoodJet20New(myevent *m, myobject const& a, myobject const& b) {
+    
+    vector<myobject> goodJet;
+    vector<myobject> Jet = m->RecPFJetsAK5;
+    
+    for (int i = 0; i < Jet.size(); i++) {
+        if (Jet[i].pt > 20 && TMath::Abs(Jet[i].eta) < 4.7 && Jet[i].jetId_loose > 0.5 && Jet[i].puJetIdLoose > 0.5) {
+            if (NonOverLapWithAB(a, b, Jet[i]))
+                goodJet.push_back(Jet[i]);
+        }
+    }
+    sort(goodJet.begin(), goodJet.end(), myobject_grt());
+    return goodJet;
+}
 
 //******************************************************************************************
 //*********************   B---JET   ************************************************************

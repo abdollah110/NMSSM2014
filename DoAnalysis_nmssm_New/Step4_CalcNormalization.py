@@ -68,6 +68,9 @@ def XSection(mX, CoMEnergy):
         if mX == 'ggH_SM125':      return 1.23
         if mX == 'qqH_SM125':      return 0.100
         if mX == 'VH_SM125':      return 0.077
+        if mX == 'ggH_SMHWW125':      return 4.182
+        if mX == 'qqH_SMHWW125':      return 0.340
+        if mX == 'VH_SMHWW125':      return 0.2618
         if mX == 'TTEmbeddedmutau':      return (26.197  * 771693/ 12011428)  # FIXME   This hsould be fixed
         if mX == 'TTEmbeddedetau':      return (26.197  * 718441/ 12011428)  # FIXME   This hsould be fixed
 #        if mX == 'TTEmbeddedmutau':      return (5.887  * 771693/ 12011428)  # FIXME   This hsould be fixed
@@ -91,7 +94,7 @@ def XSection(mX, CoMEnergy):
 
 signal = ['bba1GenFil_']
 mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
-SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
+SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125', 'ggH_SMHWW125', 'qqH_SMHWW125', 'VH_SMHWW125']
 Other_BackGround = ['DYJetsAllMassLow']
 
 #category = ["_inclusive"]
@@ -116,6 +119,8 @@ def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     if (HistoSub):
         value = HistoSub.Integral() * luminosity(CoMEnergy) / HistoDenum.GetBinContent(1)
         value = round(value, digit)
+    else:
+        print "There is no such a histogram",chan+Histogram+ cat+PostFix, "    in     ",SubRootDir + "out_"+Name +CoMEnergy+ ".root"
     return value
 
 def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
@@ -407,7 +412,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
 
                 Histogram = Observable+"_mTLess30_OS"
                 XLoc= categ + len(category)*chl + 1
-                YLoc= lenghtSig + 12 + OtherBG
+                YLoc= lenghtSig + 15 + OtherBG
                 Name= str(Other_BackGround[OtherBG])
 
                 value = getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram) * luminosity(CoMEnergy)
@@ -428,10 +433,11 @@ def make2DTable(Observable,PostFix,CoMEnergy):
 if __name__ == "__main__":
 #    make2DTable("_visibleMass","", "_8TeV")
 #    make2DTable("_TauPt","", "_8TeV")
-    make2DTable("_nBjets","", "_8TeV")
+#   make2DTable("_nBjets","", "_8TeV")
 #    make2DTable("_TauEta","", "_8TeV")
 #    make2DTable("_LepPt","", "_8TeV")
-#    make2DTable("_SVMass","", "_8TeV")
-#    make2DTable("_SVMass","Up", "_8TeV")
-#    make2DTable("_SVMass","Down", "_8TeV")
+
+    make2DTable("_SVMass","", "_8TeV")
+    #    make2DTable("_SVMass","Up", "_8TeV")
+# make2DTable("_SVMass","Down", "_8TeV")
 

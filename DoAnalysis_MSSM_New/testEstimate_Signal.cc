@@ -242,7 +242,7 @@ int main(int argc, char** argv) {
     int y = 0;
     for (Int_t i = 0; i < nentries_wtn; i++) {
         Run_Tree->GetEntry(i);
-        if (i % 10000000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
+        if (i % 10000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
         fflush(stdout);
 
         //###############################################################################################
@@ -544,13 +544,8 @@ int main(int argc, char** argv) {
         if (zCategory==4) zCategory=2;
 //                int evenrList[150] = {2303605,47320515,24058878,5719773,704525,9022512,30257505,112555,20923217,35624962,2810887,21791407,8603770,37889540,16092899,45854507,40547,45154364,38544680,58329438,13727956,35622528,37744623,11766558,7923410,110373,15433517,51531714,4205860,16238038,29619349,51611703,29370434,47011867,27889644,3481070,23705286,4534618,14833929,27432003,9099310,25300667,684597,38386427,52246842,64042785,58381893,35974272,61442732,69273213,41430984,4846466,5707733,32785216,5819174536,7681230385,26993718,37509503,20161243,64865193,53540389,42715693,62711134,724370,46801156,49374538,30477044,7962905,1068467,42724003,58544038,48011803,44841762,4298846,7081912,20675868,50649227,64525782,889219,14133002,66840990,10369265,29644339,28277045,65071862,62613062,58226398,47248619,30836967,48602660,53125348,30040287,47680538,58182898,15343703,50945528,14064766,49000277,22071797,18270893,9410405,9719522,17400680,19131944,25467272,25467295,30136223,34655839,45033236,46935679,48134023,62596617,54904332,516255,41825358,38931289,39119177,41748918,41430656,47395595,47764633,10697369,11004040,11452219,11975640,4921318,10483035,10487088,3579194,4062707,39743794,2218842,62054054,623207,38885669,40252959,41543514,41287740,150145022,45024,34958927,35057225,36115970,32802653,36985765,44951045,27574727,289088,31313777,8440240};
         
-        if (Event== 269370329 || Event==479140274 || Event==197649483 || Event==48692795 || Event== 2173253372|| Event==1142263365 || Event== 739429138|| Event==54596209 || Event==1016457808 || Event== 174786808 || Event== 92339814 || Event==130082237 || Event== 83227824|| Event==483256990 || Event== 195999898 || Event==441056713 || Event==  77315598|| Event==19295623|| Event==433066250 || Event==810589238 || Event== 32323392 || Event== 849534294 || Event== 1281764288|| Event== 997856040){
-        cout<<  "\n "<<Run <<" - "<<Lumi<<" - "<<Event<< "   --- >  "<<(l1Pt>20) << (l2Pt>30 )<< (l2Pt < 45) << charge_OS << (Channel<2 )<< l2_TighttauIsoMVA3oldDMwLT  << (mt_1 < 30) << (fabs(l1_d0) < 0.045) << (fabs(l1_dZ_in) < 0.2 )<< (abs(Tau_Vertex_dz) < 0.2 )<< l2_tauRejEleMVA3L << (l1_muIso < 0.1) << Trigger_MuTau12 << l1_trgMatche_Mu17Tau20 << l2_trgMatche_Mu17Tau20 << (nbtag > 0) << (njets < 2 )<< (SVMass > 50) << (SVMass < 250)<<"\n";
-            
-            //cout<<Run <<" - "<<Lumi<<" - "<<Event<<" - "<<l1Pt<<" - "<< l2Pt<<" - "<< SVMass<< " - "  <<  mt_1      <<" - "  <<  mvamet      <<"\n";
-        }
-            // if (l1Pt>20 && l2Pt>30 && l2Pt < 45 && charge_OS && Channel<2 && l2_TighttauIsoMVA3oldDMwLT > 0.5 && mt_1 < 30 && fabs(l1_d0) < 0.045 && fabs(l1_dZ_in) < 0.2 && abs(Tau_Vertex_dz) < 0.2 && l2_tauRejEleMVA3L > 0.5 && l1_muIso < 0.1 && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20 && nbtag > 0 && njets < 2 && SVMass > 50 && SVMass < 250)
-        
+        if (l1Pt>20 && l2Pt>30 && l2Pt < 45 && charge_OS && Channel<2 && l2_TighttauIsoMVA3oldDMwLT > 0.5 && mt_1 < 30 && fabs(l1_d0) < 0.045 && fabs(l1_dZ_in) < 0.2 && abs(Tau_Vertex_dz) < 0.2 && l2_tauRejEleMVA3L > 0.5 && l1_muIso < 0.1 && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20 && nbtag > 0 && njets < 2 && SVMass > 250)
+            cout<<"Her is the extra ones "<<Run <<"-"<<Lumi<<" "<<SVMass<< "  mt1 is "  <<  mt_1 <<  "  new MT is "<<mT    <<"\n";
 //        int evenrList[15] = {4054761,4502281,4502411,51625561,62320701,62711134,68459791,70452501,8440240,11037311,11255581,17453681,23036051,23038531,28908871};
 //                for (int ii = 0; ii < 15; ii++) {
 //                    if (Event == evenrList[ii]) {
@@ -560,7 +555,7 @@ int main(int argc, char** argv) {
 //                }
     
 //                        cout << Event << "  " << El_PtEta << El_IdTight << (SVMass > 50) << IsInCorrcetMassRange << TauVtxdZ << Tau_DMF << Tau_antiEl << Tau_antiMu << (l2Pt > 30) << (fabs(l2Eta) < 2.3) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) << "  pt of tau " << l2Pt << "  tau Isol MVA is " << l2_tauIsoMVAraw3oldDMwLTraw << "  tau Isol Comb is " << byCombinedIsolationDeltaBetaCorrRaw3Hits_2 << " eta is" << l2Eta << " decayMode is " << l2_DecayMode << "\n";
-        //        if (selection_btag << EL_CUTS && TAU_CUTS && Channel == 3 && mTLess30 && charge_OS && TightIso && l2Pt > 30 && fabs(l2Eta) < 2.3) {
+        //        if (selection_btag && EL_CUTS && TAU_CUTS && Channel == 3 && mTLess30 && charge_OS && TightIso && l2Pt > 30 && fabs(l2Eta) < 2.3) {
         //            cout << Run << ":" << Lumi << ":" << Event << "\n";
         //        }
         //if (selection && MuTrgMatched && MU_CUTS && TAU_CUTS && Channel == 1 && mTLess30 && charge_OS && TightIso && sel_ZJ) {

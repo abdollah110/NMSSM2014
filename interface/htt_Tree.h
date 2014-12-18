@@ -266,6 +266,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
         mvametphiNoRecoil = MVAMetNORecoil_mutau[pairIndex].phi;
 
         mt_1 = TMass(obj1, MVAMetRecoil_mutau[pairIndex]);
+        cout<<   "TMass is   "<<mt_1<<"\n";
         mt_2 = TMass(obj2, MVAMetRecoil_mutau[pairIndex]);
         mvacov00 = m->PairMet_mutau_sigMatrix_00[pairIndex];
         mvacov01 = m->PairMet_mutau_sigMatrix_01[pairIndex];
@@ -306,6 +307,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     nbtag = BJETS.size();
     nbtagLoose = BLooseJETS.size();
     //    nbtagNoCor = BJETSNoCor.size();
+    cout<<  "  JetSize=" << njets << "  BJetSize=" << nbtag <<"\n";
 
     jpt_1 = (JETS.size() > 0 ? JETS[0].pt : -1000);
     jeta_1 = (JETS.size() > 0 ? JETS[0].eta : -1000);
