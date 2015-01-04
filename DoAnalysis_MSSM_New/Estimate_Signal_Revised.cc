@@ -1,6 +1,12 @@
 #include "interface/mssm_Tree.h"
 #include "interface/TTEmbedCor.h"
+#include "interface/WeightCalculator.h"
+#include <Python.h>
+
 //#include "../interface/zh_Tree.h"
+
+
+
 
 int main(int argc, char** argv) {
 
@@ -22,19 +28,43 @@ int main(int argc, char** argv) {
     for (int f = 2; f < argc; f++) {
         input.push_back(*(argv + f));
         // printing the input NAME
-        cout << "\n INPUT NAME IS:   " << input[f - 2] << "\t";
+        cout << "\n INPUT NAME IS:   " << input[f - 2] << "\n";
     }
+    
+    
+    
+
+    
      for (int k = 0; k < input.size(); k++) {
     
     //std::string input = *(argv + 2);
     TFile *f_Double = new TFile(input[k].c_str());
+         
+         
+         cout <<  "\n  Now is running on ------->   "<<f_Double->GetName()<<"\n";
 
+         
+         TFile * myFile = new TFile(f_Double->GetName());
+         TH1F * Histo = (TH1F*) myFile->Get("TotalEventsNumber");
+         
+         
+//         TFile * myFile_W = new TFile("../FileROOT/MSSMROOTFiles/WJetsToLNu_8TeV.root");
+//         TH1F * Histo_W = (TH1F*) myFile_W->Get("TotalEventsNumber");
+         
+         
+         vector<float> W_Events = W_EvenetMultiplicity();
+         vector<float> DY_Events = DY_EvenetMultiplicity();
+//         
+//         TFile * myFile_DY = new TFile("../FileROOT/MSSMROOTFiles/DYJetsToLL_8TeV.root");
+//         TH1F * Histo_DY = (TH1F*) myFile_DY->Get("TotalEventsNumber");
+         
+         
     
     TTree *Run_Tree = (TTree*) f_Double->Get("InfoTree");
     Run_Tree->AddFriend("Mass_tree");
 
     cout.setf(ios::fixed, ios::floatfield);
-    cout.precision(5);
+    cout.precision(10);
 
     Run_Tree->SetBranchAddress("Channel", &Channel);
     Run_Tree->SetBranchAddress("run", &Run);
@@ -264,7 +294,7 @@ int main(int argc, char** argv) {
         //###############################################################################################
         //  CATEGORIZATION
         //###############################################################################################
-
+             float NewWEIGHT= weightCalc(Histo,f_Double->GetName(),num_gen_jets,mcdata,W_Events,DY_Events);
         ////###############   New NMSSM Categorization
         //        const int size_mssmC = 5;
         //        bool selection_inclusive = 1;
@@ -405,8 +435,8 @@ int main(int argc, char** argv) {
         std::string Gjet_Cat[6] = {"", "0j", "1j", "2j", "3j", "4j"};
         size_t DYsample = out.find("out_DY");
         size_t Wsample = out.find("out_W");
-        if (!(DYsample != string::npos || Wsample != string::npos)) size_jet = 1;
-
+       // if (!(DYsample != string::npos || Wsample != string::npos)) size_jet = 1;
+        size_jet = 1;
 
         ////###############   tsu energy scale up and down  Categorization
         const int size_tscale = 3;
@@ -512,7 +542,7 @@ int main(int argc, char** argv) {
         }
 
         //############ Full Reweighting
-        float AllWeight = GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * SMHiggs125PtReweight[1] *EleTauFRWeight * TopPtReweighting * TauSpinor;
+        float AllWeight = GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * SMHiggs125PtReweight[1] *EleTauFRWeight * TopPtReweighting * TauSpinor * NewWEIGHT;
         if (verbose_) cout << "AllWeight= " << AllWeight << "   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight=" << tauESWeight << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "\n";
         //####################################################
         // Muon Selection

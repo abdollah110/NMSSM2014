@@ -59,7 +59,8 @@ UpperRange = 200
 Binning_NoBTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,200])
 Binning_BTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,200])
 TauScale = ["Down", "", "Up"]
-POSTFIX=["","Up","Down"]
+POSTFIX=[""]
+#POSTFIX=["","Up","Down"]
 
 signal = ['bba1GenFil_']
 signalName = ['bba1']
@@ -86,16 +87,6 @@ def luminosity(CoMEnergy):
 def XSection(mX, CoMEnergy):
     if CoMEnergy == '_8TeV':
         if mX == 'ggH_SM125':      return 1.23
-    
-def QCDUncertaintyNameFR(unc,channel,NameCat,CoMEnergy):
-    if unc=="": return 'QCD'
-    if unc== "Up": return "QCD_CMS_htt_QCDfrShape_"+channel+CoMEnergy+"Up"
-    if unc== "Down": return "QCD_CMS_htt_QCDfrShape_"+channel+CoMEnergy+"Down"
-
-def QCDUncertaintyName(unc,channel,NameCat,CoMEnergy):
-    if unc=="": return 'QCD_'
-    if unc== "Up": return "QCD_CMS_htt_QCDShape_"+channel+NameCat+CoMEnergy+"Up"
-    if unc== "Down": return "QCD_CMS_htt_QCDShape_"+channel+NameCat+CoMEnergy+"Down"
 
 def getTauFakeCorrection(pt):
 
@@ -154,11 +145,11 @@ def _Return_Embed_Shape(Name, channel,cat,HistoName,PostFix,CoMEnergy,normal,nor
     TTEmbedded.Close()
     return NewFile
 
-def _Return_QCD_Shape(channel,cat,Histo,UncShape,PostFix,CoMEnergy):
+def _Return_QCD_Shape(channel,cat,Histo,PostFix,CoMEnergy):
     myfile = TFile("QCDFinalFile.root")
-    HistoNorm =  myfile.Get(channel+Histo + cat+ UncShape+PostFix)
+    HistoNorm =  myfile.Get(channel+Histo + cat+PostFix)
     if cat=="_btag" : cat = "_btagLoose" 
-    HistoShape =  myfile.Get(channel+Histo + cat+ UncShape+PostFix)
+    HistoShape =  myfile.Get(channel+Histo + cat+PostFix)
     HistoShape.Scale(HistoNorm.Integral()/HistoShape.Integral())
 #    NewFile=TFile("Extra/XXX2out_QCD" +CoMEnergy+channel+ cat+PostFix+".root","RECREATE")
     NewFile=TFile("Extra/XXX.root","RECREATE")
@@ -540,23 +531,44 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             ################################################
             #  Filling QCD
             ################################################
+
             if tscale ==1:
-                print "Doing QCD, BG estimation"
-                for unc in POSTFIX:
+                    print "Doing QCD, BG estimation"
+        
                     tDirectory.cd()
-                    Histogram = "_QCDShapeNormTotal"
+                    HistogramNorm = "_QCDShapeNormTotalFROSSS"   #channelName+"_QCDShapeNormTotal"+catName+shiftFR+"FR"+shiftOSSS+"OSSS"
+                    HistogramNormUpFR = "_QCDShapeNormTotalUpFROSSS"
+                    HistogramNormDownFR = "_QCDShapeNormTotalDownFROSSS"
+                    HistogramNormUpOSSS = "_QCDShapeNormTotalFRUpOSSS"
+                    HistogramNormDownOSSS = "_QCDShapeNormTotalFRDownOSSS"
                     Name='Data'
                     NameOut= 'QCD'
 
-                    SampleFile= _Return_QCD_Shape(channel,NameCat, Histogram,unc, TauScale[tscale],CoMEnergy)
+                    SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNorm, TauScale[tscale],CoMEnergy)
                     SampleHisto=SampleFile.Get("XXX")
                     RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
-                    tDirectory.WriteObject(RebinedHist,QCDUncertaintyNameFR(unc, channel, NameCat, CoMEnergy))
-                    tDirectory.WriteObject(RebinedHist,QCDUncertaintyName(unc, channel, NameCat, CoMEnergy))
-                    if doFineBinning:
-                        RebinedHistFinBin= SampleHisto.Rebin(FineBinVal)
-                        tDirectory.WriteObject(RebinedHistFinBin,QCDUncertaintyNameFR(unc, channel, NameCat, CoMEnergy)+"_fine_binning")
-                        tDirectory.WriteObject(RebinedHistFinBin,QCDUncertaintyName(unc, channel, NameCat, CoMEnergy)+"_fine_binning")
+                    tDirectory.WriteObject(RebinedHist,"QCD")
+                    
+                    SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNormUpFR, TauScale[tscale],CoMEnergy)
+                    SampleHisto=SampleFile.Get("XXX")
+                    RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDFRShape_"+channel+NameCat+CoMEnergy+"Up")
+                    
+                    SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNormDownFR, TauScale[tscale],CoMEnergy)
+                    SampleHisto=SampleFile.Get("XXX")
+                    RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDFRShape_"+channel+NameCat+CoMEnergy+"Down")
+                    
+                    SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNormUpOSSS, TauScale[tscale],CoMEnergy)
+                    SampleHisto=SampleFile.Get("XXX")
+                    RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDOSSSShape_"+channel+NameCat+CoMEnergy+"Up")
+                        
+                    SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNormDownOSSS, TauScale[tscale],CoMEnergy)
+                    SampleHisto=SampleFile.Get("XXX")
+                    RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDOSSSShape_"+channel+NameCat+CoMEnergy+"Down")
+                        
 
             ################################################
             #  Filling Data

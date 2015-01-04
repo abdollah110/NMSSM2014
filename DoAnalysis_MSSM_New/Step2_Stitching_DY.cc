@@ -14,13 +14,13 @@ void Step2_Stitching_DY() {
 
     const int numBG = 5;
     // Do stiching for DY Background
-        Target_DY = TFile::Open("OutFiles/out_DYJetsAll_8TeV.root", "RECREATE");
-        FileList_DY = new TList();
-        FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsAll_8TeV_Hadd.root"));
-        char * Background_DY[numBG] = {"DYJetsToLL", "DY1JetsToLL", "DY2JetsToLL", "DY3JetsToLL", "DY4JetsToLL"};
-        float XSection_DY[numBG] = {2950, 561, 181, 51.1, 23};
-        float LOtoNLO_DY = 1.187694915;
-        MeasureWeight_Submit(Target_DY, FileList_DY, Background_DY, XSection_DY, LOtoNLO_DY);
+    Target_DY = TFile::Open("OutFiles/out_DYJetsAll_8TeV.root", "RECREATE");
+    FileList_DY = new TList();
+    FileList_DY->Add(TFile::Open("OutFiles/out_DYJetsAll_8TeV_Hadd.root"));
+    char * Background_DY[numBG] = {"DYJetsToLL", "DY1JetsToLL", "DY2JetsToLL", "DY3JetsToLL", "DY4JetsToLL"};
+    float XSection_DY[numBG] = {2950, 561, 181, 51.1, 23};
+    float LOtoNLO_DY = 1.187694915;
+    MeasureWeight_Submit(Target_DY, FileList_DY, Background_DY, XSection_DY, LOtoNLO_DY);
 
     //    // Do stiching for W Background
     Target_W = TFile::Open("OutFiles/out_WJetsAll_8TeV.root", "RECREATE");

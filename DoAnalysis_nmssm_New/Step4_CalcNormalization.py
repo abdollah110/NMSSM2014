@@ -108,6 +108,8 @@ lenghtSig = len(signal) * len(mass) +1
 
 digit = 5
 verbos_ = False
+lowBin=0
+highBin=200
 
 
 def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
@@ -117,7 +119,7 @@ def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
     value = 10E-7
     if (HistoSub):
-        value = HistoSub.Integral() * luminosity(CoMEnergy) / HistoDenum.GetBinContent(1)
+        value = HistoSub.Integral(lowBin,highBin) * luminosity(CoMEnergy) / HistoDenum.GetBinContent(1)
         value = round(value, digit)
     else:
         print "There is no such a histogram",chan+Histogram+ cat+PostFix, "    in     ",SubRootDir + "out_"+Name +CoMEnergy+ ".root"
@@ -128,7 +130,7 @@ def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
     value = 10E-7
     if (HistoSub):
-        value = HistoSub.Integral() * luminosity(CoMEnergy)
+        value = HistoSub.Integral(lowBin,highBin) * luminosity(CoMEnergy)
         value = round(value, digit)
     return value
 
@@ -136,7 +138,7 @@ def getHistoNorm_BG(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 #    myfileSub = TFile(SubRootDir + "out_"+Name+chan +CoMEnergy+ '.root') #need chan due to embedded name include MuTau
 #    HistoInclusive = myfileSub.Get(chan+Histogram+ "_inclusive"+PostFix )
 #    HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
-#    value = HistoSub.Integral()/ HistoInclusive.Integral()
+#    value = HistoSub.Integral(lowBin,highBin)/ HistoInclusive.Integral(lowBin,highBin)
 #    return value
 
 def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
@@ -146,19 +148,19 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
     if not UseTauPolarOff: 
         DY_Files = TFile(SubRootDir + "out_DYJetsAll"+CoMEnergy+".root")
         DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
-        Normalization_DY= DY_Histo.Integral()*luminosity(CoMEnergy)
+        Normalization_DY= DY_Histo.Integral(lowBin,highBin)*luminosity(CoMEnergy)
     else:
         DY_Files = TFile(SubRootDir + "out_DYJetsToLL_PolarOff"+CoMEnergy+".root")
         DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
         OriginFile_Polar = TFile(InputFileLocation + "DYJetsToLL_PolarOff"+CoMEnergy+".root")
         Histo_Polar = OriginFile_Polar.Get("TotalEventsNumber")  # to get Total number of events  "MuTau_Multiplicity" + index[icat]
-        Normalization_DY= DY_Histo.Integral()*luminosity(CoMEnergy) * XSection ('tauPolarOff',CoMEnergy) / Histo_Polar.Integral()
+        Normalization_DY= DY_Histo.Integral(lowBin,highBin)*luminosity(CoMEnergy) * XSection ('tauPolarOff',CoMEnergy) / Histo_Polar.Integral(lowBin,highBin)
     
 
     #  Get Normalization from Embedded Data Sample in Inclusive
     EmbedData_Files = TFile(SubRootDir + "out_Embedded"+chan+CoMEnergy+".root")
     EmbedData_Histo=EmbedData_Files.Get(chan+HistogramNoMT+ "_inclusive")
-    Normalization_EmbedData= EmbedData_Histo.Integral()
+    Normalization_EmbedData= EmbedData_Histo.Integral(lowBin,highBin)
 
     HistogramNoMT=HistogramNoMT.replace("_ZTT","") # There is no _ZTT for TTEmbedded
     #  Get Normalization from TTEmbedded Sample in Inclusive
@@ -166,14 +168,14 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
     EmbedTT_Histo=EmbedTT_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
     OriginFile_EmbedTT = TFile(InputFileLocation + "TTEmbedded"+chan+CoMEnergy+".root")
     HistoTotal = OriginFile_EmbedTT.Get("TotalEventsNumber")  # to get Total number of events  "MuTau_Multiplicity" + index[icat]
-    Normalization_EmbedTT= (EmbedTT_Histo.Integral()*luminosity(CoMEnergy) * XSection("TTEmbedded"+chan, CoMEnergy))/HistoTotal.Integral()
+    Normalization_EmbedTT= (EmbedTT_Histo.Integral(lowBin,highBin)*luminosity(CoMEnergy) * XSection("TTEmbedded"+chan, CoMEnergy))/HistoTotal.Integral(lowBin,highBin)
     OriginFile_EmbedTT.Close()
 
     
 #    print "DY MC Incluvive= ", (Normalization_DY)
 #    print "TTEmbedded MC Incluvive= ", (Normalization_EmbedTT) 
-#    print "TTEmbed Data Incluvive= ", EmbedData_Histo.Integral()
-#    print "ExtraPOl Factor= ", (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
+#    print "TTEmbed Data Incluvive= ", EmbedData_Histo.Integral(lowBin,highBin)
+#    print "ExtraPOl Factor= ", (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral(lowBin,highBin)* luminosity(CoMEnergy))
 
     return (Normalization_DY)/(Normalization_EmbedData- Normalization_EmbedTT)
 
@@ -182,10 +184,10 @@ def getWExtraPol(PostFix,CoMEnergy,Name,chan,cat,HistogramNum,HistogramDenum ):
     HistoNum = myfileSub.Get(chan+HistogramNum+ cat+PostFix )
     HistoDenum = myfileSub.Get(chan+HistogramDenum+ "_inclusive"+PostFix )
     print "----------------------------" , chan+HistogramNum+ cat+PostFix
-    print "W(from MC, signal region in category i) = ", HistoNum.GetName(), HistoNum.Integral()
-    print "W(from MC, control region in inclusive)=  ", HistoDenum.GetName(), HistoDenum.Integral()
-    print " scaleFactor =  ", HistoNum.Integral()/ HistoDenum.Integral()
-    value = HistoNum.Integral()/ HistoDenum.Integral()
+    print "W(from MC, signal region in category i) = ", HistoNum.GetName(), HistoNum.Integral(lowBin,highBin)
+    print "W(from MC, control region in inclusive)=  ", HistoDenum.GetName(), HistoDenum.Integral(lowBin,highBin)
+    print " scaleFactor =  ", HistoNum.Integral(lowBin,highBin)/ HistoDenum.Integral(lowBin,highBin)
+    value = HistoNum.Integral(lowBin,highBin)/ HistoDenum.Integral(lowBin,highBin)
     return value
 
 def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
@@ -193,7 +195,7 @@ def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
     HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
     value = 10E-7
     if (HistoSub):
-        value = HistoSub.Integral()
+        value = HistoSub.Integral(lowBin,highBin)
         value = round(value, digit)
     return value
 
@@ -438,6 +440,6 @@ if __name__ == "__main__":
 #    make2DTable("_LepPt","", "_8TeV")
 
     make2DTable("_SVMass","", "_8TeV")
-    #    make2DTable("_SVMass","Up", "_8TeV")
-# make2DTable("_SVMass","Down", "_8TeV")
+    make2DTable("_SVMass","Up", "_8TeV")
+    make2DTable("_SVMass","Down", "_8TeV")
 

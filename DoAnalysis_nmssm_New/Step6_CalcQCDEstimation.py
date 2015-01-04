@@ -75,8 +75,8 @@ Bcategory = ["_inclusive",  "_btag", "_btagLoose"]
 #channel = ["mutau"]
 channel = ["mutau", "etau"]
 channelDirectory = ["muTau", "eleTau"]
-POSTFIX=[""]
-#POSTFIX=["","Up","Down"]
+#POSTFIX=[""]
+POSTFIX=["","Up","Down"]
 
 MASS_BIN = 200
 PT_BIN = 200
@@ -557,7 +557,7 @@ def GetFinalQCDShapeNorm(Observable,CoMEnergy):
 
                     QCDShapeTotal.Scale(NewFinalQCDEstimate/QCDShapeTotal.Integral())
 
-                    FinalFile.WriteObject(QCDShapeTotal,channelName+"_QCDShapeNormTotal"+catName+shiftFR+"FR"+shiftOSSS+"OSSS")
+                    FinalFile.WriteObject(QCDShapeTotal,channelName+"_QCDShapeNormTotal"+shiftFR+"FR"+shiftOSSS+"OSSS"+catName)
 
 
 #############################################################################################################
