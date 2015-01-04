@@ -13,14 +13,13 @@ import shutil
 Run_Over = {
 
     ##### Unfiltered
-    1:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/MC", "mc12", "75:00:00"),
-    2:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Data", "data12", "75:00:00"),
-   # 3:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Embed_MC", "embedmc12", "75:00:00"),
-   # 4:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v3/53X/Embed_Data", "embeddata12", "75:00:00"),
+    1:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v5/53X/MC", "mc12", "75:00:00"),
+    2:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v5/53X/Data", "data12", "75:00:00"),
+    3:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v4/Embed_MC", "embedmc12", "75:00:00"),
+    4:("/pnfs/iihe/cms/store/user/abdollah/HTTNtuples_v4/Embed_Data", "embeddata12", "75:00:00"),
 
-    5:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples_v3/53X/MC", "mc12", "75:00:00"),
-    6:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples_v3/53X/Embed_MC_v2", "embedmc12", "75:00:00"),
-    7:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples_v3/53X/Embed_Data_v3", "embeddata12", "75:00:00"),
+    5:("/pnfs/iihe/cms/store/user/ccaillol/HTTNtuples_v4/53X/MC", "mc12", "75:00:00"),
+
 
 }
     ########################################################################################
