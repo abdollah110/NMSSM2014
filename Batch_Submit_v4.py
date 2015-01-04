@@ -24,7 +24,11 @@ def make_submit_form():
         timing= files[0:-1].split(",")[2]
         FileSize= int(files[0:-1].split(",")[3])
 
-        sampleName2= files[0:-1].split("/")[10]
+        Name53X=files[0:-1].split("/")[9]
+        if Name53X=="53X":
+            sampleName2= files[0:-1].split("/")[10]
+        else:
+            sampleName2= files[0:-1].split("/")[9]
         sampleName= sampleName2.split(",")[0]
         print "sampleName=", sampleName
 
