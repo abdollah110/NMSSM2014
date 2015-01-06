@@ -98,6 +98,7 @@ public:
     float embeddingWeight;
     float spinnerWeight;
     float PU_Weight;
+    float PU_Weight_tautau;
     float PUInfo;
     float PUInfo_true;
     int PUInfo_Bunch0;
