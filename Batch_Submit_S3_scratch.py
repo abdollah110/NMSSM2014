@@ -50,10 +50,13 @@ def make_submit_form():
                 QName=i[0:-1]
                 XName=int(float(QName[15:-11]))
                 outName= " /scratch/"   +sampleName + "_"+str(XName) +".root"
+                outNameInLocal= sampleName + "_"+str(XName) +".root"
                 if (XName % NumberToBedevided == numMod):
-                    command2 = "\n" + "./nMSSM_Analysis.exe " + data_year + outName + " " + dir + "/" + i[0:-1]
+                    command2 = "\n" + "touch    " + location+ "/BoxRoot/"+outNameInLocal
+                    command2 = command2 + "\n" + "./nMSSM_Analysis.exe " + data_year + outName + " " + dir + "/" + i[0:-1]
 #                    command2 = command2 + " \n" + " mv  $scratchdir/" + data_year + "_" +  outName + "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
-                    command2 = command2 + " \n" + " mv  " + outName + "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
+                    command2 = command2 + " \n" + " mv  " + outName + "\t" +location+ "/BoxRoot/"
+                    command2 = command2 + " \n" + " mv  " +location+ "/BoxRoot/" +outNameInLocal+  "\t" +location+ "/Out_" + sampleName+"_"+str(numMod)
                     command2 = command2 + " \n\n\n"
                     outFile.write(command2)
 
