@@ -267,6 +267,53 @@ vector<myobject> GoodbJet20_EffDown(myevent *m, myobject const& a, myobject cons
     sort(goodbJet.begin(), goodbJet.end(), myobject_grt());
     return goodbJet;
 }
+
+
+//******************************************************************************************
+
+
+vector<myobject> GoodbJet20_MisTagUp(myevent *m, myobject const& a, myobject const& b, bool isdata, bool is2012) {
+    
+    vector<myobject> goodbJet;
+    vector<myobject> jet = GoodJet20(m);
+    bool isBtagged = false;
+    BtagSF isBJ;
+    
+    //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
+    //Note:   The BJet ScaleFactor is just for Medium WP
+    for (int k = 0; k < jet.size(); k++) {
+        int jetGenpdgid_ = jet[k].partonFlavour;
+        isBtagged = isBJ.isbtagged13(jet[k].pt, jet[k].eta, jet[k].bDiscriminatiors_CSV, jetGenpdgid_, isdata,0, BtagSF::kUp, is2012);
+        
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].puJetIdLoose > 0.5 && isBtagged) { //adding PUJetId for bjets as well
+            if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
+        }
+    }
+    sort(goodbJet.begin(), goodbJet.end(), myobject_grt());
+    return goodbJet;
+}
+
+vector<myobject> GoodbJet20_MisTagDown(myevent *m, myobject const& a, myobject const& b, bool isdata, bool is2012) {
+    
+    vector<myobject> goodbJet;
+    vector<myobject> jet = GoodJet20(m);
+    bool isBtagged = false;
+    BtagSF isBJ;
+    
+    //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
+    //Note:   The BJet ScaleFactor is just for Medium WP
+    for (int k = 0; k < jet.size(); k++) {
+        int jetGenpdgid_ = jet[k].partonFlavour;
+        isBtagged = isBJ.isbtagged13(jet[k].pt, jet[k].eta, jet[k].bDiscriminatiors_CSV, jetGenpdgid_, isdata, 0, BtagSF::kDown,  is2012);
+        
+        if (jet[k].pt > 20 && TMath::Abs(jet[k].eta) < 2.4 && jet[k].puJetIdLoose > 0.5 && isBtagged) { //adding PUJetId for bjets as well
+            if (NonOverLapWithAB(a, b, jet[k])) goodbJet.push_back(jet[k]);
+        }
+    }
+    sort(goodbJet.begin(), goodbJet.end(), myobject_grt());
+    return goodbJet;
+}
+
 //******************************************************************************************
 //*********************   DiBoson Removal   ************************************************************
 //******************************************************************************************

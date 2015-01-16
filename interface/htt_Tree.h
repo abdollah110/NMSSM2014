@@ -197,6 +197,8 @@ bool l2_VLoosetauIsoMVA3oldDMwLT;
 float VtxZ = -100;
 int nbtag_EffUp=0;
 int nbtag_EffDown=0;
+int nbtag_MisTagUp=0;
+int nbtag_MisTagDown=0;
 
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
@@ -312,6 +314,8 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     
     nbtag_EffUp=GoodbJet20_EffUp(m, obj1, obj2, isdata, is2012).size();
     nbtag_EffDown=GoodbJet20_EffDown(m, obj1, obj2, isdata, is2012).size();
+    nbtag_MisTagUp=GoodbJet20_MisTagUp(m, obj1, obj2, isdata, is2012).size();
+    nbtag_MisTagDown=GoodbJet20_MisTagDown(m, obj1, obj2, isdata, is2012).size();
     //    nbtagNoCor = BJETSNoCor.size();
 //    cout<<  "  JetSize=" << njets << "  BJetSize=" << nbtag <<"\n";
 
