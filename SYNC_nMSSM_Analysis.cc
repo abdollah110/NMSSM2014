@@ -354,7 +354,7 @@ int main(int argc, char** argv) {
                 fprintf(stdout, "\n");
             }
             fflush(stdout);
-            //            if (m->eventNumber == 64981240){
+//                        if (m->eventNumber == 6572548  || m->eventNumber == 42420468  ){
             if (1) {
 
                 //*********************************************************************************************
@@ -388,8 +388,8 @@ int main(int argc, char** argv) {
                 //  Jet Information
                 //  ########## ########## ########## ########## ########## ##########
 
-                cout << "\n##################################################################################################################################\n";
-                cout << "Run is " << m->runNumber << "  Lumi is    " << m->lumiNumber << "    and Event is " << m->eventNumber << "\n";
+//                cout << "\n##################################################################################################################################\n";
+//                cout << "Run is " << m->runNumber << "  Lumi is    " << m->lumiNumber << "    and Event is " << m->eventNumber << "\n";
 
                 //########################## MuTau Selection         ##############################################
                 //#################################################################################################
@@ -437,6 +437,7 @@ int main(int argc, char** argv) {
                             vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
                             vector<myobject> JETS20New = GoodJet20New(m, mu_[i], tau_[k]);
                             vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
+                            
                             //
                             //                        int pairIndex = mu_[i].gen_index * 10 + tau_[k].gen_index;
                             //                        float MetPair_MT = MVAMetRecoil_mutau[mu_[i].gen_index * 10 + tau_[k].gen_index].pt;
@@ -456,16 +457,17 @@ int main(int argc, char** argv) {
 
                                 plotFill("mutau", ++mutau, 20, 0., 20.);
                                 fillTree(1, Run_Tree, m, is_data_mc.c_str(), FinalState, mu_[i], tau_[k]);
-
-                                for (int nj = 0; nj < JETS20New.size(); nj++) {
-                                    cout << "jet number_" << nj + 1 << "  pt=" << JETS20New[nj].pt << " eta=" << JETS20New[nj].eta << " pt_Mu=" << mu_[i].pt << "  eta_Mu=" << mu_[i].eta << "  pt_Tau=" << tau_[k].pt << "  eta_Tau=" << tau_[k].eta << "\n";
-                                }
-                                cout << "-----------------" << "\n";
-                                for (int nj = 0; nj < BJETS.size(); nj++) {
-                                    cout << "Bjet number_" << nj + 1 << "              pt=" << BJETS[nj].pt << "  eta=" << BJETS[nj].eta << "\n";
-                                }
+                                int zCategory = ZCategory(m, mu_[i], tau_[k]);
+                                if (zCategory==5)   cout << "Run is " << m->runNumber << "  Lumi is    " << m->lumiNumber << "    and Event is " << m->eventNumber << "\n\n\n\n\n\n\n";
+                                //for (int nj = 0; nj < JETS20New.size(); nj++) {
+                                 //   cout << "jet number_" << nj + 1 << "  pt=" << JETS20New[nj].pt << " eta=" << JETS20New[nj].eta << " pt_Mu=" << mu_[i].pt << "  eta_Mu=" << mu_[i].eta << "  pt_Tau=" << tau_[k].pt << "  eta_Tau=" << tau_[k].eta << "\n";
+                              //  }
+                                //cout << "-----------------" << "\n";
+                                //for (int nj = 0; nj < BJETS.size(); nj++) {
+                                //    cout << "Bjet number_" << nj + 1 << "              pt=" << BJETS[nj].pt << "  eta=" << BJETS[nj].eta << "\n";
+                               // }
                                 //                            counter++;
-                                cout << "-------------> passed   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "\n";
+                               // cout << "-------------> passed   run=" << m->runNumber << "   lumi=" << m->lumiNumber << "   event=" << m->eventNumber << "\n";
                                 //                            cout << "for leptons: - lepton pt/eta/phi = " << mu_[i].pt << "/" << mu_[i].eta << " /" << mu_[i].phi << "\n";
                                 //                            cout << "            - tau    E/pt/eta/phi =" << tau_[k].E << "/" << tau_[k].pt << "/" << tau_[k].eta << "/" << tau_[k].phi << "\n";
                                 //                            cout << "   MVAMetwithRecoil=" << MetPair_MT << "   MVAMet No Recoil= " << MetPair_MTNoRecoil << "   RAWPFMet= " << RAWPFMet.front().pt << "\n";

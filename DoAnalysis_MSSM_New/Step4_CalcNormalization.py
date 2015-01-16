@@ -150,10 +150,10 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
     OriginFile_EmbedTT.Close()
 
     
-#    print "DY MC Incluvive= ", (Normalization_DY)
-#    print "TTEmbedded MC Incluvive= ", (Normalization_EmbedTT) 
-#    print "TTEmbed Data Incluvive= ", EmbedData_Histo.Integral()
-#    print "ExtraPOl Factor= ", (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
+    print "DY MC Incluvive= ", (Normalization_DY)
+    print "TTEmbedded MC Incluvive= ", (Normalization_EmbedTT) 
+    print "TTEmbed Data Incluvive= ", EmbedData_Histo.Integral()
+    print "ExtraPOl Factor= ", (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
 
     return (Normalization_DY)/(Normalization_EmbedData- Normalization_EmbedTT)
 

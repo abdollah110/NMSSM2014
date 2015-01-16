@@ -195,6 +195,9 @@ int  nbtag30;
 float ZimpactTau =-1000;
 bool l2_VLoosetauIsoMVA3oldDMwLT;
 float VtxZ = -100;
+int nbtag_EffUp=0;
+int nbtag_EffDown=0;
+
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -266,7 +269,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
         mvametphiNoRecoil = MVAMetNORecoil_mutau[pairIndex].phi;
 
         mt_1 = TMass(obj1, MVAMetRecoil_mutau[pairIndex]);
-        cout<<   "TMass is   "<<mt_1<<"\n";
+//        cout<<   "TMass is   "<<mt_1<<"\n";
         mt_2 = TMass(obj2, MVAMetRecoil_mutau[pairIndex]);
         mvacov00 = m->PairMet_mutau_sigMatrix_00[pairIndex];
         mvacov01 = m->PairMet_mutau_sigMatrix_01[pairIndex];
@@ -306,8 +309,11 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     njets = JETS.size();
     nbtag = BJETS.size();
     nbtagLoose = BLooseJETS.size();
+    
+    nbtag_EffUp=GoodbJet20_EffUp(m, obj1, obj2, isdata, is2012).size();
+    nbtag_EffDown=GoodbJet20_EffDown(m, obj1, obj2, isdata, is2012).size();
     //    nbtagNoCor = BJETSNoCor.size();
-    cout<<  "  JetSize=" << njets << "  BJetSize=" << nbtag <<"\n";
+//    cout<<  "  JetSize=" << njets << "  BJetSize=" << nbtag <<"\n";
 
     jpt_1 = (JETS.size() > 0 ? JETS[0].pt : -1000);
     jeta_1 = (JETS.size() > 0 ? JETS[0].eta : -1000);

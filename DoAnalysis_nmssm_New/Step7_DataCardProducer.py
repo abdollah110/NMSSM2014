@@ -199,9 +199,9 @@ def _Return_W_Shape(channel,cat,CoMEnergy,PostFix,changeHistoName):
     NewHISTDown =TH1F("XXXDown","",high_bin,0,high_bin)
     NewHISTDown.SetDefaultSumw2()
     WShapeFile = TFile(SubRootDir + "out_WJetsAll"+CoMEnergy+ '.root')
-    if cat=="_btag_low" and changeHistoName : cat = "_btagLoose_low"
-    if cat=="_btag_high" and changeHistoName : cat = "_btagLoose_high"
-#    if NameCat=="_btag" and changeHistoName : NameCat = "_btagLoose"
+#    if cat=="_btag_low" and changeHistoName : cat = "_btagLoose_low"
+#    if cat=="_btag_high" and changeHistoName : cat = "_btagLoose_high"
+    if cat=="_btag" and changeHistoName : cat = "_btagLoose"
     Histo = WShapeFile.Get(channel+"_2DSVMassPt_W_mTLess30_OS_RelaxIso"+cat+PostFix)
     preWYeild= Histo.Integral()
     for bb in range(high_bin):
@@ -497,6 +497,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
             SampleFile= _Return_W_Shape(channel,NameCat,CoMEnergy,TauScale[tscale],True)
             SampleHisto=SampleFile.Get("XXX")
+            print "----------> Debug on W",channel,NameCat, SampleHisto.Integral()
             if SampleHisto.Integral(): SampleHisto.Scale(normal)
 #            if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)

@@ -32,7 +32,7 @@ ROOT.gROOT.SetBatch(True)
 InputFileLocation = '../FileROOT/nmssmROOTFiles/'
 SubRootDir = 'OutFiles/'
 verbosity_ = False
-UseLLRFakeRate = True
+UseLLRFakeRate = False
 applyTauFR_Correction= True
 applyOS_SS_Correction= False
 apply106asScaleFactor = True
@@ -69,13 +69,13 @@ def luminosity(CoMEnergy):
 #category = ["_inclusive","_btag"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-#category = ["_inclusive"]
+category = ["_inclusive"]
 #category = [ "_btag"]
-category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
-#channel = ["mutau"]
-channel = ["mutau", "etau"]
-#POSTFIX=[""]
-POSTFIX=["","Up","Down"]
+#category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
+channel = ["mutau"]
+#channel = ["mutau", "etau"]
+POSTFIX=[""]
+#POSTFIX=["","Up","Down"]
 
 MASS_BIN = 1500
 PT_BIN = 300
@@ -211,7 +211,8 @@ def GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
 
     QCD_EstimateNorm=(Data_ForqcdNorm - (W_ForqcdNorm+VV_ForqcdNorm+TT_ForqcdNorm+ZL_ForqcdNorm+ZJ_ForqcdNorm+ZTT_ForqcdNorm))
     if verbosity_:  print "###### QCD Estimate in", PostFix,CoMEnergy,channelName,catName,HistoName,etaRange, " ##### QCD_EstimateNorm= ", QCD_EstimateNorm,  "  = data - other BG", Data_ForqcdNorm ,"  W_ForqcdNorm=", W_ForqcdNorm,"  VV_ForqcdNorm=",VV_ForqcdNorm,"  TT_ForqcdNorm,",TT_ForqcdNorm,"  ZL_ForqcdNorm=",ZL_ForqcdNorm,"  ZJ_ForqcdNorm=",ZJ_ForqcdNorm,"  ZTT_ForqcdNorm=",ZTT_ForqcdNorm
-    return QCD_EstimateNorm
+#    return QCD_EstimateNorm
+    return  Data_ForqcdNorm
 
 
 def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
@@ -262,22 +263,24 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
     Data_ForqcdShapeHisto=Data_ForqcdShape.Get("XXX")
 
     #################### Subtract All BG from QCD
-    if  VV_ForqcdShapeHisto:
-        Data_ForqcdShapeHisto.Add(VV_ForqcdShapeHisto,-1)
-    if  TT_ForqcdShapeHisto:
-        Data_ForqcdShapeHisto.Add(TT_ForqcdShapeHisto,-1)
-    if  ZL_ForqcdShapeHisto:
-        Data_ForqcdShapeHisto.Add(ZL_ForqcdShapeHisto,-1)
-    if  ZJ_ForqcdShapeHisto:
-        Data_ForqcdShapeHisto.Add(ZJ_ForqcdShapeHisto,-1)
-    if  ZTT_ForqcdShapeHisto:
-        Data_ForqcdShapeHisto.Add(ZTT_ForqcdShapeHisto,-1)
-    if  W_ForqcdShapeHisto:
-        Data_ForqcdShapeHisto.Add(W_ForqcdShapeHisto,-1)
+#    if  VV_ForqcdShapeHisto:
+#        Data_ForqcdShapeHisto.Add(VV_ForqcdShapeHisto,-1)
+#    if  TT_ForqcdShapeHisto:
+#        Data_ForqcdShapeHisto.Add(TT_ForqcdShapeHisto,-1)
+#    if  ZL_ForqcdShapeHisto:
+#        Data_ForqcdShapeHisto.Add(ZL_ForqcdShapeHisto,-1)
+#    if  ZJ_ForqcdShapeHisto:
+#        Data_ForqcdShapeHisto.Add(ZJ_ForqcdShapeHisto,-1)
+#    if  ZTT_ForqcdShapeHisto:
+#        Data_ForqcdShapeHisto.Add(ZTT_ForqcdShapeHisto,-1)
+#    if  W_ForqcdShapeHisto:
+#        Data_ForqcdShapeHisto.Add(W_ForqcdShapeHisto,-1)
 
     #################### Return QCD Shape with Proper Normalization
     QCDNorm= GetNorm_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange)
+    print   "test for disabling contamination subtraction=  ", QCDNorm    ,  "v.s.",  Data_ForqcdShapeHisto.Integral()
     Data_ForqcdShapeHisto.Scale(QCDNorm/Data_ForqcdShapeHisto.Integral())
+
 
     NewShapeForQCD=TFile("Extra/XXX.root","RECREATE")
     NewShapeForQCD.WriteObject(Data_ForqcdShapeHisto,"XXX")
@@ -302,12 +305,14 @@ def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 
     ShapeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_SS",etaRange)
     HistoNum=ShapeNum.Get("XXX")
-    HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
+    HistoNum= HistoNum.Rebin(5)
+#    HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
     HistoNum.Scale(1000/HistoNum.Integral())
 
     ShapeDeNum=GetShape_QCD(PostFix,CoMEnergy,channelName,catName,"_TauPt_LepAntiIso_mTLess30_SS_RelaxIso",etaRange)
     HistoDeNum=ShapeDeNum.Get("XXX")
-    HistoDeNum= HistoDeNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
+    HistoDeNum= HistoDeNum.Rebin(5)
+#    HistoDeNum= HistoDeNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
     HistoDeNum.Scale(1000/HistoDeNum.Integral())
 
     HistoNum.Divide(HistoDeNum)
@@ -317,7 +322,7 @@ def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
     HistoNum.GetXaxis().SetRangeUser(0,150)
     HistoNum.GetYaxis().SetRangeUser(0,2)
     HistoNum.SetMarkerStyle(20)
-    theFit=TF1("theFit", fitFunc_Exp3Par, 20, 150, 2)
+    theFit=TF1("theFit", fitFunc_Exp3Par, 30, 150, 2)
     theFit.SetParameter(0, 0.6)
     theFit.SetParameter(1, 0.18)
     HistoNum.Fit(theFit, "R0","")
