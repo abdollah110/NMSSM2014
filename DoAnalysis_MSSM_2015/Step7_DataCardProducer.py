@@ -56,8 +56,8 @@ SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 lenghtSig = len(signal) * len(mass) +1
 
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-#category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
-category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high"]
+category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
+#category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high"]
 channelDirectory = ["muTau", "eleTau"]
 SystematicGluGluHiggs = ["_SVMassHiggPtRWUp","_SVMassHiggPtRWDown","_SVMassHiggPtRWScaleUp","_SVMassHiggPtRWScaleDown"]
 SystematicHighPtTau = ["_SVMassTauHighPtRWUp","_SVMassTauHighPtRWDown"]
@@ -291,6 +291,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                     SampleHisto=SampleFile.Get("XXX")
                     if SampleHisto:
                         SampleHisto.Scale(normal/SampleHisto.Integral())
+
                     else:
                         SampleFile= _Return_SigBGData_Shape(Name, channel,"_inclusive", Histogram, TauScale[tscale],CoMEnergy,False)
                         SampleHisto=SampleFile.Get("XXX")

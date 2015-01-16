@@ -28,6 +28,7 @@ import os
 
 
 
+
 ROOT.gROOT.SetBatch(True)
 #ROOT.gROOT.ProcessLine('.x rootlogon.C')
 SubRootDir = 'OutFiles/'
@@ -297,7 +298,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                     YLoc= sig * len(mass) + m + 1
                     normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization
                     Name= str(signal[sig])+str(mass[m])
-                    NameOut= str(signal[sig]) +str(mass[m])+str(TauScaleOut[tscale])
+                    NameOut= str(signalName[sig]) +str(mass[m])+str(TauScaleOut[tscale])
 
                     SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,False)
                     SampleHisto=SampleFile.Get("XXX")
@@ -541,6 +542,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
             SampleFile= _Return_W_Shape(channel,NameCat,CoMEnergy,TauScale[tscale],True)
             SampleHisto=SampleFile.Get("XXX")
+            print "----------> Debug on W",channel,NameCat, SampleHisto.Integral()
             if SampleHisto.Integral(): SampleHisto.Scale(normal)  # Due to change in _Return_W_Shape
 #            if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
             RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
@@ -677,24 +679,24 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
         ################################################
         #  Filling Other Nackground
         ################################################
-        print "Doing SM HIggs Background"
-        for OtherBG in range(len(Other_BackGround)):
+            print "Doing SM HIggs Background"
+            for OtherBG in range(len(Other_BackGround)):
         
-                tDirectory.cd()
-                Histogram = Observable+"_mTLess30_OS"
-                XLoc= icat + len(category)*chl + 1
-                YLoc= lenghtSig + 12 + OtherBG
-                normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization
-                Name= str(Other_BackGround[OtherBG])
-                NameOut= "ZTT_lowMass"+str(TauScaleOut[tscale])
+                   tDirectory.cd()
+                   Histogram = Observable+"_mTLess30_OS"
+                   XLoc= icat + len(category)*chl + 1
+                   YLoc= lenghtSig + 12 + OtherBG
+                   normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization
+                   Name= str(Other_BackGround[OtherBG])
+                   NameOut= "ZTT_lowMass"+str(TauScaleOut[tscale])
                 
                 #FIXME   Due to the lack of statitics I get the shaoe from inclusive
                 #                NameCat= "_inclusive"
-                SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True)
-                SampleHisto=SampleFile.Get("XXX")
-                if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
-                RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
-                tDirectory.WriteObject(RebinedHist,NameOut)
+                   SampleFile= _Return_SigBGData_Shape(Name, channel,NameCat, Histogram, TauScale[tscale],CoMEnergy,True)
+                   SampleHisto=SampleFile.Get("XXX")
+                   if SampleHisto.Integral(): SampleHisto.Scale(normal/SampleHisto.Integral())
+                   RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
+                   tDirectory.WriteObject(RebinedHist,NameOut)
 
 
     myOut.Close()

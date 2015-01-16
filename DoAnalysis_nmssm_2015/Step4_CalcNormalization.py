@@ -31,7 +31,7 @@ UseTauPolarOff = True
 
 signal = ['bba1GenFil_']
 mass = [25,30,  35, 40, 45, 50, 55,  60, 65, 70, 75, 80]
-SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125', 'ggH_SMHWW125', 'qqH_SMHWW125', 'VH_SMHWW125']
+SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125', 'ggHWW_SM125', 'qqHWW_SM125', 'VHWW_SM125']
 Other_BackGround = ['DYJetsAllMassLow']
 
 #category = ["_inclusive"]

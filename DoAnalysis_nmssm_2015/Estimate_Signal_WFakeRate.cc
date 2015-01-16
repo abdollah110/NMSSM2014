@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
         TFile * myFile = new TFile(f_Double->GetName());
         TH1F * Histo = (TH1F*) myFile->Get("TotalEventsNumber");
 
+        vector<float> DYLowMass_Events = DYLowMass_EvenetMultiplicity();
         vector<float> W_Events = W_EvenetMultiplicity();
         vector<float> DY_Events = DY_EvenetMultiplicity();
 
@@ -240,15 +241,14 @@ int main(int argc, char** argv) {
         //Initial Requirements
         //###############################################################################################
         // Specific Cuts to be changed fro MSSM and nMSSM
-//                   int icount=0;
-        float cutonSVmass = 50;
-        float cutonTaupt = 30;
-        int massBin = 1500;
+        float cutonSVmass = 0;
+        float cutonTaupt = 20;
+        int massBin = 200;
         //    float cutonSVmass= 0;
         //    float cutonTaupt= 20;
         //    int massBin = 300;
         //###############################################################################################
-        int ptBin = 300;
+        int ptBin = 200;
         bool IsInCorrcetMassRange = true;
         bool verbose_ = false;
         int Event_Double[8][9];
@@ -273,25 +273,30 @@ int main(int argc, char** argv) {
         int icount = 0;
         for (Int_t i = 0; i < nentries_wtn; i++) {
             Run_Tree->GetEntry(i);
-            if (i % 10000000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
+            if (i % 10000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
             fflush(stdout);
 
             //###############################################################################################
             //  introcuing the tau ES up and down on categories and TMass CATEGORIZATION
             //###############################################################################################
-            const int size_mssmC = 8;
+            const int size_mssmC = 3;
             int size_MT = 3;
-
+            
+//            //###############   New NMSSM Categorization
+//            const int size_mssmC = 3;
+//            bool selection_inclusive = 1;
+//            bool selection_btag = nbtag > 0 ;
+//            bool selection_btagLoose = nbtagLoose > 0;
+//            bool MSSM_Category[size_mssmC] = {selection_inclusive,  selection_btag, selection_btagLoose};
+//            std::string index[size_mssmC] = {"_inclusive",  "_btag", "_btagLoose"};
+            
+            
             //  ##################################   Tau Energy Scale Down
             float tauESc = -0.03;
-            bool selection_inclusiveDown = l2Pt * (1 + tauESc) > 30;
-            bool selection_nobtag_lowDown = nbtag < 1 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_nobtag_mediumDown = nbtag < 1 && l2Pt * (1 + tauESc) > 45 && l2Pt * (1 + tauESc) < 60;
-            bool selection_nobtag_highDown = nbtag < 1 && l2Pt * (1 + tauESc) > 60;
-            bool selection_btag_lowDown = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btag_highDown = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
-            bool selection_btagLoose_lowDown = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btagLoose_highDown = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
+            bool selection_inclusiveDown = l2Pt * (1 + tauESc) > cutonTaupt;
+            bool selection_btagDown = nbtag > 0 && l2Pt * (1 + tauESc) > cutonTaupt;
+            bool selection_btagLooseDown = nbtagLoose > 0 && l2Pt * (1 + tauESc) > cutonTaupt;
+            
 
             float shiftedPx2_scaleDown = mvamet * cos(mvametphi) - l2Px * tauESc;
             float shiftedPy2_scaleDown = mvamet * sin(mvametphi) - l2Py * tauESc;
@@ -301,19 +306,14 @@ int main(int argc, char** argv) {
             if (mvametphi < (-TMath::Pi() / 2)) mvametphi_scaleDown -= TMath::Pi();
             float mT_scaleDown = TMass_F(l1Pt, l1Px, l1Py, mvamet_scaleDown, mvametphi_scaleDown);
             bool mTLess30_scaleDown = mT_scaleDown < 30;
-            bool mTHigh70_scaleDown = mT_scaleDown > 70;
+            bool mTHigh70_scaleDown = mT_scaleDown > 50;  // FIXME   here are the changes
             bool noMTCut_scaleDown = 1;
 
             //  ##################################   Tau Energy Scale Nominal
             tauESc = 0;
-            bool selection_inclusive = l2Pt * (1 + tauESc) > 30;
-            bool selection_nobtag_low = nbtag < 1 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_nobtag_medium = nbtag < 1 && l2Pt * (1 + tauESc) > 45 && l2Pt * (1 + tauESc) < 60;
-            bool selection_nobtag_high = nbtag < 1 && l2Pt * (1 + tauESc) > 60;
-            bool selection_btag_low = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btag_high = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
-            bool selection_btagLoose_low = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btagLoose_high = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
+            bool selection_inclusive = l2Pt * (1 + tauESc) > cutonTaupt;
+            bool selection_btag = nbtag > 0 && l2Pt * (1 + tauESc) > cutonTaupt;
+            bool selection_btagLoose = nbtagLoose > 0 && l2Pt * (1 + tauESc) > cutonTaupt;
 
             float shiftedPx2_scale = mvamet * cos(mvametphi) - l2Px * tauESc;
             float shiftedPy2_scale = mvamet * sin(mvametphi) - l2Py * tauESc;
@@ -324,20 +324,15 @@ int main(int argc, char** argv) {
             if (mvametphi < (-TMath::Pi() / 2)) mvametphi_scale -= TMath::Pi();
             float mT_scale = TMass_F(l1Pt, l1Px, l1Py, mvamet_scale, mvametphi_scale);
             bool mTLess30_scale = mT_scale < 30;
-            bool mTHigh70_scale = mT_scale > 70;
+            bool mTHigh70_scale = mT_scale > 50;
             bool noMTCut_scale = 1;
 
 
             //  ##################################   Tau Energy Scale Up
             tauESc = +0.03;
-            bool selection_inclusiveUp = l2Pt * (1 + tauESc) > 30;
-            bool selection_nobtag_lowUp = nbtag < 1 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_nobtag_mediumUp = nbtag < 1 && l2Pt * (1 + tauESc) > 45 && l2Pt * (1 + tauESc) < 60;
-            bool selection_nobtag_highUp = nbtag < 1 && l2Pt * (1 + tauESc) > 60;
-            bool selection_btag_lowUp = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btag_highUp = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
-            bool selection_btagLoose_lowUp = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btagLoose_highUp = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
+            bool selection_inclusiveUp = l2Pt * (1 + tauESc) > cutonTaupt;
+            bool selection_btagUp = nbtag > 0 && l2Pt * (1 + tauESc) > cutonTaupt;
+            bool selection_btagLooseUp = nbtagLoose > 0 && l2Pt * (1 + tauESc) > cutonTaupt;
 
             float shiftedPx2_scaleUp = mvamet * cos(mvametphi) - l2Px * tauESc;
             float shiftedPy2_scaleUp = mvamet * sin(mvametphi) - l2Py * tauESc;
@@ -347,7 +342,7 @@ int main(int argc, char** argv) {
             if (mvametphi < (-TMath::Pi() / 2)) mvametphi_scaleUp -= TMath::Pi();
             float mT_scaleUp = TMass_F(l1Pt, l1Px, l1Py, mvamet_scaleUp, mvametphi_scaleUp);
             bool mTLess30_scaleUp = mT_scaleUp < 30;
-            bool mTHigh70_scaleUp = mT_scaleUp > 70;
+            bool mTHigh70_scaleUp = mT_scaleUp > 50;
             bool noMTCut_scaleUp = 1;
 
 
@@ -360,16 +355,11 @@ int main(int argc, char** argv) {
 
             bool MSSM_Category[size_mssmC][3] = {
                 {selection_inclusiveDown, selection_inclusive, selection_inclusiveUp},
-                {selection_nobtag_lowDown, selection_nobtag_low, selection_nobtag_lowUp},
-                {selection_nobtag_mediumDown, selection_nobtag_medium, selection_nobtag_mediumUp},
-                {selection_nobtag_highDown, selection_nobtag_high, selection_nobtag_highUp},
-                {selection_btag_lowDown, selection_btag_low, selection_btag_lowUp},
-                {selection_btag_highDown, selection_btag_high, selection_btag_highUp},
-                {selection_btagLoose_lowDown, selection_btagLoose_low, selection_btagLoose_lowUp},
-                {selection_btagLoose_highDown, selection_btagLoose_high, selection_btagLoose_highUp}
+                {selection_btagDown, selection_btag, selection_btagUp},
+                {selection_btagLooseDown, selection_btagLoose, selection_btagLooseUp}
             };
 
-            std::string index[size_mssmC] = {"_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"};
+            std::string index[size_mssmC] = {"_inclusive", "_btag",  "_btagLoose"};
 
 
             //###############################################################################################
@@ -424,7 +414,8 @@ int main(int argc, char** argv) {
             //###############################################################################################
             const int size_isoCat = 2;
             bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
-            bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+//            bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+            bool RelaxIso = 1;
             bool Iso_category[size_isoCat] = {TightIso, RelaxIso};
             std::string iso_Cat[size_isoCat] = {"", "_RelaxIso"};
 
@@ -475,38 +466,22 @@ int main(int argc, char** argv) {
             //#########################################################################################################################################################################################
 
             //####################################################
-            // Check Higgs Mass intervals  0.7-1.3
+            // Apply Filter efficiency
             //####################################################
+            float SignalFilterEff=1;
             size_t ggHiggsFind = InputROOT.find("ggH"); // Check in the name it IS ggH
-            size_t bbHiggsFind = InputROOT.find("bbH"); // Check in the name it IS ggH
             size_t SMHFind = InputROOT.find("125"); // Check that it IS NOT SM ggH_SM125 GeV
-            if (ggHiggsFind != string::npos && SMHFind == string::npos) {
+            size_t bbHiggsFind = InputROOT.find("bba1"); // Check in the name it IS ggH
+            if (bbHiggsFind != string::npos ) {
+
+                std::string FirstPart = "../FileROOT/nmssmROOTFiles/bba1GenFil_";
+                std::string LastPart = "_8TeV.root";
+                std::string newOut = InputROOT.substr(FirstPart.size());
+                newOut = newOut.substr(0, newOut.size() - LastPart.size());
+                SignalFilterEff=RetunSignalFilEff(newOut);
                 
-                std::string FirstPart = "../FileROOT/MSSMROOTFiles/ggH";
-                std::string LastPart = "_8TeV.root";
-                std::string newOut = InputROOT.substr(FirstPart.size());
-                newOut = newOut.substr(0, newOut.size() - LastPart.size());
-                vector<string>::iterator it;
-                it = find(MassOfHiggs_String.begin(), MassOfHiggs_String.end(), newOut);
-                if (it != MassOfHiggs_String.end()) {
-                    int massHiggs = MassOfHiggs_Int[it - MassOfHiggs_String.begin()];
-                    IsInCorrcetMassRange = (gen_Higgs_Mass > massHiggs * 0.7 && gen_Higgs_Mass < massHiggs * 1.3);
                 }
-            }
-//            cout<<InputROOT << "   "<< InputROOT.find("bbH")<<"\n";
-            if (bbHiggsFind != string::npos && SMHFind == string::npos) {
-//                cout<<"  Here is step1\n";
-                std::string FirstPart = "../FileROOT/MSSMROOTFiles/bbH";
-                std::string LastPart = "_8TeV.root";
-                std::string newOut = InputROOT.substr(FirstPart.size());
-                newOut = newOut.substr(0, newOut.size() - LastPart.size());
-                vector<string>::iterator it;
-                it = find(MassOfHiggs_String.begin(), MassOfHiggs_String.end(), newOut);
-                if (it != MassOfHiggs_String.end()) {
-                    int massHiggs = MassOfHiggs_Int[it - MassOfHiggs_String.begin()];
-                    IsInCorrcetMassRange = (gen_Higgs_Mass > massHiggs * 0.7 && gen_Higgs_Mass < massHiggs * 1.3);
-                }
-            }
+            
 
             //####################################################
             // Event Weight
@@ -518,7 +493,7 @@ int main(int argc, char** argv) {
             size_t SMFind = InputROOT.find("125"); // Check that it IS NOT SM ggH_SM125 GeV
             bool isGluGluH = (HiggsFind != string::npos && SMFind == string::npos);
             if (isGluGluH) {
-                std::string FirstPart = "../FileROOT/MSSMROOTFiles/ggH";
+                std::string FirstPart = "../FileROOT/nmssmROOTFiles/ggH";
                 std::string LastPart = "_8TeV.root";
                 std::string newOut = InputROOT.substr(FirstPart.size());
                 newOut = newOut.substr(0, newOut.size() - LastPart.size());
@@ -542,9 +517,7 @@ int main(int argc, char** argv) {
             float tauPtReweightingDown = 1 - 0.2 * (l2Pt / 1000);
 
             //############ Tau Energy Scale Reweighting
-            float tauESWeight = 1;
-            if (ggHiggsFind != string::npos || SMHFind != string::npos  || bbHiggsFind != string::npos || sel_ZTT)
-                TauESWeight(mcdata, l2_DecayMode, l2Eta);
+            float tauESWeight = TauESWeight(mcdata, l2_DecayMode, l2Eta);
 
             //############ Tau Spinor on DYjet_tauPOlar_Off
             float TauSpinor = 1;
@@ -576,8 +549,8 @@ int main(int argc, char** argv) {
 
             //############ Full Reweighting
 //            float LumiWeight = 1;
-            float LumiWeight = weightCalc(Histo, InputROOT, num_gen_jets, mcdata, W_Events, DY_Events);
-            float AllWeight = GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * SMHiggs125PtReweight[1] * EleTauFRWeight * TopPtReweighting * TauSpinor * LumiWeight;
+            float LumiWeight = weightCalc(Histo, InputROOT, num_gen_jets, mcdata, W_Events, DY_Events, DYLowMass_Events);
+            float AllWeight = GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * SMHiggs125PtReweight[1] * EleTauFRWeight * TopPtReweighting * TauSpinor * LumiWeight  * SignalFilterEff;
             if (verbose_) cout << "AllWeight= " << AllWeight << "   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight=" << tauESWeight << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "   TopPtReweighting="<<TopPtReweighting <<    "   TauSpinor="<<TauSpinor <<   "   LumiWeight="<<LumiWeight<<"\n";
 
             //########################################################################################################
@@ -587,7 +560,7 @@ int main(int argc, char** argv) {
             //####################################################
             // Muon Selection
             //####################################################
-            bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
+            bool Mu_PtEta = l1Pt > 18 && fabs(l1Eta) < 2.1;
             bool Mu_IdTight = l1_muId_Tight;
             bool Mu_d0 = fabs(l1_d0) < 0.045; //the impact parameter in the transverse plane
             bool Mu_dZ = fabs(l1_dZ_in) < 0.2; //the impact parameter in the transverse plane
@@ -598,12 +571,14 @@ int main(int argc, char** argv) {
 
             //####################################################
             // Electron Selection
+            ZimpactTau = 1000;
             //####################################################
             bool El_PtEta = l1Pt > 24 && fabs(l1Eta) < 2.1;
             bool El_IdTight = l1_eleId_Tight;
             //        bool El_Iso = l1_eleIso < 0.1;
             //        bool El_Iso_Loose = l1_eleIso > 0.2 && l1_eleIso < 0.5;
             bool EL_CUTS = El_PtEta && El_IdTight && (ZimpactTau < -1.5 || ZimpactTau > 0.5);
+
 
             //####################################################
             // Tau Selection
@@ -617,7 +592,8 @@ int main(int argc, char** argv) {
             //bool Tau_Isolation = l2_tauIsoMVA2T > 0.5;
             bool Tau_antiEl = 1; //applied at the level of tree Making
             bool Tau_antiMu = 1; //applied at the level of tree Making
-            if (Channel == 1 && (selection_btag_low || selection_btag_high || selection_btagLoose_low || selection_btagLoose_high)) Tau_antiMu = l2_tauRejEleMVA3L;
+           // if (Channel == 1 && (selection_btag || selection_btagLoose)) Tau_antiMu = l2_tauRejEleMVA3L;
+            if (Channel == 1) Tau_antiMu = l2_tauRejEleMVA3L;
             //bool Tau_antiEl = l2_tauRejEleL;
             //bool Tau_antiMu = l2_tauRejMu3L;
             //bool Tau_antiMu = l2_tauRejMu2T;
@@ -625,20 +601,6 @@ int main(int argc, char** argv) {
             bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
             //########################################################################################################
-            if(Event==10024033)
-                cout<<(l1Pt>20) << (l2Pt>30 )<< (l2Pt < 45) << charge_OS << (Channel<2) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) << (mt_1 < 30) << (fabs(l1_d0) < 0.045) << (fabs(l1_dZ_in) < 0.2 )<< (abs(Tau_Vertex_dz) < 0.2 )<< (l2_tauRejEleMVA3L > 0.5) << (l1_muIso < 0.1 )<< Trigger_MuTau12 << l1_trgMatche_Mu17Tau20 << l2_trgMatche_Mu17Tau20 << (nbtag > 0) << (njets < 2) << (SVMass > 50) <<"\n";
-                
-                    
-
-            if (l1Pt>20 && l2Pt>30 && l2Pt < 45 && charge_OS && Channel<2 && l2_TighttauIsoMVA3oldDMwLT > 0.5 && mt_1 < 30 && fabs(l1_d0) < 0.045 && fabs(l1_dZ_in) < 0.2 && abs(Tau_Vertex_dz) < 0.2 && l2_tauRejEleMVA3L > 0.5 && l1_muIso < 0.1 && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20 && nbtag > 0 && njets < 2 && SVMass > 50  && sel_ZJ)
-            {
-                icount++;
-                cout<<Run<<":"<<Lumi<<":"<<Event<<"\n";
-                cout << "AllWeight= " << AllWeight << " idweight_1="<<idweight_1  << " trigweight_1="<<trigweight_1  << " trigweight_2="<<trigweight_2   <<"   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight=" << tauESWeight << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "   TopPtReweighting="<<TopPtReweighting <<    "   TauSpinor="<<TauSpinor <<   "   LumiWeight="<<LumiWeight<<"\n";
-                cout<<"-------- "<<mcdata<< "  "<<l2_DecayMode <<"  "<< l2Eta <<" \n ";
-
-            }
-            
             //########################################################################################################
             //####################################################
             //####################################################
@@ -677,8 +639,8 @@ int main(int argc, char** argv) {
                                                                             bool SignalSelection = (lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && zcat == 0 && etacat == 0);
                                                                             bool ZLSelection = ((DYsample != string::npos) && lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && etacat == 0);
                                                                             bool QCDShape = (tScalecat == 1 && mTcat < 2);
-                                                                            bool PtForFR = (tScalecat == 1 && mTcat < 2);
-                                                                            bool WTopShape = (((Wsample != string::npos) || isTTJets) && lepiso == 0 && qcat == 0 && mTcat == 0 && zcat == 0);
+                                                                            bool PtForFR = (tScalecat == 1);
+                                                                            bool WTopShape = (((Wsample != string::npos) || isTTJets) && lepiso == 0 && qcat == 0 && mTcat == 0 && zcat == 0 && etacat == 0); // added && etacat == 0 on 7 Jan
                                                                             bool HiggsSelection = SignalSelection && (ggHiggsFind != string::npos ||bbHiggsFind != string::npos || SMFind != string::npos);
                                                                             bool SMHiggs125Selection = SignalSelection && (ggHiggsFind != string::npos && SMFind != string::npos);
                                                                             //###################################################
@@ -687,7 +649,7 @@ int main(int argc, char** argv) {
                                                                             //###################################################
                                                                             //###################################################
                                                                             if (MuTrgMatched && MU_CUTS && TAU_CUTS && SVMASS[tScalecat] > cutonSVmass && (Event != Event_Double[1][1])) {
-                                                                                if (lepiso == 0 && etacat == 0) plotFill("mutau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                                if ( etacat == 0) plotFill("mutau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                                 if (QCDShape && qcat == 1) plotFill("mutau_2DSVMassPt" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                 if (WTopShape) plotFill("mutau_2DSVMassPt_W" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                 if (PtForFR) plotFill("mutau_TauPt" + FullStringName, l2Pt, ptBin, 0, ptBin, AllWeight);
@@ -709,7 +671,7 @@ int main(int argc, char** argv) {
                                                                             //###################################################
                                                                             //###################################################
                                                                             if (EleTrgMatched && EL_CUTS && TAU_CUTS && SVMASS[tScalecat] > cutonSVmass && (Event != Event_Double[2][2])) {
-                                                                                if (lepiso == 0 && etacat == 0) plotFill("etau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                                if ( etacat == 0) plotFill("etau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
                                                                                 if (QCDShape && qcat == 1) plotFill("etau_2DSVMassPt" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                 if (WTopShape) plotFill("etau_2DSVMassPt_W" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
                                                                                 if (PtForFR) plotFill("etau_TauPt" + FullStringName, l2Pt, ptBin, 0, ptBin, AllWeight);

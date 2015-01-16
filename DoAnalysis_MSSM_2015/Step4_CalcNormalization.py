@@ -132,7 +132,7 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
         DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
         Normalization_DY= DY_Histo.Integral()
     
-
+    print "---------->  ", chan+HistogramNoMT+ "_inclusive"
     #  Get Normalization from Embedded Data Sample in Inclusive
     EmbedData_Files = TFile(SubRootDir + "out_Embedded"+chan+CoMEnergy+".root")
     EmbedData_Histo=EmbedData_Files.Get(chan+HistogramNoMT+ "_inclusive")
@@ -145,11 +145,11 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
     Normalization_EmbedTT= EmbedTT_Histo.Integral()
 
 
-    
-#    print "DY MC Incluvive= ", (Normalization_DY)
-#    print "TTEmbedded MC Incluvive= ", (Normalization_EmbedTT) 
-#    print "TTEmbed Data Incluvive= ", EmbedData_Histo.Integral()
-#    print "ExtraPOl Factor= ", (Normalization_DY+ Normalization_EmbedTT)/(EmbedData_Histo.Integral()* luminosity(CoMEnergy))
+    print "---------->  ", chan+HistogramNoMT+ "_inclusive"
+    print "DY MC Incluvive= ", Normalization_DY
+    print "TTEmbedded MC Incluvive= ", Normalization_EmbedTT
+    print "TTEmbed Data Incluvive= ", Normalization_EmbedData
+    print "ExtraPOl Factor= ", (Normalization_DY)/(Normalization_EmbedData- Normalization_EmbedTT)
 
     return (Normalization_DY)/(Normalization_EmbedData- Normalization_EmbedTT)
 
@@ -309,7 +309,8 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             HistogramNoMT = Observable+"_OS"+DYIndex
             Histogram = Observable+"_mTLess30_OS"+DYIndex
             HistomTHigh70 = Observable+"_mTHigher70_OS"+DYIndex
-
+            
+            print "------->",channel[chl],category[categ]
             embedToDYWeight= getEmbedToDYWeight(PostFix,CoMEnergy,channel[chl],HistogramNoMT)
             #print "       ------------   extraPol Embeede w8=======", embedToDYWeight
 

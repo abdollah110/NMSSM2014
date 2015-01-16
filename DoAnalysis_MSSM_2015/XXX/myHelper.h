@@ -61,62 +61,54 @@ std::vector<float> HPtReWeight(float H_Pt, std::string Mass, TFile * inputFile) 
     std::vector<float> HiggsPtRW;
     HiggsPtRW.clear();
 
+    //    TFile * inputFile = new TFile("mssmHiggsPtReweightGluGlu_mhmod+_POWHEG.root", "r");
+
     std::string DirName = "A_mA" + Mass + "_mu200";
     std::string nominalName = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_central";
     std::string UpName = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_tanBetaHigh";
     std::string DownName = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_tanBetaLow";
-    std::string UpNameScale = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_scaleUp";
-    std::string DownNameScale = "mssmHiggsPtReweight_A_mA" + Mass + "_mu200_scaleDown";
 
     TDirectory * tDir = (TDirectory *) inputFile->Get(DirName.c_str());
     TH1F *HpT = (TH1F*) tDir->Get(nominalName.c_str());
     TH1F *HpT_Up = (TH1F*) tDir->Get(UpName.c_str());
     TH1F *HpT_Down = (TH1F*) tDir->Get(DownName.c_str());
-    TH1F *HpT_UpScale = (TH1F*) tDir->Get(UpNameScale.c_str());
-    TH1F *HpT_DownScale = (TH1F*) tDir->Get(DownNameScale.c_str());
 
 
     int whichBin = 1 + int(H_Pt) / 5;
     if (whichBin > 50) whichBin = 50;
-    if (!HpT_Down->GetBinContent(whichBin) || !HpT->GetBinContent(whichBin) || !HpT_Up->GetBinContent(whichBin) || !HpT_UpScale->GetBinContent(whichBin) || !HpT_DownScale->GetBinContent(whichBin)) cout << "No Historam exsit\n";
-
-    HiggsPtRW.push_back(HpT_Down->GetBinContent(whichBin) / HpT->GetBinContent(whichBin));
-    HiggsPtRW.push_back(HpT->GetBinContent(whichBin));
-    HiggsPtRW.push_back(HpT_Up->GetBinContent(whichBin) / HpT->GetBinContent(whichBin));
-    HiggsPtRW.push_back(HpT_DownScale->GetBinContent(whichBin) / HpT->GetBinContent(whichBin));
-    HiggsPtRW.push_back(HpT_UpScale->GetBinContent(whichBin) / HpT->GetBinContent(whichBin));
-
-    return HiggsPtRW;
-
-}
-
-std::vector<float> SMHiggs125PtReWeight(float H_Pt,  TFile * inputFile) {
-    std::vector<float> HiggsPtRW;
-    HiggsPtRW.clear();
-
-
-    std::string nominalName = "Nominal";
-    std::string UpName = "Up";
-    std::string DownName = "Down";
-    
-
-    TH1F *HpT = (TH1F*) inputFile->Get(nominalName.c_str());
-    TH1F *HpT_Up = (TH1F*) inputFile->Get(UpName.c_str());
-    TH1F *HpT_Down = (TH1F*) inputFile->Get(DownName.c_str());
-
-
-    int whichBin = 1 + int(H_Pt);
-    if (whichBin > 500) whichBin = 500;
-    if (!HpT_Down->GetBinContent(whichBin) || !HpT->GetBinContent(whichBin) || !HpT_Up->GetBinContent(whichBin) ) cout << "No Historam exsit\n";
-
+    if (!HpT_Down->GetBinContent(whichBin) || !HpT->GetBinContent(whichBin) || !HpT_Up->GetBinContent(whichBin)) cout << "No Historam exsit\n";
+    //    HiggsPtRW.push_back(1);
+    //    HiggsPtRW.push_back(1);
+    //    HiggsPtRW.push_back(1);
     HiggsPtRW.push_back(HpT_Down->GetBinContent(whichBin) / HpT->GetBinContent(whichBin));
     HiggsPtRW.push_back(HpT->GetBinContent(whichBin));
     HiggsPtRW.push_back(HpT_Up->GetBinContent(whichBin) / HpT->GetBinContent(whichBin));
 
+    //    cout << H_Pt << "   whcih bin= " << whichBin << "   nominal weight"<< HpT->GetBinContent(whichBin) <<   "   "<<  HpT_Down->GetBinContent(whichBin) / HpT->GetBinContent(whichBin)  << "  " << HpT_Up->GetBinContent(whichBin) / HpT->GetBinContent(whichBin)<<  "\n";
+    //    inputFile->Close();
     return HiggsPtRW;
 
-}
 
+
+
+
+
+    //
+    //    [23/09/14 10:16:52] Cécile Caillol: poidssup = poidssup * (1+ highMSSM*0.2*l1Pt_*0.001 +highMSSM*0.2*l2Pt_*0.001);
+    //[23/09/14 10:25:34] Cécile Caillol:     TFile *f_HpT = new TFile("From_Christian/mssmHiggsPtReweightGluGlu_mhmod+.root","r");
+    //    TDirectory *d_HpT = (TDirectory*) f_HpT->Get("A_mA120_mu200");
+    //    TH1F *HpT = (TH1F*) d_HpT->Get("mssmHiggsPtReweight_A_mA120_mu200_central");
+    //    TH1F *HpT_Up = (TH1F*) d_HpT->Get("mssmHiggsPtReweight_A_mA120_mu200_tanBetaHigh");
+    //    TH1F *HpT_Down = (TH1F*) d_HpT->Get("mssmHiggsPtReweight_A_mA120_mu200_tanBetaLow");
+    //    if (dataType=="GluGluH"){
+    //           int binnb=1+int(gen_Higgs_pt)/5;
+    //           if (binnb>50) binnb=50;
+    //           cout<<HpT->GetBinContent(binnb)<<endl;
+    //           poids = poids * HpT->GetBinContent(binnb);
+    //           poidsUp = HpT_Up->GetBinContent(binnb)/HpT->GetBinContent(binnb);
+    //           poidsDown = HpT_Down->GetBinContent(binnb)/HpT->GetBinContent(binnb);
+    //        }
+}
 
 float TauESWeight(int mcdata, int DM, float eta) {
     if (mcdata == 2 || mcdata == 4)
@@ -126,8 +118,6 @@ float TauESWeight(int mcdata, int DM, float eta) {
         if (DM == 0 && fabs(eta) > 1.5) return 0.96;
         if (DM == 1 && fabs(eta) < 1.5) return 1.06;
         if (DM == 1 && fabs(eta) > 1.5) return 1.00;
-        if (DM == 2 && fabs(eta) < 1.5) return 1.06;
-        if (DM == 2 && fabs(eta) > 1.5) return 1.00;
         if (DM == 10 && fabs(eta) < 1.5) return 1.02;
         if (DM == 10 && fabs(eta) > 1.5) return 1.06;
     }

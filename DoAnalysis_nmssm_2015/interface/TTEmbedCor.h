@@ -18,28 +18,28 @@ using namespace std;
 
 //******************** ETau/MuTau turn-on *****************************
 
-double correctionHighPtTail_Data(float l1Pt, float l1Eta, TF1* TriggerWeightBarrel, TF1* TriggerWeightEndcaps) {
+double corHighPtTail_Data(float l1Pt, float l1Eta, TF1* TrgWeightBar, TF1* TrgWeightEnd) {
     //Additional corrections for high pT taus in muTau & eTau (Arun, Mar14)
-    //    TF1 *TriggerWeightBarrel = new TF1("AddTriggerWeightMuTauBarrel", "1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)", 0., 800.);
-    //    TF1 *TriggerWeightEndcaps = new TF1("AddTriggerWeightMuTauEndcaps", "1 - 1.81148e-03*(x - 60) + 5.44335e-07*(x - 60)*(x-60)", 0., 800.);
-
-    //    Double_t DataValBarrel_pt = OneMinratioABCD +ratioABCD * TriggerWeightBarrel->Eval(l1Pt);
-    //    Double_t DataValBarrel_800 = OneMinratioABCD +ratioABCD * TriggerWeightBarrel->Eval(800.);
+    //    TF1 *TrgWeightBar = new TF1("AddTriggerWeightMuTauBarrel", "1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)", 0., 800.);
+    //    TF1 *TrgWeightEnd = new TF1("AddTriggerWeightMuTauEndcaps", "1 - 1.81148e-03*(x - 60) + 5.44335e-07*(x - 60)*(x-60)", 0., 800.);
+    
+    //    Double_t DataValBarrel_pt = OneMinratioABCD +ratioABCD * TrgWeightBar->Eval(l1Pt);
+    //    Double_t DataValBarrel_800 = OneMinratioABCD +ratioABCD * TrgWeightBar->Eval(800.);
     //
-    //    Double_t DataValEndcaps_pt = OneMinratioABCD +ratioABCD * TriggerWeightEndcaps->Eval(l1Pt);
-    //    Double_t DataValEndcaps_400 = OneMinratioABCD +ratioABCD * TriggerWeightEndcaps->Eval(400.);
+    //    Double_t DataValEndcaps_pt = OneMinratioABCD +ratioABCD * TrgWeightEnd->Eval(l1Pt);
+    //    Double_t DataValEndcaps_400 = OneMinratioABCD +ratioABCD * TrgWeightEnd->Eval(400.);
     float ratioABCD= 0.62457;
     float OneMinratioABCD= 1- ratioABCD;
-    if (l1Pt > 140 && l1Pt < 800 && fabs(l1Eta) < 1.5) return (OneMinratioABCD +ratioABCD * TriggerWeightBarrel->Eval(l1Pt));
-    else if (l1Pt >= 800 && fabs(l1Eta) <= 1.5) return (OneMinratioABCD +ratioABCD * TriggerWeightBarrel->Eval(800.));
-    else if (l1Pt > 60 && l1Pt < 400 && fabs(l1Eta) > 1.5) return (OneMinratioABCD +ratioABCD * TriggerWeightEndcaps->Eval(l1Pt));
-    else if (l1Pt >= 400 && fabs(l1Eta) >= 1.5) return (OneMinratioABCD +ratioABCD * TriggerWeightEndcaps->Eval(400.));
-        //    if (l1Pt < 800 && fabs(l1Eta) < 1.5) return (OneMinratioABCD +ratioABCD * TriggerWeightBarrel->Eval(l1Pt));
-        //    else if (l1Pt >= 800 && fabs(l1Eta) <= 1.5) return (OneMinratioABCD +ratioABCD * TriggerWeightBarrel->Eval(800.));
-        //    else if (l1Pt < 400 && fabs(l1Eta) > 1.5) return (OneMinratioABCD +ratioABCD * TriggerWeightEndcaps->Eval(l1Pt));
-        //    else if (l1Pt >= 400 && fabs(l1Eta) >= 1.5) return (OneMinratioABCD +ratioABCD * TriggerWeightEndcaps->Eval(400.));
+    if (l1Pt > 140 && l1Pt < 800 && fabs(l1Eta) < 1.5) return (OneMinratioABCD +ratioABCD * TrgWeightBar->Eval(l1Pt));
+    else if (l1Pt >= 800 && fabs(l1Eta) <= 1.5) return (OneMinratioABCD +ratioABCD * TrgWeightBar->Eval(800.));
+    else if (l1Pt > 60 && l1Pt < 400 && fabs(l1Eta) > 1.5) return (OneMinratioABCD +ratioABCD * TrgWeightEnd->Eval(l1Pt));
+    else if (l1Pt >= 400 && fabs(l1Eta) >= 1.5) return (OneMinratioABCD +ratioABCD * TrgWeightEnd->Eval(400.));
+    //    if (l1Pt < 800 && fabs(l1Eta) < 1.5) return (OneMinratioABCD +ratioABCD * TrgWeightBar->Eval(l1Pt));
+    //    else if (l1Pt >= 800 && fabs(l1Eta) <= 1.5) return (OneMinratioABCD +ratioABCD * TrgWeightBar->Eval(800.));
+    //    else if (l1Pt < 400 && fabs(l1Eta) > 1.5) return (OneMinratioABCD +ratioABCD * TrgWeightEnd->Eval(l1Pt));
+    //    else if (l1Pt >= 400 && fabs(l1Eta) >= 1.5) return (OneMinratioABCD +ratioABCD * TrgWeightEnd->Eval(400.));
     else
-        return 1;
+    return 1;
 }
 
 double efficiency(double m, double m0, double sigma, double alpha, double n, double norm) {
@@ -48,7 +48,7 @@ double efficiency(double m, double m0, double sigma, double alpha, double n, dou
     double sig = fabs((double) sigma);
     double t = (m - m0) / sig;
     if (alpha < 0)
-        t = -t;
+    t = -t;
     double absAlpha = fabs(alpha / sig);
     double a = TMath::Power(n / absAlpha, n) * exp(-0.5 * absAlpha * absAlpha);
     double b = absAlpha - n / absAlpha;
@@ -68,7 +68,7 @@ double efficiency(double m, double m0, double sigma, double alpha, double n, dou
         return norm * (1 + ApproxErf) * sqrtPiOver2 / area;
     } else {
         return norm * (leftArea + a * (1 / TMath::Power(t - b, n - 1) -
-                1 / TMath::Power(absAlpha - b, n - 1)) / (1 - n)) / area;
+                                       1 / TMath::Power(absAlpha - b, n - 1)) / (1 - n)) / area;
     }
 }
 
@@ -177,40 +177,27 @@ float Eff_MuTauTrg_Tau_Data_2012(float l1Pt, float l1Eta) {
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-//float getCorrFactorMC(int mcdata, int channel, float l1Pt, float l1Eta, float l2Pt, float l2Eta) {
-//
-//    if (channel == 3) {
-//        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta);
-//    }
-//    if (channel == 1) {
-//        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta);
-//    }
-//    return 1.0;
-//
-//}
-
-float getCorrFactorEMbed(int mcdata, int channel, float l1Pt, float l1Eta, float l2Pt, float l2Eta, TF1* TriggerWeightBarrel, TF1* TriggerWeightEndcaps) {
-
-    if (mcdata == 2 || mcdata == 4 || mcdata == 5) {  //Data
-        if (channel == 3) {
-            //            return Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l1Pt, l1Eta);
-            return Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l1Pt, l1Eta) * correctionHighPtTail_Data(l1Pt, l1Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
-        }
-        if (channel == 1) {
-            //            return Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l1Pt, l1Eta) ;
-            return Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l1Pt, l1Eta) * correctionHighPtTail_Data(l1Pt, l1Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
-        }
-    } else if (channel == 3) {  //MC
-        //        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) ;
-        return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
-    } else if (channel == 1) {
-        //        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) ;
-        return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) * correctionHighPtTail_Data(l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
-    } else return 1;
-    return 1;
-
-
+float getCorrFactorEMbed(int mcdata, int channel, float l1Pt, float l1Eta, float l2Pt, float l2Eta, TF1* TrgWeightBar, TF1* TrgWeightEnd) {
+    
+    float TailCor = corHighPtTail_Data(l2Pt, l2Eta, TrgWeightBar, TrgWeightEnd);
+    
+    if (mcdata == 5 && channel == 3) // EmbedData_eleTau
+    return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) * TailCor;
+    
+    else if (mcdata == 5 && channel == 1) // EmbedData_muTau
+    return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) * TailCor;
+    
+    else if (mcdata == 6 && channel == 3) // EmbedMC_eleTau
+    return Cor_IDIso_ETau_Ele_2012(l1Pt, l1Eta) * Eff_ETauTrg_Ele_Data_2012(l1Pt, l1Eta) * Eff_ETauTrg_Tau_Data_2012(l2Pt, l2Eta) * TailCor;
+    
+    else if (mcdata == 6 && channel == 1) // EmbedMC_muTau
+    return Cor_IDIso_MuTau_Muon_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Mu_Data_2012(l1Pt, l1Eta) * Eff_MuTauTrg_Tau_Data_2012(l2Pt, l2Eta) * TailCor;
+    
+    else return 1;
+    
 }
+
+
 
 
 

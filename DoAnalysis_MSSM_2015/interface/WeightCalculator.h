@@ -122,8 +122,8 @@ float XSection(std::string OutName) {
     else if (OutName.compare("ggH_SM125") == 0) return 1.23;
     else if (OutName.compare("qqH_SM125") == 0) return 0.100;
     else if (OutName.compare("VH_SM125") == 0) return 0.077;
-    else if (OutName.compare("TTEmbeddedmutau") == 0) return (26.197 * 771693 / 12011428);
-    else if (OutName.compare("TTEmbeddedetau") == 0) return (26.197 * 718441 / 12011428);
+    else if (OutName.compare("TTEmbeddedmutau") == 0) return (26.197 * 792835 / 12011428);
+    else if (OutName.compare("TTEmbeddedetau") == 0) return (26.197 * 758691 / 12011428);
 
 
     else return 1;
@@ -182,6 +182,11 @@ float weightCalc(TH1F *Histo, std::string outputName, int njet, int mcdata, vect
 
 
 }
+
+
+
+
+
 
 
 

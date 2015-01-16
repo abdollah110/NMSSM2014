@@ -414,7 +414,8 @@ int main(int argc, char** argv) {
             //###############################################################################################
             const int size_isoCat = 2;
             bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
-            bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+//            bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+            bool RelaxIso = 1;
             bool Iso_category[size_isoCat] = {TightIso, RelaxIso};
             std::string iso_Cat[size_isoCat] = {"", "_RelaxIso"};
 
@@ -578,6 +579,7 @@ int main(int argc, char** argv) {
             //        bool El_Iso_Loose = l1_eleIso > 0.2 && l1_eleIso < 0.5;
             bool EL_CUTS = El_PtEta && El_IdTight && (ZimpactTau < -1.5 || ZimpactTau > 0.5);
 
+
             //####################################################
             // Tau Selection
             //####################################################
@@ -638,7 +640,7 @@ int main(int argc, char** argv) {
                                                                             bool ZLSelection = ((DYsample != string::npos) && lepiso == 0 && tScalecat == 1 && qcat == 0 && mTcat == 0 && isocat == 0 && etacat == 0);
                                                                             bool QCDShape = (tScalecat == 1 && mTcat < 2);
                                                                             bool PtForFR = (tScalecat == 1 && mTcat < 2);
-                                                                            bool WTopShape = (((Wsample != string::npos) || isTTJets) && lepiso == 0 && qcat == 0 && mTcat == 0 && zcat == 0);
+                                                                            bool WTopShape = (((Wsample != string::npos) || isTTJets) && lepiso == 0 && qcat == 0 && mTcat == 0 && zcat == 0 && etacat == 0); // added && etacat == 0 on 7 Jan
                                                                             bool HiggsSelection = SignalSelection && (ggHiggsFind != string::npos ||bbHiggsFind != string::npos || SMFind != string::npos);
                                                                             bool SMHiggs125Selection = SignalSelection && (ggHiggsFind != string::npos && SMFind != string::npos);
                                                                             //###################################################
