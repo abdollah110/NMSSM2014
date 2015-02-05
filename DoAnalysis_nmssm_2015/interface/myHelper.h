@@ -126,6 +126,8 @@ float TauESWeight(int mcdata, int DM, float eta) {
         if (DM == 0 && fabs(eta) > 1.5) return 0.96;
         if (DM == 1 && fabs(eta) < 1.5) return 1.06;
         if (DM == 1 && fabs(eta) > 1.5) return 1.00;
+        if (DM == 2 && fabs(eta) < 1.5) return 1.06;
+        if (DM == 2 && fabs(eta) > 1.5) return 1.00;
         if (DM == 10 && fabs(eta) < 1.5) return 1.02;
         if (DM == 10 && fabs(eta) > 1.5) return 1.06;
     }
@@ -191,4 +193,10 @@ float InvarMass_F(float e1, float e2, float px1, float px2, float py1, float py2
 }
 
 #endif	/* MYHELPER_H */
+
+
+
+
+
+
 

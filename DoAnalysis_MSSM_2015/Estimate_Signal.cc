@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
         Run_Tree->AddFriend("Mass_tree");
 
         cout.setf(ios::fixed, ios::floatfield);
-        cout.precision(7);
+        cout.precision(3);
 
         Run_Tree->SetBranchAddress("Channel", &Channel);
         Run_Tree->SetBranchAddress("run", &Run);
@@ -275,6 +275,7 @@ int main(int argc, char** argv) {
             Run_Tree->GetEntry(i);
             if (i % 10000000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
             fflush(stdout);
+            if(Event ==1197496477  || Event ==428263621  || Event ==249332599  || Event ==628419671  || Event ==575895570  || Event ==515447668  || Event == 833361705 || Event == 457600573 || Event == 290771110 ){
 
             //###############################################################################################
             //  introcuing the tau ES up and down on categories and TMass CATEGORIZATION
@@ -284,21 +285,24 @@ int main(int argc, char** argv) {
 
             //  ##################################   Tau Energy Scale Down
             float tauESc = -0.03;
-            bool selection_inclusiveDown = l2Pt * (1 + tauESc) > 30;
-            bool selection_nobtag_lowDown = nbtag < 1 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_nobtag_mediumDown = nbtag < 1 && l2Pt * (1 + tauESc) > 45 && l2Pt * (1 + tauESc) < 60;
-            bool selection_nobtag_highDown = nbtag < 1 && l2Pt * (1 + tauESc) > 60;
-            bool selection_btag_lowDown = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btag_highDown = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
-            bool selection_btagLoose_lowDown = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btagLoose_highDown = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
+            float scaledL2Pt=l2Pt * (1 + tauESc);
+            bool selection_inclusiveDown = scaledL2Pt > 30;
+            bool selection_nobtag_lowDown = nbtag < 1 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_nobtag_mediumDown = nbtag < 1 && scaledL2Pt > 45 && scaledL2Pt < 60;
+            bool selection_nobtag_highDown = nbtag < 1 && scaledL2Pt > 60;
+            bool selection_btag_lowDown = nbtag > 0 && njets < 2 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_btag_highDown = nbtag > 0 && njets < 2 && scaledL2Pt > 45;
+            bool selection_btagLoose_lowDown = nbtagLoose > 0 && njets < 2 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_btagLoose_highDown = nbtagLoose > 0 && njets < 2 && scaledL2Pt > 45;
 
             float shiftedPx2_scaleDown = mvamet * cos(mvametphi) - l2Px * tauESc;
             float shiftedPy2_scaleDown = mvamet * sin(mvametphi) - l2Py * tauESc;
             float mvamet_scaleDown = sqrt(pow(shiftedPy2_scaleDown, 2) + pow(shiftedPx2_scaleDown, 2));
             float mvametphi_scaleDown = atan(shiftedPy2_scaleDown / shiftedPx2_scaleDown);
-            if (mvametphi > (TMath::Pi() / 2)) mvametphi_scaleDown += TMath::Pi();
-            if (mvametphi < (-TMath::Pi() / 2)) mvametphi_scaleDown -= TMath::Pi();
+//            if (mvametphi_scaleDown > (TMath::Pi() / 2)) mvametphi_scaleDown += TMath::Pi();
+//            if (mvametphi_scaleDown < (-TMath::Pi() / 2)) mvametphi_scaleDown -= TMath::Pi();
+                if (mvametphi > (TMath::Pi() / 2)) mvametphi_scaleDown += TMath::Pi();
+                if (mvametphi < (-TMath::Pi() / 2)) mvametphi_scaleDown -= TMath::Pi();
             float mT_scaleDown = TMass_F(l1Pt, l1Px, l1Py, mvamet_scaleDown, mvametphi_scaleDown);
             bool mTLess30_scaleDown = mT_scaleDown < 30;
             bool mTHigh70_scaleDown = mT_scaleDown > 70;
@@ -306,14 +310,15 @@ int main(int argc, char** argv) {
 
             //  ##################################   Tau Energy Scale Nominal
             tauESc = 0;
-            bool selection_inclusive = l2Pt * (1 + tauESc) > 30;
-            bool selection_nobtag_low = nbtag < 1 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_nobtag_medium = nbtag < 1 && l2Pt * (1 + tauESc) > 45 && l2Pt * (1 + tauESc) < 60;
-            bool selection_nobtag_high = nbtag < 1 && l2Pt * (1 + tauESc) > 60;
-            bool selection_btag_low = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btag_high = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
-            bool selection_btagLoose_low = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btagLoose_high = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
+            scaledL2Pt=l2Pt * (1 + tauESc);
+            bool selection_inclusive = scaledL2Pt > 30;
+            bool selection_nobtag_low = nbtag < 1 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_nobtag_medium = nbtag < 1 && scaledL2Pt > 45 && scaledL2Pt < 60;
+            bool selection_nobtag_high = nbtag < 1 && scaledL2Pt > 60;
+            bool selection_btag_low = nbtag > 0 && njets < 2 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_btag_high = nbtag > 0 && njets < 2 && scaledL2Pt > 45;
+            bool selection_btagLoose_low = nbtagLoose > 0 && njets < 2 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_btagLoose_high = nbtagLoose > 0 && njets < 2 && scaledL2Pt > 45;
 
             float shiftedPx2_scale = mvamet * cos(mvametphi) - l2Px * tauESc;
             float shiftedPy2_scale = mvamet * sin(mvametphi) - l2Py * tauESc;
@@ -330,14 +335,15 @@ int main(int argc, char** argv) {
 
             //  ##################################   Tau Energy Scale Up
             tauESc = +0.03;
-            bool selection_inclusiveUp = l2Pt * (1 + tauESc) > 30;
-            bool selection_nobtag_lowUp = nbtag < 1 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_nobtag_mediumUp = nbtag < 1 && l2Pt * (1 + tauESc) > 45 && l2Pt * (1 + tauESc) < 60;
-            bool selection_nobtag_highUp = nbtag < 1 && l2Pt * (1 + tauESc) > 60;
-            bool selection_btag_lowUp = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btag_highUp = nbtag > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
-            bool selection_btagLoose_lowUp = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 30 && l2Pt * (1 + tauESc) < 45;
-            bool selection_btagLoose_highUp = nbtagLoose > 0 && njets < 2 && l2Pt * (1 + tauESc) > 45;
+            scaledL2Pt=l2Pt * (1 + tauESc);
+            bool selection_inclusiveUp = scaledL2Pt > 30;
+            bool selection_nobtag_lowUp = nbtag < 1 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_nobtag_mediumUp = nbtag < 1 && scaledL2Pt > 45 && scaledL2Pt < 60;
+            bool selection_nobtag_highUp = nbtag < 1 && scaledL2Pt > 60;
+            bool selection_btag_lowUp = nbtag > 0 && njets < 2 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_btag_highUp = nbtag > 0 && njets < 2 && scaledL2Pt > 45;
+            bool selection_btagLoose_lowUp = nbtagLoose > 0 && njets < 2 && scaledL2Pt > 30 && scaledL2Pt < 45;
+            bool selection_btagLoose_highUp = nbtagLoose > 0 && njets < 2 && scaledL2Pt > 45;
 
             float shiftedPx2_scaleUp = mvamet * cos(mvametphi) - l2Px * tauESc;
             float shiftedPy2_scaleUp = mvamet * sin(mvametphi) - l2Py * tauESc;
@@ -542,9 +548,10 @@ int main(int argc, char** argv) {
             float tauPtReweightingDown = 1 - 0.2 * (l2Pt / 1000);
 
             //############ Tau Energy Scale Reweighting
-            float tauESWeight = 1;
-            if (ggHiggsFind != string::npos || SMHFind != string::npos  || bbHiggsFind != string::npos || sel_ZTT)
-                TauESWeight(mcdata, l2_DecayMode, l2Eta);
+            float tauESWeight_ = 1;
+//            cout<< (ggHiggsFind != string::npos) << (SMHFind != string::npos)  << (bbHiggsFind != string::npos) << (sel_ZTT)<<"\n";
+            if (ggHiggsFind != string::npos || SMHFind != string::npos  || bbHiggsFind != string::npos || sel_ZTT || TTJets != string::npos)
+                tauESWeight_= TauESWeight(mcdata, l2_DecayMode, l2Eta);
 
             //############ Tau Spinor on DYjet_tauPOlar_Off
             float TauSpinor = 1;
@@ -567,8 +574,10 @@ int main(int argc, char** argv) {
             bool MuTrgMatched = 1;
             bool EleTrgMatched = 1;
             size_t EmbedFind = InputROOT.find("Embed");
-            if (EmbedFind != string::npos)
+                if (EmbedFind != string::npos){
                 GeneralReweighting = 1 * getCorrFactorEMbed(mcdata, Channel, l1Pt, l1Eta, l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
+//                cout << " ******GeneralReweighting******= "<<GeneralReweighting<<endl;
+                }
             else {
                 MuTrgMatched = (Channel == 1) && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20;
                 EleTrgMatched = (Channel == 3) && Trigger_EleTau12 && l1_trgMatche_Ele20Tau20 && l2_trgMatche_Ele20Tau20;
@@ -577,8 +586,8 @@ int main(int argc, char** argv) {
             //############ Full Reweighting
 //            float LumiWeight = 1;
             float LumiWeight = weightCalc(Histo, InputROOT, num_gen_jets, mcdata, W_Events, DY_Events);
-            float AllWeight = GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * SMHiggs125PtReweight[1] * EleTauFRWeight * TopPtReweighting * TauSpinor * LumiWeight;
-            if (verbose_) cout << "AllWeight= " << AllWeight << "   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight=" << tauESWeight << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "   TopPtReweighting="<<TopPtReweighting <<    "   TauSpinor="<<TauSpinor <<   "   LumiWeight="<<LumiWeight<<"\n";
+            float AllWeight = GeneralReweighting * tauESWeight_ * embedWeight * HiggsPtReweight[1] * SMHiggs125PtReweight[1] * EleTauFRWeight * TopPtReweighting * TauSpinor * LumiWeight;
+            if (verbose_) cout << "AllWeight= " << AllWeight << "   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight_=" << tauESWeight_ << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "   TopPtReweighting="<<TopPtReweighting <<    "   TauSpinor="<<TauSpinor <<   "   LumiWeight="<<LumiWeight<<"\n";
 
             //########################################################################################################
             //########################################################################################################
@@ -625,18 +634,39 @@ int main(int argc, char** argv) {
             bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
             //########################################################################################################
-            if(Event==10024033)
-                cout<<(l1Pt>20) << (l2Pt>30 )<< (l2Pt < 45) << charge_OS << (Channel<2) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) << (mt_1 < 30) << (fabs(l1_d0) < 0.045) << (fabs(l1_dZ_in) < 0.2 )<< (abs(Tau_Vertex_dz) < 0.2 )<< (l2_tauRejEleMVA3L > 0.5) << (l1_muIso < 0.1 )<< Trigger_MuTau12 << l1_trgMatche_Mu17Tau20 << l2_trgMatche_Mu17Tau20 << (nbtag > 0) << (njets < 2) << (SVMass > 50) <<"\n";
-                
-                    
-
-            if (l1Pt>20 && l2Pt>30 && l2Pt < 45 && charge_OS && Channel<2 && l2_TighttauIsoMVA3oldDMwLT > 0.5 && mt_1 < 30 && fabs(l1_d0) < 0.045 && fabs(l1_dZ_in) < 0.2 && abs(Tau_Vertex_dz) < 0.2 && l2_tauRejEleMVA3L > 0.5 && l1_muIso < 0.1 && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20 && nbtag > 0 && njets < 2 && SVMass > 50  && sel_ZJ)
+//            if(Event==32390369)
+//                cout<<(l1Pt>20) << (l2Pt>30 )<< (l2Pt < 45) << charge_OS << (Channel<2) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) << (mt_1 < 30) << (fabs(l1_d0) < 0.045) << (fabs(l1_dZ_in) < 0.2 )<< (abs(Tau_Vertex_dz) < 0.2 )<< (l2_tauRejEleMVA3L > 0.5) << (l1_muIso < 0.1 )<< Trigger_MuTau12 << l1_trgMatche_Mu17Tau20 << l2_trgMatche_Mu17Tau20 << (nbtag > 0) << (njets < 2) << (SVMass > 50) <<"\n";
+//                
+//                    
+//
+                if (selection_btag_highDown && l1Pt>20 &&  l2Pt > 45 && charge_OS && Channel<2 && l2_TighttauIsoMVA3oldDMwLT > 0.5  && fabs(l1_d0) < 0.045 && fabs(l1_dZ_in) < 0.2 && abs(Tau_Vertex_dz) < 0.2 && l2_tauRejEleMVA3L > 0.5 && l1_muIso < 0.1 && nbtag > 0  && SVMass > 50  && sel_ZTT )
+//            if (selection_btag_highDown && l1Pt>20 &&  l2Pt > 45 && charge_OS && Channel<2 && l2_TighttauIsoMVA3oldDMwLT > 0.5 && mt_1 < 30 && fabs(l1_d0) < 0.045 && fabs(l1_dZ_in) < 0.2 && abs(Tau_Vertex_dz) < 0.2 && l2_tauRejEleMVA3L > 0.5 && l1_muIso < 0.1 && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20 && nbtag > 0  && SVMass > 50  && sel_ZTT )
+//                if (1 )
+            if(Event> 0 )
             {
-                icount++;
-                cout<<Run<<":"<<Lumi<<":"<<Event<<"\n";
-                cout << "AllWeight= " << AllWeight << " idweight_1="<<idweight_1  << " trigweight_1="<<trigweight_1  << " trigweight_2="<<trigweight_2   <<"   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight=" << tauESWeight << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "   TopPtReweighting="<<TopPtReweighting <<    "   TauSpinor="<<TauSpinor <<   "   LumiWeight="<<LumiWeight<<"\n";
-                cout<<"-------- "<<mcdata<< "  "<<l2_DecayMode <<"  "<< l2Eta <<" \n ";
+                
+                cout<<Run<<":"<<Lumi<<":"<<Event <<"\t";
+//                cout<<SVMassDown << "  "<<SVMass << "  "<< SVMassUp<<"\n";
+                cout<<"mT_scaleDown" << "  "<<mT_scaleDown << "  SVMassDown= "<<SVMassDown <<  "  mvamet_scaleDown= "<<mvamet_scaleDown <<  "  mvamet_scale= "<<mvamet_scale <<  "  mvamet_scaleUp= "<<mvamet_scaleUp <<  " tauScaleDown"<< l2Pt * (0.97)<< "  mvametphi_scaleDown= "<<mvametphi_scaleDown <<"\n\n";
 
+                
+//                cout<<Run<<":"<<Lumi<<":"<<Event<< "  "<< l1_eleIso <<"\n";
+//                cout << "num_gen_jets" <<   num_gen_jets      <<"   AllWeight= " << AllWeight << " idweight_1="<<idweight_1  << " trigweight_1="<<trigweight_1  << " trigweight_2="<<trigweight_2   <<"   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight_=" << tauESWeight_ << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "   TopPtReweighting="<<TopPtReweighting <<    "   TauSpinor="<<TauSpinor <<   "   LumiWeight="<<LumiWeight<<"\n";
+
+
+//                            cout<<(l1Pt>24) << (l2Pt > 45) << charge_OS << (Channel>2) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) << l1_eleId_Tight << (mt_1 < 30) << (nbtag > 0)  << (njets < 2)<<(SVMass > 50 ) << (ZimpactTau < -1.5 || ZimpactTau > 0.5) << sel_ZTT << (l1_eleIso < 0.1 )<<"\n";
+            
+//                if (l1Pt>24 &&  l2Pt > 30 && charge_OS && Channel>2 && l2_TighttauIsoMVA3oldDMwLT > 0.5 && l1_eleId_Tight && mt_1 < 30  && SVMass > 50  && (ZimpactTau < -1.5 || ZimpactTau > 0.5)  && sel_ZTT && (l1_eleIso < 0.1 ))
+//            if (l1Pt>24 &&  l2Pt > 45 && l2Pt < 60 && charge_SS && Channel>2 && l2_TighttauIsoMVA3oldDMwLT > 0.5 && l1_eleId_Tight && mt_1 < 30  && nbtag < 1  && SVMass > 50  && (ZimpactTau < -1.5 || ZimpactTau > 0.5)  && sel_ZL && (l1_eleIso < 0.1 ) && Trigger_EleTau12 && l1_trgMatche_Ele20Tau20 && l2_trgMatche_Ele20Tau20)
+//            {
+//
+//                icount++;
+//                cout<<Run<<":"<<Lumi<<":"<<Event<< "\n";
+//                
+////                cout << "AllWeight= " << AllWeight << " idweight_1="<<idweight_1  << " trigweight_1="<<trigweight_1  << " trigweight_2="<<trigweight_2   <<"   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight_=" << tauESWeight_ << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "   TopPtReweighting="<<TopPtReweighting <<    "   TauSpinor="<<TauSpinor <<   "   LumiWeight="<<LumiWeight<<"\n";
+////                cout<<"-------- "<<mcdata<< "  "<<l2_DecayMode <<"  "<< l2Eta <<" \n ";
+//
+//            }
             }
             
             //########################################################################################################
@@ -748,6 +778,7 @@ int main(int argc, char** argv) {
 
         }
     }
+}
     fout->cd();
     //    BG_Tree->Write();
 
@@ -765,4 +796,8 @@ int main(int argc, char** argv) {
 
     fout->Close();
 }
+
+
+
+
 

@@ -99,17 +99,30 @@ SystematicSignalScale = ["_SVMassHiggPtRWUp","_SVMassHiggPtRWDown"]
 #    if unc== "Up": return "QCD_CMS_htt_QCDShape_"+channel+NameCat+CoMEnergy+"Up"
 #    if unc== "Down": return "QCD_CMS_htt_QCDShape_"+channel+NameCat+CoMEnergy+"Down"
 
+
 def getTauFakeCorrection(pt):
-  #new corrections (Mar14, new T-ES correction)
-  if pt > 200: pt =200
-  correction = 0;
-  p0 =  0.787452;
-  p1 = -0.146412;
-  p2 = -0.0276803;
-  p3 = -0.0824184;
-  X = (pt-149.832)/100;  #//(x-meanPt)/100
-  correction = p0+p1*X+p2*X*X+p3*X*X*X;
-  return correction;
+    #new corrections (Mar14, new T-ES correction)
+    if pt > 200: pt =200
+    correction = 0;
+    p0 =  0.787452;
+    p1 = -0.146412;
+    p2 = -0.0276803;
+    p3 = -0.0824184;
+    X = (pt-149.832)/100;  #//(x-meanPt)/100
+    correction = p0+p1*X+p2*X*X+p3*X*X*X;
+    return correction;
+
+#def getTauFakeCorrection(pt):
+#  #new corrections (Mar14, new T-ES correction)
+#  if pt > 150: pt =150
+#  correction = 0;
+#  p0 =  4.14209e-01 #0.787452;
+#  p1 = -7.60796e-03 #-0.146412;
+#  p2 = -1.15766e-04 #-0.0276803;
+#  p3 = -8.04130e-07 #-0.0824184;
+#  X = (pt-1.37945e+02)/100;  #//(x-149.832)/100
+#  correction = p0+p1*X+p2*X*X+p3*X*X*X;
+#  return correction;
 
 #def getHistoNorm(PostFix,CoMEnergy,Name,chan,cat,Histogram):
 #    myfile = TFile(InputFileLocation + Name +CoMEnergy+ '.root')
@@ -597,22 +610,24 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                     SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNormUpFR, TauScale[tscale],CoMEnergy)
                     SampleHisto=SampleFile.Get("XXX")
                     RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
-                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDFRShape_"+channel+NameCat+CoMEnergy+"Up")
+#                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDfrShape_"+channel+NameCat+CoMEnergy+"Up") #Removing Btag
+                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDfrShape_"+channel+CoMEnergy+"Up")
                     
                     SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNormDownFR, TauScale[tscale],CoMEnergy)
                     SampleHisto=SampleFile.Get("XXX")
                     RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
-                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDFRShape_"+channel+NameCat+CoMEnergy+"Down")
+#                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDfrShape_"+channel+NameCat+CoMEnergy+"Down") #Removing Btag
+                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDfrShape_"+channel+CoMEnergy+"Down")
                     
                     SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNormUpOSSS, TauScale[tscale],CoMEnergy)
                     SampleHisto=SampleFile.Get("XXX")
                     RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
-                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDOSSSShape_"+channel+NameCat+CoMEnergy+"Up")
+                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDOSSSShape_"+channel+CoMEnergy+"Up")
                     
                     SampleFile= _Return_QCD_Shape(channel,NameCat, HistogramNormDownOSSS, TauScale[tscale],CoMEnergy)
                     SampleHisto=SampleFile.Get("XXX")
                     RebinedHist= SampleHisto.Rebin(len(BinCateg)-1,"",BinCateg)
-                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDOSSSShape_"+channel+NameCat+CoMEnergy+"Down")
+                    tDirectory.WriteObject(RebinedHist,"QCD_CMS_htt_QCDOSSSShape_"+channel+CoMEnergy+"Down")
 
             ################################################
             #  Filling Data
@@ -685,7 +700,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
                    tDirectory.cd()
                    Histogram = Observable+"_mTLess30_OS"
                    XLoc= icat + len(category)*chl + 1
-                   YLoc= lenghtSig + 12 + OtherBG
+                   YLoc= lenghtSig + 15 + OtherBG
                    normal = NormTable[tscale].GetBinContent(XLoc,YLoc)    #Get the Noralization
                    Name= str(Other_BackGround[OtherBG])
                    NameOut= "ZTT_lowMass"+str(TauScaleOut[tscale])

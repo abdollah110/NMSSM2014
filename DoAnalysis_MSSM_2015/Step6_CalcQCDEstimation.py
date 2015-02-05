@@ -31,7 +31,7 @@ import os
 ROOT.gROOT.SetBatch(True)
 #InputFileLocation = '../FileROOT/nmssmROOTFiles/'
 SubRootDir = 'OutFiles/'
-verbosity_ = False
+verbosity_ = True
 UseLLRFakeRate = True
 applyTauFR_Correction= True
 applyOS_SS_Correction= False
@@ -69,10 +69,10 @@ def MakeCanvas(name, title,  dX,  dY):
 #category = ["_inclusive","_btag"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose","_doublebtag"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-#category = ["_inclusive"]
+#category = ["_nobtag_medium"]
 #category = [ "_btag"]
 category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
-#channel = ["mutau"]
+#channel = ["etau"]
 channel = ["mutau", "etau"]
 #POSTFIX=[""]
 POSTFIX=["","Up","Down"]

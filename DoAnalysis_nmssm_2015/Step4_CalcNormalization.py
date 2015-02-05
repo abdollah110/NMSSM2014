@@ -53,8 +53,9 @@ lowBin=0
 def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
     # Here we have used ZTT for all DY and Embedded data and Embed MC     
     
-    #  Get Normalization from DY Sample in Inclusive
-    if not UseTauPolarOff: 
+
+    # Get Normalization from DY Sample in Inclusive
+    if not UseTauPolarOff:
         DY_Files = TFile(SubRootDir + "out_DYJetsAll"+CoMEnergy+".root")
         DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
         Normalization_DY= DY_Histo.Integral()
@@ -62,7 +63,6 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
         DY_Files = TFile(SubRootDir + "out_DYJetsToLL_PolarOff"+CoMEnergy+".root")
         DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
         Normalization_DY= DY_Histo.Integral()
-    
 
     #  Get Normalization from Embedded Data Sample in Inclusive
     EmbedData_Files = TFile(SubRootDir + "out_Embedded"+chan+CoMEnergy+".root")
@@ -272,8 +272,10 @@ def make2DTable(Observable,PostFix,CoMEnergy):
 
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, "W")
-            if (verbos_): print "WNormInSideBandData= ", WNormInSideBandData, "   VV_mTHighOS=", VV_mTHighOS, "   TT_mTHighOS=", TT_mTHighOS,  "   ZL_mTHighOS=",ZL_mTHighOS, "   ZJ_mTHighOS=",ZJ_mTHighOS,"   ZTT_mTHighOS=",ZTT_mTHighOS
-            if (verbos_): print "Final W Value is =", (WNormInSideBandData - (VV_mTHighOS + TT_mTHighOS +ZL_mTHighOS + ZJ_mTHighOS + ZTT_mTHighOS )), " time x ExtraPolationFactorFinal=", ExtraPolationFactorFinal, "  =", value
+#            if (verbos_):
+            print "WNormInSideBandData= ", WNormInSideBandData, "   VV_mTHighOS=", VV_mTHighOS, "   TT_mTHighOS=", TT_mTHighOS,  "   ZL_mTHighOS=",ZL_mTHighOS, "   ZJ_mTHighOS=",ZJ_mTHighOS,"   ZTT_mTHighOS=",ZTT_mTHighOS
+#            if (verbos_):
+            print "Final W Value is =", (WNormInSideBandData - (VV_mTHighOS + TT_mTHighOS +ZL_mTHighOS + ZJ_mTHighOS + ZTT_mTHighOS )), " time x ExtraPolationFactorFinal=", ExtraPolationFactorFinal, "  =", value
             
         ##################################################################################################
         #   TTEmbedded Estimation

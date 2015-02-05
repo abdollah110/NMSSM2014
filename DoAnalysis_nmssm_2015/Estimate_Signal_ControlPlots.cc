@@ -273,9 +273,8 @@ int main(int argc, char** argv) {
         int icount = 0;
         for (Int_t i = 0; i < nentries_wtn; i++) {
             Run_Tree->GetEntry(i);
-            if (i % 10000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
+            if (i % 10000000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
             fflush(stdout);
-            if (1){
 
             //###############################################################################################
             //  introcuing the tau ES up and down on categories and TMass CATEGORIZATION
@@ -601,7 +600,7 @@ int main(int argc, char** argv) {
             //bool Tau_antiMu = l2_tauRejMu3L;
             //bool Tau_antiMu = l2_tauRejMu2T;
             bool TauVtxdZ = fabs(Tau_Vertex_dz) < 0.2;
-            bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu && SVMass < 200;
+            bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu;
 
             //########################################################################################################
 //            if (Event==8397872){
@@ -612,9 +611,9 @@ int main(int argc, char** argv) {
 //                cout<<(l1Pt>24 )<<  (l2Pt > 20) << charge_OS << (Channel< 2) << (l2_TighttauIsoMVA3oldDMwLT > 0.5) << (mt_1 < 30 ) << (nbtag > 0)   << (l1_muIso < 0.1 ) << Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20<<"\n";
 //                
 //            }
-            
+
 //            if (MU_CUTS && l1Pt>18 &&  l2Pt > 20 && l2_tauRejEleMVA3L && l1_muId_Tight&& fabs(l1Eta) < 2.1 && charge_OS && Channel < 2 && l2_TighttauIsoMVA3oldDMwLT > 0.5 && mt_1 < 30  && nbtag > 0   && (l1_muIso < 0.1 ) && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20){
-//                cout<<Run<<":"<<Lumi<<":"<<Event << "    MT=" <<  mt_1   <<  "  tauPt="<< l2Pt <<  "   mvaMet="<<  mvamet <<"  metPhi="<< mvametphi<<"  svMass="<< SVMass <<"\n";
+//                cout<<Run<<":"<<Lumi<<":"<<Event <<"\n";
 //                
 //            }
             
@@ -673,45 +672,29 @@ int main(int argc, char** argv) {
                                                                             //###################################################
                                                                             //###################################################
                                                                             //###################################################
-                                                                            if (MuTrgMatched && MU_CUTS && TAU_CUTS && SVMASS[tScalecat] > cutonSVmass && (Event != Event_Double[1][1])) {
-                                                                                if ( etacat == 0) plotFill("mutau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
-                                                                                if (QCDShape && qcat == 1) plotFill("mutau_2DSVMassPt" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                                if (WTopShape) plotFill("mutau_2DSVMassPt_W" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                                if (PtForFR) plotFill("mutau_TauPt" + FullStringName, l2Pt, ptBin, 0, ptBin, AllWeight);
-                                                                                if (ZLSelection) plotFill("mutau_SVMassZLScaleUp" + FullStringName, SVMASS[tScalecat]*1.02, massBin, 0, massBin, AllWeight);
-                                                                                if (ZLSelection) plotFill("mutau_SVMassZLScaleDown" + FullStringName, SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
-                                                                                if (SMHiggs125Selection) plotFill("mutau_SVMassSMHigg125PtRWUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * SMHiggs125PtReweight[2] / SMHiggs125PtReweight[1]);
-                                                                                if (SMHiggs125Selection) plotFill("mutau_SVMassSMHigg125PtRWDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * SMHiggs125PtReweight[0] / SMHiggs125PtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("mutau_SVMassHiggPtRWUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[2] / HiggsPtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("mutau_SVMassHiggPtRWDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[0] / HiggsPtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("mutau_SVMassHiggPtRWScaleUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[4] / HiggsPtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("mutau_SVMassHiggPtRWScaleDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[3] / HiggsPtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("mutau_SVMassTauHighPtRWDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingDown);
-                                                                                if (HiggsSelection) plotFill("mutau_SVMassTauHighPtRWUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
-                                                                                if (SignalSelection && isTTJets) plotFill("mutau_SVMassTopPtRWUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * TopPtReweighting);
-                                                                                if (SignalSelection && isTTJets) plotFill("mutau_SVMassTopPtRWDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
+                                                                            if (MuTrgMatched && MU_CUTS && TAU_CUTS && SVMASS[tScalecat] > cutonSVmass && (Event != Event_Double[1][1]) && etacat == 0) {
+                                                                                plotFill("mutau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                                plotFill("mutau_nJet" + FullStringName, njets, 10, 0, 10, AllWeight);
+                                                                                plotFill("mutau_nBJet" + FullStringName,nbtag, 10, 0, 10, AllWeight);
+                                                                                if (nbtag> 0) plotFill("mutau_bJet1Pt" + FullStringName, bpt_1, massBin, 0, massBin, AllWeight);
+                                                                                if (nbtag> 0) plotFill("mutau_bJet1Eta" + FullStringName, beta_1, 50, -2.5, 2.5, AllWeight);
+                                                                                if (nbtag> 1) plotFill("mutau_bJet2Pt" + FullStringName, bpt_2, massBin, 0, massBin, AllWeight);
+                                                                                if (nbtag> 1) plotFill("mutau_bJet2Eta" + FullStringName, beta_2, 50, -2.5, 2.5, AllWeight);
+
+                    
 
                                                                             }
                                                                             //####################################################
                                                                             //###################################################
                                                                             //###################################################
-                                                                            if (EleTrgMatched && EL_CUTS && TAU_CUTS && SVMASS[tScalecat] > cutonSVmass && (Event != Event_Double[2][2])) {
-                                                                                if ( etacat == 0) plotFill("etau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
-                                                                                if (QCDShape && qcat == 1) plotFill("etau_2DSVMassPt" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                                if (WTopShape) plotFill("etau_2DSVMassPt_W" + FullStringName, SVMASS[tScalecat], l2Pt, massBin, 0, massBin, ptBin, 0, ptBin, AllWeight);
-                                                                                if (PtForFR) plotFill("etau_TauPt" + FullStringName, l2Pt, ptBin, 0, ptBin, AllWeight);
-                                                                                if (ZLSelection) plotFill("etau_SVMassZLScaleUp" + FullStringName, SVMASS[tScalecat]*1.02, massBin, 0, massBin, AllWeight);
-                                                                                if (ZLSelection) plotFill("etau_SVMassZLScaleDown" + FullStringName, SVMASS[tScalecat]*0.98, massBin, 0, massBin, AllWeight);
-                                                                                if (SMHiggs125Selection) plotFill("etau_SVMassSMHigg125PtRWUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * SMHiggs125PtReweight[2] / SMHiggs125PtReweight[1]);
-                                                                                if (SMHiggs125Selection) plotFill("etau_SVMassSMHigg125PtRWDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * SMHiggs125PtReweight[0] / SMHiggs125PtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("etau_SVMassHiggPtRWUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[2] / HiggsPtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("etau_SVMassHiggPtRWDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[0] / HiggsPtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("etau_SVMassHiggPtRWScaleUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[4] / HiggsPtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("etau_SVMassHiggPtRWScaleDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * HiggsPtReweight[3] / HiggsPtReweight[1]);
-                                                                                if (HiggsSelection) plotFill("etau_SVMassTauHighPtRWDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingDown);
-                                                                                if (HiggsSelection) plotFill("etau_SVMassTauHighPtRWUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * tauPtReweightingUp);
-                                                                                if (SignalSelection && isTTJets) plotFill("etau_SVMassTopPtRWUp" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight * TopPtReweighting);
-                                                                                if (SignalSelection && isTTJets) plotFill("etau_SVMassTopPtRWDown" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight / TopPtReweighting);
+                                                                            if (EleTrgMatched && EL_CUTS && TAU_CUTS && SVMASS[tScalecat] > cutonSVmass && (Event != Event_Double[2][2]) && etacat == 0) {
+                                                                                plotFill("etau_SVMass" + FullStringName, SVMASS[tScalecat], massBin, 0, massBin, AllWeight);
+                                                                                plotFill("etau_nJet" + FullStringName, njets, 10, 0, 10, AllWeight);
+                                                                                plotFill("etau_nBJet" + FullStringName,nbtag, 10, 0, 10, AllWeight);
+                                                                                if (nbtag> 0) plotFill("etau_bJet1Pt" + FullStringName, bpt_1, massBin, 0, massBin, AllWeight);
+                                                                                if (nbtag> 0) plotFill("etau_bJet1Eta" + FullStringName, beta_1, 50, -2.5, 2.5, AllWeight);
+                                                                                if (nbtag> 1) plotFill("etau_bJet2Pt" + FullStringName, bpt_2, massBin, 0, massBin, AllWeight);
+                                                                                if (nbtag> 1) plotFill("etau_bJet2Eta" + FullStringName, beta_2, 50, -2.5, 2.5, AllWeight);
                                                                             }
                                                                             //####################################################
                                                                         }
@@ -732,7 +715,6 @@ int main(int argc, char** argv) {
                     }
                 }
             }
-        }
 
         }
     }

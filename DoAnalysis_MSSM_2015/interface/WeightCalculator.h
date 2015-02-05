@@ -49,6 +49,7 @@ vector <float> DY_EvenetMultiplicity(){
     vector<float> DY_events;
     DY_events.clear();
     TFile * myFile_DY0 = new TFile("../FileROOT/MSSMROOTFiles/DYJetsToLL_8TeV.root");
+//    TFile * myFile_DY0 = new TFile("../FileROOT/MSSMROOTFiles/DYJetsToLL_PolarOff_8TeV.root");
     TH1F * Histo_DY0 = (TH1F*) myFile_DY0->Get("TotalEventsNumber");
     DY_events.push_back(Histo_DY0->Integral());
     
@@ -77,7 +78,8 @@ float XSection(std::string OutName) {
 
     
     
-    
+    float TOPXS= 241.5;
+    float TOPCorr = 1.033;
  
     
     
@@ -97,6 +99,7 @@ float XSection(std::string OutName) {
     else if (OutName.compare("DY3JetsToLL") == 0) return 51.1;
     else if (OutName.compare("DY4JetsToLL") == 0) return 23;
 
+
     else if (OutName.compare("signal") == 0) return 1.;
 
         //Di-boson
@@ -110,9 +113,9 @@ float XSection(std::string OutName) {
     else if (OutName.compare("T_tW") == 0) return 11.1;
 
         //TTbar
-    else if (OutName.compare("TTJets_FullLeptMGDecays") == 0) return 25.809;
-    else if (OutName.compare("TTJets_SemiLeptMGDecays") == 0) return 107.66;
-    else if (OutName.compare("TTJets_HadronicMGDecays") == 0) return 112.331;
+    else if (OutName.compare("TTJets_FullLeptMGDecays") == 0) return 0.1050 * TOPXS * TOPCorr;
+    else if (OutName.compare("TTJets_SemiLeptMGDecays") == 0) return 0.4380 * TOPXS * TOPCorr;
+    else if (OutName.compare("TTJets_HadronicMGDecays") == 0) return 0.4570 * TOPXS * TOPCorr;
 
 
 
@@ -122,8 +125,8 @@ float XSection(std::string OutName) {
     else if (OutName.compare("ggH_SM125") == 0) return 1.23;
     else if (OutName.compare("qqH_SM125") == 0) return 0.100;
     else if (OutName.compare("VH_SM125") == 0) return 0.077;
-    else if (OutName.compare("TTEmbeddedmutau") == 0) return (26.197 * 792835 / 12011428);
-    else if (OutName.compare("TTEmbeddedetau") == 0) return (26.197 * 758691 / 12011428);
+    else if (OutName.compare("TTEmbeddedmutau") == 0) return (26.229 * 792835 / 12011428);
+    else if (OutName.compare("TTEmbeddedetau") == 0) return (26.229 * 758691 / 12011428);
 
 
     else return 1;
@@ -150,6 +153,7 @@ float weightCalc(TH1F *Histo, std::string outputName, int njet, int mcdata, vect
     size_t Signal_bbH = outputName.find("bbH");
     size_t bg_SM = outputName.find("SM125");
     size_t bg_PolarOff = outputName.find("PolarOff");
+//    cout<<" XSection(newOut) = "<<XSection(newOut) << "  Histo->Integral()"<<Histo->Integral()<<"\n";
     
     if (bg_PolarOff != string::npos){
         return luminosity * XSection(newOut)*1.0 / Histo->Integral();

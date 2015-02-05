@@ -30,7 +30,7 @@ import array
 gROOT.Reset()
 import os
 ROOT.gROOT.SetBatch(True)
-#InputFileLocation = '../FileROOT/nmssmROOTFiles/'
+#InputFileLocation = '../FileROOT/MSSMROOTFiles/'
 SubRootDir = 'OutFiles/'
 verbosity_ = False
 applyTauFR_Correction= True

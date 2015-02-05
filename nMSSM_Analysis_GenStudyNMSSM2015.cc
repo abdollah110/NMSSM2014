@@ -391,11 +391,33 @@ int main(int argc, char** argv) {
 
 //                cout << "\n##################################################################################################################################\n";
 //                cout << "Run is " << m->runNumber << "  Lumi is    " << m->lumiNumber << "    and Event is " << m->eventNumber << "\n";
-
+                bool ThereIsElectron15GeV= false;
+                bool ThereIsMuon15GeV= false;
+                
+                for (int gg=0; gg<genPar.size(); gg++) {
+//                    if (fabs(genPar[gg].pdgId)== 13 && fabs(genPar[gg].mod_pdgId)== 15)
+//                        cout<<"Here is Tau";
+                    
+                    if (fabs(genPar[gg].pdgId)== 11 && (fabs(genPar[gg].mod_pdgId)== 23 || fabs(genPar[gg].mod_pdgId)== 15) &&  genPar[gg].pt > 15)
+                        ThereIsElectron15GeV= true;
+                    
+                    if (fabs(genPar[gg].pdgId)== 13 && (fabs(genPar[gg].mod_pdgId)== 23 || fabs(genPar[gg].mod_pdgId)== 15) &&  genPar[gg].pt > 15)
+                        ThereIsMuon15GeV= true;
+                    
+                }
+                
+                plotFill("TotalEventsNumber", 0, 1, 0, 1);
+                if (ThereIsElectron15GeV || ThereIsMuon15GeV ) plotFill("NumLepton15",1 , 1, 0., 1);
+                if (ThereIsElectron15GeV  ) plotFill("NumElectron15",1 , 1, 0., 1);
+                if ( ThereIsMuon15GeV ) plotFill("NumMuon15",1 , 1, 0., 1);
+                
+                
+                
                 //########################## MuTau Selection         ##############################################
                 //#################################################################################################
                 //#################################################################################################
-                if (isMu || isTot) {
+//                if (isMu || isTot) {
+                     if (0) {
                     //##############################################################################
                     // mutau
                     //##############################################################################
@@ -498,7 +520,8 @@ int main(int argc, char** argv) {
                 //#######################  EleTau Selection #######################
                 //#################################################################################################
                 //            #################################################################################################
-                if ((isEle || isTot)) {
+                if ((0)) {
+//                                    if ((isEle || isTot)) {
                     //            if ((isEle || isTot) && m->eventNumber==27460205) {
                     //            if ((isEle || isTot) && m->eventNumber==55417347) {
                     //            if ((isEle || isTot) && m->eventNumber==40127711) {

@@ -79,13 +79,13 @@ signal = ['ggH', 'bbH']
 mass = [80,90,  100, 110,  120, 130, 140,  160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000]
 SMHiggs_BackGround = ['ggH_SM125', 'qqH_SM125', 'VH_SM125']
 
-#category = ["_inclusive"]
+category = ["_btag_high"]
 #category = ["_inclusive", "_nobtag", "_btag", "_btagLoose"]
-category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
+#category =["_inclusive", "_nobtag_low", "_nobtag_medium", "_nobtag_high", "_btag_low", "_btag_high", "_btagLoose_low", "_btagLoose_high"]
 #category = ["_inclusive",  "_nobtag","_btag"]
-channel = ["mutau", "etau"]
+#channel = ["mutau", "etau"]
 #channel = ["etau"]
-#channel = ["mutau"]
+channel = ["mutau"]
 lenghtSig = len(signal) * len(mass) +1
 
 digit = 3
@@ -122,8 +122,8 @@ verbos_ = False
 def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
     # Here we have used ZTT for all DY and Embedded data and Embed MC     
     
-    #  Get Normalization from DY Sample in Inclusive
-    if not UseTauPolarOff: 
+    # Get Normalization from DY Sample in Inclusive
+    if not UseTauPolarOff:
         DY_Files = TFile(SubRootDir + "out_DYJetsAll"+CoMEnergy+".root")
         DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
         Normalization_DY= DY_Histo.Integral()
@@ -131,24 +131,24 @@ def getEmbedToDYWeight(PostFix,CoMEnergy,chan,HistogramNoMT):
         DY_Files = TFile(SubRootDir + "out_DYJetsToLL_PolarOff"+CoMEnergy+".root")
         DY_Histo=DY_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
         Normalization_DY= DY_Histo.Integral()
-    
-    print "---------->  ", chan+HistogramNoMT+ "_inclusive"
+
+
     #  Get Normalization from Embedded Data Sample in Inclusive
     EmbedData_Files = TFile(SubRootDir + "out_Embedded"+chan+CoMEnergy+".root")
     EmbedData_Histo=EmbedData_Files.Get(chan+HistogramNoMT+ "_inclusive")
     Normalization_EmbedData= EmbedData_Histo.Integral()
 
-    HistogramNoMT=HistogramNoMT.replace("_ZTT","") # There is no _ZTT for TTEmbedded #FIXME   maight be resoved by new ntuples
+#    HistogramNoMT=HistogramNoMT.replace("_ZTT","") # There is no _ZTT for TTEmbedded #FIXME   maight be resoved by new ntuples
     #  Get Normalization from TTEmbedded Sample in Inclusive
     EmbedTT_Files = TFile(SubRootDir + "out_TTEmbedded"+chan+CoMEnergy+".root")
     EmbedTT_Histo=EmbedTT_Files.Get(chan+HistogramNoMT+ "_inclusive"+PostFix)
     Normalization_EmbedTT= EmbedTT_Histo.Integral()
 
-
+    print "PostFix is ", PostFix
     print "---------->  ", chan+HistogramNoMT+ "_inclusive"
-    print "DY MC Incluvive= ", Normalization_DY
-    print "TTEmbedded MC Incluvive= ", Normalization_EmbedTT
-    print "TTEmbed Data Incluvive= ", Normalization_EmbedData
+    print "DY MC Incluvive= ", Normalization_DY, "   #ofevents=(",DY_Histo.GetEntries(),")"
+    print "TTEmbedded MC Incluvive= ", Normalization_EmbedTT, "   #ofevents=(",EmbedTT_Histo.GetEntries(),")"
+    print "Embed Data Incluvive= ", Normalization_EmbedData, "   #ofevents=(",EmbedData_Histo.GetEntries(),")"
     print "ExtraPOl Factor= ", (Normalization_DY)/(Normalization_EmbedData- Normalization_EmbedTT)
 
     return (Normalization_DY)/(Normalization_EmbedData- Normalization_EmbedTT)
@@ -173,6 +173,14 @@ def getHistoIntegral(PostFix,CoMEnergy,Name,chan,cat,Histogram):
         value = round(value, digit)
     return value
 
+def getHistoEntry(PostFix,CoMEnergy,Name,chan,cat,Histogram):
+    myfileSub = TFile(SubRootDir + "out_"+Name +CoMEnergy+ '.root')
+    HistoSub = myfileSub.Get(chan+Histogram+ cat+PostFix )
+    value = 10E-7
+    if (HistoSub):
+        value = HistoSub.GetEntries()
+        value = round(value, digit)
+    return value
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
@@ -315,6 +323,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             #print "       ------------   extraPol Embeede w8=======", embedToDYWeight
 
             value = getHistoIntegral(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram)  * embedToDYWeight
+            print   "-------> ZTauTau Value", getHistoIntegral(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram), "   #ofevents=(",getHistoEntry(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram),")"
             # print    "@@@@@@@@@@@  Test for ZTT in "+Name+channel[chl]+category[categ]+Histogram +" ==> NUmber of events in embeeded data=", getHistoIntegral(PostFix,CoMEnergy, Name,channel[chl],category[categ],Histogram) , "  embed weight= ", embedToDYWeight,   "  Final ZTT Yield= ", value
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
@@ -356,6 +365,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
             Histogram = Observable+"_mTLess30_OS"
 # FIXME added december 3   resolve the issue
             value=embedToDYWeight * getHistoIntegral(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram)
+            print "------EmbedTT test", value, "   #ofevents=(",getHistoEntry(PostFix,CoMEnergy,Name ,channel[chl],category[categ],Histogram),")"
             FullResults.SetBinContent(XLoc,YLoc , value)
             FullResults.GetYaxis().SetBinLabel(YLoc, Name)
 
@@ -404,7 +414,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
 
 if __name__ == "__main__":
 #    make2DTable("_visibleMass","", "_8TeV")
-    make2DTable("_SVMass","", "_8TeV")
-    make2DTable("_SVMass","Up", "_8TeV")
+#    make2DTable("_SVMass","", "_8TeV")
+#    make2DTable("_SVMass","Up", "_8TeV")
     make2DTable("_SVMass","Down", "_8TeV")
 

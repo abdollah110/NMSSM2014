@@ -40,23 +40,23 @@ float RetunSignalFilEff(std::string massValue){
 vector <float> W_EvenetMultiplicity(){
     vector<float> W_events;
     W_events.clear();
-    TFile * myFile_W0 = new TFile("../FileROOT/nmssmROOTFiles/WJetsToLNu_8TeV.root");
+    TFile * myFile_W0 = new TFile("../FileROOT/MSSMROOTFiles/WJetsToLNu_8TeV.root");
     TH1F * Histo_W0 = (TH1F*) myFile_W0->Get("TotalEventsNumber");
     W_events.push_back(Histo_W0->Integral());
     
-    TFile * myFile_W1 = new TFile("../FileROOT/nmssmROOTFiles/W1JetsToLNu_8TeV.root");
+    TFile * myFile_W1 = new TFile("../FileROOT/MSSMROOTFiles/W1JetsToLNu_8TeV.root");
     TH1F * Histo_W1 = (TH1F*) myFile_W1->Get("TotalEventsNumber");
     W_events.push_back(Histo_W1->Integral());
     
-    TFile * myFile_W2 = new TFile("../FileROOT/nmssmROOTFiles/W2JetsToLNu_8TeV.root");
+    TFile * myFile_W2 = new TFile("../FileROOT/MSSMROOTFiles/W2JetsToLNu_8TeV.root");
     TH1F * Histo_W2 = (TH1F*) myFile_W2->Get("TotalEventsNumber");
     W_events.push_back(Histo_W2->Integral());
     
-    TFile * myFile_W3 = new TFile("../FileROOT/nmssmROOTFiles/W3JetsToLNu_8TeV.root");
+    TFile * myFile_W3 = new TFile("../FileROOT/MSSMROOTFiles/W3JetsToLNu_8TeV.root");
     TH1F * Histo_W3 = (TH1F*) myFile_W3->Get("TotalEventsNumber");
     W_events.push_back(Histo_W3->Integral());
     
-    TFile * myFile_W4 = new TFile("../FileROOT/nmssmROOTFiles/W4JetsToLNu_8TeV.root");
+    TFile * myFile_W4 = new TFile("../FileROOT/MSSMROOTFiles/W4JetsToLNu_8TeV.root");
     TH1F * Histo_W4 = (TH1F*) myFile_W4->Get("TotalEventsNumber");
     W_events.push_back(Histo_W4->Integral());
     
@@ -67,23 +67,23 @@ vector <float> W_EvenetMultiplicity(){
 vector <float> DY_EvenetMultiplicity(){
     vector<float> DY_events;
     DY_events.clear();
-    TFile * myFile_DY0 = new TFile("../FileROOT/nmssmROOTFiles/DYJetsToLL_8TeV.root");
+    TFile * myFile_DY0 = new TFile("../FileROOT/MSSMROOTFiles/DYJetsToLL_8TeV.root");
     TH1F * Histo_DY0 = (TH1F*) myFile_DY0->Get("TotalEventsNumber");
     DY_events.push_back(Histo_DY0->Integral());
     
-    TFile * myFile_DY1 = new TFile("../FileROOT/nmssmROOTFiles/DY1JetsToLL_8TeV.root");
+    TFile * myFile_DY1 = new TFile("../FileROOT/MSSMROOTFiles/DY1JetsToLL_8TeV.root");
     TH1F * Histo_DY1 = (TH1F*) myFile_DY1->Get("TotalEventsNumber");
     DY_events.push_back(Histo_DY1->Integral());
     
-    TFile * myFile_DY2 = new TFile("../FileROOT/nmssmROOTFiles/DY2JetsToLL_8TeV.root");
+    TFile * myFile_DY2 = new TFile("../FileROOT/MSSMROOTFiles/DY2JetsToLL_8TeV.root");
     TH1F * Histo_DY2 = (TH1F*) myFile_DY2->Get("TotalEventsNumber");
     DY_events.push_back(Histo_DY2->Integral());
     
-    TFile * myFile_DY3 = new TFile("../FileROOT/nmssmROOTFiles/DY3JetsToLL_8TeV.root");
+    TFile * myFile_DY3 = new TFile("../FileROOT/MSSMROOTFiles/DY3JetsToLL_8TeV.root");
     TH1F * Histo_DY3 = (TH1F*) myFile_DY3->Get("TotalEventsNumber");
     DY_events.push_back(Histo_DY3->Integral());
     
-    TFile * myFile_DY4 = new TFile("../FileROOT/nmssmROOTFiles/DY4JetsToLL_8TeV.root");
+    TFile * myFile_DY4 = new TFile("../FileROOT/MSSMROOTFiles/DY4JetsToLL_8TeV.root");
     TH1F * Histo_DY4 = (TH1F*) myFile_DY4->Get("TotalEventsNumber");
     DY_events.push_back(Histo_DY4->Integral());
     
@@ -94,15 +94,15 @@ vector <float> DY_EvenetMultiplicity(){
 vector <float> DYLowMass_EvenetMultiplicity(){
     vector<float> DYLowMass_events;
     DYLowMass_events.clear();
-    TFile * myFile_DYLowMass0 = new TFile("../FileROOT/nmssmROOTFiles/DYJetsToLLMassLow_8TeV.root");
+    TFile * myFile_DYLowMass0 = new TFile("../FileROOT/MSSMROOTFiles/DYJetsToLLMassLow_8TeV.root");
     TH1F * Histo_DYLowMass0 = (TH1F*) myFile_DYLowMass0->Get("TotalEventsNumber");
     DYLowMass_events.push_back(Histo_DYLowMass0->Integral());
     
-    TFile * myFile_DYLowMass1 = new TFile("../FileROOT/nmssmROOTFiles/DY1JetsToLLMassLow_8TeV.root");
+    TFile * myFile_DYLowMass1 = new TFile("../FileROOT/MSSMROOTFiles/DY1JetsToLLMassLow_8TeV.root");
     TH1F * Histo_DYLowMass1 = (TH1F*) myFile_DYLowMass1->Get("TotalEventsNumber");
     DYLowMass_events.push_back(Histo_DYLowMass1->Integral());
     
-    TFile * myFile_DYLowMass2 = new TFile("../FileROOT/nmssmROOTFiles/DY2JetsToLLMassLow_8TeV.root");
+    TFile * myFile_DYLowMass2 = new TFile("../FileROOT/MSSMROOTFiles/DY2JetsToLLMassLow_8TeV.root");
     TH1F * Histo_DYLowMass2 = (TH1F*) myFile_DYLowMass2->Get("TotalEventsNumber");
     DYLowMass_events.push_back(Histo_DYLowMass2->Integral());
     
@@ -161,9 +161,9 @@ float XSection(std::string OutName) {
     else if (OutName.compare("T_tW") == 0) return 11.1;
 
         //TTbar
-    else if (OutName.compare("TTJets_FullLeptMGDecays") == 0) return 25.809;
-    else if (OutName.compare("TTJets_SemiLeptMGDecays") == 0) return 107.66;
-    else if (OutName.compare("TTJets_HadronicMGDecays") == 0) return 112.331;
+    else if (OutName.compare("TTJets_FullLeptMGDecays") == 0) return 26.1975;
+    else if (OutName.compare("TTJets_SemiLeptMGDecays") == 0) return 109.281;
+    else if (OutName.compare("TTJets_HadronicMGDecays") == 0) return 114.0215;
 
 
 
@@ -178,8 +178,8 @@ float XSection(std::string OutName) {
     else if (OutName.compare("qqH_SMHWW125") == 0) return 0.340;
     else if (OutName.compare("VH_SMHWW125") == 0) return 0.2618;
     
-    else if (OutName.compare("TTEmbeddedmutau") == 0) return (26.197 * 771693 / 12011428);
-    else if (OutName.compare("TTEmbeddedetau") == 0) return (26.197 * 718441 / 12011428);
+    else if (OutName.compare("TTEmbeddedmutau") == 0) return (26.229 * 792835 / 12011428);
+    else if (OutName.compare("TTEmbeddedetau") == 0) return (26.229 * 758691 / 12011428);
 
 
     else return 1;
@@ -196,14 +196,14 @@ float weightCalc(TH1F *Histo, std::string outputName, int njet, int mcdata, vect
     float LOtoNLO_W = 1.233848684;
     float luminosity=19710;
 
-    std::string FirstPart = "../FileROOT/nmssmROOTFiles/";
+    std::string FirstPart = "../FileROOT/MSSMROOTFiles/";
     std::string LastPart = "_8TeV.root";
     std::string newOut = outputName.substr(FirstPart.size());
     newOut = newOut.substr(0, newOut.size() - LastPart.size());
 
     size_t isDYMassLow = outputName.find("JetsToLLMassLow");
     size_t isW = outputName.find("JetsToLNu");
-    size_t isDY = outputName.find("JetsToLL");
+    size_t isDY = outputName.find("JetsToLL_");
     size_t Signal_bba1 = outputName.find("bba1");
 //    size_t Signal_bbH = outputName.find("bbH");
 //    size_t bg_SM = outputName.find("SM125");
@@ -211,8 +211,8 @@ float weightCalc(TH1F *Histo, std::string outputName, int njet, int mcdata, vect
     
     if (bg_PolarOff != string::npos){
         return luminosity * XSection(newOut)*1.0 / Histo->Integral();
-    
-    }else if (isDYMassLow != string::npos) {
+    }
+    else if (isDYMassLow != string::npos) {
     
      if (njet == 0) return luminosity*LOtoNLO_DYMassLow / (DYMassLow_events[0] / XSection("DYJetsToLLMassLow"));
     else if (njet == 1) return luminosity*LOtoNLO_DYMassLow / (DYMassLow_events[1] / XSection("DY1JetsToLLMassLow") + DYMassLow_events[0] / XSection("DYJetsToLLMassLow"));

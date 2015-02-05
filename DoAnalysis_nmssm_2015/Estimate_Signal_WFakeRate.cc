@@ -474,7 +474,7 @@ int main(int argc, char** argv) {
             size_t bbHiggsFind = InputROOT.find("bba1"); // Check in the name it IS ggH
             if (bbHiggsFind != string::npos ) {
 
-                std::string FirstPart = "../FileROOT/nmssmROOTFiles/bba1GenFil_";
+                std::string FirstPart = "../FileROOT/MSSMROOTFiles/bba1GenFil_";
                 std::string LastPart = "_8TeV.root";
                 std::string newOut = InputROOT.substr(FirstPart.size());
                 newOut = newOut.substr(0, newOut.size() - LastPart.size());
@@ -493,7 +493,7 @@ int main(int argc, char** argv) {
             size_t SMFind = InputROOT.find("125"); // Check that it IS NOT SM ggH_SM125 GeV
             bool isGluGluH = (HiggsFind != string::npos && SMFind == string::npos);
             if (isGluGluH) {
-                std::string FirstPart = "../FileROOT/nmssmROOTFiles/ggH";
+                std::string FirstPart = "../FileROOT/MSSMROOTFiles/ggH";
                 std::string LastPart = "_8TeV.root";
                 std::string newOut = InputROOT.substr(FirstPart.size());
                 newOut = newOut.substr(0, newOut.size() - LastPart.size());

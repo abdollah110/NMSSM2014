@@ -8,7 +8,7 @@ __date__ = "$Feb 23, 2013 10:39:33 PM$"
 
 import os
 
-InputFileLocation = '../FileROOT/nmssmROOTFiles/'
+InputFileLocation = '../FileROOT/MSSMROOTFiles/'
 OutPutFileLocation = 'OutFiles/'
 Sample = os.popen(("ls " + InputFileLocation + " | sort "))
 OutFile = open("RunFullSamples.txt", 'w')
