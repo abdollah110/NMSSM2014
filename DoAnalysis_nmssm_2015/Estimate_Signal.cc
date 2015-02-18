@@ -1,6 +1,9 @@
 #include "interface/mssm_Tree.h"
 #include "interface/TTEmbedCor.h"
 #include "interface/WeightCalculator.h"
+#include "interface/Bin_Trg_Cor_MuLeg_Data.h"
+#include "interface/Bin_Trg_Cor_MuLeg_MC.h"
+
 #include <string>
 #include <ostream>
 
@@ -133,6 +136,7 @@ int main(int argc, char** argv) {
         Run_Tree->SetBranchAddress("mvis", &mvis);
 
         Run_Tree->SetBranchAddress("idweight_1", &idweight_1);
+        Run_Tree->SetBranchAddress("isoweight_1", &isoweight_1);
         Run_Tree->SetBranchAddress("trigweight_1", &trigweight_1);
         Run_Tree->SetBranchAddress("trigweight_2", &trigweight_2);
         Run_Tree->SetBranchAddress("rho", &rho);
@@ -242,7 +246,8 @@ int main(int argc, char** argv) {
         //###############################################################################################
         // Specific Cuts to be changed fro MSSM and nMSSM
         float cutonSVmass = 0;
-        float cutonTaupt = 20;
+//        float cutonTaupt = 20;
+        float cutonTaupt = 22;
         int massBin = 200;
         //    float cutonSVmass= 0;
         //    float cutonTaupt= 20;
@@ -539,6 +544,18 @@ int main(int argc, char** argv) {
             // Trigger and Trigger Matching
             //####################################################
             float GeneralReweighting = pu_Weight * eff_Correction;
+            
+//            float Bin_trigweight_1_data=Bin_Corr_MuTauTrg_MuLeg_2012_Data(pt_1,eta_1);
+//            float Bin_trigweight_1_mc  =Bin_Corr_MuTauTrg_MuLeg_2012_MC(pt_1,eta_1);
+//            float Bin_trg_Correction_Mu=Bin_trigweight_1_data/Bin_trigweight_1_mc;
+//            
+//
+//            float ExtremeWeight_Bin_trigweight_1_mc  = 1+ (Bin_Corr_MuTauTrg_MuLeg_2012_MC(100,eta_1) - Bin_trigweight_1_mc);
+//            
+//            if (mcdata!=4)
+//            GeneralReweighting=idweight_1*isoweight_1*Bin_trg_Correction_Mu*trigweight_2 * pu_Weight;
+
+
             //####################################################
             bool MuTrgMatched = 1;
             bool EleTrgMatched = 1;
@@ -564,6 +581,7 @@ int main(int argc, char** argv) {
             // Muon Selection
             //####################################################
             bool Mu_PtEta = l1Pt > 18 && fabs(l1Eta) < 2.1;
+//                bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;  //Changing MUpt from 18 to 20
             bool Mu_IdTight = l1_muId_Tight;
             bool Mu_d0 = fabs(l1_d0) < 0.045; //the impact parameter in the transverse plane
             bool Mu_dZ = fabs(l1_dZ_in) < 0.2; //the impact parameter in the transverse plane

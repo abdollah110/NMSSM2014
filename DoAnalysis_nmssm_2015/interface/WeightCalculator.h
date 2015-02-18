@@ -114,7 +114,11 @@ vector <float> DYLowMass_EvenetMultiplicity(){
 
 
 
-
+float TTbarXS= 245.2585;
+float TTScaleFactor= 1.0;
+float TT_FulLep_BR= 0.105;
+float TT_SemiLep_BR= 0.438;
+float TT_Had_BR= 0.457;
 
 
 float XSection(std::string OutName) {
@@ -160,10 +164,13 @@ float XSection(std::string OutName) {
     else if (OutName.compare("Tbar_tW") == 0) return 11.1;
     else if (OutName.compare("T_tW") == 0) return 11.1;
 
-        //TTbar
-    else if (OutName.compare("TTJets_FullLeptMGDecays") == 0) return 26.1975;
-    else if (OutName.compare("TTJets_SemiLeptMGDecays") == 0) return 109.281;
-    else if (OutName.compare("TTJets_HadronicMGDecays") == 0) return 114.0215;
+//        //TTbar
+//    else if (OutName.compare("TTJets_FullLeptMGDecays") == 0) return 26.1975;
+//    else if (OutName.compare("TTJets_SemiLeptMGDecays") == 0) return 109.281;
+//    else if (OutName.compare("TTJets_HadronicMGDecays") == 0) return 114.0215;
+    else if (OutName.compare("TTJets_FullLeptMGDecays") == 0) return (TTbarXS * TTScaleFactor * TT_FulLep_BR);
+    else if (OutName.compare("TTJets_SemiLeptMGDecays") == 0) return (TTbarXS * TTScaleFactor * TT_SemiLep_BR);
+    else if (OutName.compare("TTJets_HadronicMGDecays") == 0) return (TTbarXS * TTScaleFactor * TT_Had_BR);
 
 
 

@@ -85,7 +85,7 @@ float l1_CloseJetPhi, l2_CloseJetPhi;
 
 float mt_1;
 float mt_2;
-float idweight_1;
+float idweight_1,isoweight_1;
 float trigweight_1;
 float trigweight_2;
 float rho;

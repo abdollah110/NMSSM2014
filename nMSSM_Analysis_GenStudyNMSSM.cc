@@ -45,11 +45,9 @@
 #include "interface/zh_Auxiliary.h"
 #include "interface/Corrector.h"
 #include "interface/htt_Trigger.h"
-#include "interface/zh_Tree.h"
+#include "interface/htt_Tree.h"
 #include "interface/Leptons_IdIso.h"
 #include "interface/zh_Functions.h"
-#include "DoAnalysis_MSSM/myHelper.h"
-#include "interface/myHelper.h"
 
 int main(int argc, char** argv) {
 
@@ -352,8 +350,8 @@ int main(int argc, char** argv) {
             //#################################################################################################
             vector<myGenobject> genPar_ = m->RecGenParticle;
             vector<myGenobject> genMet_ = m->RecGenMet;
-            vector<myobject> recMet_ = m->RecMVAMet_mutau;
-            vector<myobject> recMetRecoil_ = m->RecoilMet;
+//            vector<myobject> recMet_ = m->RecMVAMet_mutau;
+//            vector<myobject> recMetRecoil_ = m->RecMVAMet_mutau;
             bool Trigger_MuTau12 = Trigger_MuTau_12(m);
             bool Trigger_EleTau12 = Trigger_EleTau_12(m);
 
@@ -368,6 +366,28 @@ int main(int argc, char** argv) {
             int numBjet = 0;
 
 
+            
+            for (int ii = 0; ii < mu_.size(); ii++) {
+                for (int k = 0; k < tau_.size(); k++) {
+
+                    
+                    if (mu_[ii].pt > 18 && tau_[k].pt > 20 && tau_[k].byTightIsolationMVA3oldDMwLT > 0.5 && tau_[k].discriminationByMuonMVAMedium > 0.5){
+                        for (int j = 0; j < genPar_.size(); j++) {
+//                            if (fabs(genPar_[j].pdgId) == 15) cout<< "fabs(genPar_[j].mod_pdgId) is  "<<fabs(genPar_[j].mod_pdgId) <<"\n";
+                            for (int i = 0; i < genPar_.size(); i++) {
+                                if (genPar_[j].pdgId == 15 && genPar_[j].mod_pdgId == 23 &&genPar_[i].pdgId == -15 &&genPar_[i].mod_pdgId == 23 ){
+//                                    if (InvarMass_2(genPar_[j],genPar_[i])  < 50 )cout << InvarMass_2(genPar_[j],genPar_[i])<<"\n";
+                                    plotFill("Mass_diTau_EmbeddedData", InvarMass_2(genPar_[j],genPar_[i]), 150, 0, 300);
+                                
+                                }
+                                
+                            }
+                    
+                            
+                        }
+                }
+            }
+            }
             for (int j = 0; j < genPar_.size(); j++) {
                 bool muFromTau = fabs(genPar_[j].pdgId) == 13 && fabs(genPar_[j].status) == 1 && fabs(genPar_[j].mod_pdgId) == 15 && fabs(genPar_[j].mod_status) == 2 && fabs(genPar_[j].Gmod_pdgId) == 15 && fabs(genPar_[j].Gmod_status) == 3;
                 if (muFromTau) {
@@ -569,17 +589,22 @@ int main(int argc, char** argv) {
                         bool MuTau_Charge = mu_[i].charge * tau_[k].charge < 0;
                         bool MuTau_dR = deltaR(mu_[i], tau_[k]) > 0.5;
 
-
-                        bool Veto_ME = Multi_Lepton_Veto("ME", m);
-                        bool Veto_MM = Multi_Lepton_Veto("MM", m);
-                        bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
-                        bool Veto_MME = Multi_Lepton_Veto("MME", m);
+//
+//                        bool Veto_ME = Multi_Lepton_Veto("ME", m);
+//                        bool Veto_MM = Multi_Lepton_Veto("MM", m);
+//                        bool Veto_MMM = Multi_Lepton_Veto("MMM", m);
+//                        bool Veto_MME = Multi_Lepton_Veto("MME", m);
+//                        
+                        bool Veto_ME = 1;
+                        bool Veto_MM = 1;
+                        bool Veto_MMM = 1;
+                        bool Veto_MME = 1;
 
 
                         vector<myobject> JETS = GoodJet30(m, mu_[i], tau_[k]);
                         vector<myobject> BJETS = GoodbJet20(m, mu_[i], tau_[k], 0, 1);
-                        vector<myobject> MVAMetRecoil_mutau = m->RecoilMetmutau;
-                        mt_1 = TMass_F(mu_[i].pt, mu_[i].px, mu_[i].py, MVAMetRecoil_mutau.front().pt, MVAMetRecoil_mutau.front().phi);
+//                        vector<myobject> MVAMetRecoil_mutau = m->RecoilMetmutau;
+                        mt_1 = 1;
 
                         bool LooseSelection = Mu_PtEta && Tau_PtEta && MuTau_dR && Veto_MM && Veto_MMM && Veto_MME && Veto_ME;
                         bool VLooseTauIso = tau_[k].byIsolationMVA3oldDMwLTraw > 0;
@@ -654,11 +679,16 @@ int main(int argc, char** argv) {
 
                         bool ElTau_Charge = electron_[i].charge * tau_[k].charge < 0;
                         bool ElTau_dR = deltaR(electron_[i], tau_[k]) > 0.5;
-
-                        bool Veto_EM = Multi_Lepton_Veto("EM", m);
-                        bool Veto_EE = Multi_Lepton_Veto("EE", m);
-                        bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
-                        bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
+//
+//                        bool Veto_EM = Multi_Lepton_Veto("EM", m);
+//                        bool Veto_EE = Multi_Lepton_Veto("EE", m);
+//                        bool Veto_EEM = Multi_Lepton_Veto("EEM", m);
+//                        bool Veto_EEE = Multi_Lepton_Veto("EEE", m);
+//                        
+                        bool Veto_EM = 1;
+                        bool Veto_EE = 1;
+                        bool Veto_EEM = 1;
+                        bool Veto_EEE = 1;
 
                         bool LooseSelection = El_PtEta && Tau_PtEta && ElTau_dR && Veto_EE && Veto_EEM && Veto_EEE && Veto_EM;
                         //                        bool VLooseTauIso = tau_[k].byTightIsolationMVA3newDMwLT;
@@ -668,8 +698,8 @@ int main(int argc, char** argv) {
                         //                            bool VLooseEl_Iso = Iso_Ele_dBeta(electron_[i]) < 1;
                         vector<myobject> JETS = GoodJet30(m, electron_[i], tau_[k]);
                         vector<myobject> BJETS = GoodbJet20(m, electron_[i], tau_[k], 0, 1);
-                        vector<myobject> MVAMetRecoil_etau = m->RecoilMetetau;
-                        mt_1 = TMass_F(electron_[i].pt, electron_[i].px, electron_[i].py, MVAMetRecoil_etau.front().pt, MVAMetRecoil_etau.front().phi);
+//                        vector<myobject> MVAMetRecoil_etau = m->RecoilMetetau;
+                        mt_1 =1;
 
                         bool bjetCut_TMass = BJETS.size() > 0 && JETS.size() < 2 && mt_1 < 30;
                         //                        bool MatchedTrigger =electron_[i].hasTrgObject_Ele20Tau20  &&  tau_[k].hasTrgObject_Ele20Tau20;

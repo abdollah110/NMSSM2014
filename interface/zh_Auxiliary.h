@@ -291,6 +291,12 @@ double InvarMass_2(myobject const& a, myobject const& b) {
 
     return sqrt(pow(a.E + b.E, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2) - pow(a.pz + b.pz, 2));
 }
+
+double InvarMass_2(myGenobject const& a, myGenobject const& b) {
+    
+    return sqrt(pow(a.E + b.E, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2) - pow(a.pz + b.pz, 2));
+}
+
 //double InvarMass_2(myGenobject const& a, myGenobject const& b) {
 //    return sqrt(pow(a.E + b.E, 2) - pow(a.px + b.px, 2) - pow(a.py + b.py, 2) - pow(a.pz + b.pz, 2));
 //}
