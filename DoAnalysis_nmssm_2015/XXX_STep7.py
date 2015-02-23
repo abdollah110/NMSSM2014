@@ -59,7 +59,7 @@ UpperRange = 200
 #Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
 Binning_NoBTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,200])
 Binning_BTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,200])
-TauScale = ["Down", "", "Up", "trgLepDown", "trgLepUp", "trgTauDown", "trgTauUp"]
+TauScale = ["Down", "", "Up"]
 #POSTFIX=["","Up","Down"]
 
 signal = ['bba1GenFil_']
@@ -246,30 +246,16 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
     #################### Different Normalization Tables
     #ScaleUp
     Table_FileUp = TFile("Yield"+CoMEnergy+"Up"+".root")
-    NormTableUp = Table_FileUp.Get('FullResults') 
+    NormTableUp = Table_FileUp.Get('FullResults')
     #Norm
     Table_File = TFile("Yield"+CoMEnergy+""+".root")
     NormTable_ = Table_File.Get('FullResults')
     #ScaleDown
     Table_FileDown = TFile("Yield"+CoMEnergy+"Down"+".root")
     NormTableDown = Table_FileDown.Get('FullResults')
-    
-    #ScaleDown
-    Table_TrgLepDown = TFile("Yield"+CoMEnergy+"trgLepDown"+".root")
-    NormTableTrgLepDown = Table_TrgLepDown.Get('FullResults')
 
-    Table_TrgLepUp = TFile("Yield"+CoMEnergy+"trgLepUp"+".root")
-    NormTableTrgLepUp = Table_TrgLepUp.Get('FullResults')
 
-    Table_TrgTauDown = TFile("Yield"+CoMEnergy+"trgTauDown"+".root")
-    NormTableTrgTauDown = Table_TrgTauDown.Get('FullResults')
-    
-    Table_TrgTauUp = TFile("Yield"+CoMEnergy+"trgTauUp"+".root")
-    NormTableTrgTauUp = Table_TrgTauUp.Get('FullResults')
-    
-    
-    
-    NormTable=[NormTableDown,NormTable_,NormTableUp,NormTableTrgLepDown,NormTableTrgLepUp,NormTableTrgTauDown,NormTableTrgTauUp]
+    NormTable=[NormTableDown,NormTable_,NormTableUp]
 #    NormTable=[NormTable_]
 
 # No Need Further
@@ -293,7 +279,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
 
     
-    TauScaleOut = ["_CMS_scale_t_"+channel+CoMEnergy+"Down", "", "_CMS_scale_t_"+channel+CoMEnergy+"Up", "_CMS_trgUnc_lep_"+channel+CoMEnergy+"Down" ,"_CMS_trgUnc_lep_"+channel+CoMEnergy+"Up" ,"_CMS_trgUnc_tau_"+channel+CoMEnergy+"Down" ,"_CMS_trgUnc_tau_"+channel+CoMEnergy+"Up" ]
+    TauScaleOut = ["_CMS_scale_t_"+channel+CoMEnergy+"Down", "", "_CMS_scale_t_"+channel+CoMEnergy+"Up"]
     Signal_Unc_glugluHiggs = ["_CMS_htt_higgsPtReweight"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight"+CoMEnergy+"Down", "_CMS_htt_higgsPtReweight_scale"+CoMEnergy+"Up","_CMS_htt_higgsPtReweight_scale"+CoMEnergy+"Down"]
     Signal_Unc_HighPtTau = ["_CMS_eff_t_mssmHigh_"+channel+CoMEnergy+"Up","_CMS_eff_t_mssmHigh_"+channel+CoMEnergy+"Down"]
 
@@ -739,4 +725,5 @@ if __name__ == "__main__":
 
     MakeTheHistogram("mutau","_SVMass","_8TeV",0)
     MakeTheHistogram("etau","_SVMass","_8TeV",1)
+
 

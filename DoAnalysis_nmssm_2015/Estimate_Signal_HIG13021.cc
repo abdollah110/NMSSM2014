@@ -599,7 +599,7 @@ int main(int argc, char** argv) {
             //####################################################
             // Muon Selection
             //####################################################
-            bool Mu_PtEta = l1Pt > 18 && fabs(l1Eta) < 2.1;
+            bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
 //                bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;  //Changing MUpt from 18 to 20
             bool Mu_IdTight = l1_muId_Tight;
             bool Mu_d0 = fabs(l1_d0) < 0.045; //the impact parameter in the transverse plane
@@ -638,7 +638,7 @@ int main(int argc, char** argv) {
             //bool Tau_antiMu = l2_tauRejMu3L;
             //bool Tau_antiMu = l2_tauRejMu2T;
             bool TauVtxdZ = fabs(Tau_Vertex_dz) < 0.2;
-            bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu && SVMass < 200;
+            bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu && SVMass < 200 && njets < 2;
 
             //########################################################################################################
 //            if (Event==8397872){
