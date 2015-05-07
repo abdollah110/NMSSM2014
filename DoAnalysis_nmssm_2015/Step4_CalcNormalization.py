@@ -123,7 +123,7 @@ def make2DTable(Observable,PostFix,CoMEnergy):
     for categ in range(len(category)):
         for chl in range(len(channel)):
             print "\n##################################################################################################"
-            print "starting category and channel", category[categ], channel[chl]
+            print "starting category and channel", category[categ], channel[chl], 'PostFix= ',PostFix
             print "##################################################################################################\n"
             ##################################################################################################
             #   Signal Estimation
@@ -355,4 +355,7 @@ if __name__ == "__main__":
     make2DTable("_SVMass","", "_8TeV")
     make2DTable("_SVMass","Up", "_8TeV")
     make2DTable("_SVMass","Down", "_8TeV")
-
+    make2DTable("_SVMass","trgLepUp", "_8TeV")
+    make2DTable("_SVMass","trgLepDown", "_8TeV")
+    make2DTable("_SVMass","trgTauUp", "_8TeV")
+    make2DTable("_SVMass","trgTauDown", "_8TeV")

@@ -754,7 +754,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
 
             
-if __name__ == "__main__":
+    
 
     MakeTheHistogram("mutau","_SVMass","_8TeV",0)
     MakeTheHistogram("etau","_SVMass","_8TeV",1)

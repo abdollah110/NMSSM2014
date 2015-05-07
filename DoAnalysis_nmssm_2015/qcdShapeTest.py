@@ -426,8 +426,9 @@ def ApplyCorrectionOnQCDShape(Observable,CoMEnergy, etaRange, catName, channelNa
 
     # FIXME replace the observable to SDOBservable
     nowObs= Observable.replace("_","_2D")
-    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,nowObs+"Pt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
-#    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,nowObs+"Pt_mTLess30_SS_RelaxIso", etaRange)
+#    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,nowObs+"Pt_LepAntiIso_mTLess30_SS_RelaxIso", etaRange)
+    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,nowObs+"Pt_mTLess30_SS_RelaxIso", etaRange)
+#    QCDShape_File=GetShape_QCD("",CoMEnergy,channelName,catName,nowObs+"Pt_mTLess30_SS", etaRange)
     QCDShape_Hist=QCDShape_File.Get("XXX")
 
     myOut = TFile("Extra/XXX.root","RECREATE")
@@ -511,7 +512,7 @@ CorrectionOSSS= [""]
 #POSTFIX=["","Up","Down"]
 def GetFinalQCDShapeNorm(Observable,CoMEnergy):
 
-    FinalFile = TFile("QCDFinalFile.root", "RECREATE")
+    FinalFile = TFile("qcdFinalFile_IsoMuAntiIsoTau.root", "RECREATE")
 
     for catName in Bcategory:
         for channelName in channel:
