@@ -59,8 +59,15 @@ UpperRange = 200
 #Binning_BTag = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300])
 #Binning_NoBTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,200])
 #Binning_BTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,130,140,160,180,200])
-Binning_NoBTag = array.array("d",[0,15,20,25,30,35,40,50,70,100,150,200])
-Binning_NoBTag = array.array("d",[0,15,20,25,30,35,40,50,70,100,150,200])
+#Binning_BTag = array.array("d",[0,15,20,25,30,35,40,50,70,100,150,200])
+#Binning_NoBTag = array.array("d",[0,15,20,25,30,35,40,50,70,100,150,200])
+#Binning_NoBTag = array.array("d",[-2.5,-2.3,-2.1,-1.9,-1.7,-1.5,-1.3,-1.1,-0.9,-0.7,-0.5,-0.3,-0.1,0.1,0.3,0.5,0.7,0.9,1.1,1.3,1.5,1.7,1.9,2.1,2.3,2.5])
+#Binning_BTag = array.array("d",[-2.5,-2.3,-2.1,-1.9,-1.7,-1.5,-1.3,-1.1,-0.9,-0.7,-0.5,-0.3,-0.1,0.1,0.3,0.5,0.7,0.9,1.1,1.3,1.5,1.7,1.9,2.1,2.3,2.5])
+#Binning_BTag = array.array("d",[0,5,10,15,20,25,30,60])
+#Binning_NoBTag = array.array("d",[0,5,10,15,20,25,30,60])
+Binning_BTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,55,60,70,85,100,150,200])
+Binning_NoBTag = array.array("d",[0,5,10,15,20,25,30,35,40,45,50,55,60,70,85,100,150,200])
+
 TauScale = ["Down", "", "Up"]
 #POSTFIX=["","Up","Down"]
 
@@ -267,7 +274,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
     Signal_Unc_HighPtTau = ["_CMS_eff_t_mssmHigh_"+channel+CoMEnergy+"Up","_CMS_eff_t_mssmHigh_"+channel+CoMEnergy+"Down"]
 
 #    TH1.AddDirectory(0)
-    myOut = TFile("cnt_TotalRootForLimit_"+channel + CoMEnergy+".root" , 'RECREATE') # Name Of the output file
+    myOut = TFile("cnt_TotalRootForLimit_"+Observable+channel + CoMEnergy+".root" , 'RECREATE') # Name Of the output file
 
     icat=-1
     for NameCat in category:
@@ -451,7 +458,7 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
 
 
             ################################################
-            #  Filling QCD
+            #  Filling QCD  QCD shape is driven from AntiLepton, relaxed tau and subtracted from other final states
             ################################################
             if tscale ==1:
                     print "Doing QCD, BG estimation"
@@ -543,6 +550,16 @@ def MakeTheHistogram(channel,Observable,CoMEnergy,chl):
             
 if __name__ == "__main__":
 
-    MakeTheHistogram("mutau","_SVMass","_8TeV",0)
-    MakeTheHistogram("etau","_SVMass","_8TeV",1)
+#    MakeTheHistogram("mutau","_SVMass","_8TeV",0)
+#    MakeTheHistogram("etau","_SVMass","_8TeV",1)
+#    MakeTheHistogram("mutau","_l1Pt","_8TeV",0)
+#    MakeTheHistogram("etau","_l1Pt","_8TeV",1)
+#    MakeTheHistogram("mutau","_l2Pt","_8TeV",0)
+#    MakeTheHistogram("etau","_l2Pt","_8TeV",1)
+#    MakeTheHistogram("mutau","_l1Eta","_8TeV",0)
+#    MakeTheHistogram("etau","_l1Eta","_8TeV",1)
+#    MakeTheHistogram("mutau","_l2Eta","_8TeV",0)
+#    MakeTheHistogram("etau","_l2Eta","_8TeV",1)
+    MakeTheHistogram("mutau","_MET","_8TeV",0)
+    MakeTheHistogram("etau","_MET","_8TeV",1)
 

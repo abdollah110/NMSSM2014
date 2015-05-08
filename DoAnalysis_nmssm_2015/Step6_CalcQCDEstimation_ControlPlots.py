@@ -57,7 +57,7 @@ QCDScaleFactor = 1.06
 #Binning_PT = array.array("d",[0,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300])
 #Binning_PT = array.array("d",[0,20,25,30,35,40,45,50,60,70,80,90,100,120,140,160,180,200,250,300])
 Binning_OSSS = array.array("d",[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,160,180,200])
-Binning_PT = array.array("d",[0,15,20,25,30,35,40,50,70,100,150,200])
+Binning_PT = array.array("d",[0,20,25,30,35,40,50,70,100,150,200])
 
 def doRatio2D(num, denum, marColor):
     ratio = ROOT.TGraphAsymmErrors(num, denum, "")
@@ -247,10 +247,10 @@ def GetShape_QCD(PostFix,CoMEnergy,channelName,catName,HistoName,etaRange):
 #############################################################################################################
 ##   Finalizaoing and Creating the ROOT File inclusing QCD shape and norm
 #############################################################################################################
-CorrectionFR= ["","Down","Up"]
-CorrectionOSSS= ["","Down","Up"]
-#CorrectionFR= [""]
-#CorrectionOSSS= [""]
+#CorrectionFR= ["","Down","Up"]
+#CorrectionOSSS= ["","Down","Up"]
+CorrectionFR= [""]
+CorrectionOSSS= [""]
 #POSTFIX=["","Up","Down"]
 def GetFinalQCDShapeNorm(Observable,CoMEnergy):
 
@@ -278,7 +278,12 @@ def GetFinalQCDShapeNorm(Observable,CoMEnergy):
 ##   Run the Jobs
 #############################################################################################################
 if __name__ == "__main__":
-    GetFinalQCDShapeNorm("_SVMass","_8TeV")
+#    GetFinalQCDShapeNorm("_SVMass","_8TeV")
+#    GetFinalQCDShapeNorm("_l1Pt","_8TeV")
+#    GetFinalQCDShapeNorm("_l2Pt","_8TeV")
+#    GetFinalQCDShapeNorm("_l1Eta","_8TeV")
+#    GetFinalQCDShapeNorm("_l2Eta","_8TeV")
+    GetFinalQCDShapeNorm("_MET","_8TeV")
 
 
 
