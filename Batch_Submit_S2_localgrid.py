@@ -33,7 +33,7 @@ def make_submit_form():
         print "sampleName=", sampleName
 
         NumberToBedevided= 10
-        if FileSize < 150 : NumberToBedevided=5
+        if FileSize < 150 : NumberToBedevided=10
         if FileSize > 1200 : NumberToBedevided=20
         if FileSize > 1900 : NumberToBedevided=30
         for numMod in xrange(0,NumberToBedevided):
