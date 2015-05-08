@@ -200,6 +200,7 @@ int nbtag_EffDown=0;
 int nbtag_MisTagUp=0;
 int nbtag_MisTagDown=0;
 
+float genWeight=1.0;
 
 void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_data_mc, std::string FinalState, myobject obj1, myobject obj2) {
 
@@ -241,6 +242,7 @@ void fillTree(unsigned int chnl, TTree * Run_Tree, myevent *m, std::string is_da
     Lumi = m->lumiNumber;
     Event = m->eventNumber;
     embedWeight = m->embeddingWeight;
+    genWeight=m->wgt;
 
 
     //  ########## ########## ########## ########## ########## ##########

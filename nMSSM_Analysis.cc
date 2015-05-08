@@ -328,6 +328,8 @@ Run_Tree->Branch("nbtag_EffUp", &nbtag_EffUp, "nbtag_EffUp/I");
 Run_Tree->Branch("nbtag_EffDown", &nbtag_EffDown, "nbtag_EffDown/I");
 Run_Tree->Branch("nbtag_MisTagUp", &nbtag_MisTagUp, "nbtag_MisTagUp/I");
 Run_Tree->Branch("nbtag_MisTagDown", &nbtag_MisTagDown, "nbtag_MisTagDown/I");
+//Weight from NLO amc@NLO_Madgraog
+Run_Tree->Branch("genWeight", &genWeight, "genWeight/F");
 
 
 
