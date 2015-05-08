@@ -551,7 +551,8 @@ int main(int argc, char** argv) {
 //            float Bin_trg_Correction_Mu=Bin_trigweight_1_data/Bin_trigweight_1_mc;
                 
                 
-//                
+//<<<<<<< HEAD
+//
 //            float Trigweight_Lep_Up  = 1+ (Eff_MuTauTrg_Mu_Data_2012(100,l1Eta) - Eff_MuTauTrg_Mu_Data_2012(l1Pt,l1Eta));
 //            float Trigweight_Lep_Down  = 1.0/(1+ (Eff_MuTauTrg_Mu_Data_2012(100,l1Eta) - Eff_MuTauTrg_Mu_Data_2012(l1Pt,l1Eta)));
 //            float Trigweight_Tau_Up  = 1+ (Eff_MuTauTrg_Tau_Data_2012(100,l2Eta) - Eff_MuTauTrg_Tau_Data_2012(l2Pt,l2Eta));
@@ -590,6 +591,22 @@ int main(int argc, char** argv) {
                     Trigweight_Tau_Down  = 1.0/(1+ 0.5*(Eff_ETauTrg_Tau_Data_2012(60,l2Eta) - Eff_ETauTrg_Tau_Data_2012(l2Pt,l2Eta)));
                 }
                 //                if (Channel ==3) cout << "l1Pt= "<<l1Pt <<  "   Trigweight_Lep_Up= "  <<Trigweight_Lep_Up<< "   Trigweight_Lep_Down= "  <<Trigweight_Lep_Down<<"    *****  l2Pt= " << l2Pt <<  "  Trigweight_Tau_Up= "<<Trigweight_Tau_Up<<"  Trigweight_Tau_Down= "<<Trigweight_Tau_Down<<"\n";
+//=======
+//                
+//            float Trigweight_Lep_Up  = 1+ (Eff_MuTauTrg_Mu_Data_2012(100,l1Eta) - Eff_MuTauTrg_Mu_Data_2012(l1Pt,l1Eta));
+//            float Trigweight_Lep_Down  = 1.0/(1+ (Eff_MuTauTrg_Mu_Data_2012(100,l1Eta) - Eff_MuTauTrg_Mu_Data_2012(l1Pt,l1Eta)));
+//            float Trigweight_Tau_Up  = 1+ (Eff_MuTauTrg_Tau_Data_2012(100,l2Eta) - Eff_MuTauTrg_Tau_Data_2012(l2Pt,l2Eta));
+//            float Trigweight_Tau_Down  = 1.0/(1+ (Eff_MuTauTrg_Tau_Data_2012(100,l2Eta) - Eff_MuTauTrg_Tau_Data_2012(l2Pt,l2Eta)));
+//                
+////                if (Channel ==1) cout << l1Pt <<  "   "  <<Trigweight_Lep_Up<<"    *****   " << l2Pt <<  "  "<<Trigweight_Tau_Up<<"\n";
+//                
+//                if (Channel ==3){
+//                     Trigweight_Lep_Up  = 1+ (Eff_ETauTrg_Ele_Data_2012(100,l1Eta) - Eff_ETauTrg_Ele_Data_2012(l1Pt,l1Eta));
+//                     Trigweight_Lep_Down  = 1.0/(1+ (Eff_ETauTrg_Ele_Data_2012(100,l1Eta) - Eff_ETauTrg_Ele_Data_2012(l1Pt,l1Eta)));
+//                     Trigweight_Tau_Up  = 1+ (Eff_ETauTrg_Tau_Data_2012(100,l2Eta) - Eff_ETauTrg_Tau_Data_2012(l2Pt,l2Eta));
+//                     Trigweight_Tau_Down  = 1.0/(1+ (Eff_ETauTrg_Tau_Data_2012(100,l2Eta) - Eff_ETauTrg_Tau_Data_2012(l2Pt,l2Eta)));
+//            }
+//>>>>>>> e931572404f50c5a5a6f8d2d0072d2a084d18a01
                 
 
                

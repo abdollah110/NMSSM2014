@@ -246,8 +246,9 @@ int main(int argc, char** argv) {
         //###############################################################################################
         // Specific Cuts to be changed fro MSSM and nMSSM
         float cutonSVmass = 0;
-        float cutonTaupt = 20;
-//        float cutonTaupt = 22;
+//        float cutonTaupt = 20;
+        float cutonTaupt = 22;
+
         int massBin = 200;
         //    float cutonSVmass= 0;
         //    float cutonTaupt= 20;
@@ -463,6 +464,7 @@ int main(int argc, char** argv) {
             //###############################################################################################
             const int size_tscale = 3;
             bool TauScale[size_tscale] = {1, 1, 1};
+//<<<<<<< HEAD
       
             TLorentzVector LorTau;
             TLorentzVector LorTauDown;
@@ -478,6 +480,9 @@ int main(int argc, char** argv) {
             
                 
             double SVMASS[size_tscale] = {VisibleMassDown, VisibleMass, VisibleMassUp};
+//=======
+//            double SVMASS[size_tscale] = {SVMassDown, SVMass, SVMassUp};
+//>>>>>>> e931572404f50c5a5a6f8d2d0072d2a084d18a01
             std::string TauScale_cat[size_tscale] = {"Down", "", "Up"};
 
             //#########################################################################################################################################################################################
@@ -564,6 +569,7 @@ int main(int argc, char** argv) {
 //            float Bin_trigweight_lep_mc  =Bin_Corr_MuTauTrg_MuLeg_2012_MC(l1Pt,l1Eta);
 //            float Bin_trg_Correction_Mu=Bin_trigweight_1_data/Bin_trigweight_1_mc;
                 
+//<<<<<<< HEAD
                 float Trigweight_Lep_Up  = 1;
                 float Trigweight_Lep_Down  = 1.0;
                 float Trigweight_Tau_Up  = 1;
@@ -588,6 +594,23 @@ int main(int argc, char** argv) {
                      Trigweight_Tau_Down  = 1.0/(1+ 0.5*(Eff_ETauTrg_Tau_Data_2012(60,l2Eta) - Eff_ETauTrg_Tau_Data_2012(l2Pt,l2Eta)));
             }
 //                if (Channel ==3) cout << "l1Pt= "<<l1Pt <<  "   Trigweight_Lep_Up= "  <<Trigweight_Lep_Up<< "   Trigweight_Lep_Down= "  <<Trigweight_Lep_Down<<"    *****  l2Pt= " << l2Pt <<  "  Trigweight_Tau_Up= "<<Trigweight_Tau_Up<<"  Trigweight_Tau_Down= "<<Trigweight_Tau_Down<<"\n";
+//=======
+//                
+//                
+//            float Trigweight_Lep_Up  = 1+ (Eff_MuTauTrg_Mu_Data_2012(100,l1Eta) - Eff_MuTauTrg_Mu_Data_2012(l1Pt,l1Eta));
+//            float Trigweight_Lep_Down  = 1.0/(1+ (Eff_MuTauTrg_Mu_Data_2012(100,l1Eta) - Eff_MuTauTrg_Mu_Data_2012(l1Pt,l1Eta)));
+//            float Trigweight_Tau_Up  = 1+ (Eff_MuTauTrg_Tau_Data_2012(100,l2Eta) - Eff_MuTauTrg_Tau_Data_2012(l2Pt,l2Eta));
+//            float Trigweight_Tau_Down  = 1.0/(1+ (Eff_MuTauTrg_Tau_Data_2012(100,l2Eta) - Eff_MuTauTrg_Tau_Data_2012(l2Pt,l2Eta)));
+//                
+////                if (Channel ==1) cout << l1Pt <<  "   "  <<Trigweight_Lep_Up<<"    *****   " << l2Pt <<  "  "<<Trigweight_Tau_Up<<"\n";
+//                
+//                if (Channel ==3){
+//                     Trigweight_Lep_Up  = 1+ (Eff_ETauTrg_Ele_Data_2012(100,l1Eta) - Eff_ETauTrg_Ele_Data_2012(l1Pt,l1Eta));
+//                     Trigweight_Lep_Down  = 1.0/(1+ (Eff_ETauTrg_Ele_Data_2012(100,l1Eta) - Eff_ETauTrg_Ele_Data_2012(l1Pt,l1Eta)));
+//                     Trigweight_Tau_Up  = 1+ (Eff_ETauTrg_Tau_Data_2012(100,l2Eta) - Eff_ETauTrg_Tau_Data_2012(l2Pt,l2Eta));
+//                     Trigweight_Tau_Down  = 1.0/(1+ (Eff_ETauTrg_Tau_Data_2012(100,l2Eta) - Eff_ETauTrg_Tau_Data_2012(l2Pt,l2Eta)));
+//            }
+//>>>>>>> e931572404f50c5a5a6f8d2d0072d2a084d18a01
                 
 
                
@@ -622,8 +645,13 @@ int main(int argc, char** argv) {
             //####################################################
             // Muon Selection
             //####################################################
-            bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
+
+//            bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;
 //                bool Mu_PtEta = l1Pt > 18 && fabs(l1Eta) < 2.1;  //Changing MUpt from 18 to 20
+
+            bool Mu_PtEta = l1Pt > 18 && fabs(l1Eta) < 2.1;
+//                bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;  //Changing MUpt from 18 to 20
+
             bool Mu_IdTight = l1_muId_Tight;
             bool Mu_d0 = fabs(l1_d0) < 0.045; //the impact parameter in the transverse plane
             bool Mu_dZ = fabs(l1_dZ_in) < 0.2; //the impact parameter in the transverse plane
@@ -661,7 +689,11 @@ int main(int argc, char** argv) {
             //bool Tau_antiMu = l2_tauRejMu3L;
             //bool Tau_antiMu = l2_tauRejMu2T;
             bool TauVtxdZ = fabs(Tau_Vertex_dz) < 0.2;
+
             bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu && SVMass < 200 && njets < 2;
+
+//            bool TAU_CUTS = IsInCorrcetMassRange && TauVtxdZ && Tau_DMF && Tau_antiEl && Tau_antiMu && SVMass < 200;
+
 
             //########################################################################################################
 //            if (Event==8397872){
