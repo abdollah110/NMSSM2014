@@ -1,0 +1,60 @@
+./Make.sh Estimate_Signal_ControlPlots.cc
+rm OutFiles/*.root 
+mv *.root *.pdf  OLD/
+
+
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_VVAll_8TeV.root ../FileROOT/MSSMROOTFiles/*tW_8TeV.root ../FileROOT/MSSMROOTFiles/WWJetsTo2L2Nu_8TeV.root ../FileROOT/MSSMROOTFiles/WZJets*_8TeV.root              ../FileROOT/MSSMROOTFiles/ZZJetsTo*_8TeV.root
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_TTAll_8TeV.root ../FileROOT/MSSMROOTFiles/TTJets*MGDecays_8TeV.root
+
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_WJetsAll_8TeV.root    ../FileROOT/MSSMROOTFiles/W*JetsToLNu_8TeV*
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_DYJetsAll_8TeV.root    ../FileROOT/MSSMROOTFiles/DY*JetsToLL_8TeV* 
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_DYJetsToLL_PolarOff_8TeV.root ../FileROOT/MSSMROOTFiles/DYJetsToLL_PolarOff_8TeV.root
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_DYJetsAllMassLow_8TeV.root    ../FileROOT/MSSMROOTFiles/DY*JetsToLLMassLow_8TeV*
+
+
+
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_Data_8TeV.root ../FileROOT/MSSMROOTFiles/Data_8TeV.root
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_Embeddedetau_8TeV.root ../FileROOT/MSSMROOTFiles/Embeddedetau_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_Embeddedmutau_8TeV.root ../FileROOT/MSSMROOTFiles/Embeddedmutau_8TeV.root
+
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_TTEmbeddedetau_8TeV.root ../FileROOT/MSSMROOTFiles/TTEmbeddedetau_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_TTEmbeddedmutau_8TeV.root ../FileROOT/MSSMROOTFiles/TTEmbeddedmutau_8TeV.root
+
+
+
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_25_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_25_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_30_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_30_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_35_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_35_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_40_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_40_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_45_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_45_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_50_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_50_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_55_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_55_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_60_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_60_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_65_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_65_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_70_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_70_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_75_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_75_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_bba1GenFil_80_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_80_8TeV.root
+
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_ggH_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/ggH_SM125_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_qqH_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/qqH_SM125_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_VH_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/VH_SM125_8TeV.root
+
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_VHWW_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/VHWW_SM125_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_ggHWW_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/ggHWW_SM125_8TeV.root
+./Estimate_Signal_ControlPlots.exe  OutFiles/out_qqHWW_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/qqHWW_SM125_8TeV.root
+
+
+python Step4_CalcNormalization.py 
+python Step6_CalcQCDEstimation_ControlPlots.py 
+python Step7_DataCardProducer_ControlPlots.py 

@@ -1,0 +1,64 @@
+./Make.sh Estimate_Signal.cc
+rm OutFiles/*.root 
+mv *.root *.pdf  OLD/
+./Estimate_Signal.exe  OutFiles/out_DY1JetsToLLMassLow_8TeV.root ../FileROOT/MSSMROOTFiles/DY1JetsToLLMassLow_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DY1JetsToLL_8TeV.root ../FileROOT/MSSMROOTFiles/DY1JetsToLL_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DY2JetsToLLMassLow_8TeV.root ../FileROOT/MSSMROOTFiles/DY2JetsToLLMassLow_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DY2JetsToLL_8TeV.root ../FileROOT/MSSMROOTFiles/DY2JetsToLL_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DY3JetsToLL_8TeV.root ../FileROOT/MSSMROOTFiles/DY3JetsToLL_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DY4JetsToLL_8TeV.root ../FileROOT/MSSMROOTFiles/DY4JetsToLL_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DYJetsToLLMassLow_8TeV.root ../FileROOT/MSSMROOTFiles/DYJetsToLLMassLow_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DYJetsToLL_8TeV.root ../FileROOT/MSSMROOTFiles/DYJetsToLL_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DYJetsToLL_PolarOff_8TeV.root ../FileROOT/MSSMROOTFiles/DYJetsToLL_PolarOff_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_DYJetsToLL_TauPolarOff_8TeV.root ../FileROOT/MSSMROOTFiles/DYJetsToLL_TauPolarOff_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_Data_8TeV.root ../FileROOT/MSSMROOTFiles/Data_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_Embeddedetau_8TeV.root ../FileROOT/MSSMROOTFiles/Embeddedetau_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_Embeddedmutau_8TeV.root ../FileROOT/MSSMROOTFiles/Embeddedmutau_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_TTEmbeddedetau_8TeV.root ../FileROOT/MSSMROOTFiles/TTEmbeddedetau_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_TTEmbeddedmutau_8TeV.root ../FileROOT/MSSMROOTFiles/TTEmbeddedmutau_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_TTJets_FullLeptMGDecays_8TeV.root ../FileROOT/MSSMROOTFiles/TTJets_FullLeptMGDecays_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_TTJets_HadronicMGDecays_8TeV.root ../FileROOT/MSSMROOTFiles/TTJets_HadronicMGDecays_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_TTJets_SemiLeptMGDecays_8TeV.root ../FileROOT/MSSMROOTFiles/TTJets_SemiLeptMGDecays_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_T_tW_8TeV.root ../FileROOT/MSSMROOTFiles/T_tW_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_Tbar_tW_8TeV.root ../FileROOT/MSSMROOTFiles/Tbar_tW_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_VH_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/VH_SM125_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_VH_SMHWW125_8TeV.root ../FileROOT/MSSMROOTFiles/VH_SMHWW125_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_W1JetsToLNu_8TeV.root ../FileROOT/MSSMROOTFiles/W1JetsToLNu_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_W2JetsToLNu_8TeV.root ../FileROOT/MSSMROOTFiles/W2JetsToLNu_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_W3JetsToLNu_8TeV.root ../FileROOT/MSSMROOTFiles/W3JetsToLNu_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_W4JetsToLNu_8TeV.root ../FileROOT/MSSMROOTFiles/W4JetsToLNu_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_WJetsToLNu_8TeV.root ../FileROOT/MSSMROOTFiles/WJetsToLNu_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_WWJetsTo2L2Nu_8TeV.root ../FileROOT/MSSMROOTFiles/WWJetsTo2L2Nu_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_WZJetsTo2L2Q_8TeV.root ../FileROOT/MSSMROOTFiles/WZJetsTo2L2Q_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_WZJetsTo3LNu_8TeV.root ../FileROOT/MSSMROOTFiles/WZJetsTo3LNu_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_ZZJetsTo2L2Nu_8TeV.root ../FileROOT/MSSMROOTFiles/ZZJetsTo2L2Nu_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_ZZJetsTo2L2Q_8TeV.root ../FileROOT/MSSMROOTFiles/ZZJetsTo2L2Q_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_ZZJetsTo4L_8TeV.root ../FileROOT/MSSMROOTFiles/ZZJetsTo4L_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_25_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_25_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_30_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_30_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_35_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_35_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_40_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_40_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_45_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_45_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_50_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_50_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_55_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_55_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_60_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_60_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_65_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_65_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_70_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_70_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_75_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_75_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1GenFil_80_8TeV.root ../FileROOT/MSSMROOTFiles/bba1GenFil_80_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1_30_8TeV.root ../FileROOT/MSSMROOTFiles/bba1_30_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1_50_8TeV.root ../FileROOT/MSSMROOTFiles/bba1_50_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1_60_8TeV.root ../FileROOT/MSSMROOTFiles/bba1_60_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_bba1_70_8TeV.root ../FileROOT/MSSMROOTFiles/bba1_70_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_ggH_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/ggH_SM125_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_ggH_SMHWW125_8TeV.root ../FileROOT/MSSMROOTFiles/ggH_SMHWW125_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_qqH_SM125_8TeV.root ../FileROOT/MSSMROOTFiles/qqH_SM125_8TeV.root
+./Estimate_Signal.exe  OutFiles/out_qqH_SMHWW125_8TeV.root ../FileROOT/MSSMROOTFiles/qqH_SMHWW125_8TeV.root
+root -l -q Step1_Hadding_TT_VV.C 
+hadd -f  OutFiles/out_DYJetsAll_8TeV_Hadd.root   OutFiles/out_DYJetsToLL_8TeV.root   OutFiles/out_DY1JetsToLL_8TeV.root   OutFiles/out_DY2JetsToLL_8TeV.root   OutFiles/out_DY3JetsToLL_8TeV.root   OutFiles/out_DY4JetsToLL_8TeV.root    
+hadd -f  OutFiles/out_WJetsAll_8TeV_Hadd.root   OutFiles/out_WJetsToLNu_8TeV.root   OutFiles/out_W1JetsToLNu_8TeV.root   OutFiles/out_W2JetsToLNu_8TeV.root   OutFiles/out_W3JetsToLNu_8TeV.root   OutFiles/out_W4JetsToLNu_8TeV.root    
+hadd -f  OutFiles/out_DYJetsAllMassLow_8TeV_Hadd.root   OutFiles/out_DYJetsToLLMassLow_8TeV.root   OutFiles/out_DY1JetsToLLMassLow_8TeV.root   OutFiles/out_DY2JetsToLLMassLow_8TeV.root   
+root -l -q Step2_Stitching_DY.cc 
+python Step4_CalcNormalization.py 
+python Step6_CalcQCDEstimation.py 
+python Step7_DataCardProducer.py 
