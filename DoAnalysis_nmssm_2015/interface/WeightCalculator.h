@@ -32,7 +32,7 @@ float RetunSignalFilEff(std::string massValue){
     else if (massValue.compare("70") == 0)      return  0.18227;
     else if (massValue.compare("75") == 0)      return  0.20248;
     else if (massValue.compare("80") == 0)      return  0.21765;
-    else {cout<<"**********   wooow  ********* There is a problem here\n";return 0;}
+    else {cout<<"**********   wooow  ********* There is a problem here\n";return 1;}
     
 }
 
