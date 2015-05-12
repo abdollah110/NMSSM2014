@@ -107,6 +107,7 @@ public:
     float RhoCenCharged;
     float RhoCenNeutralTight;
     float Rho;
+    float wgt;
 
     // MET significance matrix
     float MET_sigMatrix_00;
