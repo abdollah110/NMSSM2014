@@ -248,8 +248,8 @@ int main(int argc, char** argv) {
         //###############################################################################################
         // Specific Cuts to be changed fro MSSM and nMSSM
         float cutonSVmass = 0;
-//        float cutonTaupt = 20;
-        float cutonTaupt = 22;
+        float cutonTaupt = 15;
+//        float cutonTaupt = 22;
         int massBin = 200;
         //    float cutonSVmass= 0;
         //    float cutonTaupt= 20;
@@ -331,7 +331,8 @@ int main(int argc, char** argv) {
             if (mvametphi > (TMath::Pi() / 2)) mvametphi_scale += TMath::Pi();
             if (mvametphi < (-TMath::Pi() / 2)) mvametphi_scale -= TMath::Pi();
             float mT_scale = TMass_F(l1Pt, l1Px, l1Py, mvamet_scale, mvametphi_scale);
-            bool mTLess30_scale = mT_scale < 30;
+//            bool mTLess30_scale = mT_scale < 30;
+                            bool mTLess30_scale = mT_scale < 10000;
             bool mTHigh70_scale = mT_scale > 70;
             bool noMTCut_scale = 1;
 
@@ -421,7 +422,8 @@ int main(int argc, char** argv) {
             //  Tau Isolation Categorization
             //###############################################################################################
             const int size_isoCat = 2;
-            bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
+            bool TightIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
+//                            bool TightIso = l2_TighttauIsoMVA3oldDMwLT > 0.5;
 //            bool RelaxIso = l2_LoosetauIsoMVA3oldDMwLT > 0.5;
             bool RelaxIso = 1;
             bool Iso_category[size_isoCat] = {TightIso, RelaxIso};
@@ -433,11 +435,11 @@ int main(int argc, char** argv) {
             const int size_LepisoCat = 2;
             bool LepTightIso, LepRelaxIso;
             if (Channel == 1) {
-                LepTightIso = l1_muIso < 0.10;
+                LepTightIso = l1_muIso < 0.20;
                 LepRelaxIso = l1_muIso > 0.2 && l1_muIso < 0.5;
             }
             if (Channel == 3) {
-                LepTightIso = l1_eleIso < 0.1;
+                LepTightIso = l1_eleIso < 0.2;
                 LepRelaxIso = l1_eleIso > 0.2 && l1_eleIso < 0.5;
             }
             bool LepIso_category[size_isoCat] = {LepTightIso, LepRelaxIso};
@@ -465,7 +467,8 @@ int main(int argc, char** argv) {
             //###############################################################################################
             const int size_tscale = 3;
             bool TauScale[size_tscale] = {1, 1, 1};
-            double SVMASS[size_tscale] = {SVMassDown, SVMass, SVMassUp};
+//            double SVMASS[size_tscale] = {SVMassDown, SVMass, SVMassUp};
+            double SVMASS[size_tscale] = {10, 20, 30};
             std::string TauScale_cat[size_tscale] = {"Down", "", "Up"};
 
             //#########################################################################################################################################################################################
@@ -482,11 +485,12 @@ int main(int argc, char** argv) {
             size_t bbHiggsFind = InputROOT.find("bba1"); // Check in the name it IS ggH
             if (bbHiggsFind != string::npos ) {
 
-                std::string FirstPart = "../FileROOT/MSSMROOTFiles/bba1GenFil_";
+                std::string FirstPart = "../FileROOT/NLORootsLoose/bba1GenFil_";
                 std::string LastPart = "_8TeV.root";
                 std::string newOut = InputROOT.substr(FirstPart.size());
                 newOut = newOut.substr(0, newOut.size() - LastPart.size());
                 SignalFilterEff=RetunSignalFilEff(newOut);
+                                genWeight=1.0;
                 
                 }
             
@@ -501,11 +505,13 @@ int main(int argc, char** argv) {
             size_t SMFind = InputROOT.find("125"); // Check that it IS NOT SM ggH_SM125 GeV
             bool isGluGluH = (HiggsFind != string::npos && SMFind == string::npos);
             if (isGluGluH) {
-                std::string FirstPart = "../FileROOT/MSSMROOTFiles/ggH";
+                std::string FirstPart = "../FileROOT/NLORootsLoose/ggH";
                 std::string LastPart = "_8TeV.root";
                 std::string newOut = InputROOT.substr(FirstPart.size());
                 newOut = newOut.substr(0, newOut.size() - LastPart.size());
                 HiggsPtReweight = HPtReWeight(gen_Higgs_pt, newOut, HiggsUncertaintyFile);
+                genWeight=1.0;
+                
             }
             //############ SM Higg125 Pt Reweighting just for GluGluH samples  [POWHEG/PYTHIA] (not VBF and Not VH))
             vector<float> SMHiggs125PtReweight(3, 1);
@@ -619,14 +625,19 @@ int main(int argc, char** argv) {
             if (EmbedFind != string::npos)
                 GeneralReweighting = 1 * getCorrFactorEMbed(mcdata, Channel, l1Pt, l1Eta, l2Pt, l2Eta, TriggerWeightBarrel, TriggerWeightEndcaps);
             else {
-                MuTrgMatched = (Channel == 1) && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20;
-                EleTrgMatched = (Channel == 3) && Trigger_EleTau12 && l1_trgMatche_Ele20Tau20 && l2_trgMatche_Ele20Tau20;
+//                MuTrgMatched = (Channel == 1) && Trigger_MuTau12 && l1_trgMatche_Mu17Tau20 && l2_trgMatche_Mu17Tau20;
+//                EleTrgMatched = (Channel == 3) && Trigger_EleTau12 && l1_trgMatche_Ele20Tau20 && l2_trgMatche_Ele20Tau20;
+                MuTrgMatched = (Channel == 1) ;
+                EleTrgMatched = (Channel == 3);
             }
 
             //############ Full Reweighting
 //            float LumiWeight = 1;
             float LumiWeight = weightCalc(Histo, InputROOT, num_gen_jets, mcdata, W_Events, DY_Events, DYLowMass_Events);
-            float AllWeight = genWeight * GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * SMHiggs125PtReweight[1] * EleTauFRWeight * TopPtReweighting * TauSpinor * LumiWeight  * SignalFilterEff;
+//            float AllWeight = GeneralReweighting * tauESWeight * embedWeight * HiggsPtReweight[1] * SMHiggs125PtReweight[1] * EleTauFRWeight * TopPtReweighting * TauSpinor * LumiWeight  * SignalFilterEff;
+//                genWeight= genWeight/fabs(genWeight);
+                genWeight= 1;
+                float AllWeight = genWeight * SignalFilterEff;
             if (verbose_) cout << "AllWeight= " << AllWeight << "   pu_Weight= " << pu_Weight << "   eff_Correction=" << eff_Correction << "   tauESWeight=" << tauESWeight << "   WeightEmbed=" << embedWeight << "   HiggsPtReweight[1]=" << HiggsPtReweight[1] << "   EleTauFRWeight=" << EleTauFRWeight << "   TopPtReweighting="<<TopPtReweighting <<    "   TauSpinor="<<TauSpinor <<   "   LumiWeight="<<LumiWeight<<"\n";
 
             //########################################################################################################
@@ -643,7 +654,7 @@ int main(int argc, char** argv) {
             //####################################################
             // Muon Selection
             //####################################################
-            bool Mu_PtEta = l1Pt > 18 && fabs(l1Eta) < 2.1;
+            bool Mu_PtEta = l1Pt > 16 && fabs(l1Eta) < 2.1;
 //                bool Mu_PtEta = l1Pt > 20 && fabs(l1Eta) < 2.1;  //Changing MUpt from 18 to 20
             bool Mu_IdTight = l1_muId_Tight;
             bool Mu_d0 = fabs(l1_d0) < 0.045; //the impact parameter in the transverse plane
@@ -657,7 +668,7 @@ int main(int argc, char** argv) {
             // Electron Selection
             ZimpactTau = 1000;
             //####################################################
-            bool El_PtEta = l1Pt > 24 && fabs(l1Eta) < 2.1;
+            bool El_PtEta = l1Pt > 5 && fabs(l1Eta) < 2.1;
             bool El_IdTight = l1_eleId_Tight;
             //        bool El_Iso = l1_eleIso < 0.1;
             //        bool El_Iso_Loose = l1_eleIso > 0.2 && l1_eleIso < 0.5;

@@ -305,10 +305,13 @@ def Make_Tau_FakeRate(PostFix,CoMEnergy,catName,channelName,etaRange):
 
     canv = MakeCanvas("canv", "histograms", 600, 600)
     HistoNum.SetMinimum(0.5)
-    HistoNum.GetXaxis().SetRangeUser(0,150)
+#    HistoNum.GetXaxis().SetRangeUser(0,60)
+    HistoNum.GetXaxis().SetRangeUser(0,100)
+    HistoNum.GetXaxis().SetTitle("#tau p_{T} [GeV]")
     HistoNum.GetYaxis().SetRangeUser(0,2)
+    HistoNum.SetStats(0)
     HistoNum.SetMarkerStyle(20)
-    theFit=TF1("theFit", fitFunc_Linear2Par, 20, 150, 2)
+    theFit=TF1("theFit", fitFunc_Linear2Par, 20, 100, 2)
     theFit.SetParameter(0, 0.6)
     theFit.SetParameter(1, 0.18)
     HistoNum.Fit(theFit, "R0","")
@@ -504,10 +507,10 @@ def ApplyCorrectionOnQCDNormalization(Observable,CoMEnergy, etaRange, catName, c
 #############################################################################################################
 ##   Finalizaoing and Creating the ROOT File inclusing QCD shape and norm
 #############################################################################################################
-#CorrectionFR= ["","Down","Up"]
-#CorrectionOSSS= ["","Down","Up"]
-CorrectionFR= [""]
-CorrectionOSSS= [""]
+CorrectionFR= ["","Down","Up"]
+CorrectionOSSS= ["","Down","Up"]
+#CorrectionFR= [""]
+#CorrectionOSSS= [""]
 #POSTFIX=["","Up","Down"]
 def GetFinalQCDShapeNorm(Observable,CoMEnergy):
 
